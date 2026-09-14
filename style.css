@@ -54,6 +54,8 @@ body {
     margin: 0 auto;
 }
 
+/* TOPO */
+
 .topo {
     background: linear-gradient(135deg, var(--turquesa) 0%, var(--turquesa-forte) 38%, var(--verde-escuro) 100%);
     color: var(--branco);
@@ -102,6 +104,8 @@ body {
     height: auto;
     object-fit: contain;
 }
+
+/* MENU */
 
 .menu-principal {
     background: var(--branco);
@@ -180,6 +184,8 @@ a.menu-item:hover {
     line-height: 1.6;
 }
 
+/* CARDS DAS FERRAMENTAS */
+
 .ferramentas-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -210,6 +216,8 @@ a.menu-item:hover {
     opacity: 0.7;
 }
 
+/* ÍCONE PADRÃO - FERRAMENTAS SEM IMAGEM */
+
 .ferramenta-icone {
     display: flex;
     align-items: center;
@@ -223,23 +231,41 @@ a.menu-item:hover {
     font-weight: 700;
     margin-bottom: 22px;
     border-bottom: 4px solid var(--verde-claro);
+    flex-shrink: 0;
 }
 
-.ferramenta-icone.com-imagem {
+.ferramenta-icone span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--branco);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ÍCONE COM IMAGEM */
+
+.ferramenta-icone.ferramenta-icone-imagem {
     width: 64px;
     height: 64px;
+    padding: 0;
     background: transparent;
     border: none;
     border-radius: 14px;
-    overflow: hidden;
+    overflow: visible;
 }
 
-.ferramenta-icone.com-imagem img {
+.ferramenta-icone.ferramenta-icone-imagem img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: block;
 }
+
+/* CONTEÚDO DOS CARDS */
 
 .ferramenta-conteudo {
     display: flex;
@@ -284,7 +310,7 @@ a.menu-item:hover {
     margin-top: auto;
 }
 
-/* GRID PRINCIPAL DO SIMULADOR */
+/* GRID DO SIMULADOR */
 
 .simulador-grid {
     display: grid;
@@ -295,7 +321,7 @@ a.menu-item:hover {
     align-items: start;
 }
 
-/* CARDS */
+/* CARDS DO SIMULADOR */
 
 .card {
     background: var(--branco);
@@ -311,8 +337,6 @@ a.menu-item:hover {
     padding: 28px;
 }
 
-/* PRIMEIRA LINHA */
-
 .formulario-card {
     grid-column: 1;
     grid-row: 1;
@@ -322,8 +346,6 @@ a.menu-item:hover {
     grid-column: 2;
     grid-row: 1;
 }
-
-/* SEGUNDA LINHA */
 
 .tabela-card {
     grid-column: 1;
@@ -418,7 +440,7 @@ input[readonly] {
     cursor: default;
 }
 
-/* PREFIXOS E SUFIXOS */
+/* INPUTS COM PREFIXO/SUFIXO */
 
 .input-prefixo,
 .input-sufixo {
@@ -527,7 +549,7 @@ button {
     color: #665416;
 }
 
-/* RESULTADOS */
+/* RESULTADO */
 
 .resultado-destaque {
     background: linear-gradient(135deg, var(--turquesa), var(--turquesa-forte));
@@ -787,6 +809,15 @@ footer {
 
     .menu-item {
         white-space: nowrap;
+    }
+
+    .home {
+        padding-top: 30px;
+        padding-bottom: 35px;
+    }
+
+    .home-apresentacao h2 {
+        font-size: 25px;
     }
 
     .simulador-grid {
