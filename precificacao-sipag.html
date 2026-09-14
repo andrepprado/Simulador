@@ -26,7 +26,7 @@
             <a href="index.html" class="menu-item">Início</a>
             <a href="credito-rural.html" class="menu-item">Crédito Rural</a>
             <a href="antecipacao-sipag.html" class="menu-item">Antecipação Sipag</a>
-            <a href="precificacao-sipag.html" class="menu-item">Precificação Sipag</a>
+            <a href="precificacao-sipag.html" class="menu-item ativo">Precificação Sipag</a>
             <a href="cobranca.html" class="menu-item">Cobrança</a>
         </div>
     </nav>
@@ -39,7 +39,7 @@
             </div>
 
             <div id="statusMotorSipag" class="status-carregamento">
-                Informe o CNAE ou MCC da atividade para identificar o segmento e aplicar as condições da simulação.
+                Carregando motor de regras da Precificação Sipag...
             </div>
 
             <div class="grid-form-4">
@@ -82,11 +82,6 @@
                     </div>
                 </div>
             </div>
-
-            <!--<div class="aviso-info">
-                Os cálculos são executados diretamente pelo motor de regras da aplicação. Não há dependência de Excel,
-                XLSM ou qualquer arquivo externo de parametrização.
-            </div>-->
         </section>
 
         <section class="card card-largura-total configuracao-card">
@@ -122,6 +117,7 @@
                 <h2>Taxas Solicitadas</h2>
                 <p>Informe as taxas MDR negociadas por bandeira e modalidade.</p>
             </div>
+
             <div id="blocosTaxasSipag"></div>
         </section>
 
@@ -279,12 +275,12 @@
 
     <footer>
         <div class="container">
-            <p>Caixa de Ferramentas | Produtos e Serviços | Precificação Sipag</p>
+            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvido pela Área de Processos</p>
         </div>
     </footer>
 
-    <script src="js/precificacao-regras.js"></script>
-    <script src="js/precificacao-sipag.js"></script>
+    <script src="./js/precificacao-regras.js"></script>
+    <script src="./js/precificacao-sipag.js"></script>
 </body>
 
 </html>
