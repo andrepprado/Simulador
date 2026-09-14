@@ -275,14 +275,14 @@ button {
 
 .linha-selecionada {
     margin-top: 16px;
-    background: var(--branco);
+    background: var(--turquesa-principal);
     padding: 15px;
     border-radius: 10px;
 }
 
 .linha-selecionada span {
     display: block;
-    color: var(--texto-secundario);
+    color: var(--branco);
     font-size: 12px;
     margin-bottom: 5px;
 }
