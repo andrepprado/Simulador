@@ -5,9 +5,10 @@
 }
 
 :root {
+
     --turquesa-principal: #00A091;
     --verde-escuro: #003640;
-    --verde-claro: #6699A1;
+    --verde-claro: #00A091;
     --verde-destaque: #00A091;
     --fundo: #f4f6f6;
     --branco: #ffffff;
@@ -274,7 +275,7 @@ button {
 
 .linha-selecionada {
     margin-top: 16px;
-    background: var(--verde-claro);
+    background: var(--branco);
     padding: 15px;
     border-radius: 10px;
 }
@@ -287,7 +288,7 @@ button {
 }
 
 .linha-selecionada strong {
-    color: var(--turquesa-principal);
+    color: var(--branco);
 }
 
 .tabela-card {
