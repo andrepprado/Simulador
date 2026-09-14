@@ -400,7 +400,6 @@ a.menu-item:hover {
 }
 
 /* COBRANÇA */
-
 .cobranca-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -488,6 +487,12 @@ a.menu-item:hover {
     font-weight: 700;
     color: var(--verde-escuro);
     line-height: 1.35;
+}
+
+.campo-ajuda {
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.45;
 }
 
 input,
@@ -677,9 +682,7 @@ button {
 }
 
 .resultado-destaque {
-    background: linear-gradient(135deg,
-            var(--turquesa),
-            var(--turquesa-forte));
+    background: linear-gradient(135deg, var(--turquesa), var(--turquesa-forte));
     color: var(--branco);
     padding: 22px;
     border-radius: 14px;
@@ -983,6 +986,257 @@ tfoot td {
     line-height: 1.5;
 }
 
+/* PREVIDÊNCIA */
+.previdencia-container {
+    padding-top: 30px;
+    padding-bottom: 42px;
+}
+
+.previdencia-progresso {
+    padding: 22px 26px;
+    margin-bottom: 24px;
+}
+
+.previdencia-progresso-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 12px;
+}
+
+.previdencia-progresso-topo div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.previdencia-progresso-topo span {
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+.previdencia-progresso-topo strong {
+    color: var(--turquesa);
+    font-size: 14px;
+}
+
+.barra-progresso {
+    width: 100%;
+    height: 8px;
+    background: var(--fundo-secundario);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.barra-progresso-valor {
+    width: 25%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            var(--turquesa),
+            var(--verde-claro));
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+.previdencia-etapas {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.previdencia-etapa {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    height: auto;
+    min-height: 44px;
+    padding: 8px 10px;
+    background: transparent;
+    color: var(--texto-secundario);
+    border: 1px solid transparent;
+    font-size: 12px;
+    text-align: left;
+}
+
+.previdencia-etapa span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #e6edec;
+    color: var(--texto-secundario);
+    font-size: 11px;
+}
+
+.previdencia-etapa.ativo {
+    background: rgba(0, 160, 145, 0.07);
+    color: var(--turquesa);
+    border-color: rgba(0, 160, 145, 0.18);
+}
+
+.previdencia-etapa.ativo span {
+    background: var(--turquesa);
+    color: var(--branco);
+}
+
+.previdencia-etapa.concluido span {
+    background: var(--verde-medio);
+    color: var(--branco);
+}
+
+.previdencia-painel {
+    display: none;
+}
+
+.previdencia-painel.ativo {
+    display: block;
+}
+
+.previdencia-painel>.card {
+    padding: 28px;
+}
+
+.previdencia-escolhas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.opcao-simulacao {
+    display: block;
+    margin: 0;
+    cursor: pointer;
+}
+
+.opcao-simulacao input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opcao-simulacao-conteudo {
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+    padding: 19px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: #fbfcfc;
+    transition: 0.2s ease;
+}
+
+.opcao-simulacao-conteudo strong {
+    color: var(--verde-escuro);
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 9px;
+}
+
+.opcao-simulacao-conteudo small {
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.opcao-simulacao:hover .opcao-simulacao-conteudo {
+    border-color: var(--turquesa-claro);
+}
+
+.opcao-simulacao.ativo .opcao-simulacao-conteudo {
+    border-color: var(--turquesa);
+    background: rgba(0, 160, 145, 0.06);
+    box-shadow: inset 0 0 0 1px var(--turquesa);
+}
+
+.previdencia-acoes {
+    justify-content: flex-end;
+}
+
+.previdencia-resultado-grid {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.previdencia-card-resultado {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+.previdencia-resumo-dados {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.previdencia-resumo-dados div {
+    padding: 13px;
+    border-radius: 10px;
+    background: var(--fundo-secundario);
+}
+
+.previdencia-resumo-dados span {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+}
+
+.previdencia-resumo-dados strong {
+    color: var(--verde-escuro);
+    font-size: 14px;
+}
+
+.previdencia-status {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border-left: 4px solid var(--turquesa);
+}
+
+.previdencia-status strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.previdencia-status span {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.previdencia-status.sucesso {
+    background: rgba(125, 182, 28, 0.09);
+    border-left-color: var(--verde-medio);
+    color: #426f13;
+}
+
+.previdencia-status.atencao {
+    background: #fff8e5;
+    border-left-color: var(--aviso);
+    color: #665416;
+}
+
+.tabela-previdencia {
+    min-width: 850px;
+}
+
+.tabela-previdencia td:not(:first-child),
+.tabela-previdencia th:not(:first-child) {
+    text-align: right;
+}
+
+.hide {
+    display: none !important;
+}
+
 footer {
     border-top: 1px solid var(--borda);
     padding: 24px 0;
@@ -1019,13 +1273,22 @@ footer {
     .antecipacao-documentos,
     .cobranca-card,
     .cobranca-card-principal,
-    .cobranca-card-largura-total {
+    .cobranca-card-largura-total,
+    .previdencia-card-resultado {
         grid-column: 1;
         grid-row: auto;
     }
 
     .ferramentas-grid {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-escolhas {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1085,7 +1348,8 @@ footer {
     .documentos-card,
     .configuracao-card,
     .resumo-card,
-    .cobranca-card {
+    .cobranca-card,
+    .previdencia-painel>.card {
         padding: 20px;
     }
 
@@ -1095,7 +1359,8 @@ footer {
     .resultados-grid,
     .resultados-grid-3,
     .resultados-grid-4,
-    .ferramentas-grid {
+    .ferramentas-grid,
+    .previdencia-resumo-dados {
         grid-template-columns: 1fr;
     }
 
@@ -1110,6 +1375,18 @@ footer {
     .indicador-total {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .previdencia-progresso {
+        padding: 18px;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: 1fr;
+    }
+
+    .previdencia-progresso-topo {
+        align-items: flex-start;
     }
 }
 
