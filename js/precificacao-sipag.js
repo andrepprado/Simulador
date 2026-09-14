@@ -13,12 +13,17 @@ const MODALIDADES = [
     { id: "parcelado721", nome: "Parcelado 7 a 21", produtoIc: "Installment > 6 Faturamento" }
 ];
 
-const NOMES_BANDEIRA_IC = {
-    visa: "Visa",
-    master: "Master",
-    elo: "Elo",
-    amex: "Amex"
-};
+const PARAMETROS_LOCAIS = Object.freeze({
+    cdiAnual: 0.145,
+    fatorFunding: 1.01,
+    fatorResultadoAntecipacao: 1,
+    impostoAntecipacao: 0
+});
+
+const EQUIPAMENTOS_LOCAIS = Object.freeze({
+    smartPos: 93,
+    pinPad: 27
+});
 
 const statusMotorSipag = document.getElementById("statusMotorSipag");
 const cnaeSipag = document.getElementById("cnaeSipag");
@@ -48,21 +53,9 @@ const resultadoPayback = document.getElementById("resultadoPayback");
 const resultadoCustoOperacional = document.getElementById("resultadoCustoOperacional");
 const tabelaResultadoBandeiras = document.getElementById("tabelaResultadoBandeiras");
 
-function motorRegrasDisponivel() {
-    return (
-        typeof REGRAS_PRECIFICACAO !== "undefined" &&
-        REGRAS_PRECIFICACAO &&
-        typeof REGRAS_PRECIFICACAO === "object"
-    );
-}
-
-function exibirErroMotor() {
-    statusMotorSipag.className = "status-carregamento erro";
-    statusMotorSipag.textContent = "Não foi possível carregar o motor de regras. Verifique o arquivo js/precificacao-regras.js.";
-}
-
 function moedaParaNumero(valor) {
     if (!valor) return 0;
+
     return Number(
         String(valor)
             .replace(/\./g, "")
@@ -237,189 +230,41 @@ function criarCamposTaxas() {
 }
 
 function localizarCnae() {
-    if (!motorRegrasDisponivel()) {
-        exibirErroMotor();
-        return;
-    }
-
     const codigo = normalizarCodigo(cnaeSipag.value);
 
-    if (!codigo) {
-        mccSipag.value = "";
-        segmentoSipag.value = "";
-        calcularTudo();
-        return;
-    }
-
-    const regra = REGRAS_PRECIFICACAO.cnaeMcc?.[codigo];
-
-    if (regra) {
-        mccSipag.value = regra[0];
-        segmentoSipag.value = regra[1];
-    } else {
-        mccSipag.value = "";
-        segmentoSipag.value = "";
-    }
+    cnaeSipag.value = codigo;
+    segmentoSipag.value = "";
 
     calcularTudo();
 }
 
 function localizarMcc() {
-    if (!motorRegrasDisponivel()) {
-        exibirErroMotor();
-        return;
-    }
-
     const mcc = normalizarCodigo(mccSipag.value);
 
-    if (!mcc) {
-        segmentoSipag.value = "";
-        calcularTudo();
-        return;
-    }
-
     mccSipag.value = mcc;
-
-    const cnaeAtual = normalizarCodigo(cnaeSipag.value);
-    const regraAtual = REGRAS_PRECIFICACAO.cnaeMcc?.[cnaeAtual];
-
-    if (regraAtual && String(regraAtual[0]) === mcc) {
-        segmentoSipag.value = regraAtual[1];
-    } else {
-        const encontrado = Object.entries(REGRAS_PRECIFICACAO.cnaeMcc || {})
-            .find(([, regra]) => String(regra[0]) === mcc);
-
-        if (encontrado) {
-            segmentoSipag.value = encontrado[1][1];
-        } else {
-            segmentoSipag.value = "";
-        }
-    }
+    segmentoSipag.value = "";
 
     calcularTudo();
 }
 
 function obterCustoMccBase() {
-    if (!motorRegrasDisponivel()) {
-        return null;
-    }
-
-    const mcc = normalizarCodigo(mccSipag.value);
-
-    if (!mcc) {
-        return null;
-    }
-
-    const regra = REGRAS_PRECIFICACAO.custoMcc?.[mcc];
-
-    if (!regra) {
-        return null;
-    }
-
-    return {
-        fd: Number(regra[0]) || 0,
-        cabal: Number(regra[1]) || 0
-    };
+    return null;
 }
 
-function obterCustoOperacional(bandeira) {
-    const custo = obterCustoMccBase();
-
-    if (!custo) {
-        return 0;
-    }
-
-    const sipaguinha = tipoPrecificacao.value === "Sipaguinha";
-
-    if (bandeira === "amex" && sipaguinha) {
-        return 0;
-    }
-
-    return sipaguinha
-        ? custo.cabal
-        : custo.fd;
+function obterCustoOperacional() {
+    return 0;
 }
 
-function obterIntercambioTabela(bandeira, modalidade) {
-    if (!motorRegrasDisponivel()) {
-        return 0;
-    }
-
-    const mcc = normalizarCodigo(mccSipag.value);
-
-    if (!mcc) {
-        return 0;
-    }
-
-    const padraoId = REGRAS_PRECIFICACAO.mccPadraoIc?.[mcc];
-
-    if (padraoId === undefined || padraoId === null) {
-        return 0;
-    }
-
-    const nomeBandeira = NOMES_BANDEIRA_IC[bandeira];
-    const modalidadeObj = MODALIDADES.find(item => item.id === modalidade);
-
-    if (!nomeBandeira || !modalidadeObj) {
-        return 0;
-    }
-
-    const bandas = REGRAS_PRECIFICACAO.icBandas || [];
-    const produtos = REGRAS_PRECIFICACAO.icProdutos || [];
-
-    const indiceBandeira = bandas.indexOf(nomeBandeira);
-    const indiceProduto = produtos.indexOf(modalidadeObj.produtoIc);
-
-    if (indiceBandeira < 0 || indiceProduto < 0) {
-        return 0;
-    }
-
-    const indice =
-        indiceBandeira *
-        produtos.length +
-        indiceProduto;
-
-    return Number(
-        REGRAS_PRECIFICACAO.icPadroes?.[padraoId]?.[indice]
-    ) || 0;
+function obterIntercambioTabela() {
+    return 0;
 }
 
-function obterAssessment(bandeira, modalidade) {
-    if (!motorRegrasDisponivel()) {
-        return 0;
-    }
-
-    if (bandeira === "cabal") {
-        return 0;
-    }
-
-    if (
-        bandeira === "amex" &&
-        tipoPrecificacao.value === "Sipaguinha"
-    ) {
-        return 0;
-    }
-
-    return Number(
-        REGRAS_PRECIFICACAO.assessment?.[bandeira]?.[modalidade]
-    ) || 0;
+function obterAssessment() {
+    return 0;
 }
 
 function obterCustoProcessamento() {
-    if (!motorRegrasDisponivel()) {
-        return 0;
-    }
-
-    const faturamento = moedaParaNumero(faturamentoMensal.value);
-    const p = REGRAS_PRECIFICACAO.parametros || {};
-
-    const limite = Number(p.limiteGrandesContas) || 0;
-
-    if (faturamento >= limite) {
-        return Number(p.custoProcessamentoGrandesContas) || 0;
-    }
-
-    return Number(p.custoProcessamentoPadrao) || 0;
+    return 0;
 }
 
 function obterTaxaSolicitada(bandeira, modalidade) {
@@ -446,29 +291,8 @@ function obterMix(bandeira, modalidade) {
     return (Number(input.value) || 0) / 100;
 }
 
-function obterImpostoMdr(bandeira, taxaSolicitada, intercambio) {
-    if (!motorRegrasDisponivel()) {
-        return 0;
-    }
-
-    if (bandeira !== "amex") {
-        return 0;
-    }
-
-    const base = taxaSolicitada - intercambio;
-
-    if (base <= 0) {
-        return 0;
-    }
-
-    const p = REGRAS_PRECIFICACAO.parametros || {};
-
-    const aliquota =
-        tipoPrecificacao.value === "Sipaguinha"
-            ? Number(p.impostoCabal) || 0
-            : Number(p.impostoFd) || 0;
-
-    return base * aliquota;
+function obterImpostoMdr() {
+    return 0;
 }
 
 function calcularNetMdr(bandeira, modalidade) {
@@ -590,6 +414,7 @@ function calcularMdr() {
 
     BANDEIRAS.forEach(bandeira => {
         let resultadoBandeira = 0;
+
         const modalidades = {};
 
         MODALIDADES.forEach(modalidade => {
@@ -641,7 +466,10 @@ function calcularMdr() {
     });
 
     totalMixSipag.textContent =
-        formatarPercentualDecimal(totalMix, 2);
+        formatarPercentualDecimal(
+            totalMix,
+            2
+        );
 
     totalMixSipag.style.color =
         Math.abs(totalMix - 1) > 0.0001
@@ -656,18 +484,10 @@ function calcularMdr() {
 }
 
 function calcularAntecipacao() {
-    if (!motorRegrasDisponivel()) {
-        return {
-            bruto: 0,
-            funding: 0,
-            impostos: 0,
-            liquido: 0
-        };
-    }
-
-    const volume = moedaParaNumero(
-        volumeAntecipado.value
-    );
+    const volume =
+        moedaParaNumero(
+            volumeAntecipado.value
+        );
 
     const taxaMensal =
         (Number(taxaAntecipacaoPrecificacao.value) || 0) / 100;
@@ -699,19 +519,17 @@ function calcularAntecipacao() {
         volume -
         valorPresente;
 
-    const p = REGRAS_PRECIFICACAO.parametros || {};
-
     const cdiAnual =
-        Number(p.cdiAnual) || 0;
+        Number(PARAMETROS_LOCAIS.cdiAnual) || 0;
 
     const fatorFunding =
-        Number(p.fatorFunding) || 0;
+        Number(PARAMETROS_LOCAIS.fatorFunding) || 0;
 
     const impostoAntecipacao =
-        Number(p.impostoAntecipacao) || 0;
+        Number(PARAMETROS_LOCAIS.impostoAntecipacao) || 0;
 
     const fatorResultadoAntecipacao =
-        Number(p.fatorResultadoAntecipacao) || 0;
+        Number(PARAMETROS_LOCAIS.fatorResultadoAntecipacao) || 0;
 
     const cdiComFundingAno =
         cdiAnual *
@@ -762,17 +580,6 @@ function calcularAntecipacao() {
 }
 
 function calcularEquipamentos() {
-    if (!motorRegrasDisponivel()) {
-        return {
-            complementoSmart: 0,
-            complementoPin: 0,
-            custoTotal: 0,
-            impactoMensal: 0
-        };
-    }
-
-    const e = REGRAS_PRECIFICACAO.equipamentos || {};
-
     const smartQtd =
         Number(qtdSmartPos.value) || 0;
 
@@ -792,10 +599,10 @@ function calcularEquipamentos() {
         Number(mesesPinPad.value) || 0;
 
     const valorSmart =
-        Number(e.smartPos) || 0;
+        Number(EQUIPAMENTOS_LOCAIS.smartPos) || 0;
 
     const valorPin =
-        Number(e.pinPad) || 0;
+        Number(EQUIPAMENTOS_LOCAIS.pinPad) || 0;
 
     const complementoSmart =
         Math.max(
@@ -859,23 +666,26 @@ function preencherTabelaResultados(resultadosBandeiras) {
     tabelaResultadoBandeiras.innerHTML = "";
 
     resultadosBandeiras.forEach(item => {
-        const bandeira = item.bandeira;
+        const bandeira =
+            item.bandeira;
 
-        const valores = MODALIDADES.map(modalidade => {
-            if (
-                !bandeira.debit &&
-                modalidade.id === "debito"
-            ) {
-                return "-";
-            }
+        const valores =
+            MODALIDADES.map(modalidade => {
+                if (
+                    !bandeira.debit &&
+                    modalidade.id === "debito"
+                ) {
+                    return "-";
+                }
 
-            return formatarPercentualDecimal(
-                item.modalidades[modalidade.id]?.net || 0,
-                4
-            );
-        });
+                return formatarPercentualDecimal(
+                    item.modalidades[modalidade.id]?.net || 0,
+                    4
+                );
+            });
 
-        const tr = document.createElement("tr");
+        const tr =
+            document.createElement("tr");
 
         tr.innerHTML = `
             <td>${bandeira.nome}</td>
@@ -891,38 +701,7 @@ function preencherTabelaResultados(resultadosBandeiras) {
 }
 
 function atualizarStatusMotor() {
-    if (!motorRegrasDisponivel()) {
-        exibirErroMotor();
-        return;
-    }
-
-    const mcc = normalizarCodigo(
-        mccSipag.value
-    );
-
-    if (!mcc) {
-        statusMotorSipag.className =
-            "status-carregamento";
-
-        statusMotorSipag.textContent =
-            "Motor de regras carregado. Informe um CNAE ou MCC para aplicar custos e intercâmbio.";
-
-        return;
-    }
-
-    const temCusto =
-        REGRAS_PRECIFICACAO.custoMcc?.[mcc] !== undefined;
-
-    const temIc =
-        REGRAS_PRECIFICACAO.mccPadraoIc?.[mcc] !== undefined;
-
-    if (!temCusto || !temIc) {
-        statusMotorSipag.className =
-            "status-carregamento erro";
-
-        statusMotorSipag.textContent =
-            `MCC ${mcc} não possui parametrização completa no motor de regras.`;
-
+    if (!statusMotorSipag) {
         return;
     }
 
@@ -930,7 +709,7 @@ function atualizarStatusMotor() {
         "status-carregamento ok";
 
     statusMotorSipag.textContent =
-        `MCC ${mcc} parametrizado. Motor de regras aplicado.`;
+        "Cálculo local da Precificação Sipag carregado.";
 }
 
 function atualizarClasseResultado(elemento, valor) {
@@ -971,20 +750,6 @@ function calcularTudo() {
         formatarNumeroMoeda(
             faturamento * 12
         );
-
-    if (!motorRegrasDisponivel()) {
-        exibirErroMotor();
-
-        resultadoNetMdr.textContent = "R$ 0,00";
-        resultadoAntecipacao.textContent = "R$ 0,00";
-        resultadoEquipamentos.textContent = "R$ 0,00";
-        resultadoFinalMensal.textContent = "R$ 0,00";
-        resultadoFinalAnual.textContent = "R$ 0,00";
-        resultadoPayback.textContent = "-";
-        resultadoCustoOperacional.textContent = "0,0000%";
-
-        return;
-    }
 
     const calculoMdr =
         calcularMdr();
@@ -1072,10 +837,13 @@ function calcularTudo() {
 }
 
 function registrarMascara(input) {
-    input.addEventListener("input", () => {
-        aplicarMascaraMoeda(input);
-        calcularTudo();
-    });
+    input.addEventListener(
+        "input",
+        () => {
+            aplicarMascaraMoeda(input);
+            calcularTudo();
+        }
+    );
 }
 
 function registrarEventos() {
@@ -1155,21 +923,6 @@ function iniciarPrecificacaoSipag() {
     criarMixFaturamento();
     criarCamposTaxas();
     registrarEventos();
-
-    if (!motorRegrasDisponivel()) {
-        console.error(
-            "ERRO: REGRAS_PRECIFICACAO não foi carregado. Verifique ./js/precificacao-regras.js"
-        );
-
-        exibirErroMotor();
-        calcularTudo();
-        return;
-    }
-
-    console.log(
-        "Motor de regras da Precificação Sipag carregado com sucesso."
-    );
-
     atualizarStatusMotor();
     calcularTudo();
 }
