@@ -309,6 +309,8 @@ a.menu-item:hover {
     margin-top: auto;
 }
 
+/* CRÉDITO RURAL */
+
 .simulador-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.85fr);
@@ -316,6 +318,75 @@ a.menu-item:hover {
     padding-top: 30px;
     padding-bottom: 30px;
     align-items: start;
+}
+
+.formulario-card {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.resultado-card {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.tabela-card {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+}
+
+.documentos-card {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+}
+
+/* ANTECIPAÇÃO SIPAG */
+
+.antecipacao-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
+}
+
+.antecipacao-formulario {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.antecipacao-resultado {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.antecipacao-tabela {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
+}
+
+.antecipacao-documentos {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-width: 0;
+}
+
+.antecipacao-tabela .tabela-wrapper,
+.antecipacao-documentos .tabela-wrapper {
+    width: 100%;
+}
+
+.antecipacao-tabela table,
+.antecipacao-documentos table {
+    width: 100%;
+}
+
+.antecipacao-documentos table {
+    min-width: 520px;
 }
 
 .simulador-grid-igual {
@@ -341,28 +412,6 @@ a.menu-item:hover {
 .configuracao-card,
 .resumo-card {
     padding: 28px;
-}
-
-.formulario-card {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.resultado-card {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.tabela-card {
-    grid-column: 1;
-    grid-row: 2;
-    min-width: 0;
-}
-
-.documentos-card {
-    grid-column: 2;
-    grid-row: 2;
-    min-width: 0;
 }
 
 .card-largura-total {
@@ -893,14 +942,19 @@ footer {
 @media (max-width: 900px) {
 
     .simulador-grid,
-    .simulador-grid-igual {
+    .simulador-grid-igual,
+    .antecipacao-grid {
         grid-template-columns: 1fr;
     }
 
     .formulario-card,
     .resultado-card,
     .tabela-card,
-    .documentos-card {
+    .documentos-card,
+    .antecipacao-formulario,
+    .antecipacao-resultado,
+    .antecipacao-tabela,
+    .antecipacao-documentos {
         grid-column: 1;
         grid-row: auto;
     }
@@ -953,7 +1007,8 @@ footer {
     }
 
     .simulador-grid,
-    .simulador-grid-igual {
+    .simulador-grid-igual,
+    .antecipacao-grid {
         padding-top: 18px;
     }
 
