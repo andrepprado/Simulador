@@ -6,13 +6,13 @@
 
 :root {
     --turquesa-principal: #00A091;
-    --verde-escuro: #004840;
-    --verde-claro: #e8f3f1;
-    --verde-destaque: #00a091;
+    --verde-escuro: #003640;
+    --verde-claro: #6699A1;
+    --verde-destaque: #00A091;
     --fundo: #f4f6f6;
     --branco: #ffffff;
-    --texto: #263238;
-    --texto-secundario: #667579;
+    --texto: #003640;
+    --texto-secundario: #33666E;
     --borda: #dce4e3;
     --erro: #c62828;
     --sombra: 0 8px 30px rgba(0, 55, 50, 0.08);
