@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Crédito Rural</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="topo">
+        <div class="container topo-conteudo">
+            <div>
+                <h1>Simulador de Crédito Rural</h1>
+                <p>Simule condições iniciais para operações de crédito rural.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container principal">
+        <section class="card formulario-card">
+            <div class="titulo-secao">
+                <h2>Dados da Simulação</h2>
+                <p>Preencha os dados abaixo para calcular uma estimativa.</p>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="finalidade">Finalidade</label>
+                    <select id="finalidade">
+                        <option value="custeio">Custeio</option>
+                        <option value="investimento">Investimento</option>
+                        <option value="comercializacao">Comercialização</option>
+                        <option value="industrializacao">Industrialização</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="linhaCredito">Linha de Crédito</label>
+                    <select id="linhaCredito"></select>
+                </div>
+
+                <div class="campo">
+                    <label for="atividade">Atividade Rural</label>
+                    <select id="atividade">
+                        <option value="agricultura">Agricultura</option>
+                        <option value="pecuaria">Pecuária</option>
+                        <option value="hortifruti">Hortifrúti</option>
+                        <option value="cafeicultura">Cafeicultura</option>
+                        <option value="avicultura">Avicultura</option>
+                        <option value="suinocultura">Suinocultura</option>
+                        <option value="outras">Outras</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="valorProjeto">Valor do Projeto</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="valorProjeto" value="100.000,00">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="recursosProprios">Recursos Próprios</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="recursosProprios" value="20.000,00">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="valorFinanciado">Valor Financiado</label>
+                    <div class="input-prefixo bloqueado">
+                        <span>R$</span>
+                        <input type="text" id="valorFinanciado" readonly>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="prazo">Prazo Total</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="prazo" min="1" value="60">
+                        <span>meses</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="carencia">Carência</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="carencia" min="0" value="12">
+                        <span>meses</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="taxa">Taxa de Juros</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="taxa" min="0" step="0.01" value="8.50">
+                        <span>% a.a.</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="periodicidade">Periodicidade</label>
+                    <select id="periodicidade">
+                        <option value="mensal">Mensal</option>
+                        <option value="trimestral">Trimestral</option>
+                        <option value="semestral">Semestral</option>
+                        <option value="anual">Anual</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="sistema">Sistema de Amortização</label>
+                    <select id="sistema">
+                        <option value="price">PRICE</option>
+                        <option value="sac">SAC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="acoes">
+                <button type="button" id="btnSimular">Simular Crédito</button>
+                <button type="button" id="btnLimpar" class="botao-secundario">Limpar</button>
+            </div>
+
+            <div class="aviso">
+                <strong>Atenção:</strong> esta simulação possui caráter meramente demonstrativo e não representa
+                proposta, aprovação ou condição definitiva de crédito.
+            </div>
+        </section>
+
+        <aside class="card resultado-card">
+            <div class="titulo-secao">
+                <h2>Resultado da Simulação</h2>
+                <p>Estimativa baseada nos dados informados.</p>
+            </div>
+
+            <div class="resultado-destaque">
+                <span>Valor Financiado</span>
+                <strong id="resultadoValorFinanciado">R$ 0,00</strong>
+            </div>
+
+            <div class="resultados-grid">
+                <div class="resultado-item">
+                    <span>Taxa</span>
+                    <strong id="resultadoTaxa">0,00% a.a.</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Prazo</span>
+                    <strong id="resultadoPrazo">0 meses</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Carência</span>
+                    <strong id="resultadoCarencia">0 meses</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Parcelas</span>
+                    <strong id="resultadoParcelas">0</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Primeira Parcela</span>
+                    <strong id="resultadoPrimeiraParcela">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Última Parcela</span>
+                    <strong id="resultadoUltimaParcela">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Total de Juros</span>
+                    <strong id="resultadoJuros">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Total Estimado</span>
+                    <strong id="resultadoTotal">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="linha-selecionada">
+                <span>Linha selecionada</span>
+                <strong id="resultadoLinha">-</strong>
+            </div>
+        </aside>
+    </main>
+
+    <section class="container">
+        <div class="card tabela-card">
+            <div class="titulo-secao">
+                <h2>Resumo das Parcelas</h2>
+                <p>Prévia das parcelas calculadas para a operação.</p>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parcela</th>
+                            <th>Saldo Inicial</th>
+                            <th>Amortização</th>
+                            <th>Juros</th>
+                            <th>Valor da Parcela</th>
+                            <th>Saldo Final</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaParcelas">
+                        <tr>
+                            <td colspan="6" class="sem-dados">Realize uma simulação para visualizar as parcelas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Simulador demonstrativo de Crédito Rural</p>
+        </div>
+    </footer>
+
+    <script src="simulador.js"></script>
+</body>
+
+</html>
