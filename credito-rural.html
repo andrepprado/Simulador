@@ -29,7 +29,7 @@
         </div>
     </nav>
 
-    <main class="container principal">
+    <main class="container simulador-grid">
         <section class="card formulario-card">
             <div class="titulo-secao">
                 <h2>Dados da Simulação</h2>
@@ -143,84 +143,66 @@
             </div>
         </section>
 
-        <div class="coluna-resultados">
-            <aside class="card resultado-card">
-                <div class="titulo-secao">
-                    <h2>Resultado da Simulação</h2>
-                    <p>Estimativa baseada nos dados informados.</p>
+        <aside class="card resultado-card">
+            <div class="titulo-secao">
+                <h2>Resultado da Simulação</h2>
+                <p>Estimativa baseada nos dados informados.</p>
+            </div>
+
+            <div class="resultado-destaque">
+                <span>Valor Financiado</span>
+                <strong id="resultadoValorFinanciado">R$ 0,00</strong>
+            </div>
+
+            <div class="resultados-grid">
+                <div class="resultado-item">
+                    <span>Taxa</span>
+                    <strong id="resultadoTaxa">0,00% a.a.</strong>
                 </div>
 
-                <div class="resultado-destaque">
-                    <span>Valor Financiado</span>
-                    <strong id="resultadoValorFinanciado">R$ 0,00</strong>
+                <div class="resultado-item">
+                    <span>Prazo</span>
+                    <strong id="resultadoPrazo">0 meses</strong>
                 </div>
 
-                <div class="resultados-grid">
-                    <div class="resultado-item">
-                        <span>Taxa</span>
-                        <strong id="resultadoTaxa">0,00% a.a.</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Prazo</span>
-                        <strong id="resultadoPrazo">0 meses</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Carência</span>
-                        <strong id="resultadoCarencia">0 meses</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Parcelas</span>
-                        <strong id="resultadoParcelas">0</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Primeira Parcela</span>
-                        <strong id="resultadoPrimeiraParcela">R$ 0,00</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Última Parcela</span>
-                        <strong id="resultadoUltimaParcela">R$ 0,00</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Total de Juros</span>
-                        <strong id="resultadoJuros">R$ 0,00</strong>
-                    </div>
-
-                    <div class="resultado-item">
-                        <span>Total Estimado</span>
-                        <strong id="resultadoTotal">R$ 0,00</strong>
-                    </div>
+                <div class="resultado-item">
+                    <span>Carência</span>
+                    <strong id="resultadoCarencia">0 meses</strong>
                 </div>
 
-                <div class="linha-selecionada">
-                    <span>Linha selecionada</span>
-                    <strong id="resultadoLinha">-</strong>
-                </div>
-            </aside>
-
-            <aside class="card documentos-card">
-                <div class="titulo-secao documentos-titulo">
-                    <h2>Documentos Necessários</h2>
-                    <p>Documentação orientativa para prosseguir com a operação selecionada.</p>
+                <div class="resultado-item">
+                    <span>Parcelas</span>
+                    <strong id="resultadoParcelas">0</strong>
                 </div>
 
-                <div id="listaDocumentos" class="lista-documentos"></div>
-
-                <div class="documentos-observacao">
-                    <strong>Importante:</strong> a documentação apresentada é apenas orientativa e poderá variar
-                    conforme o enquadramento, análise da operação, perfil do cooperado e demais condições aplicáveis.
+                <div class="resultado-item">
+                    <span>Primeira Parcela</span>
+                    <strong id="resultadoPrimeiraParcela">R$ 0,00</strong>
                 </div>
-            </aside>
-        </div>
-    </main>
 
-    <section class="container">
-        <div class="card tabela-card">
+                <div class="resultado-item">
+                    <span>Última Parcela</span>
+                    <strong id="resultadoUltimaParcela">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Total de Juros</span>
+                    <strong id="resultadoJuros">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Total Estimado</span>
+                    <strong id="resultadoTotal">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="linha-selecionada">
+                <span>Linha selecionada</span>
+                <strong id="resultadoLinha">-</strong>
+            </div>
+        </aside>
+
+        <section class="card tabela-card">
             <div class="titulo-secao">
                 <h2>Resumo das Parcelas</h2>
                 <p>Prévia das parcelas calculadas para a operação.</p>
@@ -238,15 +220,32 @@
                             <th>Saldo Final</th>
                         </tr>
                     </thead>
+
                     <tbody id="tabelaParcelas">
                         <tr>
-                            <td colspan="6" class="sem-dados">Realize uma simulação para visualizar as parcelas.</td>
+                            <td colspan="6" class="sem-dados">
+                                Realize uma simulação para visualizar as parcelas.
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <aside class="card documentos-card">
+            <div class="titulo-secao documentos-titulo">
+                <h2>Documentos Necessários</h2>
+                <p>Documentação orientativa para prosseguir com a operação selecionada.</p>
+            </div>
+
+            <div id="listaDocumentos" class="lista-documentos"></div>
+
+            <div class="documentos-observacao">
+                <strong>Importante:</strong> a documentação apresentada é apenas orientativa e poderá variar conforme o
+                enquadramento, análise da operação, perfil do cooperado e demais condições aplicáveis.
+            </div>
+        </aside>
+    </main>
 
     <footer>
         <div class="container">

@@ -144,6 +144,8 @@ a.menu-item:hover {
     cursor: default;
 }
 
+/* HOME */
+
 .home {
     padding-top: 44px;
     padding-bottom: 50px;
@@ -266,14 +268,18 @@ a.menu-item:hover {
     margin-top: auto;
 }
 
-.principal {
+/* GRID PRINCIPAL DO SIMULADOR */
+
+.simulador-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.85fr);
     gap: 24px;
     padding-top: 30px;
-    padding-bottom: 24px;
+    padding-bottom: 30px;
     align-items: start;
 }
+
+/* CARDS */
 
 .card {
     background: var(--branco);
@@ -288,6 +294,34 @@ a.menu-item:hover {
 .documentos-card {
     padding: 28px;
 }
+
+/* PRIMEIRA LINHA */
+
+.formulario-card {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.resultado-card {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+/* SEGUNDA LINHA */
+
+.tabela-card {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+}
+
+.documentos-card {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+}
+
+/* TÍTULOS */
 
 .titulo-secao {
     margin-bottom: 24px;
@@ -306,6 +340,8 @@ a.menu-item:hover {
     font-size: 14px;
     line-height: 1.5;
 }
+
+/* FORMULÁRIO */
 
 .grid-form {
     display: grid;
@@ -366,6 +402,8 @@ input[readonly] {
     cursor: default;
 }
 
+/* PREFIXOS E SUFIXOS */
+
 .input-prefixo,
 .input-sufixo {
     display: flex;
@@ -421,6 +459,8 @@ input[readonly] {
     background: #eef2f2;
 }
 
+/* BOTÕES */
+
 .acoes {
     display: flex;
     gap: 12px;
@@ -458,6 +498,8 @@ button {
     color: var(--branco);
 }
 
+/* AVISO */
+
 .aviso {
     margin-top: 22px;
     background: #fff8e5;
@@ -469,12 +511,7 @@ button {
     color: #665416;
 }
 
-.coluna-resultados {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    min-width: 0;
-}
+/* RESULTADOS */
 
 .resultado-destaque {
     background: linear-gradient(135deg, var(--turquesa), var(--turquesa-forte));
@@ -544,6 +581,8 @@ button {
     font-size: 14px;
 }
 
+/* DOCUMENTOS */
+
 .documentos-titulo {
     margin-bottom: 18px;
 }
@@ -608,11 +647,10 @@ button {
     line-height: 1.5;
 }
 
-.tabela-card {
-    margin-bottom: 30px;
-}
+/* TABELA */
 
 .tabela-wrapper {
+    width: 100%;
     overflow-x: auto;
     border-radius: 10px;
 }
@@ -620,7 +658,7 @@ button {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px;
+    min-width: 760px;
 }
 
 thead {
@@ -631,9 +669,10 @@ thead {
 th,
 td {
     text-align: right;
-    padding: 13px 14px;
+    padding: 13px 12px;
     border-bottom: 1px solid var(--borda);
-    font-size: 13px;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
 th:first-child,
@@ -655,6 +694,8 @@ tbody tr:hover {
     padding: 30px;
 }
 
+/* FOOTER */
+
 footer {
     border-top: 1px solid var(--borda);
     padding: 24px 0;
@@ -664,9 +705,34 @@ footer {
     background: var(--branco);
 }
 
+/* RESPONSIVIDADE */
+
 @media (max-width: 900px) {
-    .principal {
+    .simulador-grid {
         grid-template-columns: 1fr;
+    }
+
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card {
+        grid-column: 1;
+    }
+
+    .formulario-card {
+        grid-row: 1;
+    }
+
+    .resultado-card {
+        grid-row: 2;
+    }
+
+    .tabela-card {
+        grid-row: 3;
+    }
+
+    .documentos-card {
+        grid-row: 4;
     }
 
     .ferramentas-grid {
@@ -707,7 +773,7 @@ footer {
         white-space: nowrap;
     }
 
-    .principal {
+    .simulador-grid {
         padding-top: 18px;
     }
 
