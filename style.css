@@ -50,7 +50,10 @@ body {
 }
 
 .topo {
-    background: linear-gradient(135deg, var(--turquesa) 0%, var(--turquesa-forte) 38%, var(--verde-escuro) 100%);
+    background: linear-gradient(135deg,
+            var(--turquesa) 0%,
+            var(--turquesa-forte) 38%,
+            var(--verde-escuro) 100%);
     color: var(--branco);
     padding: 30px 0;
     box-shadow: 0 4px 18px rgba(0, 54, 64, 0.15);
@@ -132,11 +135,6 @@ a.menu-item:hover {
 .menu-item.ativo {
     color: var(--turquesa);
     border-bottom-color: var(--verde-claro);
-}
-
-.menu-bloqueado {
-    opacity: 0.45;
-    cursor: default;
 }
 
 .home {
@@ -309,7 +307,22 @@ a.menu-item:hover {
     margin-top: auto;
 }
 
-/* CRÉDITO RURAL */
+.card {
+    background: var(--branco);
+    border-radius: 16px;
+    border: 1px solid var(--borda);
+    box-shadow: var(--sombra);
+}
+
+.formulario-card,
+.resultado-card,
+.tabela-card,
+.documentos-card,
+.configuracao-card,
+.resumo-card,
+.cobranca-card {
+    padding: 28px;
+}
 
 .simulador-grid {
     display: grid;
@@ -342,8 +355,6 @@ a.menu-item:hover {
     min-width: 0;
 }
 
-/* ANTECIPAÇÃO SIPAG */
-
 .antecipacao-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
@@ -375,20 +386,6 @@ a.menu-item:hover {
     min-width: 0;
 }
 
-.antecipacao-tabela .tabela-wrapper,
-.antecipacao-documentos .tabela-wrapper {
-    width: 100%;
-}
-
-.antecipacao-tabela table,
-.antecipacao-documentos table {
-    width: 100%;
-}
-
-.antecipacao-documentos table {
-    min-width: 520px;
-}
-
 .simulador-grid-igual {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -398,24 +395,33 @@ a.menu-item:hover {
     align-items: start;
 }
 
-.card {
-    background: var(--branco);
-    border-radius: 16px;
-    border: 1px solid var(--borda);
-    box-shadow: var(--sombra);
-}
-
-.formulario-card,
-.resultado-card,
-.tabela-card,
-.documentos-card,
-.configuracao-card,
-.resumo-card {
-    padding: 28px;
-}
-
 .card-largura-total {
     grid-column: 1 / -1;
+}
+
+/* COBRANÇA */
+
+.cobranca-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
+}
+
+.cobranca-card-principal {
+    grid-column: 1 / -1;
+}
+
+.cobranca-card-largura-total {
+    grid-column: 1 / -1;
+}
+
+.cobranca-acoes {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: 0;
 }
 
 .titulo-secao {
@@ -436,10 +442,21 @@ a.menu-item:hover {
     line-height: 1.5;
 }
 
-.subtitulo-card {
+.titulo-subsecao {
+    margin-bottom: 17px;
+}
+
+.titulo-subsecao h3 {
     color: var(--verde-escuro);
     font-size: 16px;
-    margin-bottom: 14px;
+    line-height: 1.3;
+    margin-bottom: 5px;
+}
+
+.titulo-subsecao p {
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .grid-form {
@@ -470,6 +487,7 @@ a.menu-item:hover {
     font-size: 14px;
     font-weight: 700;
     color: var(--verde-escuro);
+    line-height: 1.35;
 }
 
 input,
@@ -564,10 +582,6 @@ input[readonly] {
     box-shadow: none !important;
 }
 
-.input-prefixo.bloqueado {
-    background: #eef2f2;
-}
-
 .acoes {
     display: flex;
     gap: 12px;
@@ -607,6 +621,13 @@ button {
     color: var(--branco);
 }
 
+.separador {
+    width: 100%;
+    height: 1px;
+    background: var(--borda);
+    margin: 24px 0;
+}
+
 .aviso {
     margin-top: 22px;
     background: #fff8e5;
@@ -629,8 +650,36 @@ button {
     color: var(--texto-secundario);
 }
 
+.indicador-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+.indicador-total strong {
+    color: var(--verde-escuro);
+    font-size: 14px;
+}
+
+.indicador-total strong.indicador-ok {
+    color: var(--sucesso);
+}
+
+.indicador-total strong.indicador-erro {
+    color: var(--erro);
+}
+
 .resultado-destaque {
-    background: linear-gradient(135deg, var(--turquesa), var(--turquesa-forte));
+    background: linear-gradient(135deg,
+            var(--turquesa),
+            var(--turquesa-forte));
     color: var(--branco);
     padding: 22px;
     border-radius: 14px;
@@ -650,6 +699,14 @@ button {
     color: var(--branco);
 }
 
+.resultado-destaque strong.valor-negativo {
+    color: #ffd0d0;
+}
+
+.resultado-destaque strong.valor-positivo {
+    color: var(--branco);
+}
+
 .resultados-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -659,6 +716,12 @@ button {
 .resultados-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.resultados-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
 }
 
@@ -681,6 +744,10 @@ button {
     display: block;
     color: var(--turquesa);
     font-size: 16px;
+}
+
+.resultado-item-neutro strong {
+    color: var(--verde-escuro);
 }
 
 .resultado-item.resultado-negativo strong {
@@ -711,13 +778,6 @@ button {
     font-size: 14px;
 }
 
-.separador {
-    width: 100%;
-    height: 1px;
-    background: var(--borda);
-    margin: 24px 0;
-}
-
 .tabela-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -746,7 +806,7 @@ td {
 
 th:first-child,
 td:first-child {
-    text-align: center;
+    text-align: left;
 }
 
 tbody tr:nth-child(even) {
@@ -755,6 +815,31 @@ tbody tr:nth-child(even) {
 
 tbody tr:hover {
     background: rgba(0, 160, 145, 0.07);
+}
+
+tfoot {
+    background: var(--fundo-secundario);
+}
+
+tfoot td {
+    font-weight: 700;
+    color: var(--verde-escuro);
+    border-top: 2px solid var(--borda-forte);
+    border-bottom: none;
+}
+
+.tabela-cobranca {
+    min-width: 700px;
+}
+
+.tabela-cobranca th:first-child,
+.tabela-cobranca td:first-child {
+    width: 46%;
+}
+
+.tabela-cobranca th:not(:first-child),
+.tabela-cobranca td:not(:first-child) {
+    text-align: right;
 }
 
 .sem-dados {
@@ -783,28 +868,6 @@ tbody tr:hover {
     height: 34px;
     font-size: 12px;
     text-align: right;
-}
-
-.status-carregamento {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 18px;
-    padding: 11px 13px;
-    border-radius: 8px;
-    background: rgba(0, 160, 145, 0.08);
-    color: var(--texto-secundario);
-    font-size: 12px;
-}
-
-.status-carregamento.erro {
-    background: rgba(198, 40, 40, 0.08);
-    color: var(--erro);
-}
-
-.status-carregamento.ok {
-    background: rgba(125, 182, 28, 0.11);
-    color: var(--sucesso);
 }
 
 .bloco-bandeira {
@@ -929,12 +992,10 @@ footer {
     background: var(--branco);
 }
 
-@media (max-width: 1000px) {
-    .grid-form-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+@media (max-width: 1100px) {
 
-    .resultados-grid-3 {
+    .grid-form-4,
+    .resultados-grid-4 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
@@ -943,7 +1004,8 @@ footer {
 
     .simulador-grid,
     .simulador-grid-igual,
-    .antecipacao-grid {
+    .antecipacao-grid,
+    .cobranca-grid {
         grid-template-columns: 1fr;
     }
 
@@ -954,7 +1016,10 @@ footer {
     .antecipacao-formulario,
     .antecipacao-resultado,
     .antecipacao-tabela,
-    .antecipacao-documentos {
+    .antecipacao-documentos,
+    .cobranca-card,
+    .cobranca-card-principal,
+    .cobranca-card-largura-total {
         grid-column: 1;
         grid-row: auto;
     }
@@ -1008,7 +1073,8 @@ footer {
 
     .simulador-grid,
     .simulador-grid-igual,
-    .antecipacao-grid {
+    .antecipacao-grid,
+    .cobranca-grid {
         padding-top: 18px;
     }
 
@@ -1017,7 +1083,8 @@ footer {
     .tabela-card,
     .documentos-card,
     .configuracao-card,
-    .resumo-card {
+    .resumo-card,
+    .cobranca-card {
         padding: 20px;
     }
 
@@ -1026,6 +1093,7 @@ footer {
     .grid-form-4,
     .resultados-grid,
     .resultados-grid-3,
+    .resultados-grid-4,
     .ferramentas-grid {
         grid-template-columns: 1fr;
     }
@@ -1036,6 +1104,11 @@ footer {
 
     button {
         width: 100%;
+    }
+
+    .indicador-total {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 

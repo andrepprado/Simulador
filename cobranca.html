@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Cobrança | Caixa de Ferramentas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="topo">
+        <div class="container topo-conteudo">
+            <div class="topo-textos">
+                <h1>Simulador de Cobrança</h1>
+                <p>Simule receitas financeiras, custos operacionais, tarifas e resultado da carteira de cobrança.</p>
+            </div>
+            <div class="topo-logo">
+                <img src="img/LOGO-SICOOB-Endos-Singular-mono-branco - Copia (2) 1 (1).png" alt="Sicoob">
+            </div>
+        </div>
+    </header>
+
+    <nav class="menu-principal">
+        <div class="container menu-conteudo">
+            <a href="index.html" class="menu-item">Início</a>
+            <a href="credito-rural.html" class="menu-item">Crédito Rural</a>
+            <a href="antecipacao-sipag.html" class="menu-item">Antecipação Sipag</a>
+            <a href="precificacao-sipag.html" class="menu-item">Precificação Sipag</a>
+            <a href="cobranca.html" class="menu-item ativo">Cobrança</a>
+        </div>
+    </nav>
+
+    <main class="container cobranca-grid">
+        <section class="card cobranca-card cobranca-card-principal">
+            <div class="titulo-secao">
+                <h2>Dados da Carteira</h2>
+                <p>Informe os dados da carteira de cobrança para realizar a simulação.</p>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="quantidadeBoletos">Quantidade de Boletos Emitidos Mensalmente</label>
+                    <input type="number" id="quantidadeBoletos" min="0" step="1" value="0">
+                </div>
+
+                <div class="campo">
+                    <label for="percentualLiquidados">% dos Títulos Emitidos Liquidados</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentualLiquidados" min="0" max="100" step="0.01" value="100">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="ticketMedio">Ticket Médio da Carteira</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="ticketMedio" value="0,00" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="titulo-subsecao">
+                <h3>Distribuição dos Títulos Liquidados</h3>
+                <p>Distribuição percentual por canal de liquidação.</p>
+            </div>
+
+            <div class="grid-form-4">
+                <div class="campo">
+                    <label for="percentRedeBancaria">Rede Bancária</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentRedeBancaria" min="0" max="100" step="0.01" value="46.08">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="percentRedeSicoob">Rede Sicoob</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentRedeSicoob" min="0" max="100" step="0.01" value="5.18">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="percentLiqPropria">Liq. Própria Cooperativa</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentLiqPropria" min="0" max="100" step="0.01" value="2.70">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="percentCorrespondente">Correspondente Bancário</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentCorrespondente" min="0" max="100" step="0.01" value="46.06">
+                        <span>%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="indicador-total">
+                <span>Total da Distribuição</span>
+                <strong id="totalDistribuicao">100,02%</strong>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="titulo-subsecao">
+                <h3>Títulos Baixados</h3>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="percentBaixaCedente">% Baixados por Pedido do Cedente</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentBaixaCedente" min="0" max="100" step="0.01" value="0">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="percentBaixaDecurso">% Baixados por Decurso de Prazo</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentBaixaDecurso" min="0" max="100" step="0.01" value="0">
+                        <span>%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card cobranca-card">
+            <div class="titulo-secao">
+                <h2>Funding</h2>
+                <p>Direcionadores utilizados na estimativa das receitas financeiras.</p>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="centralizacaoFinanceira">Centralização Financeira</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="centralizacaoFinanceira" min="0" max="100" step="0.01" value="100">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="percentualSaldoMedio">% de Saldo Médio</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="percentualSaldoMedio" min="0" max="100" step="0.01" value="0">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="taxaCdiAno">Taxa CDI no Ano</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="taxaCdiAno" min="0" step="0.01" value="15">
+                        <span>% a.a.</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="diasFloat">Dias de Float</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="diasFloat" min="0" step="1" value="0">
+                        <span>dias</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card cobranca-card">
+            <div class="titulo-secao">
+                <h2>Custos Gerais</h2>
+                <p>Valores praticados por boleto utilizados na composição dos custos operacionais.</p>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="custoRedeBancaria">Canais Físicos</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="custoRedeBancaria" value="0,31" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="custoRedeSicoob">Canais Digitais</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="custoRedeSicoob" value="0,20" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="custoLiqPropria">Liquidação Própria Cooperativa</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="custoLiqPropria" value="0,09" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="custoCorrespondente">Liquidação Correspondente Bancário</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="custoCorrespondente" value="1,83" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="custoProcessamento">Custo de Processamento por Boleto</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="custoProcessamento" value="0,05" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="custoTarifaNova">Custo Tarifa Nova Cobrança</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="custoTarifaNova" value="0,10" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="aviso-info">
+                (*) Custos gerais disponíveis nas condições operacionais básicas do Sicoob, sujeitos a alterações.
+            </div>
+        </section>
+
+        <section class="card cobranca-card cobranca-card-largura-total">
+            <div class="titulo-secao">
+                <h2>Tarifas Praticadas</h2>
+                <p>Informe as tarifas cobradas do cooperado para cada evento da carteira.</p>
+            </div>
+
+            <div class="grid-form-4">
+                <div class="campo">
+                    <label for="tarifaDecurso">Tarifa por Decurso de Prazo</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="tarifaDecurso" value="0,00" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="tarifaBaixaCedente">Tarifa Baixa Pedido Cedente</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="tarifaBaixaCedente" value="0,00" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="tarifaLiquidacao">Tarifa Liquidação do Título</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="tarifaLiquidacao" value="0,00" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="tarifaEntrada">Tarifa Entrada do Título</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="tarifaEntrada" value="0,00" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card cobranca-card cobranca-card-largura-total">
+            <div class="titulo-secao">
+                <h2>Resultado da Simulação</h2>
+                <p>Resumo financeiro mensal e anual da carteira de cobrança.</p>
+            </div>
+
+            <div class="resultado-destaque">
+                <span>Resultado Líquido Mensal</span>
+                <strong id="resultadoMensal">R$ 0,00</strong>
+            </div>
+
+            <div class="resultados-grid-4">
+                <div class="resultado-item">
+                    <span>Receita Financeira</span>
+                    <strong id="receitaFinanceira">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Receita de Tarifas</span>
+                    <strong id="receitaTarifas">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Custos Operacionais</span>
+                    <strong id="custosOperacionais">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Resultado Anual</span>
+                    <strong id="resultadoAnual">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="titulo-subsecao">
+                <h3>Receitas Financeiras</h3>
+            </div>
+
+            <div class="resultados-grid-4">
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Boletos Liquidados</span>
+                    <strong id="qtdLiquidados">0</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Saldo Médio da Carteira</span>
+                    <strong id="saldoMedio">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>CDI Mensal Equivalente</span>
+                    <strong id="taxaCdiMensal">0,00%</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Receita sobre Saldo Médio</span>
+                    <strong id="receitaSaldoMedio">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Taxa Auferida no Float</span>
+                    <strong id="taxaFloat">0,00%</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Receita de Float</span>
+                    <strong id="receitaFloat">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Receita por Boleto Liquidado</span>
+                    <strong id="receitaPorBoleto">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item resultado-item-neutro">
+                    <span>Custo Médio por Boleto Emitido</span>
+                    <strong id="custoMedioBoleto">R$ 0,00</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="card cobranca-card cobranca-card-largura-total">
+            <div class="titulo-secao">
+                <h2>Custos por Canal</h2>
+                <p>Detalhamento das quantidades, custos unitários e custos totais da carteira.</p>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table class="tabela-cobranca">
+                    <thead>
+                        <tr>
+                            <th>Evento / Canal</th>
+                            <th>Quantidade</th>
+                            <th>Custo Unitário</th>
+                            <th>Custo Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Rede Bancária / Canais Físicos</td>
+                            <td id="qtdRedeBancaria">0</td>
+                            <td id="unitRedeBancaria">R$ 0,31</td>
+                            <td id="totalRedeBancaria">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Rede Sicoob / Canais Digitais</td>
+                            <td id="qtdRedeSicoob">0</td>
+                            <td id="unitRedeSicoob">R$ 0,20</td>
+                            <td id="totalRedeSicoob">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Liquidação Própria Cooperativa</td>
+                            <td id="qtdLiqPropria">0</td>
+                            <td id="unitLiqPropria">R$ 0,09</td>
+                            <td id="totalLiqPropria">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Correspondente Bancário</td>
+                            <td id="qtdCorrespondente">0</td>
+                            <td id="unitCorrespondente">R$ 1,83</td>
+                            <td id="totalCorrespondente">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Processamento</td>
+                            <td id="qtdProcessamento">0</td>
+                            <td id="unitProcessamento">R$ 0,05</td>
+                            <td id="totalProcessamento">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Tarifa Nova Cobrança</td>
+                            <td id="qtdTarifaNova">0</td>
+                            <td id="unitTarifaNova">R$ 0,10</td>
+                            <td id="totalTarifaNova">R$ 0,00</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Custos Operacionais Totais</td>
+                            <td id="totalCustosTabela">R$ 0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <section class="card cobranca-card cobranca-card-largura-total">
+            <div class="titulo-secao">
+                <h2>Receitas de Tarifas</h2>
+                <p>Detalhamento das tarifas cobradas conforme ocorrência dos eventos.</p>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table class="tabela-cobranca">
+                    <thead>
+                        <tr>
+                            <th>Tarifa</th>
+                            <th>Quantidade / Base</th>
+                            <th>Tarifa Unitária</th>
+                            <th>Receita Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Decurso de Prazo</td>
+                            <td id="baseTarifaDecurso">0</td>
+                            <td id="unitTarifaDecurso">R$ 0,00</td>
+                            <td id="totalTarifaDecurso">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Baixa a Pedido do Cedente</td>
+                            <td id="baseTarifaCedente">0</td>
+                            <td id="unitTarifaCedente">R$ 0,00</td>
+                            <td id="totalTarifaCedente">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Liquidação do Título</td>
+                            <td id="baseTarifaLiquidacao">0</td>
+                            <td id="unitTarifaLiquidacao">R$ 0,00</td>
+                            <td id="totalTarifaLiquidacao">R$ 0,00</td>
+                        </tr>
+
+                        <tr>
+                            <td>Entrada do Título</td>
+                            <td id="baseTarifaEntrada">0</td>
+                            <td id="unitTarifaEntrada">R$ 0,00</td>
+                            <td id="totalTarifaEntrada">R$ 0,00</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Receitas Totais de Tarifas</td>
+                            <td id="totalReceitaTarifasTabela">R$ 0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <div class="acoes cobranca-acoes">
+            <button type="button" class="botao-secundario" id="btnLimpar">Limpar Simulação</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Caixa de Ferramentas | Produtos e Serviços | Cobrança</p>
+        </div>
+    </footer>
+
+    <script src="js/cobranca.js"></script>
+</body>
+
+</html>
