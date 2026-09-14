@@ -1532,3 +1532,65 @@ footer {
         min-height: auto;
     }
 }
+
+/* =========================================================
+   BOTÃO IMPRIMIR / SALVAR PDF
+   ========================================================= */
+
+.botao-impressao-pdf {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--verde-escuro, #003640);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0, 54, 64, 0.22);
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.botao-impressao-pdf:hover {
+    background: var(--turquesa, #00A091);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0, 54, 64, 0.28);
+}
+
+.botao-impressao-pdf:active {
+    transform: translateY(0);
+}
+
+.botao-impressao-pdf:focus-visible {
+    outline: 3px solid var(--verde-claro, #C9D200);
+    outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+    .botao-impressao-pdf {
+        right: 16px;
+        bottom: 16px;
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: 13px;
+    }
+}
+
+@media print {
+    .botao-impressao-pdf {
+        display: none !important;
+    }
+}
