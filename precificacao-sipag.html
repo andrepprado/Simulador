@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precificação Sipag 2.0 | Caixa de Ferramentas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="topo">
+        <div class="container topo-conteudo">
+            <div class="topo-textos">
+                <h1>Simulador de Precificação Sipag 2.0</h1>
+                <p>Simule condições comerciais, MDR, antecipação, equipamentos e resultado financeiro.</p>
+            </div>
+            <div class="topo-logo">
+                <img src="img/LOGO-SICOOB-Endos-Singular-mono-branco - Copia (2) 1 (1).png" alt="Sicoob">
+            </div>
+        </div>
+    </header>
+
+    <nav class="menu-principal">
+        <div class="container menu-conteudo">
+            <a href="index.html" class="menu-item">Início</a>
+            <a href="credito-rural.html" class="menu-item">Crédito Rural</a>
+            <a href="antecipacao-sipag.html" class="menu-item">Antecipação Sipag</a>
+            <a href="precificacao-sipag.html" class="menu-item ativo">Precificação Sipag</a>
+        </div>
+    </nav>
+
+    <main class="container simulador-grid-igual">
+        <section class="card configuracao-card card-largura-total">
+            <div class="titulo-secao">
+                <h2>Dados da Negociação</h2>
+                <p>Informe os dados utilizados para enquadramento e cálculo da negociação.</p>
+            </div>
+
+            <div id="statusBaseSipag" class="status-carregamento">
+                Carregando base de parametrização Sipag...
+            </div>
+
+            <div class="grid-form-4">
+                <div class="campo">
+                    <label for="cnaeSipag">CNAE</label>
+                    <input type="text" id="cnaeSipag" placeholder="Ex.: 4711302">
+                </div>
+
+                <div class="campo">
+                    <label for="mccSipag">MCC</label>
+                    <input type="text" id="mccSipag" placeholder="Ex.: 5411">
+                </div>
+
+                <div class="campo">
+                    <label for="segmentoSipag">Segmento</label>
+                    <input type="text" id="segmentoSipag" readonly>
+                </div>
+
+                <div class="campo">
+                    <label for="tipoPrecificacao">Tipo de Precificação</label>
+                    <select id="tipoPrecificacao">
+                        <option value="FD">Sipag 2.0 / FD</option>
+                        <option value="Sipaguinha">Sipaguinha</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="faturamentoMensal">Faturamento Mensal</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="faturamentoMensal" value="100.000,00">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="faturamentoAnual">Faturamento Anual</label>
+                    <div class="input-prefixo bloqueado">
+                        <span>R$</span>
+                        <input type="text" id="faturamentoAnual" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aviso-info">
+                O MCC e as tabelas internas de custo/intercâmbio são carregados diretamente da base de parametrização da
+                planilha Sipag.
+            </div>
+        </section>
+
+        <section class="card card-largura-total configuracao-card">
+            <div class="titulo-secao">
+                <h2>Percentuais de Faturamento</h2>
+                <p>Informe o percentual de faturamento por bandeira e modalidade. A soma total deve corresponder a 100%.
+                </p>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table class="tabela-mix">
+                    <thead>
+                        <tr>
+                            <th>Bandeira</th>
+                            <th>Débito</th>
+                            <th>Crédito à Vista</th>
+                            <th>Parcelado 2 a 6</th>
+                            <th>Parcelado 7 a 21</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaMixSipag"></tbody>
+                </table>
+            </div>
+
+            <div class="linha-selecionada">
+                <span>Total do Mix de Faturamento</span>
+                <strong id="totalMixSipag">0,00%</strong>
+            </div>
+        </section>
+
+        <section class="card card-largura-total configuracao-card">
+            <div class="titulo-secao">
+                <h2>Taxas Solicitadas</h2>
+                <p>Informe as taxas MDR negociadas por bandeira e modalidade.</p>
+            </div>
+
+            <div id="blocosTaxasSipag"></div>
+        </section>
+
+        <section class="card configuracao-card">
+            <div class="titulo-secao">
+                <h2>Antecipação</h2>
+                <p>Informe as condições esperadas para antecipação de recebíveis.</p>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="volumeAntecipado">Volume Antecipado</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="volumeAntecipado" value="0,00">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="taxaAntecipacaoPrecificacao">Taxa</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="taxaAntecipacaoPrecificacao" value="0" min="0" step="0.01">
+                        <span>% a.m.</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="durationAntecipacao">Duration</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="durationAntecipacao" value="0" min="0">
+                        <span>dias</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card configuracao-card">
+            <div class="titulo-secao">
+                <h2>Equipamentos</h2>
+                <p>Informe quantidades e condições propostas de aluguel.</p>
+            </div>
+
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="qtdSmartPos">Smart POS - Quantidade</label>
+                    <input type="number" id="qtdSmartPos" min="0" value="0">
+                </div>
+
+                <div class="campo">
+                    <label for="valorSmartPos">Smart POS - Valor Proposto</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="valorSmartPos" value="0,00">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="mesesSmartPos">Smart POS - Período</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="mesesSmartPos" min="0" value="0">
+                        <span>meses</span>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="qtdPinPad">PinPad - Quantidade</label>
+                    <input type="number" id="qtdPinPad" min="0" value="0">
+                </div>
+
+                <div class="campo">
+                    <label for="valorPinPad">PinPad - Valor Proposto</label>
+                    <div class="input-prefixo">
+                        <span>R$</span>
+                        <input type="text" id="valorPinPad" value="0,00">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="mesesPinPad">PinPad - Período</label>
+                    <div class="input-sufixo">
+                        <input type="number" id="mesesPinPad" min="0" value="0">
+                        <span>meses</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card resumo-card card-largura-total">
+            <div class="titulo-secao">
+                <h2>Resultado Financeiro</h2>
+                <p>Resultado consolidado da negociação simulada.</p>
+            </div>
+
+            <div class="resultado-destaque">
+                <span>Resultado Final Mensal</span>
+                <strong id="resultadoFinalMensal">R$ 0,00</strong>
+            </div>
+
+            <div class="resultados-grid-3">
+                <div class="resultado-item">
+                    <span>NET MDR Mensal</span>
+                    <strong id="resultadoNetMdr">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Antecipação Mensal</span>
+                    <strong id="resultadoAntecipacao">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Impacto Equipamentos</span>
+                    <strong id="resultadoEquipamentos">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Resultado Anual</span>
+                    <strong id="resultadoFinalAnual">R$ 0,00</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Payback</span>
+                    <strong id="resultadoPayback">-</strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Custo Operacional</span>
+                    <strong id="resultadoCustoOperacional">0,0000%</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="card card-largura-total tabela-card">
+            <div class="titulo-secao">
+                <h2>Resultado por Bandeira</h2>
+                <p>Detalhamento do NET MDR estimado por modalidade.</p>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bandeira</th>
+                            <th>Débito</th>
+                            <th>Crédito à Vista</th>
+                            <th>2 a 6</th>
+                            <th>7 a 21</th>
+                            <th>Resultado Mensal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaResultadoBandeiras"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Caixa de Ferramentas | Produtos e Serviços | Precificação Sipag</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="js/precificacao-sipag.js"></script>
+</body>
+
+</html>

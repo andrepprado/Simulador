@@ -16,15 +16,9 @@
     --verde-claro: #C9D200;
     --verde-claro-suave: #DCE633;
     --verde-claro-mais-suave: #E6F266;
-    --verde-claro-forte: #FFFF00;
     --verde-medio: #7DB61C;
     --verde-medio-claro: #A3D14D;
-    --verde-medio-mais-claro: #BCE27F;
-    --verde-medio-forte: #99CC33;
     --roxo: #49479D;
-    --roxo-claro: #7A79C2;
-    --roxo-mais-claro: #A3A2D6;
-    --roxo-forte: #6666CC;
     --fundo: #f4f6f6;
     --fundo-secundario: #eef4f3;
     --branco: #ffffff;
@@ -34,6 +28,7 @@
     --borda-forte: #cbd7d5;
     --erro: #c62828;
     --aviso: #e0a500;
+    --sucesso: #4f8f12;
     --sombra: 0 8px 30px rgba(0, 54, 64, 0.08);
     --sombra-hover: 0 12px 36px rgba(0, 54, 64, 0.12);
 }
@@ -53,8 +48,6 @@ body {
     width: min(1200px, calc(100% - 40px));
     margin: 0 auto;
 }
-
-/* TOPO */
 
 .topo {
     background: linear-gradient(135deg, var(--turquesa) 0%, var(--turquesa-forte) 38%, var(--verde-escuro) 100%);
@@ -105,8 +98,6 @@ body {
     object-fit: contain;
 }
 
-/* MENU */
-
 .menu-principal {
     background: var(--branco);
     border-bottom: 1px solid var(--borda);
@@ -148,8 +139,6 @@ a.menu-item:hover {
     cursor: default;
 }
 
-/* HOME */
-
 .home {
     padding-top: 44px;
     padding-bottom: 50px;
@@ -157,10 +146,11 @@ a.menu-item:hover {
 
 .home-apresentacao {
     max-width: 720px;
-    margin-bottom: 30px;
+    margin-bottom: 38px;
 }
 
-.home-etiqueta {
+.home-etiqueta,
+.categoria-etiqueta {
     display: inline-flex;
     background: rgba(0, 160, 145, 0.1);
     color: var(--turquesa);
@@ -172,19 +162,34 @@ a.menu-item:hover {
     margin-bottom: 14px;
 }
 
-.home-apresentacao h2 {
+.home-apresentacao h2,
+.categoria-titulo h2 {
     font-size: 30px;
     color: var(--verde-escuro);
     margin-bottom: 10px;
 }
 
-.home-apresentacao p {
+.home-apresentacao p,
+.categoria-titulo p {
     color: var(--texto-secundario);
     font-size: 15px;
     line-height: 1.6;
 }
 
-/* CARDS DAS FERRAMENTAS */
+.categoria-ferramentas {
+    margin-bottom: 48px;
+}
+
+.categoria-titulo {
+    margin-bottom: 22px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid var(--borda);
+}
+
+.categoria-titulo h2 {
+    font-size: 23px;
+    margin-bottom: 5px;
+}
 
 .ferramentas-grid {
     display: grid;
@@ -216,8 +221,6 @@ a.menu-item:hover {
     opacity: 0.7;
 }
 
-/* ÍCONE PADRÃO - FERRAMENTAS SEM IMAGEM */
-
 .ferramenta-icone {
     display: flex;
     align-items: center;
@@ -241,12 +244,10 @@ a.menu-item:hover {
     width: 100%;
     height: 100%;
     color: var(--branco);
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 1;
 }
-
-/* ÍCONE COM IMAGEM */
 
 .ferramenta-icone.ferramenta-icone-imagem {
     width: 64px;
@@ -264,8 +265,6 @@ a.menu-item:hover {
     height: 100%;
     object-fit: contain;
 }
-
-/* CONTEÚDO DOS CARDS */
 
 .ferramenta-conteudo {
     display: flex;
@@ -310,8 +309,6 @@ a.menu-item:hover {
     margin-top: auto;
 }
 
-/* GRID DO SIMULADOR */
-
 .simulador-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.85fr);
@@ -321,7 +318,14 @@ a.menu-item:hover {
     align-items: start;
 }
 
-/* CARDS DO SIMULADOR */
+.simulador-grid-igual {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
+}
 
 .card {
     background: var(--branco);
@@ -333,7 +337,9 @@ a.menu-item:hover {
 .formulario-card,
 .resultado-card,
 .tabela-card,
-.documentos-card {
+.documentos-card,
+.configuracao-card,
+.resumo-card {
     padding: 28px;
 }
 
@@ -359,7 +365,9 @@ a.menu-item:hover {
     min-width: 0;
 }
 
-/* TÍTULOS */
+.card-largura-total {
+    grid-column: 1 / -1;
+}
 
 .titulo-secao {
     margin-bottom: 24px;
@@ -379,12 +387,28 @@ a.menu-item:hover {
     line-height: 1.5;
 }
 
-/* FORMULÁRIO */
+.subtitulo-card {
+    color: var(--verde-escuro);
+    font-size: 16px;
+    margin-bottom: 14px;
+}
 
 .grid-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
+}
+
+.grid-form-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.grid-form-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
 }
 
 .campo {
@@ -439,8 +463,6 @@ input[readonly] {
     color: var(--texto-secundario);
     cursor: default;
 }
-
-/* INPUTS COM PREFIXO/SUFIXO */
 
 .input-prefixo,
 .input-sufixo {
@@ -497,8 +519,6 @@ input[readonly] {
     background: #eef2f2;
 }
 
-/* BOTÕES */
-
 .acoes {
     display: flex;
     gap: 12px;
@@ -516,11 +536,13 @@ button {
     transition: 0.2s ease;
 }
 
+.btn-principal,
 #btnSimular {
     background: var(--turquesa);
     color: var(--branco);
 }
 
+.btn-principal:hover,
 #btnSimular:hover {
     background: var(--verde-escuro);
     transform: translateY(-1px);
@@ -536,8 +558,6 @@ button {
     color: var(--branco);
 }
 
-/* AVISO */
-
 .aviso {
     margin-top: 22px;
     background: #fff8e5;
@@ -549,7 +569,16 @@ button {
     color: #665416;
 }
 
-/* RESULTADO */
+.aviso-info {
+    margin-top: 18px;
+    background: rgba(0, 160, 145, 0.07);
+    border-left: 4px solid var(--turquesa);
+    padding: 13px 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--texto-secundario);
+}
 
 .resultado-destaque {
     background: linear-gradient(135deg, var(--turquesa), var(--turquesa-forte));
@@ -578,6 +607,12 @@ button {
     gap: 12px;
 }
 
+.resultados-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
 .resultado-item {
     border: 1px solid var(--borda);
     border-radius: 11px;
@@ -597,6 +632,14 @@ button {
     display: block;
     color: var(--turquesa);
     font-size: 16px;
+}
+
+.resultado-item.resultado-negativo strong {
+    color: var(--erro);
+}
+
+.resultado-item.resultado-positivo strong {
+    color: var(--sucesso);
 }
 
 .linha-selecionada {
@@ -619,7 +662,150 @@ button {
     font-size: 14px;
 }
 
-/* DOCUMENTOS */
+.separador {
+    width: 100%;
+    height: 1px;
+    background: var(--borda);
+    margin: 24px 0;
+}
+
+.tabela-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+}
+
+thead {
+    background: var(--verde-escuro);
+    color: var(--branco);
+}
+
+th,
+td {
+    text-align: right;
+    padding: 13px 12px;
+    border-bottom: 1px solid var(--borda);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background: #fafcfc;
+}
+
+tbody tr:hover {
+    background: rgba(0, 160, 145, 0.07);
+}
+
+.sem-dados {
+    text-align: center !important;
+    color: var(--texto-secundario);
+    padding: 30px;
+}
+
+.tabela-input {
+    min-width: 80px;
+}
+
+.tabela-input input {
+    height: 34px;
+    font-size: 12px;
+    padding: 0 7px;
+    text-align: right;
+}
+
+.tabela-mix {
+    min-width: 720px;
+}
+
+.tabela-mix input {
+    width: 82px;
+    height: 34px;
+    font-size: 12px;
+    text-align: right;
+}
+
+.status-carregamento {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 11px 13px;
+    border-radius: 8px;
+    background: rgba(0, 160, 145, 0.08);
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+.status-carregamento.erro {
+    background: rgba(198, 40, 40, 0.08);
+    color: var(--erro);
+}
+
+.status-carregamento.ok {
+    background: rgba(125, 182, 28, 0.11);
+    color: var(--sucesso);
+}
+
+.bloco-bandeira {
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.bloco-bandeira:last-child {
+    margin-bottom: 0;
+}
+
+.bloco-bandeira-titulo {
+    background: var(--verde-escuro);
+    color: var(--branco);
+    padding: 11px 14px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.bloco-bandeira-conteudo {
+    overflow-x: auto;
+}
+
+.tabela-taxas {
+    min-width: 650px;
+}
+
+.tabela-taxas th {
+    background: #eef4f3;
+    color: var(--verde-escuro);
+}
+
+.tabela-taxas td,
+.tabela-taxas th {
+    text-align: right;
+}
+
+.tabela-taxas td:first-child,
+.tabela-taxas th:first-child {
+    text-align: left;
+}
+
+.tabela-taxas input {
+    height: 34px;
+    width: 90px;
+    font-size: 12px;
+    text-align: right;
+}
 
 .documentos-titulo {
     margin-bottom: 18px;
@@ -685,55 +871,6 @@ button {
     line-height: 1.5;
 }
 
-/* TABELA */
-
-.tabela-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    border-radius: 10px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 760px;
-}
-
-thead {
-    background: var(--verde-escuro);
-    color: var(--branco);
-}
-
-th,
-td {
-    text-align: right;
-    padding: 13px 12px;
-    border-bottom: 1px solid var(--borda);
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-th:first-child,
-td:first-child {
-    text-align: center;
-}
-
-tbody tr:nth-child(even) {
-    background: #fafcfc;
-}
-
-tbody tr:hover {
-    background: rgba(0, 160, 145, 0.07);
-}
-
-.sem-dados {
-    text-align: center !important;
-    color: var(--texto-secundario);
-    padding: 30px;
-}
-
-/* FOOTER */
-
 footer {
     border-top: 1px solid var(--borda);
     padding: 24px 0;
@@ -743,10 +880,20 @@ footer {
     background: var(--branco);
 }
 
-/* RESPONSIVIDADE */
+@media (max-width: 1000px) {
+    .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resultados-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
 
 @media (max-width: 900px) {
-    .simulador-grid {
+
+    .simulador-grid,
+    .simulador-grid-igual {
         grid-template-columns: 1fr;
     }
 
@@ -755,22 +902,7 @@ footer {
     .tabela-card,
     .documentos-card {
         grid-column: 1;
-    }
-
-    .formulario-card {
-        grid-row: 1;
-    }
-
-    .resultado-card {
-        grid-row: 2;
-    }
-
-    .tabela-card {
-        grid-row: 3;
-    }
-
-    .documentos-card {
-        grid-row: 4;
+        grid-row: auto;
     }
 
     .ferramentas-grid {
@@ -820,19 +952,25 @@ footer {
         font-size: 25px;
     }
 
-    .simulador-grid {
+    .simulador-grid,
+    .simulador-grid-igual {
         padding-top: 18px;
     }
 
     .formulario-card,
     .resultado-card,
     .tabela-card,
-    .documentos-card {
+    .documentos-card,
+    .configuracao-card,
+    .resumo-card {
         padding: 20px;
     }
 
     .grid-form,
+    .grid-form-3,
+    .grid-form-4,
     .resultados-grid,
+    .resultados-grid-3,
     .ferramentas-grid {
         grid-template-columns: 1fr;
     }

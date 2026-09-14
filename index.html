@@ -25,7 +25,7 @@
         <div class="container menu-conteudo">
             <a href="index.html" class="menu-item ativo">Início</a>
             <a href="credito-rural.html" class="menu-item">Crédito Rural</a>
-            <span class="menu-item menu-bloqueado">Novas Ferramentas</span>
+            <a href="#produtos-servicos" class="menu-item">Produtos e Serviços</a>
         </div>
     </nav>
 
@@ -36,41 +36,88 @@
             <p>Utilize os recursos disponíveis para consultar, simular e apoiar a tomada de decisão nas operações.</p>
         </section>
 
-        <section class="ferramentas-grid">
-            <a href="credito-rural.html" class="ferramenta-card ferramenta-disponivel">
-                <div class="ferramenta-icone ferramenta-icone-imagem">
-                    <img src="img/simuladorCredito.png" alt="Crédito Rural">
-                </div>
-                <div class="ferramenta-conteudo">
-                    <span class="ferramenta-status">Disponível</span>
-                    <h3>Simulador de Crédito Rural</h3>
-                    <p>Simule operações de crédito rural, consulte condições estimadas e visualize a documentação
-                        necessária.</p>
-                    <span class="ferramenta-link">Acessar ferramenta →</span>
-                </div>
-            </a>
-
-            <div class="ferramenta-card ferramenta-indisponivel">
-                <div class="ferramenta-icone">
-                    <span>+</span>
-                </div>
-                <div class="ferramenta-conteudo">
-                    <span class="ferramenta-status status-futuro">Em breve</span>
-                    <h3>Nova Ferramenta</h3>
-                    <p>Espaço preparado para inclusão de novos simuladores e recursos internos.</p>
-                    <span class="ferramenta-link">Em desenvolvimento</span>
+        <section class="categoria-ferramentas">
+            <div class="categoria-titulo">
+                <div>
+                    <span class="categoria-etiqueta">Crédito</span>
+                    <h2>Simuladores de Crédito</h2>
                 </div>
             </div>
 
-            <div class="ferramenta-card ferramenta-indisponivel">
-                <div class="ferramenta-icone">
-                    <span>+</span>
+            <div class="ferramentas-grid">
+                <a href="credito-rural.html" class="ferramenta-card ferramenta-disponivel">
+                    <div class="ferramenta-icone ferramenta-icone-imagem">
+                        <img src="img/icone-credito-rural.png" alt="Crédito Rural">
+                    </div>
+                    <div class="ferramenta-conteudo">
+                        <span class="ferramenta-status">Disponível</span>
+                        <h3>Simulador de Crédito Rural</h3>
+                        <p>Simule operações de crédito rural, consulte condições estimadas e visualize a documentação
+                            necessária.</p>
+                        <span class="ferramenta-link">Acessar ferramenta →</span>
+                    </div>
+                </a>
+
+                <div class="ferramenta-card ferramenta-indisponivel">
+                    <div class="ferramenta-icone">
+                        <span>+</span>
+                    </div>
+                    <div class="ferramenta-conteudo">
+                        <span class="ferramenta-status status-futuro">Em breve</span>
+                        <h3>Nova Ferramenta</h3>
+                        <p>Espaço preparado para inclusão de novos simuladores relacionados às operações de crédito.</p>
+                        <span class="ferramenta-link">Em desenvolvimento</span>
+                    </div>
                 </div>
-                <div class="ferramenta-conteudo">
-                    <span class="ferramenta-status status-futuro">Em breve</span>
-                    <h3>Nova Ferramenta</h3>
-                    <p>Espaço preparado para inclusão de novas funcionalidades na caixa de ferramentas.</p>
-                    <span class="ferramenta-link">Em desenvolvimento</span>
+            </div>
+        </section>
+
+        <section class="categoria-ferramentas" id="produtos-servicos">
+            <div class="categoria-titulo">
+                <div>
+                    <span class="categoria-etiqueta">Produtos e Serviços</span>
+                    <h2>Ferramentas Sipag</h2>
+                    <p>Simuladores para apoio às negociações, antecipação e precificação Sipag.</p>
+                </div>
+            </div>
+
+            <div class="ferramentas-grid">
+                <a href="antecipacao-sipag.html" class="ferramenta-card ferramenta-disponivel">
+                    <div class="ferramenta-icone">
+                        <span>A</span>
+                    </div>
+                    <div class="ferramenta-conteudo">
+                        <span class="ferramenta-status">Disponível</span>
+                        <h3>Antecipação Sipag 2.0</h3>
+                        <p>Calcule o valor líquido antecipado, deságio, MDR e taxa final considerando quantidade de
+                            parcelas e prazo.</p>
+                        <span class="ferramenta-link">Acessar ferramenta →</span>
+                    </div>
+                </a>
+
+                <a href="precificacao-sipag.html" class="ferramenta-card ferramenta-disponivel">
+                    <div class="ferramenta-icone">
+                        <span>P</span>
+                    </div>
+                    <div class="ferramenta-conteudo">
+                        <span class="ferramenta-status">Disponível</span>
+                        <h3>Precificação Sipag 2.0</h3>
+                        <p>Simule taxas MDR, mix de faturamento, antecipação, custos, equipamentos, resultado financeiro
+                            e payback.</p>
+                        <span class="ferramenta-link">Acessar ferramenta →</span>
+                    </div>
+                </a>
+
+                <div class="ferramenta-card ferramenta-indisponivel">
+                    <div class="ferramenta-icone">
+                        <span>+</span>
+                    </div>
+                    <div class="ferramenta-conteudo">
+                        <span class="ferramenta-status status-futuro">Em breve</span>
+                        <h3>Nova Ferramenta</h3>
+                        <p>Espaço preparado para novas funcionalidades da área de Produtos e Serviços.</p>
+                        <span class="ferramenta-link">Em desenvolvimento</span>
+                    </div>
                 </div>
             </div>
         </section>
