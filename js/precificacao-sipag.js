@@ -7,29 +7,20 @@ const BANDEIRAS = [
 ];
 
 const MODALIDADES = [
-    { id: "debito", nome: "Débito", range: "Debit" },
-    { id: "credito", nome: "Crédito à Vista", range: "Credit" },
-    { id: "parcelado26", nome: "Parcelado 2 a 6", range: "Installment < 6 Faturamento" },
-    { id: "parcelado721", nome: "Parcelado 7 a 21", range: "Installment > 6 Faturamento" }
+    { id: "debito", nome: "Débito", produtoIc: "Debit" },
+    { id: "credito", nome: "Crédito à Vista", produtoIc: "Credit" },
+    { id: "parcelado26", nome: "Parcelado 2 a 6", produtoIc: "Installment < 6 Faturamento" },
+    { id: "parcelado721", nome: "Parcelado 7 a 21", produtoIc: "Installment > 6 Faturamento" }
 ];
 
-const PLANILHA_BASE = "dados/precificacao-sipag.xlsm";
-
-let baseCarregada = false;
-let dadosCnae = [];
-let dadosIcNovo = [];
-let dadosCusto = [];
-let equipamentos = {};
-let parametrosFinanceiros = {
-    fatorResultadoAntecipacao: 1,
-    cdiAnual: 0.145,
-    funding: 1.01,
-    impostoAntecipacao: 0,
-    custoProcessamentoNormal: 0.0022,
-    custoProcessamentoGrande: 0.0019
+const NOMES_BANDEIRA_IC = {
+    visa: "Visa",
+    master: "Master",
+    elo: "Elo",
+    amex: "Amex"
 };
 
-const statusBaseSipag = document.getElementById("statusBaseSipag");
+const statusMotorSipag = document.getElementById("statusMotorSipag");
 const cnaeSipag = document.getElementById("cnaeSipag");
 const mccSipag = document.getElementById("mccSipag");
 const segmentoSipag = document.getElementById("segmentoSipag");
@@ -39,18 +30,15 @@ const faturamentoAnual = document.getElementById("faturamentoAnual");
 const tabelaMixSipag = document.getElementById("tabelaMixSipag");
 const totalMixSipag = document.getElementById("totalMixSipag");
 const blocosTaxasSipag = document.getElementById("blocosTaxasSipag");
-
 const volumeAntecipado = document.getElementById("volumeAntecipado");
 const taxaAntecipacaoPrecificacao = document.getElementById("taxaAntecipacaoPrecificacao");
 const durationAntecipacao = document.getElementById("durationAntecipacao");
-
 const qtdSmartPos = document.getElementById("qtdSmartPos");
 const valorSmartPos = document.getElementById("valorSmartPos");
 const mesesSmartPos = document.getElementById("mesesSmartPos");
 const qtdPinPad = document.getElementById("qtdPinPad");
 const valorPinPad = document.getElementById("valorPinPad");
 const mesesPinPad = document.getElementById("mesesPinPad");
-
 const resultadoFinalMensal = document.getElementById("resultadoFinalMensal");
 const resultadoNetMdr = document.getElementById("resultadoNetMdr");
 const resultadoAntecipacao = document.getElementById("resultadoAntecipacao");
@@ -62,7 +50,7 @@ const tabelaResultadoBandeiras = document.getElementById("tabelaResultadoBandeir
 
 function moedaParaNumero(valor) {
     if (!valor) return 0;
-    return Number(valor.replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "")) || 0;
+    return Number(String(valor).replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "")) || 0;
 }
 
 function formatarMoeda(valor) {
@@ -102,29 +90,22 @@ function aplicarMascaraMoeda(input) {
     });
 }
 
-function normalizarTexto(valor) {
-    return String(valor ?? "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-}
+function normalizarCodigo(valor) {
+    const somenteNumeros = String(valor ?? "").replace(/\D/g, "");
 
-function numeroSeguro(valor) {
-    if (typeof valor === "number") return valor;
-
-    if (valor === null || valor === undefined || valor === "") {
-        return 0;
+    if (!somenteNumeros) {
+        return "";
     }
 
-    const texto = String(valor)
-        .replace("%", "")
-        .replace(/\s/g, "")
-        .replace(",", ".");
+    return String(Number(somenteNumeros));
+}
 
-    const numero = Number(texto);
+function arredondar4(valor) {
+    return Math.round((valor + Number.EPSILON) * 10000) / 10000;
+}
 
-    return Number.isFinite(numero) ? numero : 0;
+function truncar4(valor) {
+    return Math.trunc(valor * 10000) / 10000;
 }
 
 function criarMixFaturamento() {
@@ -137,21 +118,19 @@ function criarMixFaturamento() {
             <td>${bandeira.nome}</td>
             ${MODALIDADES.map(modalidade => {
             if (!bandeira.debit && modalidade.id === "debito") {
-                return `<td>-</td>`;
+                return "<td>-</td>";
             }
 
             return `
                     <td class="tabela-input">
-                        <input
-                            type="number"
+                        <input type="number"
                             min="0"
                             max="100"
                             step="0.01"
                             value="0"
                             class="mix-input"
                             data-bandeira="${bandeira.id}"
-                            data-modalidade="${modalidade.id}"
-                        >
+                            data-modalidade="${modalidade.id}">
                     </td>
                 `;
         }).join("")}
@@ -170,6 +149,7 @@ function criarCamposTaxas() {
 
     BANDEIRAS.forEach(bandeira => {
         const bloco = document.createElement("div");
+
         bloco.className = "bloco-bandeira";
 
         bloco.innerHTML = `
@@ -200,15 +180,13 @@ function criarCamposTaxas() {
                                 <tr>
                                     <td>${modalidade.nome}</td>
                                     <td>
-                                        <input
-                                            type="number"
+                                        <input type="number"
                                             min="0"
                                             step="0.01"
                                             value="0"
                                             class="taxa-solicitada"
                                             data-bandeira="${bandeira.id}"
-                                            data-modalidade="${modalidade.id}"
-                                        >
+                                            data-modalidade="${modalidade.id}">
                                     </td>
                                     <td id="intercambio_${chave}">0,0000%</td>
                                     <td id="assessment_${chave}">0,0000%</td>
@@ -232,117 +210,29 @@ function criarCamposTaxas() {
     });
 }
 
-function obterSheetArray(workbook, nome) {
-    const sheet = workbook.Sheets[nome];
-
-    if (!sheet) {
-        throw new Error(`A aba "${nome}" não foi localizada na base.`);
-    }
-
-    return XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-        raw: true,
-        defval: ""
-    });
-}
-
-async function carregarBaseSipag() {
-    try {
-        statusBaseSipag.className = "status-carregamento";
-        statusBaseSipag.textContent = "Carregando base de parametrização Sipag...";
-
-        const resposta = await fetch(PLANILHA_BASE);
-
-        if (!resposta.ok) {
-            throw new Error(`Não foi possível carregar ${PLANILHA_BASE}.`);
-        }
-
-        const buffer = await resposta.arrayBuffer();
-
-        const workbook = XLSX.read(buffer, {
-            type: "array",
-            cellFormula: true,
-            cellDates: false
-        });
-
-        const cnaeArray = obterSheetArray(workbook, "CNAE x MCC");
-        const icNovoArray = obterSheetArray(workbook, "IC TABLE - 08.2024");
-        const custoArray = obterSheetArray(workbook, "Custo Operacional");
-
-        dadosCnae = cnaeArray.slice(1).map(linha => ({
-            cnae: String(linha[0] ?? "").trim(),
-            mcc: String(linha[2] ?? "").trim(),
-            segmento: String(linha[4] ?? "").trim()
-        })).filter(item => item.cnae || item.mcc);
-
-        dadosIcNovo = icNovoArray.slice(1).map(linha => ({
-            mcc: String(linha[1] ?? "").trim(),
-            bandeira: String(linha[2] ?? "").trim(),
-            range: String(linha[3] ?? "").trim(),
-            taxa: numeroSeguro(linha[6])
-        })).filter(item => item.mcc && item.bandeira && item.range);
-
-        dadosCusto = custoArray.slice(1).map(linha => ({
-            mcc: String(linha[0] ?? "").trim(),
-            custoFd: numeroSeguro(linha[1]),
-            custoCabal: numeroSeguro(linha[2])
-        })).filter(item => item.mcc);
-
-        parametrosFinanceiros.custoProcessamentoNormal = numeroSeguro(custoArray[8]?.[4]) || 0.0022;
-        parametrosFinanceiros.custoProcessamentoGrande = numeroSeguro(custoArray[9]?.[4]) || 0.0019;
-        parametrosFinanceiros.cdiAnual = numeroSeguro(custoArray[3]?.[4]) || 0.145;
-        parametrosFinanceiros.funding = numeroSeguro(custoArray[4]?.[4]) || 1.01;
-        parametrosFinanceiros.impostoAntecipacao = numeroSeguro(custoArray[7]?.[4]) || 0;
-        parametrosFinanceiros.fatorResultadoAntecipacao = numeroSeguro(custoArray[2]?.[4]) || 1;
-
-        equipamentos.smartPos = {
-            valor: numeroSeguro(custoArray[3]?.[15]) || 93
-        };
-
-        equipamentos.pinPad = {
-            valor: numeroSeguro(custoArray[4]?.[15]) || 27
-        };
-
-        equipamentos.conectividade = {
-            valor: numeroSeguro(custoArray[5]?.[15]) || 8.88
-        };
-
-        baseCarregada = true;
-
-        statusBaseSipag.className = "status-carregamento ok";
-        statusBaseSipag.textContent = "Base de parametrização Sipag carregada com sucesso.";
-
-        calcularTudo();
-    } catch (erro) {
-        console.error(erro);
-
-        baseCarregada = false;
-
-        statusBaseSipag.className = "status-carregamento erro";
-        statusBaseSipag.textContent =
-            "Não foi possível carregar a base Sipag. Verifique se o arquivo dados/precificacao-sipag.xlsm existe e se o site está sendo executado por um servidor HTTP.";
-    }
-}
-
 function localizarCnae() {
-    const cnae = cnaeSipag.value.replace(/\D/g, "");
+    const codigo = normalizarCodigo(cnaeSipag.value);
 
-    if (!cnae) {
+    if (!codigo) {
+        calcularTudo();
         return;
     }
 
-    const registro = dadosCnae.find(item => item.cnae === cnae);
+    const regra = REGRAS_PRECIFICACAO.cnaeMcc[codigo];
 
-    if (registro) {
-        mccSipag.value = registro.mcc;
-        segmentoSipag.value = registro.segmento;
+    if (regra) {
+        mccSipag.value = regra[0];
+        segmentoSipag.value = regra[1];
+    } else {
+        mccSipag.value = "";
+        segmentoSipag.value = "";
     }
 
     calcularTudo();
 }
 
 function localizarMcc() {
-    const mcc = mccSipag.value.trim();
+    const mcc = normalizarCodigo(mccSipag.value);
 
     if (!mcc) {
         segmentoSipag.value = "";
@@ -350,117 +240,123 @@ function localizarMcc() {
         return;
     }
 
-    const registro = dadosCnae.find(item => item.mcc === mcc);
+    mccSipag.value = mcc;
 
-    if (registro) {
-        if (!cnaeSipag.value) {
-            cnaeSipag.value = registro.cnae;
+    const cnaeAtual = normalizarCodigo(cnaeSipag.value);
+    const regraAtual = REGRAS_PRECIFICACAO.cnaeMcc[cnaeAtual];
+
+    if (regraAtual && regraAtual[0] === mcc) {
+        segmentoSipag.value = regraAtual[1];
+    } else {
+        const encontrado = Object.entries(REGRAS_PRECIFICACAO.cnaeMcc)
+            .find(([, regra]) => regra[0] === mcc);
+
+        if (encontrado) {
+            segmentoSipag.value = encontrado[1][1];
+        } else {
+            segmentoSipag.value = "";
         }
-
-        segmentoSipag.value = registro.segmento;
     }
 
     calcularTudo();
 }
 
-function obterCustoMcc() {
-    const mcc = mccSipag.value.trim();
+function obterCustoMccBase() {
+    const mcc = normalizarCodigo(mccSipag.value);
+    const regra = REGRAS_PRECIFICACAO.custoMcc[mcc];
 
-    const registro = dadosCusto.find(item => item.mcc === mcc);
-
-    if (!registro) {
-        return 0;
-    }
-
-    return tipoPrecificacao.value === "Sipaguinha"
-        ? registro.custoCabal
-        : registro.custoFd;
-}
-
-function obterIntercambio(bandeira, modalidade) {
-    if (!baseCarregada) return 0;
-
-    const mcc = mccSipag.value.trim();
-
-    if (!mcc) return 0;
-
-    if (bandeira === "cabal") {
+    if (!regra) {
         return null;
     }
 
-    const nomesBandeira = {
-        visa: "Visa",
-        master: "Master",
-        elo: "Elo",
-        amex: "Amex"
+    return {
+        fd: Number(regra[0]) || 0,
+        cabal: Number(regra[1]) || 0
     };
-
-    const modalidadeObj = MODALIDADES.find(item => item.id === modalidade);
-
-    if (!modalidadeObj) return 0;
-
-    return dadosIcNovo
-        .filter(item =>
-            item.mcc === mcc &&
-            normalizarTexto(item.bandeira) === normalizarTexto(nomesBandeira[bandeira]) &&
-            normalizarTexto(item.range) === normalizarTexto(modalidadeObj.range)
-        )
-        .reduce((total, item) => total + item.taxa, 0);
 }
 
-function obterAssessment(bandeira, modalidade) {
-    if (bandeira === "cabal") return 0;
+function obterCustoOperacional(bandeira) {
+    const custo = obterCustoMccBase();
 
-    const referencias = {
-        visa: {
-            debito: 0.0017,
-            credito: 0.0017,
-            parcelado26: 0.0017,
-            parcelado721: 0.0017
-        },
-        master: {
-            debito: 0.0018,
-            credito: 0.0018,
-            parcelado26: 0.0018,
-            parcelado721: 0.0018
-        },
-        elo: {
-            debito: 0.0054,
-            credito: 0.0054,
-            parcelado26: 0.0054,
-            parcelado721: 0.0054
-        },
-        amex: {
-            debito: 0,
-            credito: 0.0084,
-            parcelado26: 0.0084,
-            parcelado721: 0.0084
-        }
-    };
-
-    return referencias[bandeira]?.[modalidade] || 0;
-}
-
-function obterImpostoMdr(bandeira, taxaSolicitada, intercambio) {
-    if (bandeira !== "amex") {
+    if (!custo) {
         return 0;
     }
 
-    const base = Math.max(taxaSolicitada - intercambio, 0);
+    const sipaguinha = tipoPrecificacao.value === "Sipaguinha";
 
-    const aliquota = tipoPrecificacao.value === "Sipaguinha"
-        ? 0.0965
-        : 0.0465;
+    if (bandeira === "amex" && sipaguinha) {
+        return 0;
+    }
 
-    return base * aliquota;
+    return sipaguinha
+        ? custo.cabal
+        : custo.fd;
+}
+
+function obterIntercambioTabela(bandeira, modalidade) {
+    const mcc = normalizarCodigo(mccSipag.value);
+
+    if (!mcc) {
+        return 0;
+    }
+
+    const padraoId = REGRAS_PRECIFICACAO.mccPadraoIc[mcc];
+
+    if (padraoId === undefined) {
+        return 0;
+    }
+
+    const nomeBandeira = NOMES_BANDEIRA_IC[bandeira];
+    const modalidadeObj = MODALIDADES.find(item => item.id === modalidade);
+
+    if (!nomeBandeira || !modalidadeObj) {
+        return 0;
+    }
+
+    const indiceBandeira =
+        REGRAS_PRECIFICACAO.icBandas.indexOf(nomeBandeira);
+
+    const indiceProduto =
+        REGRAS_PRECIFICACAO.icProdutos.indexOf(modalidadeObj.produtoIc);
+
+    if (indiceBandeira < 0 || indiceProduto < 0) {
+        return 0;
+    }
+
+    const indice =
+        indiceBandeira *
+        REGRAS_PRECIFICACAO.icProdutos.length +
+        indiceProduto;
+
+    return Number(
+        REGRAS_PRECIFICACAO.icPadroes[padraoId]?.[indice]
+    ) || 0;
+}
+
+function obterAssessment(bandeira, modalidade) {
+    if (bandeira === "cabal") {
+        return 0;
+    }
+
+    if (
+        bandeira === "amex" &&
+        tipoPrecificacao.value === "Sipaguinha"
+    ) {
+        return 0;
+    }
+
+    return Number(
+        REGRAS_PRECIFICACAO.assessment[bandeira]?.[modalidade]
+    ) || 0;
 }
 
 function obterCustoProcessamento() {
     const faturamento = moedaParaNumero(faturamentoMensal.value);
+    const p = REGRAS_PRECIFICACAO.parametros;
 
-    return faturamento >= 500000.01
-        ? parametrosFinanceiros.custoProcessamentoGrande
-        : parametrosFinanceiros.custoProcessamentoNormal;
+    return faturamento >= p.limiteGrandesContas
+        ? p.custoProcessamentoGrandesContas
+        : p.custoProcessamentoPadrao;
 }
 
 function obterTaxaSolicitada(bandeira, modalidade) {
@@ -468,7 +364,9 @@ function obterTaxaSolicitada(bandeira, modalidade) {
         `.taxa-solicitada[data-bandeira="${bandeira}"][data-modalidade="${modalidade}"]`
     );
 
-    if (!input) return 0;
+    if (!input) {
+        return 0;
+    }
 
     return (Number(input.value) || 0) / 100;
 }
@@ -478,37 +376,88 @@ function obterMix(bandeira, modalidade) {
         `.mix-input[data-bandeira="${bandeira}"][data-modalidade="${modalidade}"]`
     );
 
-    if (!input) return 0;
+    if (!input) {
+        return 0;
+    }
 
     return (Number(input.value) || 0) / 100;
 }
 
-function calcularNetMdr(bandeira, modalidade) {
-    const taxaSolicitada = obterTaxaSolicitada(bandeira, modalidade);
-
-    let intercambio;
-
-    if (bandeira === "cabal") {
-        intercambio = taxaSolicitada / 2;
-    } else {
-        intercambio = obterIntercambio(bandeira, modalidade) || 0;
+function obterImpostoMdr(
+    bandeira,
+    taxaSolicitada,
+    intercambio
+) {
+    if (bandeira !== "amex") {
+        return 0;
     }
 
-    const assessment = obterAssessment(bandeira, modalidade);
-    const custoOperacional = obterCustoMcc();
-    const processamento = obterCustoProcessamento();
-    const imposto = obterImpostoMdr(
-        bandeira,
-        taxaSolicitada,
-        intercambio
-    );
+    const base = taxaSolicitada - intercambio;
 
-    const net = taxaSolicitada -
+    if (base <= 0) {
+        return 0;
+    }
+
+    const p = REGRAS_PRECIFICACAO.parametros;
+
+    const aliquota =
+        tipoPrecificacao.value === "Sipaguinha"
+            ? p.impostoCabal
+            : p.impostoFd;
+
+    return base * aliquota;
+}
+
+function calcularNetMdr(bandeira, modalidade) {
+    const taxaSolicitada =
+        obterTaxaSolicitada(
+            bandeira,
+            modalidade
+        );
+
+    const intercambio =
+        bandeira === "cabal"
+            ? taxaSolicitada / 2
+            : obterIntercambioTabela(
+                bandeira,
+                modalidade
+            );
+
+    const assessment =
+        obterAssessment(
+            bandeira,
+            modalidade
+        );
+
+    const custoOperacional =
+        obterCustoOperacional(bandeira);
+
+    const processamento =
+        obterCustoProcessamento();
+
+    const imposto =
+        obterImpostoMdr(
+            bandeira,
+            taxaSolicitada,
+            intercambio
+        );
+
+    const bruto =
+        taxaSolicitada -
         intercambio -
         assessment -
         custoOperacional -
         processamento -
         imposto;
+
+    const net =
+        bandeira === "cabal" &&
+            (
+                modalidade === "parcelado26" ||
+                modalidade === "parcelado721"
+            )
+            ? truncar4(bruto)
+            : arredondar4(bruto);
 
     return {
         taxaSolicitada,
@@ -521,69 +470,126 @@ function calcularNetMdr(bandeira, modalidade) {
     };
 }
 
-function preencherResultadoTaxa(bandeira, modalidade, calculo) {
-    const chave = `${bandeira}_${modalidade}`;
+function preencherResultadoTaxa(
+    bandeira,
+    modalidade,
+    calculo
+) {
+    const chave =
+        `${bandeira}_${modalidade}`;
 
     const campos = {
-        intercambio: document.getElementById(`intercambio_${chave}`),
-        assessment: document.getElementById(`assessment_${chave}`),
-        operacional: document.getElementById(`operacional_${chave}`),
-        processamento: document.getElementById(`processamento_${chave}`),
-        impostos: document.getElementById(`impostos_${chave}`),
-        net: document.getElementById(`net_${chave}`)
+        intercambio:
+            document.getElementById(
+                `intercambio_${chave}`
+            ),
+        assessment:
+            document.getElementById(
+                `assessment_${chave}`
+            ),
+        operacional:
+            document.getElementById(
+                `operacional_${chave}`
+            ),
+        processamento:
+            document.getElementById(
+                `processamento_${chave}`
+            ),
+        impostos:
+            document.getElementById(
+                `impostos_${chave}`
+            ),
+        net:
+            document.getElementById(
+                `net_${chave}`
+            )
     };
 
     if (campos.intercambio) {
-        campos.intercambio.textContent = formatarPercentualDecimal(calculo.intercambio);
+        campos.intercambio.textContent =
+            formatarPercentualDecimal(
+                calculo.intercambio
+            );
     }
 
     if (campos.assessment) {
-        campos.assessment.textContent = formatarPercentualDecimal(calculo.assessment);
+        campos.assessment.textContent =
+            formatarPercentualDecimal(
+                calculo.assessment
+            );
     }
 
     if (campos.operacional) {
-        campos.operacional.textContent = formatarPercentualDecimal(calculo.custoOperacional);
+        campos.operacional.textContent =
+            formatarPercentualDecimal(
+                calculo.custoOperacional
+            );
     }
 
     if (campos.processamento) {
-        campos.processamento.textContent = formatarPercentualDecimal(calculo.processamento);
+        campos.processamento.textContent =
+            formatarPercentualDecimal(
+                calculo.processamento
+            );
     }
 
     if (campos.impostos) {
-        campos.impostos.textContent = formatarPercentualDecimal(calculo.imposto);
+        campos.impostos.textContent =
+            formatarPercentualDecimal(
+                calculo.imposto
+            );
     }
 
     if (campos.net) {
-        campos.net.textContent = formatarPercentualDecimal(calculo.net);
+        campos.net.textContent =
+            formatarPercentualDecimal(
+                calculo.net
+            );
 
-        campos.net.style.color = calculo.net < 0
-            ? "#c62828"
-            : "#00A091";
+        campos.net.style.color =
+            calculo.net < 0
+                ? "#c62828"
+                : "#00A091";
     }
 }
 
 function calcularMdr() {
-    const faturamento = moedaParaNumero(faturamentoMensal.value);
+    const faturamento =
+        moedaParaNumero(
+            faturamentoMensal.value
+        );
+
     let totalMix = 0;
     let totalMdr = 0;
+
     const resultadosBandeiras = [];
 
     BANDEIRAS.forEach(bandeira => {
         let resultadoBandeira = 0;
 
+        const modalidades = {};
+
         MODALIDADES.forEach(modalidade => {
-            if (!bandeira.debit && modalidade.id === "debito") {
+            if (
+                !bandeira.debit &&
+                modalidade.id === "debito"
+            ) {
                 return;
             }
 
-            const mix = obterMix(bandeira.id, modalidade.id);
+            const mix =
+                obterMix(
+                    bandeira.id,
+                    modalidade.id
+                );
 
             totalMix += mix;
 
-            const calculo = calcularNetMdr(
-                bandeira.id,
-                modalidade.id
-            );
+            const calculo =
+                calcularNetMdr(
+                    bandeira.id,
+                    modalidade.id
+                );
 
             preencherResultadoTaxa(
                 bandeira.id,
@@ -596,24 +602,34 @@ function calcularMdr() {
                 mix *
                 faturamento;
 
-            resultadoBandeira += resultadoModalidade;
+            modalidades[modalidade.id] = {
+                net: calculo.net,
+                resultado: resultadoModalidade
+            };
+
+            resultadoBandeira +=
+                resultadoModalidade;
         });
 
         totalMdr += resultadoBandeira;
 
         resultadosBandeiras.push({
             bandeira,
-            resultadoBandeira
+            resultadoBandeira,
+            modalidades
         });
     });
 
-    totalMixSipag.textContent = formatarPercentualDecimal(totalMix, 2);
+    totalMixSipag.textContent =
+        formatarPercentualDecimal(
+            totalMix,
+            2
+        );
 
-    if (Math.abs(totalMix - 1) > 0.0001) {
-        totalMixSipag.style.color = "#c62828";
-    } else {
-        totalMixSipag.style.color = "#ffffff";
-    }
+    totalMixSipag.style.color =
+        Math.abs(totalMix - 1) > 0.0001
+            ? "#ffb4b4"
+            : "#ffffff";
 
     return {
         totalMix,
@@ -623,11 +639,28 @@ function calcularMdr() {
 }
 
 function calcularAntecipacao() {
-    const volume = moedaParaNumero(volumeAntecipado.value);
-    const taxaMensal = (Number(taxaAntecipacaoPrecificacao.value) || 0) / 100;
-    const duration = Number(durationAntecipacao.value) || 0;
+    const volume =
+        moedaParaNumero(
+            volumeAntecipado.value
+        );
 
-    if (volume <= 0 || taxaMensal <= 0 || duration <= 0) {
+    const taxaMensal =
+        (
+            Number(
+                taxaAntecipacaoPrecificacao.value
+            ) || 0
+        ) / 100;
+
+    const duration =
+        Number(
+            durationAntecipacao.value
+        ) || 0;
+
+    if (
+        volume <= 0 ||
+        taxaMensal <= 0 ||
+        duration <= 0
+    ) {
         return {
             bruto: 0,
             funding: 0,
@@ -636,75 +669,120 @@ function calcularAntecipacao() {
         };
     }
 
-    const taxaDia = taxaMensal / 30;
-
     const valorPresente =
         volume /
-        Math.pow(1 + taxaDia, duration);
-
-    const bruto = volume - valorPresente;
-
-    const fundingAnual =
-        parametrosFinanceiros.cdiAnual *
-        parametrosFinanceiros.funding;
-
-    const fundingDia =
         Math.pow(
-            1 + fundingAnual,
+            1 + taxaMensal / 30,
+            duration
+        );
+
+    const bruto =
+        volume -
+        valorPresente;
+
+    const p =
+        REGRAS_PRECIFICACAO.parametros;
+
+    const cdiComFundingAno =
+        p.cdiAnual *
+        p.fatorFunding;
+
+    const fatorFundingDia =
+        Math.pow(
+            1 + cdiComFundingAno,
             1 / 360
         );
 
-    const custoFunding =
+    const baseFunding =
+        volume -
+        bruto;
+
+    const funding =
         (
-            Math.pow(fundingDia, duration) *
-            valorPresente -
-            valorPresente
+            (
+                Math.pow(
+                    fatorFundingDia,
+                    duration
+                ) *
+                baseFunding
+            ) -
+            baseFunding
         ) * -1;
 
     const impostos =
-        bruto *
-        parametrosFinanceiros.impostoAntecipacao *
-        -1;
+        (
+            bruto *
+            p.impostoAntecipacao
+        ) * -1;
 
     const liquido =
-        (bruto + custoFunding + impostos) *
-        parametrosFinanceiros.fatorResultadoAntecipacao;
+        (
+            bruto +
+            funding +
+            impostos
+        ) *
+        p.fatorResultadoAntecipacao;
 
     return {
         bruto,
-        funding: custoFunding,
+        funding,
         impostos,
         liquido
     };
 }
 
 function calcularEquipamentos() {
-    const smartQtd = Number(qtdSmartPos.value) || 0;
-    const smartProposto = moedaParaNumero(valorSmartPos.value);
-    const smartMeses = Number(mesesSmartPos.value) || 0;
+    const e =
+        REGRAS_PRECIFICACAO.equipamentos;
 
-    const pinQtd = Number(qtdPinPad.value) || 0;
-    const pinProposto = moedaParaNumero(valorPinPad.value);
-    const pinMeses = Number(mesesPinPad.value) || 0;
+    const smartQtd =
+        Number(qtdSmartPos.value) || 0;
 
-    const valorPadraoSmart = equipamentos.smartPos?.valor || 93;
-    const valorPadraoPin = equipamentos.pinPad?.valor || 27;
+    const smartProposto =
+        moedaParaNumero(
+            valorSmartPos.value
+        );
+
+    const smartMeses =
+        Number(mesesSmartPos.value) || 0;
+
+    const pinQtd =
+        Number(qtdPinPad.value) || 0;
+
+    const pinProposto =
+        moedaParaNumero(
+            valorPinPad.value
+        );
+
+    const pinMeses =
+        Number(mesesPinPad.value) || 0;
 
     const complementoSmart =
-        Math.max(valorPadraoSmart - smartProposto, 0) *
+        Math.max(
+            e.smartPos -
+            smartProposto,
+            0
+        ) *
         smartQtd *
         smartMeses;
 
     const complementoPin =
-        Math.max(valorPadraoPin - pinProposto, 0) *
+        Math.max(
+            e.pinPad -
+            pinProposto,
+            0
+        ) *
         pinQtd *
         pinMeses;
 
-    const custoTotal = complementoSmart + complementoPin;
+    const custoTotal =
+        complementoSmart +
+        complementoPin;
 
-    const impactoMensal = custoTotal > 0
-        ? -(custoTotal / 12)
-        : 0;
+    const impactoMensal =
+        custoTotal > 0
+            ? -(custoTotal / 12)
+            : 0;
 
     return {
         complementoSmart,
@@ -714,51 +792,61 @@ function calcularEquipamentos() {
     };
 }
 
-function calcularPayback(resultadoMensal, custoInicial) {
-    if (custoInicial <= 0) {
-        return resultadoMensal > 0
-            ? "1 mês"
+function calcularPayback(
+    resultadoMdrAntecipacaoMensal,
+    custoEquipamentos
+) {
+    if (custoEquipamentos <= 0) {
+        return resultadoMdrAntecipacaoMensal > 0
+            ? "1 - mês(es)"
             : "-";
     }
 
-    if (resultadoMensal <= 0) {
-        return "Sem retorno";
+    if (
+        resultadoMdrAntecipacaoMensal <= 0
+    ) {
+        return "Não haverá retorno financeiro para esta negociação em 24 meses.";
     }
 
-    const meses = Math.ceil(
-        custoInicial / resultadoMensal
-    );
+    const meses =
+        Math.ceil(
+            custoEquipamentos /
+            resultadoMdrAntecipacaoMensal
+        );
 
-    if (meses > 24) {
-        return "Acima de 24 meses";
-    }
-
-    return `${meses} ${meses === 1 ? "mês" : "meses"}`;
+    return meses <= 24
+        ? `${Math.max(1, meses)} - mês(es)`
+        : "Não haverá retorno financeiro para esta negociação em 24 meses.";
 }
 
-function preencherTabelaResultados(resultadosBandeiras) {
+function preencherTabelaResultados(
+    resultadosBandeiras
+) {
     tabelaResultadoBandeiras.innerHTML = "";
 
     resultadosBandeiras.forEach(item => {
-        const bandeira = item.bandeira;
+        const bandeira =
+            item.bandeira;
 
-        const valores = MODALIDADES.map(modalidade => {
-            if (!bandeira.debit && modalidade.id === "debito") {
-                return "-";
-            }
+        const valores =
+            MODALIDADES.map(modalidade => {
+                if (
+                    !bandeira.debit &&
+                    modalidade.id === "debito"
+                ) {
+                    return "-";
+                }
 
-            const calculo = calcularNetMdr(
-                bandeira.id,
-                modalidade.id
-            );
+                return formatarPercentualDecimal(
+                    item.modalidades[
+                        modalidade.id
+                    ]?.net || 0,
+                    4
+                );
+            });
 
-            return formatarPercentualDecimal(
-                calculo.net,
-                4
-            );
-        });
-
-        const tr = document.createElement("tr");
+        const tr =
+            document.createElement("tr");
 
         tr.innerHTML = `
             <td>${bandeira.nome}</td>
@@ -769,21 +857,103 @@ function preencherTabelaResultados(resultadosBandeiras) {
             <td>${formatarMoeda(item.resultadoBandeira)}</td>
         `;
 
-        tabelaResultadoBandeiras.appendChild(tr);
+        tabelaResultadoBandeiras.appendChild(
+            tr
+        );
     });
 }
 
+function atualizarStatusMotor() {
+    const mcc =
+        normalizarCodigo(
+            mccSipag.value
+        );
+
+    if (!mcc) {
+        statusMotorSipag.className =
+            "status-carregamento";
+
+        statusMotorSipag.textContent =
+            "Motor de regras carregado. Informe um CNAE ou MCC para aplicar custos e intercâmbio.";
+
+        return;
+    }
+
+    const temCusto =
+        REGRAS_PRECIFICACAO
+            .custoMcc[mcc] !== undefined;
+
+    const temIc =
+        REGRAS_PRECIFICACAO
+            .mccPadraoIc[mcc] !== undefined;
+
+    if (!temCusto || !temIc) {
+        statusMotorSipag.className =
+            "status-carregamento erro";
+
+        statusMotorSipag.textContent =
+            `MCC ${mcc} não possui parametrização completa no motor de regras.`;
+
+        return;
+    }
+
+    statusMotorSipag.className =
+        "status-carregamento ok";
+
+    statusMotorSipag.textContent =
+        `MCC ${mcc} parametrizado. Motor de regras aplicado sem dependência de planilha.`;
+}
+
+function atualizarClasseResultado(
+    elemento,
+    valor
+) {
+    const card =
+        elemento.closest(
+            ".resultado-item"
+        );
+
+    if (!card) {
+        return;
+    }
+
+    card.classList.remove(
+        "resultado-negativo",
+        "resultado-positivo"
+    );
+
+    if (valor < 0) {
+        card.classList.add(
+            "resultado-negativo"
+        );
+    }
+
+    if (valor > 0) {
+        card.classList.add(
+            "resultado-positivo"
+        );
+    }
+}
+
 function calcularTudo() {
-    const faturamento = moedaParaNumero(faturamentoMensal.value);
+    const faturamento =
+        moedaParaNumero(
+            faturamentoMensal.value
+        );
 
     faturamentoAnual.value =
         formatarNumeroMoeda(
             faturamento * 12
         );
 
-    const calculoMdr = calcularMdr();
-    const calculoAntecipacaoResultado = calcularAntecipacao();
-    const calculoEquipamentosResultado = calcularEquipamentos();
+    const calculoMdr =
+        calcularMdr();
+
+    const calculoAntecipacaoResultado =
+        calcularAntecipacao();
+
+    const calculoEquipamentosResultado =
+        calcularEquipamentos();
 
     const resultadoMensal =
         calculoMdr.totalMdr +
@@ -794,7 +964,9 @@ function calcularTudo() {
         resultadoMensal * 12;
 
     resultadoNetMdr.textContent =
-        formatarMoeda(calculoMdr.totalMdr);
+        formatarMoeda(
+            calculoMdr.totalMdr
+        );
 
     resultadoAntecipacao.textContent =
         formatarMoeda(
@@ -807,10 +979,14 @@ function calcularTudo() {
         );
 
     resultadoFinalMensal.textContent =
-        formatarMoeda(resultadoMensal);
+        formatarMoeda(
+            resultadoMensal
+        );
 
     resultadoFinalAnual.textContent =
-        formatarMoeda(resultadoAnual);
+        formatarMoeda(
+            resultadoAnual
+        );
 
     resultadoPayback.textContent =
         calcularPayback(
@@ -819,47 +995,126 @@ function calcularTudo() {
             calculoEquipamentosResultado.custoTotal
         );
 
+    const custo =
+        obterCustoOperacional("visa");
+
     resultadoCustoOperacional.textContent =
         formatarPercentualDecimal(
-            obterCustoMcc(),
+            custo,
             4
         );
 
-    resultadoFinalMensal.style.color =
-        resultadoMensal < 0
-            ? "#ffffff"
-            : "#ffffff";
+    atualizarClasseResultado(
+        resultadoNetMdr,
+        calculoMdr.totalMdr
+    );
+
+    atualizarClasseResultado(
+        resultadoAntecipacao,
+        calculoAntecipacaoResultado.liquido
+    );
+
+    atualizarClasseResultado(
+        resultadoEquipamentos,
+        calculoEquipamentosResultado.impactoMensal
+    );
+
+    atualizarClasseResultado(
+        resultadoFinalAnual,
+        resultadoAnual
+    );
 
     preencherTabelaResultados(
         calculoMdr.resultadosBandeiras
     );
+
+    atualizarStatusMotor();
 }
 
 function registrarMascara(input) {
-    input.addEventListener("input", () => {
-        aplicarMascaraMoeda(input);
-        calcularTudo();
-    });
+    input.addEventListener(
+        "input",
+        () => {
+            aplicarMascaraMoeda(
+                input
+            );
+
+            calcularTudo();
+        }
+    );
 }
 
-cnaeSipag.addEventListener("change", localizarCnae);
-mccSipag.addEventListener("change", localizarMcc);
-tipoPrecificacao.addEventListener("change", calcularTudo);
+cnaeSipag.addEventListener(
+    "change",
+    localizarCnae
+);
 
-registrarMascara(faturamentoMensal);
-registrarMascara(volumeAntecipado);
-registrarMascara(valorSmartPos);
-registrarMascara(valorPinPad);
+cnaeSipag.addEventListener(
+    "blur",
+    localizarCnae
+);
 
-taxaAntecipacaoPrecificacao.addEventListener("input", calcularTudo);
-durationAntecipacao.addEventListener("input", calcularTudo);
+mccSipag.addEventListener(
+    "change",
+    localizarMcc
+);
 
-qtdSmartPos.addEventListener("input", calcularTudo);
-mesesSmartPos.addEventListener("input", calcularTudo);
-qtdPinPad.addEventListener("input", calcularTudo);
-mesesPinPad.addEventListener("input", calcularTudo);
+mccSipag.addEventListener(
+    "blur",
+    localizarMcc
+);
+
+tipoPrecificacao.addEventListener(
+    "change",
+    calcularTudo
+);
+
+registrarMascara(
+    faturamentoMensal
+);
+
+registrarMascara(
+    volumeAntecipado
+);
+
+registrarMascara(
+    valorSmartPos
+);
+
+registrarMascara(
+    valorPinPad
+);
+
+taxaAntecipacaoPrecificacao.addEventListener(
+    "input",
+    calcularTudo
+);
+
+durationAntecipacao.addEventListener(
+    "input",
+    calcularTudo
+);
+
+qtdSmartPos.addEventListener(
+    "input",
+    calcularTudo
+);
+
+mesesSmartPos.addEventListener(
+    "input",
+    calcularTudo
+);
+
+qtdPinPad.addEventListener(
+    "input",
+    calcularTudo
+);
+
+mesesPinPad.addEventListener(
+    "input",
+    calcularTudo
+);
 
 criarMixFaturamento();
 criarCamposTaxas();
 calcularTudo();
-carregarBaseSipag();

@@ -37,19 +37,19 @@
                 <p>Informe os dados utilizados para enquadramento e cálculo da negociação.</p>
             </div>
 
-            <div id="statusBaseSipag" class="status-carregamento">
-                Carregando base de parametrização Sipag...
+            <div id="statusMotorSipag" class="status-carregamento">
+                Motor de regras carregado. Informe um CNAE ou MCC para aplicar custos e intercâmbio.
             </div>
 
             <div class="grid-form-4">
                 <div class="campo">
                     <label for="cnaeSipag">CNAE</label>
-                    <input type="text" id="cnaeSipag" placeholder="Ex.: 4711302">
+                    <input type="text" id="cnaeSipag" placeholder="Ex.: 4711302" inputmode="numeric">
                 </div>
 
                 <div class="campo">
                     <label for="mccSipag">MCC</label>
-                    <input type="text" id="mccSipag" placeholder="Ex.: 5411">
+                    <input type="text" id="mccSipag" placeholder="Ex.: 5411" inputmode="numeric">
                 </div>
 
                 <div class="campo">
@@ -69,7 +69,7 @@
                     <label for="faturamentoMensal">Faturamento Mensal</label>
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="faturamentoMensal" value="100.000,00">
+                        <input type="text" id="faturamentoMensal" value="100.000,00" autocomplete="off">
                     </div>
                 </div>
 
@@ -83,8 +83,8 @@
             </div>
 
             <div class="aviso-info">
-                O MCC e as tabelas internas de custo/intercâmbio são carregados diretamente da base de parametrização da
-                planilha Sipag.
+                Os cálculos são executados diretamente pelo motor de regras da aplicação. Não há dependência de Excel,
+                XLSM ou qualquer arquivo externo de parametrização.
             </div>
         </section>
 
@@ -121,7 +121,6 @@
                 <h2>Taxas Solicitadas</h2>
                 <p>Informe as taxas MDR negociadas por bandeira e modalidade.</p>
             </div>
-
             <div id="blocosTaxasSipag"></div>
         </section>
 
@@ -136,7 +135,7 @@
                     <label for="volumeAntecipado">Volume Antecipado</label>
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="volumeAntecipado" value="0,00">
+                        <input type="text" id="volumeAntecipado" value="0,00" autocomplete="off">
                     </div>
                 </div>
 
@@ -174,7 +173,7 @@
                     <label for="valorSmartPos">Smart POS - Valor Proposto</label>
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="valorSmartPos" value="0,00">
+                        <input type="text" id="valorSmartPos" value="0,00" autocomplete="off">
                     </div>
                 </div>
 
@@ -195,7 +194,7 @@
                     <label for="valorPinPad">PinPad - Valor Proposto</label>
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="valorPinPad" value="0,00">
+                        <input type="text" id="valorPinPad" value="0,00" autocomplete="off">
                     </div>
                 </div>
 
@@ -283,7 +282,7 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="js/precificacao-regras.js"></script>
     <script src="js/precificacao-sipag.js"></script>
 </body>
 
