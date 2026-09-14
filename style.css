@@ -5,7 +5,7 @@
 }
 
 :root {
-    --verde-principal: #005f56;
+    --turquesa-principal: #00A091;
     --verde-escuro: #004840;
     --verde-claro: #e8f3f1;
     --verde-destaque: #00a091;
@@ -31,7 +31,7 @@ body {
 }
 
 .topo {
-    background: linear-gradient(135deg, var(--verde-principal), var(--verde-escuro));
+    background: linear-gradient(135deg, var(--turquesa-principal), var(--verde-escuro));
     color: var(--branco);
     padding: 32px 0;
 }
@@ -73,7 +73,7 @@ body {
 }
 
 .titulo-secao h2 {
-    color: var(--verde-principal);
+    color: var(--turquesa-principal);
     font-size: 22px;
     margin-bottom: 6px;
 }
@@ -155,7 +155,7 @@ input[readonly] {
     justify-content: center;
     padding: 0 12px;
     background: #eef4f3;
-    color: var(--verde-principal);
+    color: var(--turquesa-principal);
     font-weight: 700;
     white-space: nowrap;
     font-size: 13px;
@@ -191,7 +191,7 @@ button {
 }
 
 #btnSimular {
-    background: var(--verde-principal);
+    background: var(--turquesa-principal);
     color: var(--branco);
 }
 
@@ -202,7 +202,7 @@ button {
 
 .botao-secundario {
     background: #e7edec;
-    color: var(--verde-principal);
+    color: var(--turquesa-principal);
 }
 
 .botao-secundario:hover {
@@ -226,7 +226,7 @@ button {
 }
 
 .resultado-destaque {
-    background: linear-gradient(135deg, var(--verde-principal), var(--verde-destaque));
+    background: linear-gradient(135deg, var(--turquesa-principal), var(--verde-destaque));
     color: var(--branco);
     padding: 22px;
     border-radius: 14px;
@@ -268,7 +268,7 @@ button {
 
 .resultado-item strong {
     display: block;
-    color: var(--verde-principal);
+    color: var(--turquesa-principal);
     font-size: 16px;
 }
 
@@ -287,7 +287,7 @@ button {
 }
 
 .linha-selecionada strong {
-    color: var(--verde-principal);
+    color: var(--turquesa-principal);
 }
 
 .tabela-card {
@@ -305,7 +305,7 @@ table {
 }
 
 thead {
-    background: var(--verde-principal);
+    background: var(--turquesa-principal);
     color: var(--branco);
 }
 
