@@ -3559,3 +3559,7 @@ footer p,
         break-inside: avoid;
     }
 }
+
+.menu-principal {
+    margin-bottom: 24px;
+}
