@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
             arquivo: "credito-rural.html"
         },
         {
+            nome: "Comprometimento de Renda",
+            arquivo: "comprometimento-renda.html"
+        },
+        {
             nome: "Antecipação Sipag",
             arquivo: "antecipacao-sipag.html"
         },
