@@ -77,6 +77,10 @@ button {
     display: none !important;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 /* =========================================================
    CABEÇALHO
    ========================================================= */
@@ -282,44 +286,6 @@ a.menu-item:hover,
 }
 
 /* =========================================================
-   MENU RESPONSIVO
-   ========================================================= */
-
-@media (max-width: 900px) {
-    .menu-conteudo {
-        overflow-x: auto;
-        overflow-y: visible;
-        scrollbar-width: thin;
-    }
-
-    .menu-item {
-        padding: 0 14px;
-    }
-
-    .menu-submenu {
-        min-width: 215px;
-    }
-}
-
-@media (max-width: 700px) {
-    .menu-conteudo {
-        gap: 0;
-    }
-
-    .menu-item {
-        min-height: 48px;
-        padding: 0 12px;
-        font-size: 13px;
-    }
-
-    .menu-subitem {
-        min-height: 40px;
-        padding: 9px 14px;
-        font-size: 12px;
-    }
-}
-
-/* =========================================================
    CONTEÚDO GERAL
    ========================================================= */
 
@@ -393,8 +359,9 @@ main {
 }
 
 .home-apresentacao {
-    max-width: 720px;
-    margin-bottom: 38px;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto 38px;
 }
 
 .home-etiqueta,
@@ -426,7 +393,9 @@ main {
 }
 
 .categoria-ferramentas {
-    margin-bottom: 36px;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto 42px;
 }
 
 .categoria-ferramentas:last-child {
@@ -434,7 +403,8 @@ main {
 }
 
 .categoria-titulo {
-    margin-bottom: 22px;
+    width: 100%;
+    margin: 0 auto 24px;
     padding-bottom: 17px;
     border-bottom: 1px solid var(--borda);
 }
@@ -448,7 +418,8 @@ main {
     display: flex;
     align-items: center;
     gap: 11px;
-    margin-bottom: 18px;
+    width: 100%;
+    margin: 0 auto 18px;
 }
 
 .categoria-indicador {
@@ -482,10 +453,9 @@ main {
     grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
     justify-content: center;
     align-items: stretch;
-    gap: 20px;
+    gap: 22px;
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
 }
 
 .ferramenta-card {
@@ -687,15 +657,16 @@ a.ferramenta-card:hover,
 
 .simulador-grid-igual {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
     padding-top: 30px;
-    padding-bottom: 30px;
+    padding-bottom: 40px;
     align-items: start;
 }
 
-.card-largura-total {
-    grid-column: 1 / -1;
+.card-largura-total,
+.simulador-grid-igual>.card-largura-total {
+    grid-column: 1;
 }
 
 .cobranca-grid {
@@ -2555,450 +2526,8 @@ footer p,
 }
 
 /* =========================================================
-   RESPONSIVIDADE
-   ========================================================= */
-
-@media (max-width: 1100px) {
-
-    .grid-form-4,
-    .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .ferramentas-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
-        justify-content: center;
-    }
-
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .sicoobcard-beneficios-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .comprometimento-resultado-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 900px) {
-
-    .header-conteudo,
-    .cabecalho-conteudo,
-    .topo-conteudo {
-        min-height: 160px;
-    }
-
-    .header-logo img,
-    .cabecalho-logo img,
-    .topo-logo img {
-        width: 145px;
-    }
-
-    .simulador-grid,
-    .simulador-grid-igual,
-    .antecipacao-grid,
-    .cobranca-grid,
-    .previdencia-resultado-grid,
-    .comprometimento-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .formulario-card,
-    .resultado-card,
-    .tabela-card,
-    .documentos-card,
-    .antecipacao-formulario,
-    .antecipacao-resultado,
-    .antecipacao-tabela,
-    .antecipacao-documentos,
-    .cobranca-card,
-    .cobranca-card-principal,
-    .cobranca-card-largura-total,
-    .previdencia-card-resultado {
-        grid-column: 1;
-        grid-row: auto;
-    }
-
-    .comprometimento-dados,
-    .comprometimento-sfn,
-    .comprometimento-resultado,
-    .comprometimento-resumo {
-        grid-column: 1;
-        grid-row: auto;
-    }
-
-    .previdencia-etapas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .previdencia-escolhas {
-        grid-template-columns: 1fr;
-    }
-
-    .previdencia-resultado-grid .card-largura-total {
-        grid-column: 1;
-    }
-
-    .previdencia-resumo-dados {
-        grid-template-columns: 1fr;
-    }
-
-    .sicoobcard-detalhes-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .sicoobcard-beneficios-cabecalho {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .sicoobcard-legenda {
-        justify-content: flex-start;
-    }
-}
-
-@media (max-width: 700px) {
-    .container {
-        width: min(100% - 24px, 1180px);
-    }
-
-    .header-conteudo,
-    .cabecalho-conteudo,
-    .topo-conteudo {
-        min-height: 0;
-        padding-top: 26px;
-        padding-bottom: 26px;
-    }
-
-    .header-logo,
-    .cabecalho-logo,
-    .topo-logo {
-        display: none;
-    }
-
-    header h1,
-    .cabecalho h1,
-    .topo h1 {
-        font-size: 29px;
-    }
-
-    header p,
-    .cabecalho p,
-    .topo p {
-        font-size: 14px;
-    }
-
-    .home,
-    .caixa-ferramentas,
-    .comprometimento-container,
-    .previdencia-container,
-    .sicoobcard-container {
-        padding-top: 18px;
-    }
-
-    .home {
-        padding-bottom: 35px;
-    }
-
-    .simulador-grid,
-    .simulador-grid-igual,
-    .antecipacao-grid,
-    .cobranca-grid {
-        padding-top: 18px;
-    }
-
-    .grid-form,
-    .grid-form-3,
-    .grid-form-4,
-    .form-grid,
-    .resultados-grid,
-    .resultados-grid-3,
-    .resultados-grid-4,
-    .previdencia-resumo-dados,
-    .previdencia-painel .grid-form,
-    .comprometimento-form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ferramentas-grid {
-        grid-template-columns: minmax(0, 1fr);
-        justify-content: stretch;
-    }
-
-    .ferramenta-card {
-        width: 100%;
-        max-width: none;
-    }
-
-    .comprometimento-campo-largo {
-        grid-column: auto;
-    }
-
-    .formulario-card,
-    .resultado-card,
-    .tabela-card,
-    .documentos-card,
-    .configuracao-card,
-    .resumo-card,
-    .cobranca-card,
-    .previdencia-painel>.card,
-    .comprometimento-card,
-    .sicoobcard-selecao-card,
-    .sicoobcard-cartao-card,
-    .sicoobcard-informacoes-card,
-    .sicoobcard-beneficios-card,
-    .sicoobcard-comparativo-card,
-    .card,
-    .simulador-card {
-        padding: 20px;
-        border-radius: 13px;
-    }
-
-    .resultado-grid,
-    .comprometimento-resultado-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .resultado-destaque,
-    .comprometimento-resultado-destaque {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .resultado-destaque strong,
-    .comprometimento-resultado-destaque strong {
-        font-size: 28px;
-    }
-
-    .acoes,
-    .acoes-simulador,
-    .acoes-comprometimento,
-    .previdencia-acoes,
-    .comprometimento-acoes {
-        flex-direction: column;
-    }
-
-    .btn,
-    .btn-primario,
-    .btn-secundario,
-    .comprometimento-btn,
-    .previdencia-acoes button,
-    button {
-        width: 100%;
-    }
-
-    .indicador-total {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .previdencia-progresso {
-        padding: 18px;
-    }
-
-    .previdencia-etapas {
-        grid-template-columns: 1fr;
-    }
-
-    .previdencia-progresso-topo {
-        align-items: flex-start;
-    }
-
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .sicoobcard-informacoes-grid,
-    .sicoobcard-beneficios-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .sicoobcard-faixa-renda {
-        grid-column: 1;
-        align-items: flex-start;
-        padding: 16px;
-    }
-
-    .sicoobcard-faixa-renda-conteudo>strong {
-        font-size: 16px;
-    }
-
-    .sicoobcard-cartao-topo {
-        flex-direction: column;
-    }
-
-    .sicoobcard-bandeiras {
-        justify-content: flex-start;
-    }
-
-    .sicoobcard-imagem-area {
-        min-height: 220px;
-    }
-
-    .sicoobcard-imagem {
-        max-height: 190px;
-    }
-
-    .sicoobcard-nome-imagem {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-
-    .botao-impressao-pdf {
-        right: 16px;
-        bottom: 16px;
-        min-height: 44px;
-        padding: 0 16px;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .topo-conteudo,
-    .cabecalho-conteudo {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 18px;
-    }
-
-    .resultado-grid,
-    .comprometimento-resultado-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ferramenta-card {
-        flex-direction: column;
-        min-height: 0;
-    }
-
-    .comprometimento-formula {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .comprometimento-formula strong {
-        white-space: normal;
-    }
-
-    .previdencia-progresso-topo {
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .previdencia-painel>.card {
-        padding: 17px;
-        border-radius: 12px;
-    }
-
-    .opcao-simulacao-conteudo {
-        min-height: auto;
-    }
-
-    .sicoobcard-seletor {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* =========================================================
-   IMPRESSÃO
-   ========================================================= */
-
-@media print {
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    body {
-        background: #FFFFFF !important;
-    }
-
-    .menu-principal,
-    .acoes,
-    .acoes-simulador,
-    .acoes-comprometimento,
-    .comprometimento-acoes,
-    .botao-impressao-pdf {
-        display: none !important;
-    }
-
-    .container {
-        width: 100% !important;
-        max-width: none !important;
-    }
-
-    .card,
-    .simulador-card,
-    .resultado-card,
-    .credito-rural-card,
-    .antecipacao-card,
-    .precificacao-card,
-    .cobranca-card,
-    .previdencia-card,
-    .comprometimento-card,
-    .sicoobcard-selecao-card,
-    .sicoobcard-cartao-card,
-    .sicoobcard-informacoes-card,
-    .sicoobcard-beneficios-card,
-    .sicoobcard-comparativo-card {
-        box-shadow: none !important;
-        break-inside: avoid;
-    }
-
-    .comprometimento-grid {
-        gap: 12px;
-    }
-
-    .comprometimento-card {
-        padding: 18px;
-    }
-
-    footer,
-    .rodape {
-        break-inside: avoid;
-    }
-
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(8, minmax(0, 1fr));
-    }
-
-    .sicoobcard-opcao {
-        height: 35px;
-        font-size: 9px;
-    }
-
-    .sicoobcard-detalhes-grid {
-        grid-template-columns: .72fr 1.28fr;
-        gap: 12px;
-    }
-
-    .sicoobcard-beneficios-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-/* =========================================================
    SIMULADOR DE CONDIÇÕES DE CRÉDITO
-   condicoes-credito.html
    ========================================================= */
-
-[hidden] {
-    display: none !important;
-}
-
-.simulador-grid-igual {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-    padding-top: 30px;
-    padding-bottom: 40px;
-    align-items: start;
-}
 
 .simulador-grid-igual>.card {
     width: 100%;
@@ -3008,10 +2537,6 @@ footer p,
     border: 1px solid var(--borda);
     border-radius: 16px;
     box-shadow: var(--sombra);
-}
-
-.simulador-grid-igual>.card-largura-total {
-    grid-column: 1;
 }
 
 .simulador-grid-igual .titulo-secao {
@@ -3078,12 +2603,6 @@ footer p,
 .simulador-grid-igual textarea {
     width: 100%;
     min-width: 0;
-}
-
-.simulador-grid-igual textarea {
-    min-height: 95px;
-    padding: 11px 13px;
-    resize: vertical;
 }
 
 .simulador-grid-igual input[readonly] {
@@ -3197,34 +2716,13 @@ footer p,
     font-size: clamp(17px, 2vw, 26px);
 }
 
-#blocoJustRepac,
-#blocoJustPix,
-#blocoJustSerasa,
-#blocoJustBacen {
-    grid-column: span 2;
-}
-
-#blocoJustSemGarantia,
-#blocoContratoMae,
-#blocoDispensaGarantia,
-#blocoParecerGerente {
+#blocoContratoMae {
     margin-top: 18px;
     padding: 18px;
     background: var(--fundo-secundario);
     border: 1px solid var(--borda);
     border-left: 4px solid var(--turquesa);
     border-radius: 10px;
-}
-
-#blocoJustSemGarantia,
-#blocoDispensaGarantia {
-    background: var(--atencao-fundo);
-    border-left-color: var(--atencao);
-}
-
-#blocoParecerGerente {
-    background: rgba(73, 71, 157, .06);
-    border-left-color: var(--roxo);
 }
 
 #documentacaoContabilCredito {
@@ -3494,7 +2992,38 @@ footer p,
     margin: 24px 0;
 }
 
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
 @media (max-width: 1100px) {
+
+    .grid-form-4,
+    .resultados-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ferramentas-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .ferramenta-card {
+        max-width: 340px;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .comprometimento-resultado-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 
     .simulador-grid-igual .grid-form-4,
     .simulador-grid-igual .resultados-grid,
@@ -3503,7 +3032,329 @@ footer p,
     }
 }
 
+@media (max-width: 900px) {
+    .menu-conteudo {
+        overflow-x: auto;
+        overflow-y: visible;
+        scrollbar-width: thin;
+    }
+
+    .menu-item {
+        padding: 0 14px;
+    }
+
+    .menu-submenu {
+        min-width: 215px;
+    }
+
+    .header-conteudo,
+    .cabecalho-conteudo,
+    .topo-conteudo {
+        min-height: 160px;
+    }
+
+    .header-logo img,
+    .cabecalho-logo img,
+    .topo-logo img {
+        width: 145px;
+    }
+
+    .ferramentas-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+        justify-content: center;
+    }
+
+    .ferramenta-card {
+        max-width: 320px;
+    }
+
+    .simulador-grid,
+    .simulador-grid-igual,
+    .antecipacao-grid,
+    .cobranca-grid,
+    .previdencia-resultado-grid,
+    .comprometimento-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card,
+    .antecipacao-formulario,
+    .antecipacao-resultado,
+    .antecipacao-tabela,
+    .antecipacao-documentos,
+    .cobranca-card,
+    .cobranca-card-principal,
+    .cobranca-card-largura-total,
+    .previdencia-card-resultado {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .comprometimento-dados,
+    .comprometimento-sfn,
+    .comprometimento-resultado,
+    .comprometimento-resumo {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-escolhas {
+        grid-template-columns: 1fr;
+    }
+
+    .previdencia-resultado-grid .card-largura-total {
+        grid-column: 1;
+    }
+
+    .previdencia-resumo-dados {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-beneficios-cabecalho {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .sicoobcard-legenda {
+        justify-content: flex-start;
+    }
+}
+
 @media (max-width: 700px) {
+    .container {
+        width: min(100% - 24px, 1180px);
+    }
+
+    .menu-conteudo {
+        gap: 0;
+    }
+
+    .menu-item {
+        min-height: 48px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    .menu-subitem {
+        min-height: 40px;
+        padding: 9px 14px;
+        font-size: 12px;
+    }
+
+    .header-conteudo,
+    .cabecalho-conteudo,
+    .topo-conteudo {
+        min-height: 0;
+        padding-top: 26px;
+        padding-bottom: 26px;
+    }
+
+    .header-logo,
+    .cabecalho-logo,
+    .topo-logo {
+        display: none;
+    }
+
+    header h1,
+    .cabecalho h1,
+    .topo h1 {
+        font-size: 29px;
+    }
+
+    header p,
+    .cabecalho p,
+    .topo p {
+        font-size: 14px;
+    }
+
+    .home,
+    .caixa-ferramentas,
+    .comprometimento-container,
+    .previdencia-container,
+    .sicoobcard-container {
+        padding-top: 18px;
+    }
+
+    .home {
+        padding-bottom: 35px;
+    }
+
+    .home-apresentacao,
+    .categoria-ferramentas,
+    .categoria-titulo {
+        width: 100%;
+        max-width: none;
+    }
+
+    .categoria-ferramentas {
+        margin-bottom: 34px;
+    }
+
+    .ferramentas-grid {
+        grid-template-columns: 1fr;
+        justify-content: stretch;
+        gap: 16px;
+    }
+
+    .ferramenta-card {
+        width: 100%;
+        max-width: none;
+    }
+
+    .simulador-grid,
+    .simulador-grid-igual,
+    .antecipacao-grid,
+    .cobranca-grid {
+        padding-top: 18px;
+    }
+
+    .grid-form,
+    .grid-form-3,
+    .grid-form-4,
+    .form-grid,
+    .resultados-grid,
+    .resultados-grid-3,
+    .resultados-grid-4,
+    .previdencia-resumo-dados,
+    .previdencia-painel .grid-form,
+    .comprometimento-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .comprometimento-campo-largo {
+        grid-column: auto;
+    }
+
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card,
+    .configuracao-card,
+    .resumo-card,
+    .cobranca-card,
+    .previdencia-painel>.card,
+    .comprometimento-card,
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card,
+    .card,
+    .simulador-card {
+        padding: 20px;
+        border-radius: 13px;
+    }
+
+    .resultado-grid,
+    .comprometimento-resultado-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resultado-destaque,
+    .comprometimento-resultado-destaque {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .resultado-destaque strong,
+    .comprometimento-resultado-destaque strong {
+        font-size: 28px;
+    }
+
+    .acoes,
+    .acoes-simulador,
+    .acoes-comprometimento,
+    .previdencia-acoes,
+    .comprometimento-acoes {
+        flex-direction: column;
+    }
+
+    .btn,
+    .btn-primario,
+    .btn-secundario,
+    .comprometimento-btn,
+    .previdencia-acoes button,
+    button {
+        width: 100%;
+    }
+
+    .indicador-total {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .previdencia-progresso {
+        padding: 18px;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: 1fr;
+    }
+
+    .previdencia-progresso-topo {
+        align-items: flex-start;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sicoobcard-informacoes-grid,
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-faixa-renda {
+        grid-column: 1;
+        align-items: flex-start;
+        padding: 16px;
+    }
+
+    .sicoobcard-faixa-renda-conteudo>strong {
+        font-size: 16px;
+    }
+
+    .sicoobcard-cartao-topo {
+        flex-direction: column;
+    }
+
+    .sicoobcard-bandeiras {
+        justify-content: flex-start;
+    }
+
+    .sicoobcard-imagem-area {
+        min-height: 220px;
+    }
+
+    .sicoobcard-imagem {
+        max-height: 190px;
+    }
+
+    .sicoobcard-nome-imagem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .botao-impressao-pdf {
+        right: 16px;
+        bottom: 16px;
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: 13px;
+    }
+
     .simulador-grid-igual {
         gap: 18px;
         padding-top: 18px;
@@ -3518,13 +3369,6 @@ footer p,
     .simulador-grid-igual .resultados-grid,
     #cardTaxasCredito .resultados-grid {
         grid-template-columns: 1fr;
-    }
-
-    #blocoJustRepac,
-    #blocoJustPix,
-    #blocoJustSerasa,
-    #blocoJustBacen {
-        grid-column: auto;
     }
 
     .simulador-grid-igual .resultado-destaque {
@@ -3551,15 +3395,149 @@ footer p,
         min-height: 78px;
     }
 
-    #blocoJustSemGarantia,
-    #blocoContratoMae,
-    #blocoDispensaGarantia,
-    #blocoParecerGerente {
+    #blocoContratoMae {
         padding: 15px;
     }
 }
 
+@media (max-width: 480px) {
+
+    .topo-conteudo,
+    .cabecalho-conteudo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .home-apresentacao h2 {
+        font-size: 26px;
+    }
+
+    .categoria-titulo h2 {
+        font-size: 21px;
+    }
+
+    .resultado-grid,
+    .comprometimento-resultado-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ferramenta-card {
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .ferramenta-icone {
+        width: 64px;
+        height: 64px;
+        flex-basis: 64px;
+    }
+
+    .comprometimento-formula {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .comprometimento-formula strong {
+        white-space: normal;
+    }
+
+    .previdencia-progresso-topo {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .previdencia-painel>.card {
+        padding: 17px;
+        border-radius: 12px;
+    }
+
+    .opcao-simulacao-conteudo {
+        min-height: auto;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   IMPRESSÃO
+   ========================================================= */
+
 @media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: #FFFFFF !important;
+    }
+
+    .menu-principal,
+    .acoes,
+    .acoes-simulador,
+    .acoes-comprometimento,
+    .comprometimento-acoes,
+    .botao-impressao-pdf {
+        display: none !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .card,
+    .simulador-card,
+    .resultado-card,
+    .credito-rural-card,
+    .antecipacao-card,
+    .precificacao-card,
+    .cobranca-card,
+    .previdencia-card,
+    .comprometimento-card,
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+
+    .comprometimento-grid {
+        gap: 12px;
+    }
+
+    .comprometimento-card {
+        padding: 18px;
+    }
+
+    footer,
+    .rodape {
+        break-inside: avoid;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .sicoobcard-opcao {
+        height: 35px;
+        font-size: 9px;
+    }
+
+    .sicoobcard-detalhes-grid {
+        grid-template-columns: .72fr 1.28fr;
+        gap: 12px;
+    }
+
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .simulador-grid-igual {
         display: block;
         padding: 0;
