@@ -24,6 +24,7 @@ const LINHAS_CREDITO = {
             carencia: 0
         }
     ],
+
     investimento: [
         {
             id: "investimento_rural",
@@ -47,6 +48,7 @@ const LINHAS_CREDITO = {
             carencia: 24
         }
     ],
+
     comercializacao: [
         {
             id: "comercializacao",
@@ -56,6 +58,7 @@ const LINHAS_CREDITO = {
             carencia: 0
         }
     ],
+
     industrializacao: [
         {
             id: "industrializacao",
@@ -73,50 +76,75 @@ const DOCUMENTOS = {
         "Comprovante de endereço atualizado.",
         "Documentos cadastrais necessários para análise da operação."
     ],
+
     custeio: [
         "Documentação relacionada à atividade rural.",
         "Comprovação ou documentação da área onde será realizada a atividade.",
         "Orçamentos, estimativas ou informações relacionadas aos itens financiados.",
         "Documentação complementar conforme cultura, atividade e enquadramento da operação."
     ],
+
     investimento: [
         "Documentação relacionada à propriedade ou área rural.",
         "Orçamento ou proposta comercial do bem ou investimento.",
         "Documentos técnicos relacionados ao investimento.",
         "Documentação complementar conforme o tipo de bem ou finalidade financiada."
     ],
+
     comercializacao: [
         "Documentação relacionada aos produtos objeto da comercialização.",
         "Comprovação da produção ou origem dos produtos.",
         "Documentos comerciais relacionados à operação."
     ],
+
     industrializacao: [
         "Documentação relacionada à atividade de industrialização.",
         "Documentação dos produtos ou matérias-primas envolvidos.",
         "Orçamentos ou informações referentes aos custos da operação."
     ],
-    agricultura: [
-        "Informações da cultura ou produção agrícola envolvida."
+
+    agricola: [
+        "Informações da cultura ou produção agrícola envolvida.",
+        "Informações referentes à área de cultivo.",
+        "Documentação relacionada à produção e à atividade agrícola."
     ],
+
     pecuaria: [
-        "Informações relacionadas ao rebanho e à atividade pecuária."
+        "Informações relacionadas ao rebanho ou à criação.",
+        "Informações referentes à estrutura utilizada na atividade pecuária.",
+        "Documentação relacionada à exploração pecuária."
     ],
-    hortifruti: [
-        "Informações referentes à produção de hortifrúti."
+
+    extrativismo: [
+        "Informações relacionadas à atividade extrativista.",
+        "Documentação referente à origem e à exploração dos produtos.",
+        "Autorizações, licenças ou documentos aplicáveis à atividade, quando necessários."
     ],
-    cafeicultura: [
-        "Informações referentes à produção e área de cafeicultura."
-    ],
-    avicultura: [
-        "Informações referentes à atividade de avicultura."
-    ],
-    suinocultura: [
-        "Informações referentes à atividade de suinocultura."
+
+    florestal_agroflorestal: [
+        "Informações relacionadas à atividade florestal ou agroflorestal.",
+        "Documentação referente à área utilizada na atividade.",
+        "Projetos, autorizações, licenças ou documentos técnicos aplicáveis, quando necessários."
     ]
+};
+
+const TITULOS_DOCUMENTOS_FINALIDADE = {
+    custeio: "Documentação para Custeio",
+    investimento: "Documentação para Investimento",
+    comercializacao: "Documentação para Comercialização",
+    industrializacao: "Documentação para Industrialização"
+};
+
+const TITULOS_DOCUMENTOS_GRUPO = {
+    agricola: "Documentação da Atividade - Agrícola",
+    pecuaria: "Documentação da Atividade - Pecuária",
+    extrativismo: "Documentação da Atividade - Extrativismo",
+    florestal_agroflorestal: "Documentação da Atividade - Florestal / Agroflorestal"
 };
 
 const finalidade = document.getElementById("finalidade");
 const linhaCredito = document.getElementById("linhaCredito");
+const grupoAtividade = document.getElementById("grupoAtividade");
 const atividade = document.getElementById("atividade");
 const valorProjeto = document.getElementById("valorProjeto");
 const recursosProprios = document.getElementById("recursosProprios");
@@ -176,31 +204,19 @@ function moedaParaNumero(valor) {
         texto = texto
             .replace(/\./g, "")
             .replace(",", ".");
-    } else if (
-        texto.includes(",")
-    ) {
-        texto = texto.replace(
-            ",",
-            "."
-        );
+    } else if (texto.includes(",")) {
+        texto = texto.replace(",", ".");
     }
 
-    texto = texto.replace(
-        /[^\d.-]/g,
-        ""
-    );
+    texto = texto.replace(/[^\d.-]/g, "");
 
-    const convertido =
-        Number(texto);
+    const convertido = Number(texto);
 
-    return limitarValorMonetario(
-        convertido
-    );
+    return limitarValorMonetario(convertido);
 }
 
 function formatarMoeda(valor) {
-    const numero =
-        Number(valor);
+    const numero = Number(valor);
 
     return (
         Number.isFinite(numero)
@@ -215,18 +231,14 @@ function formatarMoeda(valor) {
 }
 
 function formatarNumeroMoeda(valor) {
-    return limitarValorMonetario(
-        valor
-    ).toLocaleString("pt-BR", {
+    return limitarValorMonetario(valor).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 }
 
 function formatarPercentual(valor) {
-    return Number(
-        valor || 0
-    ).toLocaleString("pt-BR", {
+    return Number(valor || 0).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     }) + "%";
@@ -242,14 +254,11 @@ function aplicarMascaraMoeda(input) {
         return;
     }
 
-    const limiteCentavos =
-        Math.round(
-            LIMITE_VALOR_MONETARIO *
-            100
-        );
+    const limiteCentavos = Math.round(
+        LIMITE_VALOR_MONETARIO * 100
+    );
 
-    let centavos =
-        Number(digitos);
+    let centavos = Number(digitos);
 
     if (
         !Number.isFinite(centavos) ||
@@ -263,105 +272,81 @@ function aplicarMascaraMoeda(input) {
         limiteCentavos
     );
 
-    const valor =
-        centavos / 100;
+    const valor = centavos / 100;
 
-    input.value =
-        valor.toLocaleString(
-            "pt-BR",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
+    input.value = valor.toLocaleString(
+        "pt-BR",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
 }
 
 function carregarLinhasCredito() {
-    const lista =
-        LINHAS_CREDITO[
+    const lista = LINHAS_CREDITO[
         finalidade.value
-        ] || [];
+    ] || [];
 
-    linhaCredito.innerHTML =
-        "";
+    linhaCredito.innerHTML = "";
 
     lista.forEach(item => {
-        const option =
-            document.createElement(
-                "option"
-            );
+        const option = document.createElement("option");
 
-        option.value =
-            item.id;
+        option.value = item.id;
+        option.textContent = item.nome;
 
-        option.textContent =
-            item.nome;
-
-        linhaCredito.appendChild(
-            option
-        );
+        linhaCredito.appendChild(option);
     });
 
     aplicarParametrosLinha();
 }
 
 function obterLinhaSelecionada() {
-    const lista =
-        LINHAS_CREDITO[
+    const lista = LINHAS_CREDITO[
         finalidade.value
-        ] || [];
+    ] || [];
 
     return lista.find(
         item =>
-            item.id ===
-            linhaCredito.value
+            item.id === linhaCredito.value
     );
 }
 
 function aplicarParametrosLinha() {
-    const linha =
-        obterLinhaSelecionada();
+    const linha = obterLinhaSelecionada();
 
     if (!linha) {
         return;
     }
 
-    taxa.value =
-        linha.taxa.toFixed(2);
-
-    prazo.value =
-        linha.prazo;
-
-    carencia.value =
-        linha.carencia;
+    taxa.value = linha.taxa.toFixed(2);
+    prazo.value = linha.prazo;
+    carencia.value = linha.carencia;
 
     calcularValorFinanciado();
     simularAutomaticamente();
 }
 
 function calcularValorFinanciado() {
-    const projeto =
-        moedaParaNumero(
-            valorProjeto.value
-        );
+    const projeto = moedaParaNumero(
+        valorProjeto.value
+    );
 
-    const recursos =
-        moedaParaNumero(
-            recursosProprios.value
-        );
+    const recursos = moedaParaNumero(
+        recursosProprios.value
+    );
 
-    const financiado =
-        limitarValorMonetario(
-            Math.max(
-                projeto - recursos,
-                0
-            )
-        );
+    const financiado = limitarValorMonetario(
+        Math.max(
+            projeto - recursos,
+            0
+        )
+    );
 
-    valorFinanciado.value =
-        formatarNumeroMoeda(
-            financiado
-        );
+    valorFinanciado.value = formatarNumeroMoeda(
+        financiado
+    );
 
     return financiado;
 }
@@ -371,12 +356,10 @@ function obterQuantidadeParcelas(
     carenciaMeses,
     tipoPeriodicidade
 ) {
-    const mesesFinanciamento =
-        Math.max(
-            prazoMeses -
-            carenciaMeses,
-            1
-        );
+    const mesesFinanciamento = Math.max(
+        prazoMeses - carenciaMeses,
+        1
+    );
 
     const divisor = {
         mensal: 1,
@@ -387,16 +370,13 @@ function obterQuantidadeParcelas(
 
     return Math.max(
         Math.ceil(
-            mesesFinanciamento /
-            divisor
+            mesesFinanciamento / divisor
         ),
         1
     );
 }
 
-function obterPeriodosPorAno(
-    tipoPeriodicidade
-) {
+function obterPeriodosPorAno(tipoPeriodicidade) {
     return {
         mensal: 12,
         trimestral: 4,
@@ -409,13 +389,11 @@ function calcularTaxaPeriodo(
     taxaAnual,
     tipoPeriodicidade
 ) {
-    const periodosAno =
-        obterPeriodosPorAno(
-            tipoPeriodicidade
-        );
+    const periodosAno = obterPeriodosPorAno(
+        tipoPeriodicidade
+    );
 
-    const taxaDecimal =
-        taxaAnual / 100;
+    const taxaDecimal = taxaAnual / 100;
 
     return Math.pow(
         1 + taxaDecimal,
@@ -430,51 +408,40 @@ function calcularPrice(
 ) {
     const parcelas = [];
 
-    if (
-        quantidadeParcelas <= 0
-    ) {
+    if (quantidadeParcelas <= 0) {
         return parcelas;
     }
 
     let valorParcela;
 
-    if (
-        taxaPeriodo === 0
-    ) {
-        valorParcela =
-            valor /
-            quantidadeParcelas;
+    if (taxaPeriodo === 0) {
+        valorParcela = valor / quantidadeParcelas;
     } else {
         valorParcela =
             valor *
             (
                 taxaPeriodo *
                 Math.pow(
-                    1 +
-                    taxaPeriodo,
+                    1 + taxaPeriodo,
                     quantidadeParcelas
                 )
             ) /
             (
                 Math.pow(
-                    1 +
-                    taxaPeriodo,
+                    1 + taxaPeriodo,
                     quantidadeParcelas
-                ) -
-                1
+                ) - 1
             );
     }
 
-    let saldo =
-        valor;
+    let saldo = valor;
 
     for (
         let i = 1;
         i <= quantidadeParcelas;
         i++
     ) {
-        const saldoInicial =
-            saldo;
+        const saldoInicial = saldo;
 
         const juros =
             saldoInicial *
@@ -484,24 +451,19 @@ function calcularPrice(
             valorParcela -
             juros;
 
-        if (
-            i ===
-            quantidadeParcelas
-        ) {
-            amortizacao =
-                saldoInicial;
+        if (i === quantidadeParcelas) {
+            amortizacao = saldoInicial;
 
             valorParcela =
                 amortizacao +
                 juros;
         }
 
-        saldo =
-            Math.max(
-                saldoInicial -
-                amortizacao,
-                0
-            );
+        saldo = Math.max(
+            saldoInicial -
+            amortizacao,
+            0
+        );
 
         parcelas.push({
             numero: i,
@@ -523,9 +485,7 @@ function calcularSac(
 ) {
     const parcelas = [];
 
-    if (
-        quantidadeParcelas <= 0
-    ) {
+    if (quantidadeParcelas <= 0) {
         return parcelas;
     }
 
@@ -533,16 +493,14 @@ function calcularSac(
         valor /
         quantidadeParcelas;
 
-    let saldo =
-        valor;
+    let saldo = valor;
 
     for (
         let i = 1;
         i <= quantidadeParcelas;
         i++
     ) {
-        const saldoInicial =
-            saldo;
+        const saldoInicial = saldo;
 
         const juros =
             saldoInicial *
@@ -551,24 +509,19 @@ function calcularSac(
         let amortizacao =
             amortizacaoBase;
 
-        if (
-            i ===
-            quantidadeParcelas
-        ) {
-            amortizacao =
-                saldoInicial;
+        if (i === quantidadeParcelas) {
+            amortizacao = saldoInicial;
         }
 
         const valorParcela =
             amortizacao +
             juros;
 
-        saldo =
-            Math.max(
-                saldoInicial -
-                amortizacao,
-                0
-            );
+        saldo = Math.max(
+            saldoInicial -
+            amortizacao,
+            0
+        );
 
         parcelas.push({
             numero: i,
@@ -589,9 +542,7 @@ function calcularCarenciaCapitalizada(
     carenciaMeses,
     tipoPeriodicidade
 ) {
-    if (
-        carenciaMeses <= 0
-    ) {
+    if (carenciaMeses <= 0) {
         return valor;
     }
 
@@ -608,8 +559,7 @@ function calcularCarenciaCapitalizada(
 
     return valor *
         Math.pow(
-            1 +
-            taxaPeriodo,
+            1 + taxaPeriodo,
             periodosCarencia
         );
 }
@@ -621,21 +571,13 @@ function validarSimulacao(
         calcularValorFinanciado();
 
     const prazoMeses =
-        Number(
-            prazo.value
-        ) || 0;
+        Number(prazo.value) || 0;
 
     const carenciaMeses =
-        Number(
-            carencia.value
-        ) || 0;
+        Number(carencia.value) || 0;
 
-    if (
-        valor <= 0
-    ) {
-        if (
-            mostrarAlerta
-        ) {
+    if (valor <= 0) {
+        if (mostrarAlerta) {
             alert(
                 "Informe um valor financiado maior que zero."
             );
@@ -644,12 +586,8 @@ function validarSimulacao(
         return false;
     }
 
-    if (
-        prazoMeses <= 0
-    ) {
-        if (
-            mostrarAlerta
-        ) {
+    if (prazoMeses <= 0) {
+        if (mostrarAlerta) {
             alert(
                 "Informe um prazo válido."
             );
@@ -658,12 +596,8 @@ function validarSimulacao(
         return false;
     }
 
-    if (
-        carenciaMeses < 0
-    ) {
-        if (
-            mostrarAlerta
-        ) {
+    if (carenciaMeses < 0) {
+        if (mostrarAlerta) {
             alert(
                 "Informe uma carência válida."
             );
@@ -672,13 +606,8 @@ function validarSimulacao(
         return false;
     }
 
-    if (
-        carenciaMeses >=
-        prazoMeses
-    ) {
-        if (
-            mostrarAlerta
-        ) {
+    if (carenciaMeses >= prazoMeses) {
+        if (mostrarAlerta) {
             alert(
                 "A carência deve ser menor que o prazo total."
             );
@@ -707,19 +636,13 @@ function simular(
         calcularValorFinanciado();
 
     const prazoMeses =
-        Number(
-            prazo.value
-        ) || 0;
+        Number(prazo.value) || 0;
 
     const carenciaMeses =
-        Number(
-            carencia.value
-        ) || 0;
+        Number(carencia.value) || 0;
 
     const taxaAnual =
-        Number(
-            taxa.value
-        ) || 0;
+        Number(taxa.value) || 0;
 
     const tipoPeriodicidade =
         periodicidade.value;
@@ -753,10 +676,7 @@ function simular(
 
     let parcelas;
 
-    if (
-        sistemaSelecionado ===
-        "sac"
-    ) {
+    if (sistemaSelecionado === "sac") {
         parcelas =
             calcularSac(
                 saldoAposCarencia,
@@ -774,10 +694,7 @@ function simular(
 
     const totalPago =
         parcelas.reduce(
-            (
-                total,
-                item
-            ) =>
+            (total, item) =>
                 total +
                 item.valorParcela,
             0
@@ -789,8 +706,7 @@ function simular(
 
     const primeiraParcela =
         parcelas.length
-            ? parcelas[0]
-                .valorParcela
+            ? parcelas[0].valorParcela
             : 0;
 
     const ultimaParcela =
@@ -801,14 +717,10 @@ function simular(
             : 0;
 
     resultadoValorFinanciado.textContent =
-        formatarMoeda(
-            valor
-        );
+        formatarMoeda(valor);
 
     resultadoTaxa.textContent =
-        formatarPercentual(
-            taxaAnual
-        ) +
+        formatarPercentual(taxaAnual) +
         " a.a.";
 
     resultadoPrazo.textContent =
@@ -847,10 +759,7 @@ function simular(
             ? linha.nome
             : "-";
 
-    preencherTabela(
-        parcelas
-    );
-
+    preencherTabela(parcelas);
     atualizarDocumentos();
 }
 
@@ -863,32 +772,22 @@ function limparResultadosInvalidos() {
         calcularValorFinanciado();
 
     const prazoMeses =
-        Number(
-            prazo.value
-        ) || 0;
+        Number(prazo.value) || 0;
 
     const carenciaMeses =
-        Number(
-            carencia.value
-        ) || 0;
+        Number(carencia.value) || 0;
 
     const taxaAnual =
-        Number(
-            taxa.value
-        ) || 0;
+        Number(taxa.value) || 0;
 
     const linha =
         obterLinhaSelecionada();
 
     resultadoValorFinanciado.textContent =
-        formatarMoeda(
-            valor
-        );
+        formatarMoeda(valor);
 
     resultadoTaxa.textContent =
-        formatarPercentual(
-            taxaAnual
-        ) +
+        formatarPercentual(taxaAnual) +
         " a.a.";
 
     resultadoPrazo.textContent =
@@ -928,15 +827,10 @@ function limparResultadosInvalidos() {
     `;
 }
 
-function preencherTabela(
-    parcelas
-) {
-    tabelaParcelas.innerHTML =
-        "";
+function preencherTabela(parcelas) {
+    tabelaParcelas.innerHTML = "";
 
-    if (
-        !parcelas.length
-    ) {
+    if (!parcelas.length) {
         tabelaParcelas.innerHTML = `
             <tr>
                 <td colspan="6" class="sem-dados">
@@ -950,9 +844,7 @@ function preencherTabela(
 
     parcelas.forEach(item => {
         const tr =
-            document.createElement(
-                "tr"
-            );
+            document.createElement("tr");
 
         tr.innerHTML = `
             <td>${item.numero}</td>
@@ -963,9 +855,7 @@ function preencherTabela(
             <td>${formatarMoeda(item.saldoFinal)}</td>
         `;
 
-        tabelaParcelas.appendChild(
-            tr
-        );
+        tabelaParcelas.appendChild(tr);
     });
 }
 
@@ -1000,89 +890,139 @@ function criarGrupoDocumentos(
     `;
 }
 
+function obterNomeAtividadeSelecionada() {
+    if (
+        window.CreditoRuralAtividades &&
+        typeof window.CreditoRuralAtividades.obterNomeAtividade === "function"
+    ) {
+        return window.CreditoRuralAtividades.obterNomeAtividade(
+            atividade.value,
+            grupoAtividade.value
+        );
+    }
+
+    const optionSelecionada =
+        atividade.options[
+        atividade.selectedIndex
+        ];
+
+    return optionSelecionada
+        ? optionSelecionada.textContent
+        : "";
+}
+
+function obterNomeGrupoAtividadeSelecionado() {
+    if (
+        window.CreditoRuralAtividades &&
+        typeof window.CreditoRuralAtividades.obterNomeGrupo === "function"
+    ) {
+        return window.CreditoRuralAtividades.obterNomeGrupo(
+            grupoAtividade.value
+        );
+    }
+
+    const optionSelecionada =
+        grupoAtividade.options[
+        grupoAtividade.selectedIndex
+        ];
+
+    return optionSelecionada
+        ? optionSelecionada.textContent
+        : "";
+}
+
 function atualizarDocumentos() {
     const finalidadeSelecionada =
         finalidade.value;
 
-    const atividadeSelecionada =
-        atividade.value;
+    const grupoSelecionado =
+        grupoAtividade.value;
+
+    const nomeGrupoSelecionado =
+        obterNomeGrupoAtividadeSelecionado();
+
+    const nomeAtividadeSelecionada =
+        obterNomeAtividadeSelecionada();
 
     let html = "";
 
-    html +=
-        criarGrupoDocumentos(
-            "Documentação Geral",
-            DOCUMENTOS.gerais
-        );
+    html += criarGrupoDocumentos(
+        "Documentação Geral",
+        DOCUMENTOS.gerais
+    );
 
     if (
         DOCUMENTOS[
         finalidadeSelecionada
         ]
     ) {
-        const tituloFinalidade = {
-            custeio:
-                "Documentação para Custeio",
-            investimento:
-                "Documentação para Investimento",
-            comercializacao:
-                "Documentação para Comercialização",
-            industrializacao:
-                "Documentação para Industrialização"
-        }[
+        html += criarGrupoDocumentos(
+            TITULOS_DOCUMENTOS_FINALIDADE[
             finalidadeSelecionada
-        ];
-
-        html +=
-            criarGrupoDocumentos(
-                tituloFinalidade,
-                DOCUMENTOS[
-                finalidadeSelecionada
-                ]
-            );
+            ],
+            DOCUMENTOS[
+            finalidadeSelecionada
+            ]
+        );
     }
 
     if (
         DOCUMENTOS[
-        atividadeSelecionada
+        grupoSelecionado
         ]
     ) {
-        const tituloAtividade = {
-            agricultura:
-                "Documentação da Atividade - Agricultura",
-            pecuaria:
-                "Documentação da Atividade - Pecuária",
-            hortifruti:
-                "Documentação da Atividade - Hortifrúti",
-            cafeicultura:
-                "Documentação da Atividade - Cafeicultura",
-            avicultura:
-                "Documentação da Atividade - Avicultura",
-            suinocultura:
-                "Documentação da Atividade - Suinocultura"
-        }[
-            atividadeSelecionada
-        ];
-
-        html +=
-            criarGrupoDocumentos(
-                tituloAtividade,
-                DOCUMENTOS[
-                atividadeSelecionada
-                ]
-            );
+        html += criarGrupoDocumentos(
+            TITULOS_DOCUMENTOS_GRUPO[
+            grupoSelecionado
+            ] ||
+            `Documentação da Atividade - ${nomeGrupoSelecionado}`,
+            DOCUMENTOS[
+            grupoSelecionado
+            ]
+        );
     }
 
-    listaDocumentos.innerHTML =
-        html;
+    if (nomeAtividadeSelecionada) {
+        html += criarGrupoDocumentos(
+            "Atividade Selecionada",
+            [
+                `Atividade: ${nomeAtividadeSelecionada}.`
+            ]
+        );
+    }
+
+    listaDocumentos.innerHTML = html;
+}
+
+function redefinirAtividadeRural() {
+    if (
+        window.CreditoRuralAtividades &&
+        typeof window.CreditoRuralAtividades.preencherGrupos === "function" &&
+        typeof window.CreditoRuralAtividades.preencherAtividades === "function"
+    ) {
+        window.CreditoRuralAtividades.preencherGrupos(
+            "agricola"
+        );
+
+        window.CreditoRuralAtividades.preencherAtividades(
+            "agricola",
+            window.CreditoRuralAtividades.normalizarIdentificadorAtividade(
+                "Arroz"
+            )
+        );
+
+        return;
+    }
+
+    grupoAtividade.value =
+        "agricola";
 }
 
 function limparSimulacao() {
     finalidade.value =
         "custeio";
 
-    atividade.value =
-        "agricultura";
+    redefinirAtividadeRural();
 
     valorProjeto.value =
         "100.000,00";
@@ -1098,6 +1038,7 @@ function limparSimulacao() {
 
     carregarLinhasCredito();
     calcularValorFinanciado();
+    atualizarDocumentos();
     simularAutomaticamente();
 }
 
@@ -1169,9 +1110,18 @@ linhaCredito.addEventListener(
     }
 );
 
+grupoAtividade.addEventListener(
+    "change",
+    () => {
+        atualizarDocumentos();
+        simularAutomaticamente();
+    }
+);
+
 atividade.addEventListener(
     "change",
     () => {
+        atualizarDocumentos();
         simularAutomaticamente();
     }
 );
