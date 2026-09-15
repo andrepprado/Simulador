@@ -382,6 +382,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function atualizarExibicaoCardBeneficios(chave) {
+        const cardBeneficios =
+            document.querySelector(".sicoobcard-beneficios-card");
+
+        if (!cardBeneficios) {
+            return;
+        }
+
+        const cartaoEmpresarial =
+            chave === "masterEmpresarial" ||
+            chave === "visaEmpresarial";
+
+        if (cartaoEmpresarial) {
+            cardBeneficios.style.display = "none";
+        } else {
+            cardBeneficios.style.display = "";
+        }
+    }
+
     function atualizarBeneficios(cartao) {
         const lista = $("listaBeneficios");
         const mensagem = $("mensagemSemBeneficios");
@@ -495,6 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!cartao.imagem) {
             imagem.removeAttribute("src");
+
             imagem.alt =
                 cartao.nomeCompleto;
 
@@ -612,6 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
         atualizarImagem(cartao);
         atualizarBandeiras(cartao);
         atualizarBeneficios(cartao);
+        atualizarExibicaoCardBeneficios(chave);
         atualizarSelecao(chave);
     }
 
