@@ -2978,3 +2978,550 @@ footer p,
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
+
+/* =========================================================
+   SIMULADOR DE CONDIÇÕES DE CRÉDITO
+   ========================================================= */
+
+/* Garante ocultação correta dos campos condicionais */
+[hidden] {
+    display: none !important;
+}
+
+/* =========================================================
+   TÍTULOS DAS NOVAS SEÇÕES
+   ========================================================= */
+
+.simulador-grid-igual .titulo-secao:has(> .categoria-etiqueta) {
+    display: block;
+}
+
+.simulador-grid-igual .titulo-secao>.categoria-etiqueta {
+    margin-bottom: 10px;
+}
+
+.simulador-grid-igual .titulo-secao>h2,
+.simulador-grid-igual .titulo-secao>h3 {
+    margin: 0 0 5px;
+    color: var(--verde-escuro);
+    line-height: 1.3;
+}
+
+.simulador-grid-igual .titulo-secao>h2 {
+    font-size: 22px;
+}
+
+.simulador-grid-igual .titulo-secao>h3 {
+    font-size: 17px;
+}
+
+.simulador-grid-igual .titulo-secao>p {
+    margin: 0;
+    max-width: 850px;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   CARDS ESPECÍFICOS
+   ========================================================= */
+
+#cardTaxasCredito,
+#cardCondicoesLinha,
+#cardGarantiasCredito {
+    padding: 28px;
+}
+
+#cardTaxasCredito,
+#cardCondicoesLinha,
+#cardGarantiasCredito {
+    position: relative;
+    overflow: hidden;
+}
+
+#cardTaxasCredito::before,
+#cardCondicoesLinha::before,
+#cardGarantiasCredito::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+/* =========================================================
+   CAMPOS CONDICIONAIS
+   ========================================================= */
+
+#cardCondicoesLinha .campo {
+    min-width: 0;
+}
+
+#cardCondicoesLinha textarea,
+#cardGarantiasCredito textarea {
+    min-height: 95px;
+}
+
+#cardCondicoesLinha input[readonly] {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-weight: 700;
+}
+
+/* Destaca a documentação contábil calculada */
+#documentacaoContabilCredito {
+    background: rgba(0, 160, 145, .06) !important;
+    color: var(--verde-escuro) !important;
+    border-color: rgba(0, 160, 145, .22);
+}
+
+/* =========================================================
+   GARANTIAS
+   ========================================================= */
+
+#cardGarantiasCredito .grid-form-4 {
+    align-items: stretch;
+}
+
+#cardGarantiasCredito .campo {
+    min-width: 0;
+}
+
+#cardGarantiasCredito .opcao-simulacao {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+/* Checkbox real fica oculto, mas continua funcional */
+#cardGarantiasCredito .opcao-simulacao>input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Card da garantia */
+#cardGarantiasCredito .opcao-simulacao-conteudo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 92px;
+    height: 100%;
+    padding: 16px 17px 16px 49px;
+    background: #FBFCFC;
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+/* Checkbox visual */
+#cardGarantiasCredito .opcao-simulacao-conteudo::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 17px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background: var(--branco);
+    border: 2px solid var(--borda-forte);
+    border-radius: 6px;
+    transition: .2s ease;
+}
+
+/* Check */
+#cardGarantiasCredito .opcao-simulacao-conteudo::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 23px;
+    width: 7px;
+    height: 12px;
+    opacity: 0;
+    transform:
+        translateY(-58%) rotate(45deg);
+    border-right: 2px solid var(--branco);
+    border-bottom: 2px solid var(--branco);
+    transition: opacity .15s ease;
+}
+
+#cardGarantiasCredito .opcao-simulacao-conteudo strong {
+    display: block;
+    margin: 0 0 4px;
+    color: var(--verde-escuro);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+#cardGarantiasCredito .opcao-simulacao-conteudo small {
+    display: block;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* Hover */
+#cardGarantiasCredito .opcao-simulacao:not(:has(input:disabled)):hover .opcao-simulacao-conteudo {
+    transform: translateY(-1px);
+    background: rgba(0, 160, 145, .035);
+    border-color: var(--turquesa-claro);
+    box-shadow: 0 5px 14px rgba(0, 54, 64, .07);
+}
+
+/* Garantia marcada */
+#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo {
+    background: rgba(0, 160, 145, .07);
+    border-color: var(--turquesa);
+    box-shadow: inset 0 0 0 1px rgba(0, 160, 145, .15);
+}
+
+#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo::before {
+    background: var(--turquesa);
+    border-color: var(--turquesa);
+}
+
+#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo::after {
+    opacity: 1;
+}
+
+#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo strong {
+    color: var(--turquesa);
+}
+
+/* Garantia bloqueada */
+#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo {
+    background: #F1F4F4;
+    border-color: var(--borda);
+    cursor: not-allowed;
+    opacity: .58;
+}
+
+#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo::before {
+    background: #E5EBEB;
+    border-color: #C9D4D5;
+}
+
+#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo strong,
+#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo small {
+    color: var(--texto-secundario);
+}
+
+/* =========================================================
+   SEM GARANTIA
+   ========================================================= */
+
+#labelSemGarantia .opcao-simulacao-conteudo {
+    background: var(--atencao-fundo);
+}
+
+#labelSemGarantia:has(input:checked) .opcao-simulacao-conteudo {
+    background: var(--atencao-fundo);
+    border-color: var(--atencao);
+    box-shadow: inset 0 0 0 1px rgba(166, 106, 0, .10);
+}
+
+#labelSemGarantia:has(input:checked) .opcao-simulacao-conteudo::before {
+    background: var(--atencao);
+    border-color: var(--atencao);
+}
+
+#labelSemGarantia:has(input:checked) .opcao-simulacao-conteudo strong {
+    color: var(--atencao);
+}
+
+/* =========================================================
+   CAMPOS GERADOS PELAS GARANTIAS
+   ========================================================= */
+
+#blocoJustSemGarantia,
+#blocoContratoMae,
+#blocoDispensaGarantia,
+#blocoParecerGerente {
+    margin-top: 18px;
+    padding: 18px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 10px;
+}
+
+#blocoJustSemGarantia {
+    background: var(--atencao-fundo);
+    border-left-color: var(--atencao);
+}
+
+#blocoDispensaGarantia {
+    background: var(--atencao-fundo);
+    border-left-color: var(--atencao);
+}
+
+#blocoParecerGerente {
+    background: rgba(73, 71, 157, .055);
+    border-left-color: var(--roxo);
+}
+
+/* =========================================================
+   REGRAS / DOCUMENTOS / ALERTAS
+   ========================================================= */
+
+#regrasGarantiasCredito,
+#listaRegrasLinhaCredito,
+#listaAlertasCredito {
+    margin-top: 16px;
+}
+
+#regrasGarantiasCredito .documentos-observacao,
+#listaRegrasLinhaCredito .documentos-observacao,
+#listaAlertasCredito .documentos-observacao {
+    position: relative;
+    margin-top: 0;
+    padding: 13px 15px 13px 38px;
+    background: #FBFCFC;
+    color: var(--texto-secundario);
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 9px;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+/* Marcador */
+#regrasGarantiasCredito .documentos-observacao::before,
+#listaRegrasLinhaCredito .documentos-observacao::before,
+#listaAlertasCredito .documentos-observacao::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    width: 8px;
+    height: 8px;
+    background: var(--verde-claro);
+    border-radius: 50%;
+}
+
+#regrasGarantiasCredito .documentos-observacao strong,
+#listaRegrasLinhaCredito .documentos-observacao strong,
+#listaAlertasCredito .documentos-observacao strong {
+    color: var(--verde-escuro);
+}
+
+/* =========================================================
+   ALERTAS DE ENQUADRAMENTO
+   ========================================================= */
+
+#listaAlertasCredito .documentos-observacao:has(strong:first-child) {
+    background: var(--fundo-secundario);
+}
+
+/* Não enquadrado */
+#listaAlertasCredito .documentos-observacao:has(strong:first-child) strong {
+    font-weight: 800;
+}
+
+#listaAlertasCredito .documentos-observacao:has(strong:first-child) {
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+}
+
+/*
+   As regras abaixo utilizam o texto criado pelo JS.
+   O CSS não possui seletor textual nativo, então o visual-base
+   permanece neutro. O status principal diferencia o resultado.
+*/
+
+/* =========================================================
+   STATUS DE ENQUADRAMENTO
+   ========================================================= */
+
+#statusEnquadramentoCredito {
+    margin-bottom: 18px;
+}
+
+#statusEnquadramentoCredito strong {
+    font-size: clamp(17px, 1.4vw, 27px);
+}
+
+/* =========================================================
+   TAXAS E ALÇADAS
+   ========================================================= */
+
+#cardTaxasCredito .resultados-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#cardTaxasCredito .resultado-item {
+    position: relative;
+    min-height: 94px;
+    padding-top: 18px;
+}
+
+#cardTaxasCredito .resultado-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--turquesa);
+    opacity: .75;
+}
+
+#cardTaxasCredito .resultado-item strong {
+    color: var(--turquesa);
+    font-size: 17px;
+}
+
+/* =========================================================
+   RESUMO DAS REGRAS DA LINHA
+   ========================================================= */
+
+#resultadoNomeLinhaCredito {
+    font-size: 15px;
+}
+
+#listaRegrasLinhaCredito {
+    padding-top: 2px;
+}
+
+/* =========================================================
+   TABELA DE PARCELAS
+   ========================================================= */
+
+#tabelaParcelasCredito td:not(:first-child),
+#tabelaParcelasCredito+tr td:not(:first-child) {
+    text-align: right;
+}
+
+.tabela-card table th:first-child,
+.tabela-card table td:first-child {
+    text-align: center;
+}
+
+.tabela-card table th:not(:first-child) {
+    text-align: right;
+}
+
+#tabelaParcelasCredito tr:hover td {
+    background: rgba(0, 160, 145, .035);
+}
+
+/* =========================================================
+   SELECT DESABILITADO
+   ========================================================= */
+
+select:disabled,
+input:disabled,
+textarea:disabled {
+    background: #EEF2F2;
+    color: #849497;
+    border-color: var(--borda);
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* =========================================================
+   MELHORIAS DE TRANSIÇÃO
+   ========================================================= */
+
+#cardCondicoesLinha .campo,
+#cardGarantiasCredito .campo {
+    animation: creditoEntradaCampo .18s ease;
+}
+
+@keyframes creditoEntradaCampo {
+    from {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVIDADE - CONDIÇÕES DE CRÉDITO
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    #cardTaxasCredito .resultados-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    #cardTaxasCredito,
+    #cardCondicoesLinha,
+    #cardGarantiasCredito {
+        padding: 20px;
+    }
+
+    #cardTaxasCredito .resultados-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao-conteudo {
+        min-height: 78px;
+    }
+
+    #blocoJustSemGarantia,
+    #blocoContratoMae,
+    #blocoDispensaGarantia,
+    #blocoParecerGerente {
+        padding: 15px;
+    }
+
+    #statusEnquadramentoCredito strong {
+        max-width: 100%;
+        text-align: left;
+    }
+}
+
+/* =========================================================
+   IMPRESSÃO - CONDIÇÕES DE CRÉDITO
+   ========================================================= */
+
+@media print {
+
+    #cardTaxasCredito,
+    #cardCondicoesLinha,
+    #cardGarantiasCredito {
+        overflow: visible;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao:has(input:not(:checked)) {
+        display: none;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo {
+        min-height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    #regrasGarantiasCredito .documentos-observacao,
+    #listaRegrasLinhaCredito .documentos-observacao,
+    #listaAlertasCredito .documentos-observacao {
+        break-inside: avoid;
+    }
+}
