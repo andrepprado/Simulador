@@ -1,4 +1,4 @@
-const LIMITE_VALOR_MONETARIO_CENTAVOS = 99999999999999999999n;
+const LIMITE_VALOR_MONETARIO_CENTAVOS = 999999999999n;
 
 const LINHAS_CREDITO = {
     custeio: [
@@ -172,11 +172,9 @@ function limitarCentavos(valor) {
         return 0n;
     }
 
-    if (centavos > LIMITE_VALOR_MONETARIO_CENTAVOS) {
-        return LIMITE_VALOR_MONETARIO_CENTAVOS;
-    }
-
-    return centavos;
+    return centavos > LIMITE_VALOR_MONETARIO_CENTAVOS
+        ? LIMITE_VALOR_MONETARIO_CENTAVOS
+        : centavos;
 }
 
 function moedaParaCentavos(valor) {
@@ -250,9 +248,9 @@ function digitosParaCentavos(valor) {
 }
 
 function centavosParaNumero(centavos) {
-    const valor = limitarCentavos(centavos);
-
-    return Number(valor) / 100;
+    return Number(
+        limitarCentavos(centavos)
+    ) / 100;
 }
 
 function formatarCentavos(centavos, incluirSimbolo = false) {
@@ -309,29 +307,25 @@ function formatarPercentual(valor) {
 }
 
 function aplicarMascaraMoeda(input) {
-    const centavos =
-        digitosParaCentavos(
-            input.value
-        );
+    const centavos = digitosParaCentavos(
+        input.value
+    );
 
-    input.value =
-        formatarCentavos(
-            centavos,
-            false
-        );
+    input.value = formatarCentavos(
+        centavos,
+        false
+    );
 }
 
 function normalizarCampoMonetario(input) {
-    const centavos =
-        moedaParaCentavos(
-            input.value
-        );
+    const centavos = moedaParaCentavos(
+        input.value
+    );
 
-    input.value =
-        formatarCentavos(
-            centavos,
-            false
-        );
+    input.value = formatarCentavos(
+        centavos,
+        false
+    );
 }
 
 function carregarLinhasCredito() {
@@ -343,20 +337,12 @@ function carregarLinhasCredito() {
     linhaCredito.innerHTML = "";
 
     lista.forEach(item => {
-        const option =
-            document.createElement(
-                "option"
-            );
+        const option = document.createElement("option");
 
-        option.value =
-            item.id;
+        option.value = item.id;
+        option.textContent = item.nome;
 
-        option.textContent =
-            item.nome;
-
-        linhaCredito.appendChild(
-            option
-        );
+        linhaCredito.appendChild(option);
     });
 
     aplicarParametrosLinha();

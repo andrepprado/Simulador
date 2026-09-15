@@ -1,4 +1,4 @@
-const LIMITE_VALOR_MONETARIO = 999999999999.99;
+const LIMITE_VALOR_MONETARIO_CENTAVOS = 999999999999n;
 
 const PARAMETROS_COBRANCA = Object.freeze({
     distribuicaoPadrao: Object.freeze({
@@ -97,45 +97,147 @@ function numero(valor) {
     return Number.isFinite(convertido) ? convertido : 0;
 }
 
-function limitarValorMonetario(valor) {
-    const convertido = numero(valor);
+function limitarCentavos(valor) {
+    let centavos;
 
-    if (convertido < 0) {
-        return 0;
+    try {
+        centavos = BigInt(valor);
+    } catch {
+        return 0n;
     }
 
-    return Math.min(convertido, LIMITE_VALOR_MONETARIO);
+    if (centavos < 0n) {
+        return 0n;
+    }
+
+    return centavos > LIMITE_VALOR_MONETARIO_CENTAVOS
+        ? LIMITE_VALOR_MONETARIO_CENTAVOS
+        : centavos;
 }
 
-function moedaParaNumero(valor) {
-    if (valor === null || valor === undefined || valor === "") {
-        return 0;
+function moedaParaCentavos(valor) {
+    if (
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ) {
+        return 0n;
     }
 
     let texto = String(valor)
         .trim()
-        .replace("R$", "")
+        .replace(/R\$/gi, "")
         .replace(/\s/g, "");
 
-    if (texto.includes(",") && texto.includes(".")) {
-        texto = texto.replace(/\./g, "").replace(",", ".");
-    } else if (texto.includes(",")) {
-        texto = texto.replace(",", ".");
+    if (!texto) {
+        return 0n;
     }
 
-    texto = texto.replace(/[^\d.-]/g, "");
+    let parteInteira = "0";
+    let parteDecimal = "00";
 
-    const convertido = Number(texto);
+    if (texto.includes(",")) {
+        const partes = texto.split(",");
 
-    if (!Number.isFinite(convertido)) {
-        return 0;
+        parteInteira = partes[0]
+            .replace(/\./g, "")
+            .replace(/\D/g, "");
+
+        parteDecimal = String(partes[1] || "")
+            .replace(/\D/g, "")
+            .padEnd(2, "0")
+            .slice(0, 2);
+    } else {
+        parteInteira = texto
+            .replace(/\./g, "")
+            .replace(/\D/g, "");
     }
 
-    return limitarValorMonetario(convertido);
+    if (!parteInteira) {
+        parteInteira = "0";
+    }
+
+    try {
+        return limitarCentavos(
+            BigInt(parteInteira) * 100n +
+            BigInt(parteDecimal || "0")
+        );
+    } catch {
+        return 0n;
+    }
+}
+
+function digitosParaCentavos(valor) {
+    const digitos = String(valor || "")
+        .replace(/\D/g, "");
+
+    if (!digitos) {
+        return 0n;
+    }
+
+    try {
+        return limitarCentavos(
+            BigInt(digitos)
+        );
+    } catch {
+        return 0n;
+    }
+}
+
+function centavosParaNumero(centavos) {
+    return Number(
+        limitarCentavos(centavos)
+    ) / 100;
+}
+
+function moedaParaNumero(valor) {
+    return centavosParaNumero(
+        moedaParaCentavos(valor)
+    );
+}
+
+function formatarCentavos(
+    centavos,
+    incluirSimbolo = false
+) {
+    const valor = limitarCentavos(
+        centavos
+    );
+
+    const inteiro =
+        valor / 100n;
+
+    const decimal =
+        valor % 100n;
+
+    const inteiroFormatado = inteiro
+        .toString()
+        .replace(
+            /\B(?=(\d{3})+(?!\d))/g,
+            "."
+        );
+
+    const decimalFormatado = decimal
+        .toString()
+        .padStart(2, "0");
+
+    const resultado =
+        `${inteiroFormatado},${decimalFormatado}`;
+
+    return incluirSimbolo
+        ? `R$ ${resultado}`
+        : resultado;
 }
 
 function formatarMoeda(valor) {
-    return numero(valor).toLocaleString("pt-BR", {
+    const convertido =
+        Number(valor);
+
+    return (
+        Number.isFinite(convertido)
+            ? convertido
+            : 0
+    ).toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
         minimumFractionDigits: 2,
@@ -144,10 +246,31 @@ function formatarMoeda(valor) {
 }
 
 function formatarNumeroMoeda(valor) {
-    return limitarValorMonetario(valor).toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+    if (typeof valor === "bigint") {
+        return formatarCentavos(
+            limitarCentavos(valor),
+            false
+        );
+    }
+
+    const convertido =
+        Number(valor);
+
+    if (!Number.isFinite(convertido) || convertido <= 0) {
+        return "0,00";
+    }
+
+    const centavos =
+        BigInt(
+            Math.round(
+                convertido * 100
+            )
+        );
+
+    return formatarCentavos(
+        centavos,
+        false
+    );
 }
 
 function formatarPercentual(valor, casas = 2) {
@@ -165,33 +288,45 @@ function formatarQuantidade(valor) {
 }
 
 function aplicarMascaraMoeda(input) {
-    let valor = input.value.replace(/\D/g, "");
+    const centavos =
+        digitosParaCentavos(
+            input.value
+        );
 
-    if (!valor) {
-        input.value = "0,00";
-        return;
-    }
+    input.value =
+        formatarCentavos(
+            centavos,
+            false
+        );
+}
 
-    let numeroFormatado = Number(valor) / 100;
+function normalizarCampoMoeda(input) {
+    const centavos =
+        moedaParaCentavos(
+            input.value
+        );
 
-    if (!Number.isFinite(numeroFormatado)) {
-        numeroFormatado = 0;
-    }
-
-    numeroFormatado = limitarValorMonetario(numeroFormatado);
-
-    input.value = numeroFormatado.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+    input.value =
+        formatarCentavos(
+            centavos,
+            false
+        );
 }
 
 function limitarPercentual(valor) {
-    return Math.max(0, Math.min(100, numero(valor)));
+    return Math.max(
+        0,
+        Math.min(
+            100,
+            numero(valor)
+        )
+    );
 }
 
 function calcularTaxaCdiMensal(taxaAnualPercentual) {
-    const taxaAno = numero(taxaAnualPercentual) / 100;
+    const taxaAno =
+        numero(taxaAnualPercentual) /
+        100;
 
     if (taxaAno <= -1) {
         return 0;
@@ -206,57 +341,221 @@ function calcularTaxaCdiMensal(taxaAnualPercentual) {
     ) * 100;
 }
 
-function calcularTaxaFloat(taxaCdiAnualPercentual, centralizacaoPercentual, diasFloat) {
-    const taxaAno = numero(taxaCdiAnualPercentual) / 100;
-    const centralizacao = limitarPercentual(centralizacaoPercentual) / 100;
-    const dias = Math.max(0, numero(diasFloat));
+function calcularTaxaFloat(
+    taxaCdiAnualPercentual,
+    centralizacaoPercentual,
+    diasFloat
+) {
+    const taxaAno =
+        numero(
+            taxaCdiAnualPercentual
+        ) / 100;
 
-    if (taxaAno <= -1 || dias <= 0) {
+    const centralizacao =
+        limitarPercentual(
+            centralizacaoPercentual
+        ) / 100;
+
+    const dias =
+        Math.max(
+            0,
+            numero(diasFloat)
+        );
+
+    if (
+        taxaAno <= -1 ||
+        dias <= 0
+    ) {
         return 0;
     }
 
-    const taxaDia = Math.pow(
-        1 + taxaAno,
-        1 / PARAMETROS_COBRANCA.diasUteisAno
-    ) - 1;
+    const taxaDia =
+        Math.pow(
+            1 + taxaAno,
+            1 /
+            PARAMETROS_COBRANCA.diasUteisAno
+        ) - 1;
 
     return (
         Math.pow(
-            1 + taxaDia * centralizacao,
+            1 +
+            taxaDia *
+            centralizacao,
             dias
         ) - 1
     ) * 100;
 }
 
 function calcularSimulacao() {
-    const qtdBoletos = Math.max(0, numero(elementos.quantidadeBoletos.value));
-    const percentualLiquidados = limitarPercentual(elementos.percentualLiquidados.value);
-    const ticketMedio = moedaParaNumero(elementos.ticketMedio.value);
+    const qtdBoletos =
+        Math.max(
+            0,
+            numero(
+                elementos
+                    .quantidadeBoletos
+                    .value
+            )
+        );
 
-    const percentRedeBancaria = limitarPercentual(elementos.percentRedeBancaria.value);
-    const percentRedeSicoob = limitarPercentual(elementos.percentRedeSicoob.value);
-    const percentLiqPropria = limitarPercentual(elementos.percentLiqPropria.value);
-    const percentCorrespondente = limitarPercentual(elementos.percentCorrespondente.value);
+    const percentualLiquidados =
+        limitarPercentual(
+            elementos
+                .percentualLiquidados
+                .value
+        );
 
-    const percentualBaixaCedente = limitarPercentual(elementos.percentBaixaCedente.value);
-    const percentualBaixaDecurso = limitarPercentual(elementos.percentBaixaDecurso.value);
+    const ticketMedio =
+        moedaParaNumero(
+            elementos
+                .ticketMedio
+                .value
+        );
 
-    const centralizacao = limitarPercentual(elementos.centralizacaoFinanceira.value);
-    const percentualSaldoMedio = limitarPercentual(elementos.percentualSaldoMedio.value);
-    const taxaCdiAno = Math.max(0, numero(elementos.taxaCdiAno.value));
-    const diasFloat = Math.max(0, numero(elementos.diasFloat.value));
+    const percentRedeBancaria =
+        limitarPercentual(
+            elementos
+                .percentRedeBancaria
+                .value
+        );
 
-    const custoRedeBancaria = moedaParaNumero(elementos.custoRedeBancaria.value);
-    const custoRedeSicoob = moedaParaNumero(elementos.custoRedeSicoob.value);
-    const custoLiqPropria = moedaParaNumero(elementos.custoLiqPropria.value);
-    const custoCorrespondente = moedaParaNumero(elementos.custoCorrespondente.value);
-    const custoProcessamento = moedaParaNumero(elementos.custoProcessamento.value);
-    const custoTarifaNova = moedaParaNumero(elementos.custoTarifaNova.value);
+    const percentRedeSicoob =
+        limitarPercentual(
+            elementos
+                .percentRedeSicoob
+                .value
+        );
 
-    const tarifaDecurso = moedaParaNumero(elementos.tarifaDecurso.value);
-    const tarifaBaixaCedente = moedaParaNumero(elementos.tarifaBaixaCedente.value);
-    const tarifaLiquidacao = moedaParaNumero(elementos.tarifaLiquidacao.value);
-    const tarifaEntrada = moedaParaNumero(elementos.tarifaEntrada.value);
+    const percentLiqPropria =
+        limitarPercentual(
+            elementos
+                .percentLiqPropria
+                .value
+        );
+
+    const percentCorrespondente =
+        limitarPercentual(
+            elementos
+                .percentCorrespondente
+                .value
+        );
+
+    const percentualBaixaCedente =
+        limitarPercentual(
+            elementos
+                .percentBaixaCedente
+                .value
+        );
+
+    const percentualBaixaDecurso =
+        limitarPercentual(
+            elementos
+                .percentBaixaDecurso
+                .value
+        );
+
+    const centralizacao =
+        limitarPercentual(
+            elementos
+                .centralizacaoFinanceira
+                .value
+        );
+
+    const percentualSaldoMedio =
+        limitarPercentual(
+            elementos
+                .percentualSaldoMedio
+                .value
+        );
+
+    const taxaCdiAno =
+        Math.max(
+            0,
+            numero(
+                elementos
+                    .taxaCdiAno
+                    .value
+            )
+        );
+
+    const diasFloat =
+        Math.max(
+            0,
+            numero(
+                elementos
+                    .diasFloat
+                    .value
+            )
+        );
+
+    const custoRedeBancaria =
+        moedaParaNumero(
+            elementos
+                .custoRedeBancaria
+                .value
+        );
+
+    const custoRedeSicoob =
+        moedaParaNumero(
+            elementos
+                .custoRedeSicoob
+                .value
+        );
+
+    const custoLiqPropria =
+        moedaParaNumero(
+            elementos
+                .custoLiqPropria
+                .value
+        );
+
+    const custoCorrespondente =
+        moedaParaNumero(
+            elementos
+                .custoCorrespondente
+                .value
+        );
+
+    const custoProcessamento =
+        moedaParaNumero(
+            elementos
+                .custoProcessamento
+                .value
+        );
+
+    const custoTarifaNova =
+        moedaParaNumero(
+            elementos
+                .custoTarifaNova
+                .value
+        );
+
+    const tarifaDecurso =
+        moedaParaNumero(
+            elementos
+                .tarifaDecurso
+                .value
+        );
+
+    const tarifaBaixaCedente =
+        moedaParaNumero(
+            elementos
+                .tarifaBaixaCedente
+                .value
+        );
+
+    const tarifaLiquidacao =
+        moedaParaNumero(
+            elementos
+                .tarifaLiquidacao
+                .value
+        );
+
+    const tarifaEntrada =
+        moedaParaNumero(
+            elementos
+                .tarifaEntrada
+                .value
+        );
 
     const totalDistribuicao =
         percentRedeBancaria +
@@ -274,13 +573,24 @@ function calcularSimulacao() {
         qtdBoletosLiquidados;
 
     const taxaCdiMensal =
-        calcularTaxaCdiMensal(taxaCdiAno);
+        calcularTaxaCdiMensal(
+            taxaCdiAno
+        );
 
     const receitaSaldoMedio =
         saldoMedio *
-        (percentualSaldoMedio / 100) *
-        (taxaCdiMensal / 100) *
-        (centralizacao / 100);
+        (
+            percentualSaldoMedio /
+            100
+        ) *
+        (
+            taxaCdiMensal /
+            100
+        ) *
+        (
+            centralizacao /
+            100
+        );
 
     const taxaFloat =
         calcularTaxaFloat(
@@ -300,7 +610,8 @@ function calcularSimulacao() {
 
     const receitaPorBoleto =
         qtdBoletosLiquidados > 0
-            ? receitaFinanceira / qtdBoletosLiquidados
+            ? receitaFinanceira /
+            qtdBoletosLiquidados
             : 0;
 
     const qtdRedeBancaria =
@@ -332,27 +643,39 @@ function calcularSimulacao() {
         );
 
     const percentualLiquidadosDecimal =
-        percentualLiquidados / 100;
+        percentualLiquidados /
+        100;
 
     const qtdProcessamentoBruta =
         (
             qtdBoletos *
-            (percentRedeBancaria / 100) *
+            (
+                percentRedeBancaria /
+                100
+            ) *
             percentualLiquidadosDecimal
         ) +
         (
             qtdBoletos *
-            (percentRedeSicoob / 100) *
+            (
+                percentRedeSicoob /
+                100
+            ) *
             percentualLiquidadosDecimal
         ) +
         (
             qtdBoletos *
-            (percentCorrespondente / 100) *
+            (
+                percentCorrespondente /
+                100
+            ) *
             percentualLiquidadosDecimal
         );
 
     const qtdProcessamento =
-        Math.ceil(qtdProcessamentoBruta);
+        Math.ceil(
+            qtdProcessamentoBruta
+        );
 
     const qtdTarifaNova =
         Math.ceil(
@@ -398,7 +721,8 @@ function calcularSimulacao() {
 
     const custoMedioBoleto =
         qtdBoletos > 0
-            ? custosOperacionais / qtdBoletos
+            ? custosOperacionais /
+            qtdBoletos
             : 0;
 
     const baseTarifaDecurso =
@@ -447,7 +771,8 @@ function calcularSimulacao() {
         custosOperacionais;
 
     const resultadoAnual =
-        resultadoMensal * 12;
+        resultadoMensal *
+        12;
 
     atualizarTela({
         totalDistribuicao,
@@ -499,152 +824,250 @@ function calcularSimulacao() {
 
 function atualizarTela(r) {
     elementos.totalDistribuicao.textContent =
-        formatarPercentual(r.totalDistribuicao);
+        formatarPercentual(
+            r.totalDistribuicao
+        );
 
     elementos.totalDistribuicao.classList.toggle(
         "indicador-ok",
-        Math.abs(r.totalDistribuicao - 100) <= 0.05
+        Math.abs(
+            r.totalDistribuicao -
+            100
+        ) <= 0.05
     );
 
     elementos.totalDistribuicao.classList.toggle(
         "indicador-erro",
-        Math.abs(r.totalDistribuicao - 100) > 0.05
+        Math.abs(
+            r.totalDistribuicao -
+            100
+        ) > 0.05
     );
 
     elementos.resultadoMensal.textContent =
-        formatarMoeda(r.resultadoMensal);
+        formatarMoeda(
+            r.resultadoMensal
+        );
 
     elementos.receitaFinanceira.textContent =
-        formatarMoeda(r.receitaFinanceira);
+        formatarMoeda(
+            r.receitaFinanceira
+        );
 
     elementos.receitaTarifas.textContent =
-        formatarMoeda(r.receitaTarifas);
+        formatarMoeda(
+            r.receitaTarifas
+        );
 
     elementos.custosOperacionais.textContent =
-        formatarMoeda(r.custosOperacionais);
+        formatarMoeda(
+            r.custosOperacionais
+        );
 
     elementos.resultadoAnual.textContent =
-        formatarMoeda(r.resultadoAnual);
+        formatarMoeda(
+            r.resultadoAnual
+        );
 
     elementos.qtdLiquidados.textContent =
-        formatarQuantidade(r.qtdBoletosLiquidados);
+        formatarQuantidade(
+            r.qtdBoletosLiquidados
+        );
 
     elementos.saldoMedio.textContent =
-        formatarMoeda(r.saldoMedio);
+        formatarMoeda(
+            r.saldoMedio
+        );
 
     elementos.taxaCdiMensal.textContent =
-        formatarPercentual(r.taxaCdiMensal);
+        formatarPercentual(
+            r.taxaCdiMensal
+        );
 
     elementos.receitaSaldoMedio.textContent =
-        formatarMoeda(r.receitaSaldoMedio);
+        formatarMoeda(
+            r.receitaSaldoMedio
+        );
 
     elementos.taxaFloat.textContent =
-        formatarPercentual(r.taxaFloat);
+        formatarPercentual(
+            r.taxaFloat
+        );
 
     elementos.receitaFloat.textContent =
-        formatarMoeda(r.receitaFloat);
+        formatarMoeda(
+            r.receitaFloat
+        );
 
     elementos.receitaPorBoleto.textContent =
-        formatarMoeda(r.receitaPorBoleto);
+        formatarMoeda(
+            r.receitaPorBoleto
+        );
 
     elementos.custoMedioBoleto.textContent =
-        formatarMoeda(r.custoMedioBoleto);
+        formatarMoeda(
+            r.custoMedioBoleto
+        );
 
     elementos.qtdRedeBancaria.textContent =
-        formatarQuantidade(r.qtdRedeBancaria);
+        formatarQuantidade(
+            r.qtdRedeBancaria
+        );
 
     elementos.qtdRedeSicoob.textContent =
-        formatarQuantidade(r.qtdRedeSicoob);
+        formatarQuantidade(
+            r.qtdRedeSicoob
+        );
 
     elementos.qtdLiqPropria.textContent =
-        formatarQuantidade(r.qtdLiqPropria);
+        formatarQuantidade(
+            r.qtdLiqPropria
+        );
 
     elementos.qtdCorrespondente.textContent =
-        formatarQuantidade(r.qtdCorrespondente);
+        formatarQuantidade(
+            r.qtdCorrespondente
+        );
 
     elementos.qtdProcessamento.textContent =
-        formatarQuantidade(r.qtdProcessamento);
+        formatarQuantidade(
+            r.qtdProcessamento
+        );
 
     elementos.qtdTarifaNova.textContent =
-        formatarQuantidade(r.qtdTarifaNova);
+        formatarQuantidade(
+            r.qtdTarifaNova
+        );
 
     elementos.unitRedeBancaria.textContent =
-        formatarMoeda(r.custoRedeBancaria);
+        formatarMoeda(
+            r.custoRedeBancaria
+        );
 
     elementos.unitRedeSicoob.textContent =
-        formatarMoeda(r.custoRedeSicoob);
+        formatarMoeda(
+            r.custoRedeSicoob
+        );
 
     elementos.unitLiqPropria.textContent =
-        formatarMoeda(r.custoLiqPropria);
+        formatarMoeda(
+            r.custoLiqPropria
+        );
 
     elementos.unitCorrespondente.textContent =
-        formatarMoeda(r.custoCorrespondente);
+        formatarMoeda(
+            r.custoCorrespondente
+        );
 
     elementos.unitProcessamento.textContent =
-        formatarMoeda(r.custoProcessamento);
+        formatarMoeda(
+            r.custoProcessamento
+        );
 
     elementos.unitTarifaNova.textContent =
-        formatarMoeda(r.custoTarifaNova);
+        formatarMoeda(
+            r.custoTarifaNova
+        );
 
     elementos.totalRedeBancaria.textContent =
-        formatarMoeda(r.totalRedeBancaria);
+        formatarMoeda(
+            r.totalRedeBancaria
+        );
 
     elementos.totalRedeSicoob.textContent =
-        formatarMoeda(r.totalRedeSicoob);
+        formatarMoeda(
+            r.totalRedeSicoob
+        );
 
     elementos.totalLiqPropria.textContent =
-        formatarMoeda(r.totalLiqPropria);
+        formatarMoeda(
+            r.totalLiqPropria
+        );
 
     elementos.totalCorrespondente.textContent =
-        formatarMoeda(r.totalCorrespondente);
+        formatarMoeda(
+            r.totalCorrespondente
+        );
 
     elementos.totalProcessamento.textContent =
-        formatarMoeda(r.totalProcessamento);
+        formatarMoeda(
+            r.totalProcessamento
+        );
 
     elementos.totalTarifaNova.textContent =
-        formatarMoeda(r.totalTarifaNova);
+        formatarMoeda(
+            r.totalTarifaNova
+        );
 
     elementos.totalCustosTabela.textContent =
-        formatarMoeda(r.custosOperacionais);
+        formatarMoeda(
+            r.custosOperacionais
+        );
 
     elementos.baseTarifaDecurso.textContent =
-        formatarQuantidade(r.baseTarifaDecurso);
+        formatarQuantidade(
+            r.baseTarifaDecurso
+        );
 
     elementos.baseTarifaCedente.textContent =
-        formatarQuantidade(r.baseTarifaCedente);
+        formatarQuantidade(
+            r.baseTarifaCedente
+        );
 
     elementos.baseTarifaLiquidacao.textContent =
-        formatarQuantidade(r.baseTarifaLiquidacao);
+        formatarQuantidade(
+            r.baseTarifaLiquidacao
+        );
 
     elementos.baseTarifaEntrada.textContent =
-        formatarQuantidade(r.baseTarifaEntrada);
+        formatarQuantidade(
+            r.baseTarifaEntrada
+        );
 
     elementos.unitTarifaDecurso.textContent =
-        formatarMoeda(r.tarifaDecurso);
+        formatarMoeda(
+            r.tarifaDecurso
+        );
 
     elementos.unitTarifaCedente.textContent =
-        formatarMoeda(r.tarifaBaixaCedente);
+        formatarMoeda(
+            r.tarifaBaixaCedente
+        );
 
     elementos.unitTarifaLiquidacao.textContent =
-        formatarMoeda(r.tarifaLiquidacao);
+        formatarMoeda(
+            r.tarifaLiquidacao
+        );
 
     elementos.unitTarifaEntrada.textContent =
-        formatarMoeda(r.tarifaEntrada);
+        formatarMoeda(
+            r.tarifaEntrada
+        );
 
     elementos.totalTarifaDecurso.textContent =
-        formatarMoeda(r.totalTarifaDecurso);
+        formatarMoeda(
+            r.totalTarifaDecurso
+        );
 
     elementos.totalTarifaCedente.textContent =
-        formatarMoeda(r.totalTarifaCedente);
+        formatarMoeda(
+            r.totalTarifaCedente
+        );
 
     elementos.totalTarifaLiquidacao.textContent =
-        formatarMoeda(r.totalTarifaLiquidacao);
+        formatarMoeda(
+            r.totalTarifaLiquidacao
+        );
 
     elementos.totalTarifaEntrada.textContent =
-        formatarMoeda(r.totalTarifaEntrada);
+        formatarMoeda(
+            r.totalTarifaEntrada
+        );
 
     elementos.totalReceitaTarifasTabela.textContent =
-        formatarMoeda(r.receitaTarifas);
+        formatarMoeda(
+            r.receitaTarifas
+        );
 
     atualizarClasseResultado(
         elementos.resultadoMensal,
@@ -657,8 +1080,14 @@ function atualizarTela(r) {
     );
 }
 
-function atualizarClasseResultado(elemento, valor) {
-    const card = elemento.closest(".resultado-item");
+function atualizarClasseResultado(
+    elemento,
+    valor
+) {
+    const card =
+        elemento.closest(
+            ".resultado-item"
+        );
 
     if (card) {
         card.classList.remove(
@@ -667,73 +1096,144 @@ function atualizarClasseResultado(elemento, valor) {
         );
 
         if (valor > 0) {
-            card.classList.add("resultado-positivo");
-        } else if (valor < 0) {
-            card.classList.add("resultado-negativo");
+            card.classList.add(
+                "resultado-positivo"
+            );
+        } else if (
+            valor < 0
+        ) {
+            card.classList.add(
+                "resultado-negativo"
+            );
         }
     }
 
-    if (elemento === elementos.resultadoMensal) {
+    if (
+        elemento ===
+        elementos.resultadoMensal
+    ) {
         elemento.classList.remove(
             "valor-positivo",
             "valor-negativo"
         );
 
-        if (valor > 0) {
-            elemento.classList.add("valor-positivo");
-        } else if (valor < 0) {
-            elemento.classList.add("valor-negativo");
+        if (
+            valor > 0
+        ) {
+            elemento.classList.add(
+                "valor-positivo"
+            );
+        } else if (
+            valor < 0
+        ) {
+            elemento.classList.add(
+                "valor-negativo"
+            );
         }
     }
 }
 
 function limparSimulacao() {
-    elementos.quantidadeBoletos.value = 0;
-    elementos.percentualLiquidados.value = 100;
-    elementos.ticketMedio.value = "0,00";
+    elementos.quantidadeBoletos.value =
+        0;
+
+    elementos.percentualLiquidados.value =
+        100;
+
+    elementos.ticketMedio.value =
+        "0,00";
 
     elementos.percentRedeBancaria.value =
-        PARAMETROS_COBRANCA.distribuicaoPadrao.redeBancaria;
+        PARAMETROS_COBRANCA
+            .distribuicaoPadrao
+            .redeBancaria;
 
     elementos.percentRedeSicoob.value =
-        PARAMETROS_COBRANCA.distribuicaoPadrao.redeSicoob;
+        PARAMETROS_COBRANCA
+            .distribuicaoPadrao
+            .redeSicoob;
 
     elementos.percentLiqPropria.value =
-        PARAMETROS_COBRANCA.distribuicaoPadrao.liqPropria;
+        PARAMETROS_COBRANCA
+            .distribuicaoPadrao
+            .liqPropria;
 
     elementos.percentCorrespondente.value =
-        PARAMETROS_COBRANCA.distribuicaoPadrao.correspondente;
+        PARAMETROS_COBRANCA
+            .distribuicaoPadrao
+            .correspondente;
 
-    elementos.percentBaixaCedente.value = 0;
-    elementos.percentBaixaDecurso.value = 0;
+    elementos.percentBaixaCedente.value =
+        0;
 
-    elementos.centralizacaoFinanceira.value = 100;
-    elementos.percentualSaldoMedio.value = 0;
-    elementos.taxaCdiAno.value = 15;
-    elementos.diasFloat.value = 0;
+    elementos.percentBaixaDecurso.value =
+        0;
+
+    elementos.centralizacaoFinanceira.value =
+        100;
+
+    elementos.percentualSaldoMedio.value =
+        0;
+
+    elementos.taxaCdiAno.value =
+        15;
+
+    elementos.diasFloat.value =
+        0;
 
     elementos.custoRedeBancaria.value =
-        formatarNumeroMoeda(PARAMETROS_COBRANCA.custosPadrao.redeBancaria);
+        formatarNumeroMoeda(
+            PARAMETROS_COBRANCA
+                .custosPadrao
+                .redeBancaria
+        );
 
     elementos.custoRedeSicoob.value =
-        formatarNumeroMoeda(PARAMETROS_COBRANCA.custosPadrao.redeSicoob);
+        formatarNumeroMoeda(
+            PARAMETROS_COBRANCA
+                .custosPadrao
+                .redeSicoob
+        );
 
     elementos.custoLiqPropria.value =
-        formatarNumeroMoeda(PARAMETROS_COBRANCA.custosPadrao.liqPropria);
+        formatarNumeroMoeda(
+            PARAMETROS_COBRANCA
+                .custosPadrao
+                .liqPropria
+        );
 
     elementos.custoCorrespondente.value =
-        formatarNumeroMoeda(PARAMETROS_COBRANCA.custosPadrao.correspondente);
+        formatarNumeroMoeda(
+            PARAMETROS_COBRANCA
+                .custosPadrao
+                .correspondente
+        );
 
     elementos.custoProcessamento.value =
-        formatarNumeroMoeda(PARAMETROS_COBRANCA.custosPadrao.processamento);
+        formatarNumeroMoeda(
+            PARAMETROS_COBRANCA
+                .custosPadrao
+                .processamento
+        );
 
     elementos.custoTarifaNova.value =
-        formatarNumeroMoeda(PARAMETROS_COBRANCA.custosPadrao.tarifaNova);
+        formatarNumeroMoeda(
+            PARAMETROS_COBRANCA
+                .custosPadrao
+                .tarifaNova
+        );
 
-    elementos.tarifaDecurso.value = "0,00";
-    elementos.tarifaBaixaCedente.value = "0,00";
-    elementos.tarifaLiquidacao.value = "0,00";
-    elementos.tarifaEntrada.value = "0,00";
+    elementos.tarifaDecurso.value =
+        "0,00";
+
+    elementos.tarifaBaixaCedente.value =
+        "0,00";
+
+    elementos.tarifaLiquidacao.value =
+        "0,00";
+
+    elementos.tarifaEntrada.value =
+        "0,00";
 
     calcularSimulacao();
 }
@@ -755,8 +1255,15 @@ function registrarEventos() {
     ];
 
     camposNumericos.forEach(input => {
-        input.addEventListener("input", calcularSimulacao);
-        input.addEventListener("change", calcularSimulacao);
+        input.addEventListener(
+            "input",
+            calcularSimulacao
+        );
+
+        input.addEventListener(
+            "change",
+            calcularSimulacao
+        );
     });
 
     const camposMoeda = [
@@ -774,18 +1281,41 @@ function registrarEventos() {
     ];
 
     camposMoeda.forEach(input => {
-        input.addEventListener("input", () => {
-            aplicarMascaraMoeda(input);
-            calcularSimulacao();
-        });
+        input.setAttribute(
+            "inputmode",
+            "numeric"
+        );
 
-        input.addEventListener("blur", () => {
-            input.value = formatarNumeroMoeda(
-                moedaParaNumero(input.value)
-            );
+        input.setAttribute(
+            "autocomplete",
+            "off"
+        );
 
-            calcularSimulacao();
-        });
+        normalizarCampoMoeda(
+            input
+        );
+
+        input.addEventListener(
+            "input",
+            () => {
+                aplicarMascaraMoeda(
+                    input
+                );
+
+                calcularSimulacao();
+            }
+        );
+
+        input.addEventListener(
+            "blur",
+            () => {
+                normalizarCampoMoeda(
+                    input
+                );
+
+                calcularSimulacao();
+            }
+        );
     });
 
     elementos.btnLimpar.addEventListener(
