@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
             arquivo: "precificacao-sipag.html"
         },
         {
+            nome: "Informações Sicoob Card",
+            arquivo: "informacoes-beneficios-sicoobcard.html"
+        },
+        {
             nome: "Cobrança",
             arquivo: "cobranca.html"
         },
@@ -49,10 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nome: "Previdência",
             arquivo: "previdencia.html"
         },
-        {
-            nome: "Sicoob Card",
-            arquivo: "informacoes-beneficios-sicoobcard.html"
-        }
+
     ];
 
     function obterPaginaAtual() {
