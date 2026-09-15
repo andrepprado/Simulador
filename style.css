@@ -2981,57 +2981,167 @@ footer p,
 
 /* =========================================================
    SIMULADOR DE CONDIÇÕES DE CRÉDITO
+   condicoes-credito.html
    ========================================================= */
 
-/* Garante ocultação correta dos campos condicionais */
 [hidden] {
     display: none !important;
 }
 
 /* =========================================================
-   TÍTULOS DAS NOVAS SEÇÕES
+   ESTRUTURA PRINCIPAL
    ========================================================= */
 
-.simulador-grid-igual .titulo-secao:has(> .categoria-etiqueta) {
-    display: block;
+.simulador-grid-igual {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    align-items: start;
 }
 
-.simulador-grid-igual .titulo-secao>.categoria-etiqueta {
+.simulador-grid-igual>.card {
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+}
+
+.simulador-grid-igual>.card-largura-total {
+    grid-column: 1;
+}
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+.simulador-grid-igual .titulo-secao {
+    display: block;
+    margin-bottom: 24px;
+}
+
+.simulador-grid-igual .titulo-secao .categoria-etiqueta {
+    display: inline-flex;
     margin-bottom: 10px;
 }
 
-.simulador-grid-igual .titulo-secao>h2,
-.simulador-grid-igual .titulo-secao>h3 {
-    margin: 0 0 5px;
+.simulador-grid-igual .titulo-secao h2 {
+    margin: 0 0 6px;
     color: var(--verde-escuro);
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.simulador-grid-igual .titulo-secao h3 {
+    margin: 0 0 6px;
+    color: var(--verde-escuro);
+    font-size: 17px;
     line-height: 1.3;
 }
 
-.simulador-grid-igual .titulo-secao>h2 {
-    font-size: 22px;
-}
-
-.simulador-grid-igual .titulo-secao>h3 {
-    font-size: 17px;
-}
-
-.simulador-grid-igual .titulo-secao>p {
+.simulador-grid-igual .titulo-secao p {
+    max-width: 900px;
     margin: 0;
-    max-width: 850px;
     color: var(--texto-secundario);
     font-size: 13px;
     line-height: 1.55;
 }
 
 /* =========================================================
-   CARDS ESPECÍFICOS
+   FORMULÁRIO
    ========================================================= */
 
-#cardTaxasCredito,
-#cardCondicoesLinha,
-#cardGarantiasCredito {
-    padding: 28px;
+.simulador-grid-igual .grid-form-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
 }
+
+.simulador-grid-igual .grid-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+.simulador-grid-igual .campo {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.simulador-grid-igual .campo>label:not(.opcao-simulacao) {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.simulador-grid-igual input,
+.simulador-grid-igual select,
+.simulador-grid-igual textarea {
+    width: 100%;
+    min-width: 0;
+}
+
+.simulador-grid-igual textarea {
+    min-height: 95px;
+    padding: 11px 13px;
+    resize: vertical;
+}
+
+.simulador-grid-igual input[readonly] {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-weight: 700;
+}
+
+.simulador-grid-igual select:disabled,
+.simulador-grid-igual input:disabled,
+.simulador-grid-igual textarea:disabled {
+    background: #EEF2F2;
+    color: #87989B;
+    border-color: var(--borda);
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* =========================================================
+   INPUT COM PREFIXO / SUFIXO
+   ========================================================= */
+
+.simulador-grid-igual .input-prefixo,
+.simulador-grid-igual .input-sufixo {
+    width: 100%;
+    min-width: 0;
+}
+
+.simulador-grid-igual .input-prefixo input,
+.simulador-grid-igual .input-sufixo input {
+    flex: 1;
+    width: 1%;
+    min-width: 0;
+}
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.simulador-grid-igual .acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+/* =========================================================
+   CARDS COM DESTAQUE SUPERIOR
+   ========================================================= */
 
 #cardTaxasCredito,
 #cardCondicoesLinha,
@@ -3056,29 +3166,104 @@ footer p,
 }
 
 /* =========================================================
+   TAXAS
+   ========================================================= */
+
+#cardTaxasCredito .resultados-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 0;
+}
+
+#cardTaxasCredito .resultado-item {
+    position: relative;
+    min-height: 94px;
+    padding: 16px;
+    overflow: hidden;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+}
+
+#cardTaxasCredito .resultado-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--turquesa);
+}
+
+#cardTaxasCredito .resultado-item span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+#cardTaxasCredito .resultado-item strong {
+    display: block;
+    color: var(--turquesa);
+    font-size: 17px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   RESULTADO DE ALÇADA
+   ========================================================= */
+
+#cardTaxasCredito .resultado-destaque,
+#statusEnquadramentoCredito {
+    min-height: 82px;
+}
+
+#cardTaxasCredito .resultado-destaque strong,
+#statusEnquadramentoCredito strong {
+    font-size: clamp(17px, 2vw, 26px);
+}
+
+/* =========================================================
    CAMPOS CONDICIONAIS
    ========================================================= */
 
-#cardCondicoesLinha .campo {
-    min-width: 0;
+#blocoJustRepac,
+#blocoJustPix,
+#blocoJustSerasa,
+#blocoJustBacen {
+    grid-column: span 2;
 }
 
-#cardCondicoesLinha textarea,
-#cardGarantiasCredito textarea {
-    min-height: 95px;
-}
-
-#cardCondicoesLinha input[readonly] {
+#blocoJustSemGarantia,
+#blocoContratoMae,
+#blocoDispensaGarantia,
+#blocoParecerGerente {
+    margin-top: 18px;
+    padding: 18px;
     background: var(--fundo-secundario);
-    color: var(--verde-escuro);
-    font-weight: 700;
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 10px;
 }
 
-/* Destaca a documentação contábil calculada */
+#blocoJustSemGarantia,
+#blocoDispensaGarantia {
+    background: var(--atencao-fundo);
+    border-left-color: var(--atencao);
+}
+
+#blocoParecerGerente {
+    background: rgba(73, 71, 157, .06);
+    border-left-color: var(--roxo);
+}
+
 #documentacaoContabilCredito {
-    background: rgba(0, 160, 145, .06) !important;
-    color: var(--verde-escuro) !important;
-    border-color: rgba(0, 160, 145, .22);
+    background: rgba(0, 160, 145, .06);
+    color: var(--verde-escuro);
+    border-color: rgba(0, 160, 145, .25);
 }
 
 /* =========================================================
@@ -3090,17 +3275,18 @@ footer p,
 }
 
 #cardGarantiasCredito .campo {
-    min-width: 0;
+    height: 100%;
 }
 
 #cardGarantiasCredito .opcao-simulacao {
+    position: relative;
     display: block;
     width: 100%;
     height: 100%;
     margin: 0;
+    cursor: pointer;
 }
 
-/* Checkbox real fica oculto, mas continua funcional */
 #cardGarantiasCredito .opcao-simulacao>input[type="checkbox"] {
     position: absolute;
     width: 1px;
@@ -3109,7 +3295,6 @@ footer p,
     pointer-events: none;
 }
 
-/* Card da garantia */
 #cardGarantiasCredito .opcao-simulacao-conteudo {
     position: relative;
     display: flex;
@@ -3118,11 +3303,10 @@ footer p,
     width: 100%;
     min-height: 92px;
     height: 100%;
-    padding: 16px 17px 16px 49px;
+    padding: 15px 16px 15px 49px;
     background: #FBFCFC;
     border: 1px solid var(--borda);
     border-radius: 11px;
-    cursor: pointer;
     transition:
         background .2s ease,
         border-color .2s ease,
@@ -3130,7 +3314,7 @@ footer p,
         transform .2s ease;
 }
 
-/* Checkbox visual */
+/* Quadrado do checkbox */
 #cardGarantiasCredito .opcao-simulacao-conteudo::before {
     content: "";
     position: absolute;
@@ -3151,21 +3335,19 @@ footer p,
     position: absolute;
     top: 50%;
     left: 23px;
-    width: 7px;
-    height: 12px;
+    width: 6px;
+    height: 11px;
     opacity: 0;
-    transform:
-        translateY(-58%) rotate(45deg);
+    transform: translateY(-62%) rotate(45deg);
     border-right: 2px solid var(--branco);
     border-bottom: 2px solid var(--branco);
-    transition: opacity .15s ease;
 }
 
 #cardGarantiasCredito .opcao-simulacao-conteudo strong {
     display: block;
     margin: 0 0 4px;
     color: var(--verde-escuro);
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.35;
 }
 
@@ -3173,117 +3355,81 @@ footer p,
     display: block;
     margin: 0;
     color: var(--texto-secundario);
-    font-size: 11px;
+    font-size: 10px;
     line-height: 1.4;
 }
 
 /* Hover */
-#cardGarantiasCredito .opcao-simulacao:not(:has(input:disabled)):hover .opcao-simulacao-conteudo {
+#cardGarantiasCredito .opcao-simulacao:hover .opcao-simulacao-conteudo {
     transform: translateY(-1px);
-    background: rgba(0, 160, 145, .035);
     border-color: var(--turquesa-claro);
-    box-shadow: 0 5px 14px rgba(0, 54, 64, .07);
+    box-shadow: 0 5px 14px rgba(0, 54, 64, .08);
 }
 
-/* Garantia marcada */
-#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo {
+/* Selecionado */
+#cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo {
     background: rgba(0, 160, 145, .07);
     border-color: var(--turquesa);
-    box-shadow: inset 0 0 0 1px rgba(0, 160, 145, .15);
+    box-shadow: inset 0 0 0 1px rgba(0, 160, 145, .12);
 }
 
-#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo::before {
+#cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::before {
     background: var(--turquesa);
     border-color: var(--turquesa);
 }
 
-#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo::after {
+#cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::after {
     opacity: 1;
 }
 
-#cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo strong {
+#cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo strong {
     color: var(--turquesa);
 }
 
-/* Garantia bloqueada */
-#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo {
-    background: #F1F4F4;
+/* Desabilitado */
+#cardGarantiasCredito .opcao-simulacao>input:disabled+.opcao-simulacao-conteudo {
+    background: #EEF2F2;
     border-color: var(--borda);
+    opacity: .55;
     cursor: not-allowed;
-    opacity: .58;
+    box-shadow: none;
+    transform: none;
 }
 
-#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo::before {
-    background: #E5EBEB;
-    border-color: #C9D4D5;
+#cardGarantiasCredito .opcao-simulacao>input:disabled+.opcao-simulacao-conteudo::before {
+    background: #DFE7E7;
+    border-color: #C6D1D2;
 }
 
-#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo strong,
-#cardGarantiasCredito .opcao-simulacao:has(input:disabled) .opcao-simulacao-conteudo small {
-    color: var(--texto-secundario);
-}
-
-/* =========================================================
-   SEM GARANTIA
-   ========================================================= */
-
-#labelSemGarantia .opcao-simulacao-conteudo {
+/* Sem garantia */
+#cardGarantiasCredito #labelSemGarantia .opcao-simulacao-conteudo {
     background: var(--atencao-fundo);
 }
 
-#labelSemGarantia:has(input:checked) .opcao-simulacao-conteudo {
+#cardGarantiasCredito #labelSemGarantia>input:checked+.opcao-simulacao-conteudo {
     background: var(--atencao-fundo);
     border-color: var(--atencao);
-    box-shadow: inset 0 0 0 1px rgba(166, 106, 0, .10);
 }
 
-#labelSemGarantia:has(input:checked) .opcao-simulacao-conteudo::before {
+#cardGarantiasCredito #labelSemGarantia>input:checked+.opcao-simulacao-conteudo::before {
     background: var(--atencao);
     border-color: var(--atencao);
 }
 
-#labelSemGarantia:has(input:checked) .opcao-simulacao-conteudo strong {
+#cardGarantiasCredito #labelSemGarantia>input:checked+.opcao-simulacao-conteudo strong {
     color: var(--atencao);
 }
 
 /* =========================================================
-   CAMPOS GERADOS PELAS GARANTIAS
-   ========================================================= */
-
-#blocoJustSemGarantia,
-#blocoContratoMae,
-#blocoDispensaGarantia,
-#blocoParecerGerente {
-    margin-top: 18px;
-    padding: 18px;
-    background: var(--fundo-secundario);
-    border: 1px solid var(--borda);
-    border-left: 4px solid var(--turquesa);
-    border-radius: 10px;
-}
-
-#blocoJustSemGarantia {
-    background: var(--atencao-fundo);
-    border-left-color: var(--atencao);
-}
-
-#blocoDispensaGarantia {
-    background: var(--atencao-fundo);
-    border-left-color: var(--atencao);
-}
-
-#blocoParecerGerente {
-    background: rgba(73, 71, 157, .055);
-    border-left-color: var(--roxo);
-}
-
-/* =========================================================
-   REGRAS / DOCUMENTOS / ALERTAS
+   LISTAS DE REGRAS
    ========================================================= */
 
 #regrasGarantiasCredito,
 #listaRegrasLinhaCredito,
 #listaAlertasCredito {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
     margin-top: 16px;
 }
 
@@ -3291,7 +3437,7 @@ footer p,
 #listaRegrasLinhaCredito .documentos-observacao,
 #listaAlertasCredito .documentos-observacao {
     position: relative;
-    margin-top: 0;
+    margin: 0;
     padding: 13px 15px 13px 38px;
     background: #FBFCFC;
     color: var(--texto-secundario);
@@ -3302,7 +3448,6 @@ footer p,
     line-height: 1.55;
 }
 
-/* Marcador */
 #regrasGarantiasCredito .documentos-observacao::before,
 #listaRegrasLinhaCredito .documentos-observacao::before,
 #listaAlertasCredito .documentos-observacao::before {
@@ -3323,161 +3468,154 @@ footer p,
 }
 
 /* =========================================================
-   ALERTAS DE ENQUADRAMENTO
+   RESUMO DA LINHA
    ========================================================= */
 
-#listaAlertasCredito .documentos-observacao:has(strong:first-child) {
-    background: var(--fundo-secundario);
-}
-
-/* Não enquadrado */
-#listaAlertasCredito .documentos-observacao:has(strong:first-child) strong {
-    font-weight: 800;
-}
-
-#listaAlertasCredito .documentos-observacao:has(strong:first-child) {
-    transition:
-        border-color .2s ease,
-        background .2s ease;
-}
-
-/*
-   As regras abaixo utilizam o texto criado pelo JS.
-   O CSS não possui seletor textual nativo, então o visual-base
-   permanece neutro. O status principal diferencia o resultado.
-*/
-
-/* =========================================================
-   STATUS DE ENQUADRAMENTO
-   ========================================================= */
-
-#statusEnquadramentoCredito {
-    margin-bottom: 18px;
-}
-
-#statusEnquadramentoCredito strong {
-    font-size: clamp(17px, 1.4vw, 27px);
-}
-
-/* =========================================================
-   TAXAS E ALÇADAS
-   ========================================================= */
-
-#cardTaxasCredito .resultados-grid {
+.simulador-grid-igual .resultados-grid {
+    display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
 }
 
-#cardTaxasCredito .resultado-item {
-    position: relative;
-    min-height: 94px;
-    padding-top: 18px;
+.simulador-grid-igual .resultado-item {
+    min-width: 0;
+    padding: 15px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
 }
 
-#cardTaxasCredito .resultado-item::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
+.simulador-grid-igual .resultado-item span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.simulador-grid-igual .resultado-item strong {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 14px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   LINHA SELECIONADA
+   ========================================================= */
+
+.simulador-grid-igual .linha-selecionada {
+    margin-top: 16px;
+}
+
+/* =========================================================
+   RESULTADO FINANCEIRO
+   ========================================================= */
+
+.simulador-grid-igual .resultado-destaque {
     width: 100%;
-    height: 3px;
-    background: var(--turquesa);
-    opacity: .75;
+    margin-bottom: 20px;
 }
 
-#cardTaxasCredito .resultado-item strong {
-    color: var(--turquesa);
-    font-size: 17px;
+.simulador-grid-igual .resultado-destaque span {
+    max-width: 45%;
 }
 
-/* =========================================================
-   RESUMO DAS REGRAS DA LINHA
-   ========================================================= */
-
-#resultadoNomeLinhaCredito {
-    font-size: 15px;
-}
-
-#listaRegrasLinhaCredito {
-    padding-top: 2px;
+.simulador-grid-igual .resultado-destaque strong {
+    max-width: 55%;
 }
 
 /* =========================================================
-   TABELA DE PARCELAS
+   TABELA
    ========================================================= */
 
-#tabelaParcelasCredito td:not(:first-child),
-#tabelaParcelasCredito+tr td:not(:first-child) {
-    text-align: right;
+.simulador-grid-igual .tabela-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
 
-.tabela-card table th:first-child,
-.tabela-card table td:first-child {
+.simulador-grid-igual table {
+    min-width: 800px;
+}
+
+.simulador-grid-igual table th:first-child,
+.simulador-grid-igual table td:first-child {
     text-align: center;
 }
 
-.tabela-card table th:not(:first-child) {
+.simulador-grid-igual table th:not(:first-child),
+.simulador-grid-igual table td:not(:first-child) {
     text-align: right;
 }
 
 #tabelaParcelasCredito tr:hover td {
-    background: rgba(0, 160, 145, .035);
+    background: rgba(0, 160, 145, .04);
 }
 
 /* =========================================================
-   SELECT DESABILITADO
+   SEPARADORES
    ========================================================= */
 
-select:disabled,
-input:disabled,
-textarea:disabled {
-    background: #EEF2F2;
-    color: #849497;
-    border-color: var(--borda);
-    cursor: not-allowed;
-    opacity: 1;
+.simulador-grid-igual .separador {
+    margin: 24px 0;
 }
 
 /* =========================================================
-   MELHORIAS DE TRANSIÇÃO
-   ========================================================= */
-
-#cardCondicoesLinha .campo,
-#cardGarantiasCredito .campo {
-    animation: creditoEntradaCampo .18s ease;
-}
-
-@keyframes creditoEntradaCampo {
-    from {
-        opacity: 0;
-        transform: translateY(-3px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* =========================================================
-   RESPONSIVIDADE - CONDIÇÕES DE CRÉDITO
+   RESPONSIVIDADE
    ========================================================= */
 
 @media (max-width: 1100px) {
+
+    .simulador-grid-igual .grid-form-4,
+    .simulador-grid-igual .resultados-grid,
     #cardTaxasCredito .resultados-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 700px) {
-
-    #cardTaxasCredito,
-    #cardCondicoesLinha,
-    #cardGarantiasCredito {
-        padding: 20px;
+    .simulador-grid-igual {
+        gap: 18px;
+        padding-top: 18px;
     }
 
+    .simulador-grid-igual>.card {
+        padding: 20px;
+        border-radius: 13px;
+    }
+
+    .simulador-grid-igual .grid-form-4,
+    .simulador-grid-igual .resultados-grid,
     #cardTaxasCredito .resultados-grid {
         grid-template-columns: 1fr;
+    }
+
+    #blocoJustRepac,
+    #blocoJustPix,
+    #blocoJustSerasa,
+    #blocoJustBacen {
+        grid-column: auto;
+    }
+
+    .simulador-grid-igual .resultado-destaque {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .simulador-grid-igual .resultado-destaque span,
+    .simulador-grid-igual .resultado-destaque strong {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .simulador-grid-igual .acoes {
+        flex-direction: column;
+    }
+
+    .simulador-grid-igual .acoes button {
+        width: 100%;
     }
 
     #cardGarantiasCredito .opcao-simulacao-conteudo {
@@ -3490,33 +3628,26 @@ textarea:disabled {
     #blocoParecerGerente {
         padding: 15px;
     }
-
-    #statusEnquadramentoCredito strong {
-        max-width: 100%;
-        text-align: left;
-    }
 }
 
 /* =========================================================
-   IMPRESSÃO - CONDIÇÕES DE CRÉDITO
+   IMPRESSÃO
    ========================================================= */
 
 @media print {
-
-    #cardTaxasCredito,
-    #cardCondicoesLinha,
-    #cardGarantiasCredito {
-        overflow: visible;
+    .simulador-grid-igual {
+        display: block;
+        padding: 0;
     }
 
-    #cardGarantiasCredito .opcao-simulacao:has(input:not(:checked)) {
+    .simulador-grid-igual>.card {
+        margin-bottom: 14px;
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao>input:not(:checked)+.opcao-simulacao-conteudo {
         display: none;
-    }
-
-    #cardGarantiasCredito .opcao-simulacao:has(input:checked) .opcao-simulacao-conteudo {
-        min-height: auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
     }
 
     #regrasGarantiasCredito .documentos-observacao,
