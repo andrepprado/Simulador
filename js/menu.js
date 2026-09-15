@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
      * =========================================================
      * CADASTRO CENTRALIZADO DO MENU
      * =========================================================
-     * Para adicionar, remover, renomear ou reordenar menus,
-     * altere SOMENTE esta lista.
+     * Para adicionar, remover, renomear ou reordenar menus
+     * e submenus, altere SOMENTE esta estrutura.
      * =========================================================
      */
     const ITENS_MENU = [
@@ -26,34 +26,48 @@ document.addEventListener("DOMContentLoaded", () => {
             arquivo: "index.html"
         },
         {
-            nome: "Crédito Rural",
-            arquivo: "credito-rural.html"
+            nome: "Crédito",
+            itens: [
+                {
+                    nome: "Crédito Rural",
+                    arquivo: "credito-rural.html"
+                },
+                {
+                    nome: "Comprometimento de Renda",
+                    arquivo: "comprometimento-renda.html"
+                }
+            ]
         },
         {
-            nome: "Comprometimento de Renda",
-            arquivo: "comprometimento-renda.html"
+            nome: "Produtos e Serviços",
+            itens: [
+                {
+                    nome: "Antecipação Sipag",
+                    arquivo: "antecipacao-sipag.html"
+                },
+                {
+                    nome: "Precificação Sipag",
+                    arquivo: "precificacao-sipag.html"
+                },
+                {
+                    nome: "Informações Sicoob Card",
+                    arquivo: "informacoes-beneficios-sicoobcard.html"
+                },
+                {
+                    nome: "Cobrança",
+                    arquivo: "cobranca.html"
+                }
+            ]
         },
         {
-            nome: "Antecipação Sipag",
-            arquivo: "antecipacao-sipag.html"
-        },
-        {
-            nome: "Precificação Sipag",
-            arquivo: "precificacao-sipag.html"
-        },
-        {
-            nome: "Informações Sicoob Card",
-            arquivo: "informacoes-beneficios-sicoobcard.html"
-        },
-        {
-            nome: "Cobrança",
-            arquivo: "cobranca.html"
-        },
-        {
-            nome: "Previdência",
-            arquivo: "previdencia.html"
-        },
-
+            nome: "Seguros e Previdência",
+            itens: [
+                {
+                    nome: "Previdência",
+                    arquivo: "previdencia.html"
+                }
+            ]
+        }
     ];
 
     function obterPaginaAtual() {
@@ -72,6 +86,118 @@ document.addEventListener("DOMContentLoaded", () => {
         return paginaAtual.toLowerCase();
     }
 
+    function itemEstaAtivo(item, paginaAtual) {
+        if (item.arquivo) {
+            return item.arquivo.toLowerCase() === paginaAtual;
+        }
+
+        if (Array.isArray(item.itens)) {
+            return item.itens.some(subitem => itemEstaAtivo(subitem, paginaAtual));
+        }
+
+        return false;
+    }
+
+    function fecharTodosSubmenus(excecao = null) {
+        document.querySelectorAll(".menu-grupo.aberto").forEach(grupo => {
+            if (grupo !== excecao) {
+                grupo.classList.remove("aberto");
+
+                const botao = grupo.querySelector(".menu-grupo-botao");
+
+                if (botao) {
+                    botao.setAttribute("aria-expanded", "false");
+                }
+            }
+        });
+    }
+
+    function criarLink(item, paginaAtual, classe = "menu-item") {
+        const link = document.createElement("a");
+
+        link.href = item.arquivo;
+        link.className = classe;
+        link.textContent = item.nome;
+
+        if (itemEstaAtivo(item, paginaAtual)) {
+            link.classList.add("ativo");
+        }
+
+        return link;
+    }
+
+    function criarGrupo(item, paginaAtual) {
+        const grupo = document.createElement("div");
+        grupo.className = "menu-grupo";
+
+        if (itemEstaAtivo(item, paginaAtual)) {
+            grupo.classList.add("ativo");
+        }
+
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "menu-item menu-grupo-botao";
+        botao.setAttribute("aria-expanded", "false");
+
+        const texto = document.createElement("span");
+        texto.textContent = item.nome;
+
+        const seta = document.createElement("span");
+        seta.className = "menu-grupo-seta";
+        seta.setAttribute("aria-hidden", "true");
+        seta.textContent = "▾";
+
+        botao.appendChild(texto);
+        botao.appendChild(seta);
+
+        const submenu = document.createElement("div");
+        submenu.className = "menu-submenu";
+
+        item.itens.forEach(subitem => {
+            const link = criarLink(
+                subitem,
+                paginaAtual,
+                "menu-subitem"
+            );
+
+            submenu.appendChild(link);
+        });
+
+        botao.addEventListener("click", event => {
+            event.stopPropagation();
+
+            const abrir = !grupo.classList.contains("aberto");
+
+            fecharTodosSubmenus(grupo);
+
+            grupo.classList.toggle("aberto", abrir);
+            botao.setAttribute(
+                "aria-expanded",
+                abrir ? "true" : "false"
+            );
+        });
+
+        grupo.addEventListener("mouseenter", () => {
+            if (window.matchMedia("(hover: hover)").matches) {
+                fecharTodosSubmenus(grupo);
+                grupo.classList.add("aberto");
+                botao.setAttribute("aria-expanded", "true");
+            }
+        });
+
+        grupo.addEventListener("mouseleave", () => {
+            if (window.matchMedia("(hover: hover)").matches) {
+                grupo.classList.remove("aberto");
+                botao.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        grupo.appendChild(botao);
+        grupo.appendChild(submenu);
+
+        return grupo;
+    }
+
     function criarMenu() {
         const paginaAtual = obterPaginaAtual();
 
@@ -82,25 +208,36 @@ document.addEventListener("DOMContentLoaded", () => {
         container.className = "container menu-conteudo";
 
         ITENS_MENU.forEach(item => {
-            const link = document.createElement("a");
+            if (item.arquivo) {
+                container.appendChild(
+                    criarLink(item, paginaAtual)
+                );
 
-            link.href = item.arquivo;
-            link.className = "menu-item";
-            link.textContent = item.nome;
-
-            if (
-                paginaAtual === item.arquivo.toLowerCase()
-            ) {
-                link.classList.add("ativo");
+                return;
             }
 
-            container.appendChild(link);
+            if (Array.isArray(item.itens) && item.itens.length > 0) {
+                container.appendChild(
+                    criarGrupo(item, paginaAtual)
+                );
+            }
         });
 
         nav.appendChild(container);
-
         containerMenu.replaceChildren(nav);
     }
+
+    document.addEventListener("click", event => {
+        if (!event.target.closest(".menu-grupo")) {
+            fecharTodosSubmenus();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            fecharTodosSubmenus();
+        }
+    });
 
     criarMenu();
 });
