@@ -1,14 +1,9 @@
-/**
- * simulador-condicoes-credito.js
- * Simulador de Condições de Crédito
- * Sicoob Mantiqueira
- * @author andre.prado
- */
-
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
     const $ = id => document.getElementById(id);
+    const LIMITE_VALOR_OPERACAO = 999000000;
+    const LIMITE_VALOR_MONETARIO = 999999999.99;
 
     /* =========================================================
        LINHAS PF
@@ -130,6 +125,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "125903 CREDITO ROTATIVO PJ - CDI POS FIXADO",
         "99792 CAPITAL DE GIRO HABITACIONAL"
     ];
+
+    /* =========================================================
+       REGRAS DAS LINHAS
+       ========================================================= */
 
     const SET_LINHAS_INATIVAS = new Set([33028]);
     const SET_LINHAS_SUSPENSAS = new Set([87421]);
@@ -263,6 +262,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================================================
        MATRIZ DE TAXAS
+       Ordem:
+       Código, Diretor/Superintendente, Negócios,
+       Gerente de Agência, Taxa Balcão
        ========================================================= */
 
     const MATRIZ_TAXAS = [
@@ -397,6 +399,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* =========================================================
+       REMOÇÃO DOS CAMPOS DE JUSTIFICATIVA / TEXTAREA
+       O JS remove esses blocos mesmo que ainda existam no HTML.
+       ========================================================= */
+
+    function removerCamposTextuaisDesnecessarios() {
+        [
+            "blocoJustRepac",
+            "blocoJustPix",
+            "blocoJustSerasa",
+            "blocoJustBacen",
+            "blocoJustSemGarantia",
+            "blocoDispensaGarantia",
+            "blocoParecerGerente"
+        ].forEach(id => {
+            const bloco = $(id);
+
+            if (bloco) {
+                bloco.remove();
+            }
+        });
+
+        document.querySelectorAll(
+            "#cardCondicoesLinha textarea, #cardGarantiasCredito textarea"
+        ).forEach(textarea => {
+            const bloco =
+                textarea.closest(".campo") ||
+                textarea.closest(".grid-form") ||
+                textarea;
+
+            if (bloco) {
+                bloco.remove();
+            }
+        });
+    }
+
+    removerCamposTextuaisDesnecessarios();
+
+    /* =========================================================
        ELEMENTOS
        ========================================================= */
 
@@ -411,19 +451,15 @@ document.addEventListener("DOMContentLoaded", () => {
         perda: $("perdaEsperadaCredito"),
         flex: $("flexCredito"),
         repac: $("repacTroco"),
-        justRepac: $("justRepac"),
         porcVista: $("porcVista"),
         prazoMedio: $("prazoMedio"),
         alteraLimite: $("alteraLimite"),
         valorLimiteAnterior: $("valorLimiteAnterior"),
         pix: $("possuiPix"),
-        justPix: $("justPix"),
         cotas: $("cotasAtraso"),
         crl: $("crlAtivo"),
         serasa: $("possuiSerasa"),
-        justSerasa: $("justSerasa"),
         bacen: $("possuiBacen"),
-        justBacen: $("justBacen"),
         faturamento: $("faturamentoAnualCredito"),
         docContabil: $("documentacaoContabilCredito"),
         emitente: $("maisEmitente"),
@@ -436,10 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rural: $("garantiaImovelRural"),
         guarda: $("garantiaGuardaChuva"),
         semGarantia: $("semGarantiaCredito"),
-        justSemGarantia: $("justSemGarantia"),
         contratoMae: $("contratoMae"),
-        justDispensa: $("justDispensaGarantia"),
-        parecerGerente: $("parecerGerente"),
         btnSimular: $("btnSimularCondicoesCredito"),
         btnLimpar: $("btnLimparCondicoesCredito")
     };
@@ -450,10 +483,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function numero(valor) {
         if (typeof valor === "number") {
-            return Number.isFinite(valor) ? valor : 0;
+            return Number.isFinite(valor)
+                ? valor
+                : 0;
         }
 
-        if (valor === null || valor === undefined || valor === "") {
+        if (
+            valor === null ||
+            valor === undefined ||
+            valor === ""
+        ) {
             return 0;
         }
 
@@ -468,7 +507,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 .replace(",", ".");
         }
 
-        const resultado = Number(texto);
+        const resultado =
+            Number(texto);
 
         return Number.isFinite(resultado)
             ? resultado
@@ -476,10 +516,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function moeda(valor) {
-        return Number(valor || 0).toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL"
-        });
+        return Number(valor || 0)
+            .toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+    }
+
+    function valorMonetarioSemSimbolo(valor) {
+        return Number(valor || 0)
+            .toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
     }
 
     function percentual(valor) {
@@ -487,10 +536,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return "-";
         }
 
-        return Number(valor).toLocaleString("pt-BR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 4
-        }) + "% a.m.";
+        return Number(valor)
+            .toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+            }) + "% a.m.";
     }
 
     function setTexto(id, texto) {
@@ -514,8 +564,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function codigoLinhaSelecionada() {
-        const valor = e.linha?.value || "";
-        const match = valor.match(/^\s*(\d+)/);
+        const valor =
+            e.linha?.value || "";
+
+        const match =
+            valor.match(/^\s*(\d+)/);
 
         return match
             ? Number(match[1])
@@ -532,17 +585,9 @@ document.addEventListener("DOMContentLoaded", () => {
             !SET_LINHAS_SUSPENSAS.has(codigo);
     }
 
-    function formatarMonetario(campo) {
-        if (!campo) return;
-
-        campo.value = numero(campo.value).toLocaleString("pt-BR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    }
-
     function sugestaoSistema(nome) {
-        const n = String(nome || "").toUpperCase();
+        const n =
+            String(nome || "").toUpperCase();
 
         if (n.includes("PRICE")) {
             return "PRICE";
@@ -560,35 +605,144 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================================================
+       MÁSCARA MONETÁRIA
+       ========================================================= */
+
+    function aplicarMascaraMonetaria(campo, limite = LIMITE_VALOR_MONETARIO) {
+        if (!campo) return;
+
+        campo.type = "text";
+        campo.inputMode = "numeric";
+        campo.autocomplete = "off";
+
+        campo.addEventListener("input", () => {
+            let digitos =
+                campo.value.replace(/\D/g, "");
+
+            if (!digitos) {
+                campo.value = "0,00";
+                campo.dataset.limiteExcedido = "false";
+                return;
+            }
+
+            let valor =
+                Number(digitos) / 100;
+
+            if (!Number.isFinite(valor)) {
+                valor = 0;
+            }
+
+            if (valor > limite) {
+                valor = limite;
+                campo.dataset.limiteExcedido = "true";
+            } else {
+                campo.dataset.limiteExcedido = "false";
+            }
+
+            campo.value =
+                valorMonetarioSemSimbolo(valor);
+        });
+
+        campo.addEventListener("focus", () => {
+            requestAnimationFrame(() => {
+                const tamanho =
+                    campo.value.length;
+
+                campo.setSelectionRange(
+                    tamanho,
+                    tamanho
+                );
+            });
+        });
+
+        campo.addEventListener("blur", () => {
+            const valor =
+                Math.min(
+                    numero(campo.value),
+                    limite
+                );
+
+            campo.value =
+                valorMonetarioSemSimbolo(valor);
+        });
+    }
+
+    function configurarMascaras() {
+        aplicarMascaraMonetaria(
+            e.valor,
+            LIMITE_VALOR_OPERACAO
+        );
+
+        aplicarMascaraMonetaria(
+            e.valorLimiteAnterior,
+            LIMITE_VALOR_MONETARIO
+        );
+
+        aplicarMascaraMonetaria(
+            e.faturamento,
+            LIMITE_VALOR_MONETARIO
+        );
+
+        if (e.valor) {
+            e.valor.value = "0,00";
+            e.valor.title =
+                "Valor máximo da operação: R$ 999.000.000,00";
+        }
+
+        if (e.valorLimiteAnterior) {
+            e.valorLimiteAnterior.value =
+                "0,00";
+        }
+
+        if (e.faturamento) {
+            e.faturamento.value =
+                "0,00";
+        }
+    }
+
+    /* =========================================================
        LINHAS
        ========================================================= */
 
     function carregarLinhas() {
-        const tipo = e.tipoPessoa.value;
-        const linhas = tipo === "PF"
-            ? LINHAS_PF
-            : tipo === "PJ"
-                ? LINHAS_PJ
-                : [];
+        const tipo =
+            e.tipoPessoa?.value || "";
+
+        const linhas =
+            tipo === "PF"
+                ? LINHAS_PF
+                : tipo === "PJ"
+                    ? LINHAS_PJ
+                    : [];
+
+        if (!e.linha) return;
 
         e.linha.innerHTML = "";
 
-        const opt = document.createElement("option");
+        const opt =
+            document.createElement("option");
+
         opt.value = "";
-        opt.textContent = tipo
-            ? "Selecione a linha de crédito"
-            : "Selecione primeiro o tipo de pessoa";
+
+        opt.textContent =
+            tipo
+                ? "Selecione a linha de crédito"
+                : "Selecione primeiro o tipo de pessoa";
 
         e.linha.appendChild(opt);
 
         linhas.forEach(linha => {
-            const option = document.createElement("option");
+            const option =
+                document.createElement("option");
+
             option.value = linha;
             option.textContent = linha;
+
             e.linha.appendChild(option);
         });
 
-        e.linha.disabled = !tipo;
+        e.linha.disabled =
+            linhas.length === 0;
 
         limparPerfilLinha();
     }
@@ -602,14 +756,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function menorTaxaValida(taxas) {
-        if (!taxas) return null;
+        if (!taxas) {
+            return null;
+        }
 
         const valores = [
             taxas.diretor,
             taxas.negocios,
             taxas.gerente,
             taxas.balcao
-        ].filter(v => Number(v) > 0);
+        ].filter(valor => Number(valor) > 0);
 
         if (!valores.length) {
             return null;
@@ -647,21 +803,30 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         }
 
-        if (taxas.gerente > 0 && taxa >= taxas.gerente) {
+        if (
+            taxas.gerente > 0 &&
+            taxa >= taxas.gerente
+        ) {
             return {
                 codigo: "GERENTE",
                 texto: "Gerente de Agência"
             };
         }
 
-        if (taxas.negocios > 0 && taxa >= taxas.negocios) {
+        if (
+            taxas.negocios > 0 &&
+            taxa >= taxas.negocios
+        ) {
             return {
                 codigo: "NEGOCIOS",
                 texto: "Gerente de Apoio a Negócios"
             };
         }
 
-        if (taxas.diretor > 0 && taxa >= taxas.diretor) {
+        if (
+            taxas.diretor > 0 &&
+            taxa >= taxas.diretor
+        ) {
             return {
                 codigo: "DIRETOR",
                 texto: "Diretor / Superintendente"
@@ -675,18 +840,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function carregarTaxas() {
-        const codigo = codigoLinhaSelecionada();
-        const taxas = obterTaxas(codigo);
+        const codigo =
+            codigoLinhaSelecionada();
+
+        const taxas =
+            obterTaxas(codigo);
 
         if (!taxas) {
-            setTexto("resultadoTaxaBalcao", "-");
-            setTexto("resultadoTaxaGerente", "-");
-            setTexto("resultadoTaxaNegocios", "-");
-            setTexto("resultadoTaxaDiretor", "-");
-            setTexto("resultadoAlcadaTaxa", "Taxas não cadastradas");
+            setTexto(
+                "resultadoTaxaBalcao",
+                "-"
+            );
 
-            e.taxa.value = "";
-            e.taxa.readOnly = false;
+            setTexto(
+                "resultadoTaxaGerente",
+                "-"
+            );
+
+            setTexto(
+                "resultadoTaxaNegocios",
+                "-"
+            );
+
+            setTexto(
+                "resultadoTaxaDiretor",
+                "-"
+            );
+
+            setTexto(
+                "resultadoAlcadaTaxa",
+                "Taxas não cadastradas"
+            );
+
+            if (e.taxa) {
+                e.taxa.value = "";
+                e.taxa.readOnly = false;
+            }
+
+            atualizarMensagemTaxa();
 
             return;
         }
@@ -719,10 +910,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 : "Sem alçada"
         );
 
-        if (taxas.balcao > 0) {
-            e.taxa.value = taxas.balcao.toFixed(2);
-        } else {
-            e.taxa.value = "";
+        if (e.taxa) {
+            e.taxa.value =
+                taxas.balcao > 0
+                    ? taxas.balcao.toFixed(2)
+                    : "";
         }
 
         atualizarComportamentoTaxa();
@@ -730,8 +922,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function atualizarComportamentoTaxa() {
-        const codigo = codigoLinhaSelecionada();
-        const taxas = obterTaxas(codigo);
+        const codigo =
+            codigoLinhaSelecionada();
+
+        const taxas =
+            obterTaxas(codigo);
+
+        if (!e.taxa) return;
 
         if (!codigo) {
             e.taxa.readOnly = false;
@@ -744,15 +941,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!SET_FLEX.has(codigo)) {
-            e.taxa.readOnly = !!(taxas && taxas.balcao > 0);
+            e.taxa.readOnly =
+                !!(taxas && taxas.balcao > 0);
+
+            if (
+                taxas &&
+                taxas.balcao > 0
+            ) {
+                e.taxa.value =
+                    taxas.balcao.toFixed(2);
+            }
+
             return;
         }
 
-        const flex = e.flex.value;
-
-        if (flex === "NAO") {
-            if (taxas && taxas.balcao > 0) {
-                e.taxa.value = taxas.balcao.toFixed(2);
+        if (e.flex?.value === "NAO") {
+            if (
+                taxas &&
+                taxas.balcao > 0
+            ) {
+                e.taxa.value =
+                    taxas.balcao.toFixed(2);
             }
 
             e.taxa.readOnly = true;
@@ -761,40 +970,54 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function atualizarAlcada() {
-        const codigo = codigoLinhaSelecionada();
-        const taxas = obterTaxas(codigo);
-        const taxa = numero(e.taxa.value);
+    function atualizarMensagemTaxa() {
+        const codigo =
+            codigoLinhaSelecionada();
 
-        const resultado = identificarAlcada(taxa, taxas);
+        const taxas =
+            obterTaxas(codigo);
 
-        setTexto("resultadoAlcadaTaxa", resultado.texto);
+        const taxa =
+            numero(e.taxa?.value);
 
-        const mensagem = $("mensagemTaxaCredito");
+        const resultado =
+            identificarAlcada(
+                taxa,
+                taxas
+            );
 
-        if (!mensagem) return;
+        const mensagem =
+            $("mensagemTaxaCredito");
+
+        if (!mensagem) {
+            return;
+        }
 
         if (!taxas) {
             mensagem.innerHTML =
                 "<strong>Atenção:</strong> não há taxas cadastradas para esta linha.";
+
             return;
         }
 
         if (taxas.balcao <= 0) {
             mensagem.innerHTML =
-                "<strong>Atenção:</strong> a matriz possui taxa igual a zero para esta linha. Consulte a regra específica de precificação.";
+                "<strong>Atenção:</strong> esta linha está com taxa igual a zero na matriz informada. Consulte a regra específica de precificação.";
+
             return;
         }
 
         if (resultado.codigo === "ABAIXO") {
             mensagem.innerHTML =
                 "<strong>Atenção:</strong> a taxa informada está abaixo da menor alçada cadastrada.";
+
             return;
         }
 
         if (resultado.codigo === "NAO_INFORMADA") {
             mensagem.innerHTML =
-                "<strong>Atenção:</strong> informe a taxa da operação.";
+                "<strong>Atenção:</strong> informe uma taxa para consultar a alçada.";
+
             return;
         }
 
@@ -806,6 +1029,30 @@ document.addEventListener("DOMContentLoaded", () => {
             ".";
     }
 
+    function atualizarAlcada() {
+        const codigo =
+            codigoLinhaSelecionada();
+
+        const taxas =
+            obterTaxas(codigo);
+
+        const taxa =
+            numero(e.taxa?.value);
+
+        const resultado =
+            identificarAlcada(
+                taxa,
+                taxas
+            );
+
+        setTexto(
+            "resultadoAlcadaTaxa",
+            resultado.texto
+        );
+
+        atualizarMensagemTaxa();
+    }
+
     /* =========================================================
        CAMPOS CONDICIONAIS
        ========================================================= */
@@ -814,43 +1061,64 @@ document.addEventListener("DOMContentLoaded", () => {
         [
             "blocoFlexCredito",
             "blocoRepacTroco",
-            "blocoJustRepac",
             "blocoPorcVista",
             "blocoPrazoMedio",
             "blocoAlteraLimite",
             "blocoValorLimiteAnterior",
             "blocoPix",
-            "blocoJustPix",
             "blocoCotas",
             "blocoCrl",
             "blocoSerasa",
-            "blocoJustSerasa",
             "blocoBacen",
-            "blocoJustBacen",
             "blocoFaturamento",
             "blocoBalanco",
             "blocoEmitente",
-            "blocoJustSemGarantia",
-            "blocoContratoMae",
-            "blocoDispensaGarantia",
-            "blocoParecerGerente"
-        ].forEach(id => setHidden(id, true));
+            "blocoContratoMae"
+        ].forEach(id => {
+            setHidden(
+                id,
+                true
+            );
+        });
     }
 
     function mostrarPerfilLinha() {
-        const codigo = codigoLinhaSelecionada();
+        const codigo =
+            codigoLinhaSelecionada();
 
         esconderCondicionais();
 
-        if (!codigo || !linhaDisponivel(codigo)) {
+        if (
+            !codigo ||
+            !linhaDisponivel(codigo)
+        ) {
             return;
         }
 
-        setHidden("blocoFlexCredito", !SET_FLEX.has(codigo));
-        setHidden("blocoRepacTroco", !SET_REPAC.has(codigo));
-        setHidden("blocoPorcVista", !SET_PORC_VISTA.has(codigo));
-        setHidden("blocoPrazoMedio", !SET_PRAZO_MEDIO.has(codigo));
-        setHidden("blocoAlteraLimite", !SET_ALTERA_LIMITE.has(codigo));
+        setHidden(
+            "blocoFlexCredito",
+            !SET_FLEX.has(codigo)
+        );
+
+        setHidden(
+            "blocoRepacTroco",
+            !SET_REPAC.has(codigo)
+        );
+
+        setHidden(
+            "blocoPorcVista",
+            !SET_PORC_VISTA.has(codigo)
+        );
+
+        setHidden(
+            "blocoPrazoMedio",
+            !SET_PRAZO_MEDIO.has(codigo)
+        );
+
+        setHidden(
+            "blocoAlteraLimite",
+            !SET_ALTERA_LIMITE.has(codigo)
+        );
 
         setHidden("blocoPix", false);
         setHidden("blocoCotas", false);
@@ -865,63 +1133,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function atualizarCondicionais() {
-        const codigo = codigoLinhaSelecionada();
-
-        setHidden(
-            "blocoJustRepac",
-            !(SET_REPAC.has(codigo) && e.repac.value === "SIM")
-        );
+        const codigo =
+            codigoLinhaSelecionada();
 
         setHidden(
             "blocoValorLimiteAnterior",
-            !(SET_ALTERA_LIMITE.has(codigo) && e.alteraLimite.value === "SIM")
-        );
-
-        setHidden(
-            "blocoJustPix",
-            e.pix.value !== "NAO"
-        );
-
-        setHidden(
-            "blocoJustSerasa",
-            e.serasa.value !== "SIM"
-        );
-
-        setHidden(
-            "blocoJustBacen",
-            e.bacen.value !== "SIM"
-        );
-
-        setHidden(
-            "blocoJustSemGarantia",
-            !e.semGarantia.checked
+            !(
+                SET_ALTERA_LIMITE.has(codigo) &&
+                e.alteraLimite?.value === "SIM"
+            )
         );
 
         setHidden(
             "blocoContratoMae",
-            !e.guarda.checked
+            !e.guarda?.checked
         );
 
         atualizarDocumentacaoContabil();
-        atualizarExcecoesGerente();
     }
 
     function atualizarDocumentacaoContabil() {
-        const faturamento = numero(e.faturamento.value);
+        if (!e.docContabil) {
+            return;
+        }
 
-        if (!e.docContabil) return;
+        const faturamento =
+            numero(e.faturamento?.value);
 
         if (faturamento <= 0) {
-            e.docContabil.value = "Informe o faturamento anual";
+            e.docContabil.value =
+                "Informe o faturamento anual";
+
             return;
         }
 
         if (faturamento <= 400000) {
-            e.docContabil.value = "Balanço Perguntado obrigatório";
+            e.docContabil.value =
+                "Balanço Perguntado";
+
             return;
         }
 
-        e.docContabil.value = "Balanço Patrimonial + DRE Consolidado obrigatórios";
+        e.docContabil.value =
+            "Balanço Patrimonial + DRE Consolidado";
     }
 
     /* =========================================================
@@ -929,57 +1183,96 @@ document.addEventListener("DOMContentLoaded", () => {
        ========================================================= */
 
     function configGarantias(codigo) {
-        let avalista = "NAO";
+        let avalista =
+            "NAO";
 
-        if (SET_AVALISTA_OBRIGATORIO.has(codigo)) {
-            avalista = "OBRIGATORIO";
-        } else if (SET_AVALISTA_RISCO.has(codigo)) {
-            avalista = "RISCO";
-        } else if (SET_AVALISTA_PERMITIDO.has(codigo)) {
-            avalista = "PERMITIDO";
+        if (
+            SET_AVALISTA_OBRIGATORIO.has(codigo)
+        ) {
+            avalista =
+                "OBRIGATORIO";
+        } else if (
+            SET_AVALISTA_RISCO.has(codigo)
+        ) {
+            avalista =
+                "RISCO";
+        } else if (
+            SET_AVALISTA_PERMITIDO.has(codigo)
+        ) {
+            avalista =
+                "PERMITIDO";
         }
 
         return {
             avalista,
-            veiculo: SET_VEICULO_PERMITIDO.has(codigo),
-            zeroKm: SET_VEICULO_ZERO.has(codigo),
-            recebiveis: SET_CONVENIO.has(codigo),
-            aplicacao: SET_APLICACAO.has(codigo),
-            urbano: SET_URBANO_RESIDENCIAL.has(codigo)
-                ? "RESIDENCIAL"
-                : SET_URBANO_RC.has(codigo)
-                    ? "RESIDENCIAL/COMERCIAL"
-                    : "NAO",
-            rural: SET_RURAL.has(codigo),
-            guarda: SET_GUARDA_CHUVA.has(codigo)
+            veiculo:
+                SET_VEICULO_PERMITIDO.has(codigo),
+            zeroKm:
+                SET_VEICULO_ZERO.has(codigo),
+            recebiveis:
+                SET_CONVENIO.has(codigo),
+            aplicacao:
+                SET_APLICACAO.has(codigo),
+            urbano:
+                SET_URBANO_RESIDENCIAL.has(codigo)
+                    ? "RESIDENCIAL"
+                    : SET_URBANO_RC.has(codigo)
+                        ? "RESIDENCIAL/COMERCIAL"
+                        : "NAO",
+            rural:
+                SET_RURAL.has(codigo),
+            guarda:
+                SET_GUARDA_CHUVA.has(codigo)
         };
     }
 
-    function configurarCheckbox(campo, labelId, permitido, obrigatorio = false) {
-        if (!campo) return;
-
-        campo.disabled = !permitido;
-
-        if (!permitido) {
-            campo.checked = false;
+    function configurarCheckbox(
+        campo,
+        labelId,
+        permitido,
+        obrigatorio = false
+    ) {
+        if (!campo) {
+            return;
         }
 
-        const label = $(labelId);
+        campo.disabled =
+            !permitido;
+
+        if (!permitido) {
+            campo.checked =
+                false;
+        }
+
+        const label =
+            $(labelId);
 
         if (label) {
-            label.style.opacity = permitido ? "1" : "0.45";
-            label.style.cursor = permitido ? "pointer" : "not-allowed";
+            label.style.opacity =
+                permitido
+                    ? "1"
+                    : "0.45";
+
+            label.style.cursor =
+                permitido
+                    ? "pointer"
+                    : "not-allowed";
         }
 
         if (obrigatorio) {
-            campo.checked = true;
+            campo.checked =
+                true;
         }
     }
 
     function atualizarGarantiasDisponiveis() {
-        const codigo = codigoLinhaSelecionada();
+        const codigo =
+            codigoLinhaSelecionada();
 
-        if (!codigo || !linhaDisponivel(codigo)) {
+        if (
+            !codigo ||
+            !linhaDisponivel(codigo)
+        ) {
             [
                 [e.avalista, "labelGarantiaAvalista"],
                 [e.veiculo, "labelGarantiaVeiculo"],
@@ -989,13 +1282,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 [e.rural, "labelGarantiaRural"],
                 [e.guarda, "labelGarantiaGuarda"],
                 [e.semGarantia, "labelSemGarantia"]
-            ].forEach(item => configurarCheckbox(item[0], item[1], false));
+            ].forEach(item => {
+                configurarCheckbox(
+                    item[0],
+                    item[1],
+                    false
+                );
+            });
 
             atualizarRegrasGarantias();
+
             return;
         }
 
-        const config = configGarantias(codigo);
+        const config =
+            configGarantias(codigo);
 
         configurarCheckbox(
             e.avalista,
@@ -1075,37 +1376,51 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "Não permitido"
         );
 
-        if (config.avalista === "OBRIGATORIO") {
-            e.semGarantia.checked = false;
+        if (
+            config.avalista === "OBRIGATORIO" &&
+            e.semGarantia
+        ) {
+            e.semGarantia.checked =
+                false;
         }
 
         atualizarRegrasGarantias();
     }
 
     function possuiGarantiaReal() {
-        return e.veiculo.checked ||
-            e.recebiveis.checked ||
-            e.aplicacao.checked ||
-            e.urbano.checked ||
-            e.rural.checked;
+        return !!(
+            e.veiculo?.checked ||
+            e.recebiveis?.checked ||
+            e.aplicacao?.checked ||
+            e.urbano?.checked ||
+            e.rural?.checked
+        );
     }
 
     function possuiGarantiaSelecionada() {
-        return e.avalista.checked ||
-            e.veiculo.checked ||
-            e.recebiveis.checked ||
-            e.aplicacao.checked ||
-            e.urbano.checked ||
-            e.rural.checked ||
-            e.guarda.checked ||
-            e.semGarantia.checked;
+        return !!(
+            e.avalista?.checked ||
+            e.veiculo?.checked ||
+            e.recebiveis?.checked ||
+            e.aplicacao?.checked ||
+            e.urbano?.checked ||
+            e.rural?.checked ||
+            e.guarda?.checked ||
+            e.semGarantia?.checked
+        );
     }
 
     function tratarExclusividadeGarantias(campoAlterado) {
-        const codigo = codigoLinhaSelecionada();
-        const config = configGarantias(codigo);
+        const codigo =
+            codigoLinhaSelecionada();
 
-        if (campoAlterado === e.semGarantia && e.semGarantia.checked) {
+        const config =
+            configGarantias(codigo);
+
+        if (
+            campoAlterado === e.semGarantia &&
+            e.semGarantia?.checked
+        ) {
             [
                 e.avalista,
                 e.veiculo,
@@ -1115,23 +1430,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.rural,
                 e.guarda
             ].forEach(campo => {
-                if (campo && !campo.disabled) {
-                    campo.checked = false;
+                if (
+                    campo &&
+                    !campo.disabled
+                ) {
+                    campo.checked =
+                        false;
                 }
             });
         }
 
         if (
             campoAlterado !== e.semGarantia &&
-            campoAlterado.checked &&
+            campoAlterado?.checked &&
             e.semGarantia
         ) {
-            e.semGarantia.checked = false;
+            e.semGarantia.checked =
+                false;
         }
 
-        if (config.avalista === "OBRIGATORIO") {
-            e.avalista.checked = true;
-            e.semGarantia.checked = false;
+        if (
+            config.avalista === "OBRIGATORIO" &&
+            e.avalista
+        ) {
+            e.avalista.checked =
+                true;
+
+            if (e.semGarantia) {
+                e.semGarantia.checked =
+                    false;
+            }
         }
 
         atualizarCondicionais();
@@ -1140,108 +1468,132 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function atualizarRegrasGarantias() {
-        const container = $("regrasGarantiasCredito");
+        const container =
+            $("regrasGarantiasCredito");
 
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
-        const regras = [];
+        const regras =
+            [];
 
-        if (e.avalista.checked) {
+        if (e.avalista?.checked) {
             regras.push(
                 "<strong>Avalista:</strong> informar CPF/CNPJ e Nome/Razão Social. Para PJ, validar a condição de garantia e a participação dos sócios como avalistas."
             );
         }
 
-        if (e.veiculo.checked) {
+        if (e.veiculo?.checked) {
             regras.push(
-                "<strong>Veículo:</strong> informar tipo do veículo, Orçamento/NF/CRV, existência de seguro, apólice quando houver, justificativa quando não houver seguro, tipo de garantia e situação do licenciamento em SP/RJ."
+                "<strong>Veículo:</strong> verificar tipo do veículo, Orçamento/NF/CRV, existência de seguro, apólice quando aplicável, tipo da garantia e situação do licenciamento."
             );
         }
 
-        if (e.recebiveis.checked) {
+        if (e.recebiveis?.checked) {
             regras.push(
-                "<strong>Cessão de Direitos - Produtos/Serviços:</strong> informar valor da garantia e documentação da cessão, com anexos e descrição."
+                "<strong>Cessão de Direitos - Produtos/Serviços:</strong> verificar valor da garantia e documentação aplicável à cessão."
             );
         }
 
-        if (e.aplicacao.checked) {
+        if (e.aplicacao?.checked) {
             regras.push(
-                "<strong>Aplicação Financeira:</strong> informar valor da garantia, modo de aplicação, tipo da aplicação, conta corrente e número da aplicação."
+                "<strong>Aplicação Financeira:</strong> verificar valor da garantia, modo de aplicação, tipo da aplicação, conta corrente e número da aplicação."
             );
 
             regras.push(
-                "<strong>Documentação de Fundos:</strong> CND Receita Federal e Faturamento Receita Federal são aplicáveis à garantia de fundos."
-            );
-        }
-
-        if (e.urbano.checked) {
-            regras.push(
-                "<strong>Imóvel Urbano:</strong> informar tipo do imóvel, residência do proprietário, disponibilidade de outros meios para quitação, vínculo com outras operações, contrato de compra e venda, matrícula atualizada, avaliação, construção/averbação, alienação para PJ e certidão objeto e pé quando aplicável."
+                "<strong>Documentação de Fundos:</strong> verificar CND Receita Federal e Faturamento Receita Federal quando aplicável."
             );
         }
 
-        if (e.rural.checked) {
+        if (e.urbano?.checked) {
             regras.push(
-                "<strong>Imóvel Rural:</strong> informar tipo do imóvel, residência do proprietário, outros meios de quitação, vínculos, certidão objeto e pé, contrato de compra e venda, matrícula, avaliação, CAR, CCIR, INCRA, NIRF e situação de construção/averbação."
+                "<strong>Imóvel Urbano:</strong> verificar tipo do imóvel, matrícula atualizada, avaliação, situação da construção/averbação, vínculos existentes e demais documentos da garantia."
             );
         }
 
-        if (e.guarda.checked) {
+        if (e.rural?.checked) {
+            regras.push(
+                "<strong>Imóvel Rural:</strong> verificar matrícula, avaliação, CAR, CCIR, INCRA, NIRF, situação da construção/averbação e demais documentos aplicáveis."
+            );
+        }
+
+        if (e.guarda?.checked) {
             regras.push(
                 "<strong>Limite Guarda-Chuva:</strong> informar o número do Contrato-Mãe."
             );
         }
 
-        if (e.semGarantia.checked) {
+        if (e.semGarantia?.checked) {
             regras.push(
-                "<strong>Sem Garantias:</strong> exige justificativa e é incompatível com qualquer outra garantia."
+                "<strong>Sem Garantias:</strong> a operação será considerada sem garantia para fins desta simulação."
             );
         }
 
-        const codigo = codigoLinhaSelecionada();
+        const codigo =
+            codigoLinhaSelecionada();
 
         if (
-            e.aplicacao.checked ||
+            e.aplicacao?.checked ||
             SET_FUNDOS_DOCS.has(codigo)
         ) {
             regras.push(
-                "<strong>CND/Faturamento RF:</strong> documentação obrigatória conforme regra de fundos."
+                "<strong>CND / Faturamento RF:</strong> verificar a documentação aplicável conforme a regra da linha."
+            );
+        }
+
+        const excecao =
+            dadosExcecaoGerente();
+
+        if (excecao.semGarantiaReal) {
+            regras.push(
+                "<strong>Capital de Giro:</strong> prazo superior a 36 meses sem garantia real requer análise técnica adicional no processo."
             );
         }
 
         if (!regras.length) {
             container.innerHTML = `
                 <div class="documentos-observacao">
-                    Selecione uma garantia para visualizar as condições e documentos.
+                    Selecione uma garantia para visualizar as condições e documentos relacionados.
                 </div>
             `;
+
             return;
         }
 
-        container.innerHTML = regras
-            .map(regra => `
-                <div class="documentos-observacao">
-                    ${regra}
-                </div>
-            `)
-            .join("");
+        container.innerHTML =
+            regras
+                .map(regra => `
+                    <div class="documentos-observacao">
+                        ${regra}
+                    </div>
+                `)
+                .join("");
     }
 
     /* =========================================================
-       EXCEÇÕES DO GERENTE
+       EXCEÇÕES
        ========================================================= */
 
     function dadosExcecaoGerente() {
-        const codigo = codigoLinhaSelecionada();
-        const valor = numero(e.valor.value);
-        const prazo = Math.trunc(numero(e.prazo.value));
+        const codigo =
+            codigoLinhaSelecionada();
+
+        const valor =
+            numero(e.valor?.value);
+
+        const prazo =
+            Math.trunc(
+                numero(e.prazo?.value)
+            );
 
         const semGarantiaReal =
             SET_CAPITAL_GIRO.has(codigo) &&
             prazo > 36 &&
             !possuiGarantiaReal();
 
-        const limite = LIMITES_PARECER_GERENTE[codigo];
+        const limite =
+            LIMITES_PARECER_GERENTE[codigo];
 
         const excedeuValor =
             !!limite &&
@@ -1255,25 +1607,11 @@ document.addEventListener("DOMContentLoaded", () => {
             semGarantiaReal,
             excedeuValor,
             excedeuPrazo,
-            parecerObrigatorio:
+            parecerNecessario:
                 semGarantiaReal ||
                 excedeuValor ||
                 excedeuPrazo
         };
-    }
-
-    function atualizarExcecoesGerente() {
-        const dados = dadosExcecaoGerente();
-
-        setHidden(
-            "blocoDispensaGarantia",
-            !dados.semGarantiaReal
-        );
-
-        setHidden(
-            "blocoParecerGerente",
-            !dados.parecerObrigatorio
-        );
     }
 
     /* =========================================================
@@ -1281,36 +1619,52 @@ document.addEventListener("DOMContentLoaded", () => {
        ========================================================= */
 
     function atualizarResumoLinha() {
-        const codigo = codigoLinhaSelecionada();
-        const nome = nomeLinhaSelecionada();
+        const codigo =
+            codigoLinhaSelecionada();
+
+        const nome =
+            nomeLinhaSelecionada();
 
         if (!codigo) {
             limparResumoLinha();
             return;
         }
 
-        setTexto("resultadoCodigoLinha", String(codigo));
+        setTexto(
+            "resultadoCodigoLinha",
+            String(codigo)
+        );
 
         setTexto(
             "resultadoTipoPessoa",
-            e.tipoPessoa.value === "PF"
+            e.tipoPessoa?.value === "PF"
                 ? "Pessoa Física"
-                : e.tipoPessoa.value === "PJ"
+                : e.tipoPessoa?.value === "PJ"
                     ? "Pessoa Jurídica"
                     : "-"
         );
 
-        let situacao = "Ativa";
+        let situacao =
+            "Ativa";
 
-        if (SET_LINHAS_INATIVAS.has(codigo)) {
-            situacao = "Não existe mais";
+        if (
+            SET_LINHAS_INATIVAS.has(codigo)
+        ) {
+            situacao =
+                "Não existe mais";
         }
 
-        if (SET_LINHAS_SUSPENSAS.has(codigo)) {
-            situacao = "Suspensa";
+        if (
+            SET_LINHAS_SUSPENSAS.has(codigo)
+        ) {
+            situacao =
+                "Suspensa";
         }
 
-        setTexto("resultadoSituacaoLinha", situacao);
+        setTexto(
+            "resultadoSituacaoLinha",
+            situacao
+        );
 
         setTexto(
             "resultadoPermiteFlex",
@@ -1331,21 +1685,21 @@ document.addEventListener("DOMContentLoaded", () => {
         setTexto(
             "resultadoAlteraLimite",
             SET_ALTERA_LIMITE.has(codigo)
-                ? "Sim/Não"
+                ? "Aplicável"
                 : "Não aplicável"
         );
 
         setTexto(
             "resultadoPorcentagemVista",
             SET_PORC_VISTA.has(codigo)
-                ? "Obrigatório"
+                ? "Aplicável"
                 : "Não aplicável"
         );
 
         setTexto(
             "resultadoPrazoMedio",
             SET_PRAZO_MEDIO.has(codigo)
-                ? "Obrigatório"
+                ? "Aplicável"
                 : "Não aplicável"
         );
 
@@ -1358,92 +1712,155 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function atualizarListaRegrasLinha() {
-        const container = $("listaRegrasLinhaCredito");
+        const container =
+            $("listaRegrasLinhaCredito");
 
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
-        const codigo = codigoLinhaSelecionada();
+        const codigo =
+            codigoLinhaSelecionada();
 
         if (!codigo) {
             container.innerHTML = "";
             return;
         }
 
-        const regras = [];
+        const regras =
+            [];
 
-        if (SET_LINHAS_INATIVAS.has(codigo)) {
-            regras.push("A linha não existe mais na matriz.");
-        } else if (SET_LINHAS_SUSPENSAS.has(codigo)) {
-            regras.push("A linha está suspensa.");
+        if (
+            SET_LINHAS_INATIVAS.has(codigo)
+        ) {
+            regras.push(
+                "A linha não existe mais na matriz vigente."
+            );
+        } else if (
+            SET_LINHAS_SUSPENSAS.has(codigo)
+        ) {
+            regras.push(
+                "A linha está suspensa na matriz vigente."
+            );
         } else {
-            regras.push("Linha disponível conforme a matriz atual utilizada pelo simulador.");
+            regras.push(
+                "Linha disponível conforme a matriz utilizada pelo simulador."
+            );
         }
 
-        if (SET_COMISSAO.has(codigo)) {
-            regras.push("Linha tratada por comissão.");
-        } else if (SET_FLEX.has(codigo)) {
-            regras.push("A flexibilização da taxa pode ser informada.");
+        if (
+            SET_COMISSAO.has(codigo)
+        ) {
+            regras.push(
+                "Linha tratada por comissão."
+            );
+        } else if (
+            SET_FLEX.has(codigo)
+        ) {
+            regras.push(
+                "A linha permite simulação de flexibilização de taxa."
+            );
         } else {
-            regras.push("A linha não possui flexibilização de taxa na matriz de regras.");
+            regras.push(
+                "A linha não possui flexibilização de taxa cadastrada."
+            );
         }
 
-        if (SET_REPAC.has(codigo)) {
-            regras.push("Exige informação sobre REPAC com troco.");
+        if (
+            SET_REPAC.has(codigo)
+        ) {
+            regras.push(
+                "Possui regra relacionada a REPAC com troco."
+            );
         }
 
-        if (SET_PORC_VISTA.has(codigo)) {
-            regras.push("Exige % de recebimento à vista.");
+        if (
+            SET_PORC_VISTA.has(codigo)
+        ) {
+            regras.push(
+                "Possui informação de percentual de recebimento à vista."
+            );
         }
 
-        if (SET_PRAZO_MEDIO.has(codigo)) {
-            regras.push("Exige prazo médio de recebimento.");
+        if (
+            SET_PRAZO_MEDIO.has(codigo)
+        ) {
+            regras.push(
+                "Possui informação de prazo médio de recebimento."
+            );
         }
 
-        if (SET_ALTERA_LIMITE.has(codigo)) {
-            regras.push("Exige informação sobre alteração de limite e, se Sim, valor do limite anterior.");
+        if (
+            SET_ALTERA_LIMITE.has(codigo)
+        ) {
+            regras.push(
+                "Possui regra relacionada à alteração de limite."
+            );
         }
 
-        regras.push("PIX deve ser informado; se Não, exige justificativa.");
-        regras.push("Cotas de capital em atraso geram alerta e impedimento na liberação.");
-        regras.push("SERASA e BACEN possuem regra de bloqueio quando houver anotação.");
-        regras.push("O faturamento anual define a documentação contábil necessária.");
-        regras.push("Até R$ 400.000,00: Balanço Perguntado. A partir de R$ 400.000,01: Balanço Patrimonial + DRE Consolidado.");
+        regras.push(
+            "A situação de PIX, cotas, CRL, SERASA e BACEN pode influenciar o enquadramento da proposta."
+        );
 
-        const taxas = obterTaxas(codigo);
+        regras.push(
+            "O faturamento anual define a documentação contábil aplicável."
+        );
 
-        if (taxas && taxas.balcao > 0) {
+        regras.push(
+            "Até R$ 400.000,00: Balanço Perguntado. Acima de R$ 400.000,00: Balanço Patrimonial + DRE Consolidado."
+        );
+
+        const taxas =
+            obterTaxas(codigo);
+
+        if (
+            taxas &&
+            taxas.balcao > 0
+        ) {
             regras.push(
                 "Taxa Balcão cadastrada: " +
                 percentual(taxas.balcao) +
                 "."
             );
         } else {
-            regras.push("A linha não possui taxa de balcão parametrizada na tabela informada.");
+            regras.push(
+                "A linha não possui taxa de balcão parametrizada na tabela informada."
+            );
         }
 
-        if (SET_CAPITAL_GIRO.has(codigo)) {
-            regras.push("Capital de Giro com prazo superior a 36 meses sem garantia real exige justificativa técnica.");
+        if (
+            SET_CAPITAL_GIRO.has(codigo)
+        ) {
+            regras.push(
+                "Capital de Giro com prazo superior a 36 meses sem garantia real requer análise técnica adicional."
+            );
         }
 
-        const limite = LIMITES_PARECER_GERENTE[codigo];
+        const limite =
+            LIMITES_PARECER_GERENTE[codigo];
 
         if (limite) {
             regras.push(
-                "Limite interno: " +
+                "Referência interna de valor: " +
                 moeda(limite.valorMaximo) +
-                " e " +
+                "."
+            );
+
+            regras.push(
+                "Referência interna de prazo: " +
                 limite.prazoMaximo +
                 " meses."
             );
         }
 
-        container.innerHTML = regras
-            .map(regra => `
-                <div class="documentos-observacao">
-                    ${regra}
-                </div>
-            `)
-            .join("");
+        container.innerHTML =
+            regras
+                .map(regra => `
+                    <div class="documentos-observacao">
+                        ${regra}
+                    </div>
+                `)
+                .join("");
     }
 
     function limparResumoLinha() {
@@ -1456,14 +1873,20 @@ document.addEventListener("DOMContentLoaded", () => {
             "resultadoAlteraLimite",
             "resultadoPorcentagemVista",
             "resultadoPrazoMedio"
-        ].forEach(id => setTexto(id, "-"));
+        ].forEach(id => {
+            setTexto(
+                id,
+                "-"
+            );
+        });
 
         setTexto(
             "resultadoNomeLinhaCredito",
             "Nenhuma linha selecionada"
         );
 
-        const lista = $("listaRegrasLinhaCredito");
+        const lista =
+            $("listaRegrasLinhaCredito");
 
         if (lista) {
             lista.innerHTML = "";
@@ -1471,38 +1894,63 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================================================
-       CÁLCULO FINANCEIRO
+       CÁLCULO PRICE
        ========================================================= */
 
-    function calcularPrice(valor, taxaPercentual, prazo) {
-        if (valor <= 0 || prazo <= 0) {
+    function calcularPrice(
+        valor,
+        taxaPercentual,
+        prazo
+    ) {
+        if (
+            valor <= 0 ||
+            prazo <= 0
+        ) {
             return [];
         }
 
-        const taxa = taxaPercentual / 100;
+        const taxa =
+            taxaPercentual / 100;
 
         let parcela;
 
         if (taxa === 0) {
-            parcela = valor / prazo;
+            parcela =
+                valor / prazo;
         } else {
             parcela =
                 valor *
                 (
                     taxa *
-                    Math.pow(1 + taxa, prazo)
+                    Math.pow(
+                        1 + taxa,
+                        prazo
+                    )
                 ) /
                 (
-                    Math.pow(1 + taxa, prazo) - 1
+                    Math.pow(
+                        1 + taxa,
+                        prazo
+                    ) - 1
                 );
         }
 
-        let saldo = valor;
-        const parcelas = [];
+        let saldo =
+            valor;
 
-        for (let n = 1; n <= prazo; n++) {
-            const saldoInicial = saldo;
-            const juros = saldoInicial * taxa;
+        const parcelas =
+            [];
+
+        for (
+            let n = 1;
+            n <= prazo;
+            n++
+        ) {
+            const saldoInicial =
+                saldo;
+
+            const juros =
+                saldoInicial * taxa;
 
             let amortizacao =
                 parcela - juros;
@@ -1511,14 +1959,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 parcela;
 
             if (n === prazo) {
-                amortizacao = saldoInicial;
-                valorParcela = amortizacao + juros;
+                amortizacao =
+                    saldoInicial;
+
+                valorParcela =
+                    amortizacao + juros;
             }
 
-            saldo = Math.max(
-                0,
-                saldoInicial - amortizacao
-            );
+            saldo =
+                Math.max(
+                    0,
+                    saldoInicial - amortizacao
+                );
 
             parcelas.push({
                 numero: n,
@@ -1533,8 +1985,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return parcelas;
     }
 
-    function calcularSac(valor, taxaPercentual, prazo) {
-        if (valor <= 0 || prazo <= 0) {
+    /* =========================================================
+       CÁLCULO SAC
+       ========================================================= */
+
+    function calcularSac(
+        valor,
+        taxaPercentual,
+        prazo
+    ) {
+        if (
+            valor <= 0 ||
+            prazo <= 0
+        ) {
             return [];
         }
 
@@ -1544,12 +2007,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const amortizacaoBase =
             valor / prazo;
 
-        let saldo = valor;
+        let saldo =
+            valor;
 
-        const parcelas = [];
+        const parcelas =
+            [];
 
-        for (let n = 1; n <= prazo; n++) {
-            const saldoInicial = saldo;
+        for (
+            let n = 1;
+            n <= prazo;
+            n++
+        ) {
+            const saldoInicial =
+                saldo;
 
             const juros =
                 saldoInicial * taxa;
@@ -1562,10 +2032,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const parcela =
                 amortizacao + juros;
 
-            saldo = Math.max(
-                0,
-                saldoInicial - amortizacao
-            );
+            saldo =
+                Math.max(
+                    0,
+                    saldoInicial - amortizacao
+                );
 
             parcelas.push({
                 numero: n,
@@ -1582,15 +2053,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function calcularParcelas() {
         const valor =
-            numero(e.valor.value);
+            numero(e.valor?.value);
 
         const prazo =
-            Math.trunc(numero(e.prazo.value));
+            Math.trunc(
+                numero(e.prazo?.value)
+            );
 
         const taxa =
-            numero(e.taxa.value);
+            numero(e.taxa?.value);
 
-        if (e.sistema.value === "SAC") {
+        if (
+            e.sistema?.value === "SAC"
+        ) {
             return calcularSac(
                 valor,
                 taxa,
@@ -1605,15 +2080,21 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
+    /* =========================================================
+       RESULTADO FINANCEIRO
+       ========================================================= */
+
     function preencherResultadoFinanceiro(parcelas) {
         const valor =
-            numero(e.valor.value);
+            numero(e.valor?.value);
 
         const prazo =
-            Math.trunc(numero(e.prazo.value));
+            Math.trunc(
+                numero(e.prazo?.value)
+            );
 
         const taxa =
-            numero(e.taxa.value);
+            numero(e.taxa?.value);
 
         if (!parcelas.length) {
             limparResultadoFinanceiro();
@@ -1624,17 +2105,21 @@ document.addEventListener("DOMContentLoaded", () => {
             parcelas[0];
 
         const ultima =
-            parcelas[parcelas.length - 1];
+            parcelas[
+            parcelas.length - 1
+            ];
 
         const totalJuros =
             parcelas.reduce(
-                (total, item) => total + item.juros,
+                (total, item) =>
+                    total + item.juros,
                 0
             );
 
         const totalPago =
             parcelas.reduce(
-                (total, item) => total + item.parcela,
+                (total, item) =>
+                    total + item.parcela,
                 0
             );
 
@@ -1668,10 +2153,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setTexto(
             "resultadoTaxaAnualCredito",
-            taxaAnual.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 4
-            }) + "% a.a."
+            taxaAnual.toLocaleString(
+                "pt-BR",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 4
+                }
+            ) + "% a.a."
         );
 
         setTexto(
@@ -1699,9 +2187,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const tbody =
             $("tabelaParcelasCredito");
 
-        if (!tbody) return;
+        if (!tbody) {
+            return;
+        }
 
-        tbody.innerHTML = "";
+        tbody.innerHTML =
+            "";
 
         parcelas.forEach(item => {
             const tr =
@@ -1724,7 +2215,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const tbody =
             $("tabelaParcelasCredito");
 
-        if (!tbody) return;
+        if (!tbody) {
+            return;
+        }
 
         tbody.innerHTML = `
             <tr>
@@ -1736,15 +2229,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function limparResultadoFinanceiro() {
-        setTexto("resultadoParcelaCredito", "R$ 0,00");
-        setTexto("resultadoValorOperacaoCredito", "R$ 0,00");
-        setTexto("resultadoPrazoCredito", "0 meses");
-        setTexto("resultadoTaxaMensalCredito", "0,00% a.m.");
-        setTexto("resultadoTaxaAnualCredito", "0,00% a.a.");
-        setTexto("resultadoPrimeiraParcelaCredito", "R$ 0,00");
-        setTexto("resultadoUltimaParcelaCredito", "R$ 0,00");
-        setTexto("resultadoJurosCredito", "R$ 0,00");
-        setTexto("resultadoTotalCredito", "R$ 0,00");
+        setTexto(
+            "resultadoParcelaCredito",
+            "R$ 0,00"
+        );
+
+        setTexto(
+            "resultadoValorOperacaoCredito",
+            "R$ 0,00"
+        );
+
+        setTexto(
+            "resultadoPrazoCredito",
+            "0 meses"
+        );
+
+        setTexto(
+            "resultadoTaxaMensalCredito",
+            "0,00% a.m."
+        );
+
+        setTexto(
+            "resultadoTaxaAnualCredito",
+            "0,00% a.a."
+        );
+
+        setTexto(
+            "resultadoPrimeiraParcelaCredito",
+            "R$ 0,00"
+        );
+
+        setTexto(
+            "resultadoUltimaParcelaCredito",
+            "R$ 0,00"
+        );
+
+        setTexto(
+            "resultadoJurosCredito",
+            "R$ 0,00"
+        );
+
+        setTexto(
+            "resultadoTotalCredito",
+            "R$ 0,00"
+        );
     }
 
     /* =========================================================
@@ -1752,21 +2280,24 @@ document.addEventListener("DOMContentLoaded", () => {
        ========================================================= */
 
     function validarOperacao() {
-        const alertas = [];
+        const alertas =
+            [];
 
         const codigo =
             codigoLinhaSelecionada();
 
         const valor =
-            numero(e.valor.value);
+            numero(e.valor?.value);
 
         const prazo =
-            Math.trunc(numero(e.prazo.value));
+            Math.trunc(
+                numero(e.prazo?.value)
+            );
 
         const taxa =
-            numero(e.taxa.value);
+            numero(e.taxa?.value);
 
-        if (!e.tipoPessoa.value) {
+        if (!e.tipoPessoa?.value) {
             alertas.push({
                 tipo: "erro",
                 texto: "Selecione o tipo de pessoa."
@@ -1782,14 +2313,18 @@ document.addEventListener("DOMContentLoaded", () => {
             return alertas;
         }
 
-        if (SET_LINHAS_INATIVAS.has(codigo)) {
+        if (
+            SET_LINHAS_INATIVAS.has(codigo)
+        ) {
             alertas.push({
                 tipo: "erro",
                 texto: "A linha selecionada não existe mais na matriz."
             });
         }
 
-        if (SET_LINHAS_SUSPENSAS.has(codigo)) {
+        if (
+            SET_LINHAS_SUSPENSAS.has(codigo)
+        ) {
             alertas.push({
                 tipo: "erro",
                 texto: "A linha selecionada está suspensa."
@@ -1803,6 +2338,19 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
+        if (
+            valor > LIMITE_VALOR_OPERACAO ||
+            e.valor?.dataset.limiteExcedido === "true"
+        ) {
+            alertas.push({
+                tipo: "erro",
+                texto:
+                    "O valor máximo permitido para a operação é " +
+                    moeda(LIMITE_VALOR_OPERACAO) +
+                    "."
+            });
+        }
+
         if (prazo <= 0) {
             alertas.push({
                 tipo: "erro",
@@ -1810,7 +2358,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        if (taxa < 0 || vazio(e.taxa.value)) {
+        if (
+            vazio(e.taxa?.value) ||
+            taxa < 0
+        ) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe a taxa da operação."
@@ -1819,7 +2370,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             SET_FLEX.has(codigo) &&
-            vazio(e.flex.value)
+            vazio(e.flex?.value)
         ) {
             alertas.push({
                 tipo: "erro",
@@ -1829,7 +2380,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             SET_REPAC.has(codigo) &&
-            vazio(e.repac.value)
+            vazio(e.repac?.value)
         ) {
             alertas.push({
                 tipo: "erro",
@@ -1838,19 +2389,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (
-            SET_REPAC.has(codigo) &&
-            e.repac.value === "SIM" &&
-            vazio(e.justRepac.value)
-        ) {
-            alertas.push({
-                tipo: "erro",
-                texto: "Informe a justificativa da REPAC com troco."
-            });
-        }
-
-        if (
             SET_PORC_VISTA.has(codigo) &&
-            vazio(e.porcVista.value)
+            vazio(e.porcVista?.value)
         ) {
             alertas.push({
                 tipo: "erro",
@@ -1860,7 +2400,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             SET_PRAZO_MEDIO.has(codigo) &&
-            vazio(e.prazoMedio.value)
+            vazio(e.prazoMedio?.value)
         ) {
             alertas.push({
                 tipo: "erro",
@@ -1870,7 +2410,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             SET_ALTERA_LIMITE.has(codigo) &&
-            vazio(e.alteraLimite.value)
+            vazio(e.alteraLimite?.value)
         ) {
             alertas.push({
                 tipo: "erro",
@@ -1880,8 +2420,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             SET_ALTERA_LIMITE.has(codigo) &&
-            e.alteraLimite.value === "SIM" &&
-            numero(e.valorLimiteAnterior.value) <= 0
+            e.alteraLimite?.value === "SIM" &&
+            numero(
+                e.valorLimiteAnterior?.value
+            ) <= 0
         ) {
             alertas.push({
                 tipo: "erro",
@@ -1889,7 +2431,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        if (vazio(e.pix.value)) {
+        if (vazio(e.pix?.value)) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe se o cooperado possui PIX cadastrado."
@@ -1897,93 +2439,89 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (
-            e.pix.value === "NAO" &&
-            vazio(e.justPix.value)
+            e.pix?.value === "NAO"
         ) {
             alertas.push({
-                tipo: "erro",
-                texto: "Cooperado sem PIX exige justificativa."
+                tipo: "atencao",
+                texto: "Cooperado sem PIX cadastrado. A condição deve ser considerada na análise da proposta."
             });
         }
 
-        if (vazio(e.cotas.value)) {
+        if (vazio(e.cotas?.value)) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe a situação das cotas de capital."
             });
         }
 
-        if (e.cotas.value === "SIM") {
+        if (
+            e.cotas?.value === "SIM"
+        ) {
             alertas.push({
                 tipo: "erro",
-                texto: "Existem cotas de capital em atraso. A matriz prevê alerta no cadastro e impedimento na liberação."
+                texto: "Existem cotas de capital em atraso. A matriz prevê impedimento na liberação enquanto houver pendência."
             });
         }
 
-        if (vazio(e.crl.value)) {
+        if (vazio(e.crl?.value)) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe a situação do CRL e limites."
             });
         }
 
-        if (e.crl.value === "NAO") {
+        if (
+            e.crl?.value === "NAO"
+        ) {
             alertas.push({
                 tipo: "atencao",
-                texto: "CRL ou limites não estão ativos. Necessária análise da condição."
+                texto: "CRL ou limites não estão ativos. A condição necessita análise."
             });
         }
 
-        if (vazio(e.serasa.value)) {
+        if (vazio(e.serasa?.value)) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe a situação SERASA."
             });
         }
 
-        if (e.serasa.value === "SIM") {
+        if (
+            e.serasa?.value === "SIM"
+        ) {
             alertas.push({
                 tipo: "erro",
                 texto: "Há anotação SERASA. A matriz prevê trava da proposta."
             });
-
-            if (vazio(e.justSerasa.value)) {
-                alertas.push({
-                    tipo: "erro",
-                    texto: "Informe a justificativa da anotação SERASA."
-                });
-            }
         }
 
-        if (vazio(e.bacen.value)) {
+        if (vazio(e.bacen?.value)) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe a situação BACEN."
             });
         }
 
-        if (e.bacen.value === "SIM") {
+        if (
+            e.bacen?.value === "SIM"
+        ) {
             alertas.push({
                 tipo: "erro",
                 texto: "Há anotação BACEN. A matriz prevê trava da proposta."
             });
-
-            if (vazio(e.justBacen.value)) {
-                alertas.push({
-                    tipo: "erro",
-                    texto: "Informe a justificativa da anotação BACEN."
-                });
-            }
         }
 
-        if (numero(e.faturamento.value) <= 0) {
+        const faturamento =
+            numero(e.faturamento?.value);
+
+        if (faturamento <= 0) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe o faturamento anual."
             });
         }
 
-        if (vazio(e.emitente.value)) {
+        if (vazio(e.emitente?.value)) {
             alertas.push({
                 tipo: "erro",
                 texto: "Informe se haverá mais de um emitente."
@@ -1994,19 +2532,32 @@ document.addEventListener("DOMContentLoaded", () => {
             obterTaxas(codigo);
 
         const alcada =
-            identificarAlcada(taxa, taxas);
+            identificarAlcada(
+                taxa,
+                taxas
+            );
 
-        if (alcada.codigo === "ABAIXO") {
+        if (
+            alcada.codigo === "ABAIXO"
+        ) {
+            const menorTaxa =
+                menorTaxaValida(taxas);
+
             alertas.push({
                 tipo: "erro",
                 texto:
-                    "Taxa abaixo da menor alçada cadastrada. Taxa mínima localizada: " +
-                    percentual(menorTaxaValida(taxas)) +
-                    "."
+                    "A taxa informada está abaixo da menor alçada cadastrada" +
+                    (
+                        menorTaxa !== null
+                            ? ": " + percentual(menorTaxa) + "."
+                            : "."
+                    )
             });
         }
 
-        if (!possuiGarantiaSelecionada()) {
+        if (
+            !possuiGarantiaSelecionada()
+        ) {
             alertas.push({
                 tipo: "erro",
                 texto: "Selecione pelo menos uma garantia ou marque Sem Garantias."
@@ -2018,7 +2569,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             config.avalista === "OBRIGATORIO" &&
-            !e.avalista.checked
+            !e.avalista?.checked
         ) {
             alertas.push({
                 tipo: "erro",
@@ -2027,18 +2578,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (
-            e.semGarantia.checked &&
-            vazio(e.justSemGarantia.value)
-        ) {
-            alertas.push({
-                tipo: "erro",
-                texto: "Sem Garantias exige justificativa."
-            });
-        }
-
-        if (
-            e.guarda.checked &&
-            numero(e.contratoMae.value) <= 0
+            e.guarda?.checked &&
+            numero(e.contratoMae?.value) <= 0
         ) {
             alertas.push({
                 tipo: "erro",
@@ -2046,84 +2587,74 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        const dadosExcecao =
+        const excecao =
             dadosExcecaoGerente();
 
         if (
-            dadosExcecao.semGarantiaReal &&
-            vazio(e.justDispensa.value)
-        ) {
-            alertas.push({
-                tipo: "erro",
-                texto: "Capital de Giro acima de 36 meses sem garantia real exige justificativa técnica para dispensa."
-            });
-        }
-
-        if (
-            dadosExcecao.parecerObrigatorio &&
-            vazio(e.parecerGerente.value)
-        ) {
-            alertas.push({
-                tipo: "erro",
-                texto: "A condição exige Parecer Técnico do Gerente."
-            });
-        }
-
-        const limite =
-            LIMITES_PARECER_GERENTE[codigo];
-
-        if (
-            limite &&
-            valor > limite.valorMaximo
+            excecao.semGarantiaReal
         ) {
             alertas.push({
                 tipo: "atencao",
+                texto: "Capital de Giro com prazo superior a 36 meses sem garantia real requer análise técnica adicional."
+            });
+        }
+
+        if (
+            excecao.excedeuValor
+        ) {
+            const limite =
+                LIMITES_PARECER_GERENTE[codigo];
+
+            alertas.push({
+                tipo: "atencao",
                 texto:
-                    "Valor superior ao limite interno de " +
+                    "O valor da operação ultrapassa a referência interna de " +
                     moeda(limite.valorMaximo) +
-                    "."
+                    " para esta linha."
             });
         }
 
         if (
-            limite &&
-            prazo > limite.prazoMaximo
+            excecao.excedeuPrazo
         ) {
+            const limite =
+                LIMITES_PARECER_GERENTE[codigo];
+
             alertas.push({
                 tipo: "atencao",
                 texto:
-                    "Prazo superior ao limite interno de " +
+                    "O prazo da operação ultrapassa a referência interna de " +
                     limite.prazoMaximo +
-                    " meses."
+                    " meses para esta linha."
             });
         }
 
         if (
-            e.aplicacao.checked ||
+            e.aplicacao?.checked ||
             SET_FUNDOS_DOCS.has(codigo)
         ) {
             alertas.push({
                 tipo: "info",
-                texto: "A operação exige CND Receita Federal e Faturamento Receita Federal conforme regra de garantia de fundos."
+                texto: "Verificar CND Receita Federal e Faturamento Receita Federal conforme a regra aplicável à garantia de fundos."
             });
         }
 
         if (
-            numero(e.faturamento.value) > 0 &&
-            numero(e.faturamento.value) <= 400000
+            faturamento > 0 &&
+            faturamento <= 400000
         ) {
             alertas.push({
                 tipo: "info",
-                texto: "Documentação contábil aplicável: Balanço Perguntado."
+                texto: "Documentação contábil indicada: Balanço Perguntado."
             });
         }
 
         if (
-            numero(e.faturamento.value) >= 400000.01
+            faturamento > 400000
         ) {
             alertas.push({
                 tipo: "info",
-                texto: "Documentação contábil aplicável: Balanço Patrimonial + DRE Consolidado."
+                texto: "Documentação contábil indicada: Balanço Patrimonial + DRE Consolidado."
             });
         }
 
@@ -2137,7 +2668,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const status =
             $("statusEnquadramentoCredito");
 
-        if (!container || !status) {
+        if (
+            !container ||
+            !status
+        ) {
             return;
         }
 
@@ -2152,7 +2686,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             container.innerHTML = `
                 <div class="documentos-observacao">
-                    Preencha os dados da operação para realizar a análise.
+                    Selecione a linha e informe as condições para realizar a análise.
                 </div>
             `;
 
@@ -2163,10 +2697,16 @@ document.addEventListener("DOMContentLoaded", () => {
             validarOperacao();
 
         const erros =
-            alertas.filter(a => a.tipo === "erro");
+            alertas.filter(
+                alerta =>
+                    alerta.tipo === "erro"
+            );
 
         const atencoes =
-            alertas.filter(a => a.tipo === "atencao");
+            alertas.filter(
+                alerta =>
+                    alerta.tipo === "atencao"
+            );
 
         let texto =
             "Operação enquadrada";
@@ -2188,7 +2728,7 @@ document.addEventListener("DOMContentLoaded", () => {
             container.innerHTML = `
                 <div class="documentos-observacao">
                     <strong>Operação enquadrada.</strong>
-                    Nenhuma inconsistência foi identificada nas regras disponíveis.
+                    Nenhuma inconsistência foi identificada nas regras disponíveis no simulador.
                 </div>
             `;
 
@@ -2222,28 +2762,34 @@ document.addEventListener("DOMContentLoaded", () => {
         atualizarCondicionais();
         atualizarGarantiasDisponiveis();
         atualizarAlcada();
+        atualizarRegrasGarantias();
         atualizarEnquadramento();
 
         const codigo =
             codigoLinhaSelecionada();
 
         const valor =
-            numero(e.valor.value);
+            numero(e.valor?.value);
 
         const prazo =
-            Math.trunc(numero(e.prazo.value));
+            Math.trunc(
+                numero(e.prazo?.value)
+            );
 
         const taxa =
-            numero(e.taxa.value);
+            numero(e.taxa?.value);
 
         if (
             !codigo ||
             valor <= 0 ||
+            valor > LIMITE_VALOR_OPERACAO ||
             prazo <= 0 ||
-            taxa < 0
+            taxa < 0 ||
+            e.valor?.dataset.limiteExcedido === "true"
         ) {
             limparResultadoFinanceiro();
             limparTabela();
+
             return;
         }
 
@@ -2276,17 +2822,21 @@ document.addEventListener("DOMContentLoaded", () => {
             esconderCondicionais();
             atualizarGarantiasDisponiveis();
             atualizarEnquadramento();
+
             return;
         }
 
-        const sugestao =
+        const sistema =
             sugestaoSistema(
                 nomeLinhaSelecionada()
             );
 
-        if (sugestao) {
+        if (
+            sistema &&
+            e.sistema
+        ) {
             e.sistema.value =
-                sugestao;
+                sistema;
         }
 
         atualizarResumoLinha();
@@ -2294,6 +2844,7 @@ document.addEventListener("DOMContentLoaded", () => {
         atualizarGarantiasDisponiveis();
         carregarTaxas();
         atualizarCondicionais();
+        atualizarRegrasGarantias();
         atualizarEnquadramento();
     }
 
@@ -2320,31 +2871,31 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        [
-            e.justRepac,
-            e.justPix,
-            e.justSerasa,
-            e.justBacen,
-            e.justSemGarantia,
-            e.justDispensa,
-            e.parecerGerente
-        ].forEach(campo => {
-            if (campo) {
-                campo.value = "";
-            }
-        });
+        if (e.valorLimiteAnterior) {
+            e.valorLimiteAnterior.value =
+                "0,00";
 
-        e.valorLimiteAnterior.value =
-            "0,00";
+            e.valorLimiteAnterior.dataset.limiteExcedido =
+                "false";
+        }
 
-        e.faturamento.value =
-            "0,00";
+        if (e.faturamento) {
+            e.faturamento.value =
+                "0,00";
 
-        e.docContabil.value =
-            "";
+            e.faturamento.dataset.limiteExcedido =
+                "false";
+        }
 
-        e.contratoMae.value =
-            "";
+        if (e.docContabil) {
+            e.docContabil.value =
+                "";
+        }
+
+        if (e.contratoMae) {
+            e.contratoMae.value =
+                "";
+        }
 
         [
             e.avalista,
@@ -2357,7 +2908,8 @@ document.addEventListener("DOMContentLoaded", () => {
             e.semGarantia
         ].forEach(campo => {
             if (campo) {
-                campo.checked = false;
+                campo.checked =
+                    false;
             }
         });
     }
@@ -2369,44 +2921,86 @@ document.addEventListener("DOMContentLoaded", () => {
         limparResultadoFinanceiro();
         limparTabela();
 
-        e.taxa.value = "";
-        e.taxa.readOnly = false;
+        if (e.taxa) {
+            e.taxa.value = "";
+            e.taxa.readOnly = false;
+        }
 
-        setTexto("resultadoTaxaBalcao", "-");
-        setTexto("resultadoTaxaGerente", "-");
-        setTexto("resultadoTaxaNegocios", "-");
-        setTexto("resultadoTaxaDiretor", "-");
-        setTexto("resultadoAlcadaTaxa", "Aguardando seleção da linha");
+        setTexto(
+            "resultadoTaxaBalcao",
+            "-"
+        );
+
+        setTexto(
+            "resultadoTaxaGerente",
+            "-"
+        );
+
+        setTexto(
+            "resultadoTaxaNegocios",
+            "-"
+        );
+
+        setTexto(
+            "resultadoTaxaDiretor",
+            "-"
+        );
+
+        setTexto(
+            "resultadoAlcadaTaxa",
+            "Aguardando seleção da linha"
+        );
 
         atualizarGarantiasDisponiveis();
         atualizarEnquadramento();
     }
 
     function limparTudo() {
-        e.tipoPessoa.value = "";
+        if (e.tipoPessoa) {
+            e.tipoPessoa.value =
+                "";
+        }
 
-        e.linha.innerHTML =
-            '<option value="">Selecione primeiro o tipo de pessoa</option>';
+        if (e.linha) {
+            e.linha.innerHTML =
+                '<option value="">Selecione primeiro o tipo de pessoa</option>';
 
-        e.linha.disabled = true;
+            e.linha.disabled =
+                true;
+        }
 
-        e.valor.value =
-            "0,00";
+        if (e.valor) {
+            e.valor.value =
+                "0,00";
 
-        e.prazo.value =
-            "12";
+            e.valor.dataset.limiteExcedido =
+                "false";
+        }
 
-        e.sistema.value =
-            "PRICE";
+        if (e.prazo) {
+            e.prazo.value =
+                "12";
+        }
 
-        e.taxa.value =
-            "";
+        if (e.sistema) {
+            e.sistema.value =
+                "PRICE";
+        }
 
-        e.risco.value =
-            "";
+        if (e.taxa) {
+            e.taxa.value =
+                "";
+        }
 
-        e.perda.value =
-            "";
+        if (e.risco) {
+            e.risco.value =
+                "";
+        }
+
+        if (e.perda) {
+            e.perda.value =
+                "";
+        }
 
         limparPerfilLinha();
     }
@@ -2415,17 +3009,17 @@ document.addEventListener("DOMContentLoaded", () => {
        EVENTOS
        ========================================================= */
 
-    e.tipoPessoa.addEventListener(
+    e.tipoPessoa?.addEventListener(
         "change",
         carregarLinhas
     );
 
-    e.linha.addEventListener(
+    e.linha?.addEventListener(
         "change",
         aplicarLinhaSelecionada
     );
 
-    e.flex.addEventListener(
+    e.flex?.addEventListener(
         "change",
         () => {
             atualizarComportamentoTaxa();
@@ -2434,7 +3028,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
-    e.repac.addEventListener(
+    e.repac?.addEventListener(
         "change",
         () => {
             atualizarCondicionais();
@@ -2442,7 +3036,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
-    e.alteraLimite.addEventListener(
+    e.alteraLimite?.addEventListener(
         "change",
         () => {
             atualizarCondicionais();
@@ -2450,118 +3044,96 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
-    e.pix.addEventListener(
+    e.pix?.addEventListener(
         "change",
-        () => {
-            atualizarCondicionais();
-            atualizarEnquadramento();
-        }
+        atualizarEnquadramento
     );
 
-    e.serasa.addEventListener(
+    e.cotas?.addEventListener(
         "change",
-        () => {
-            atualizarCondicionais();
-            atualizarEnquadramento();
-        }
+        atualizarEnquadramento
     );
 
-    e.bacen.addEventListener(
+    e.crl?.addEventListener(
         "change",
-        () => {
-            atualizarCondicionais();
-            atualizarEnquadramento();
-        }
+        atualizarEnquadramento
     );
 
-    e.faturamento.addEventListener(
+    e.serasa?.addEventListener(
+        "change",
+        atualizarEnquadramento
+    );
+
+    e.bacen?.addEventListener(
+        "change",
+        atualizarEnquadramento
+    );
+
+    e.emitente?.addEventListener(
+        "change",
+        atualizarEnquadramento
+    );
+
+    e.porcVista?.addEventListener(
+        "input",
+        atualizarEnquadramento
+    );
+
+    e.prazoMedio?.addEventListener(
+        "input",
+        atualizarEnquadramento
+    );
+
+    e.contratoMae?.addEventListener(
+        "input",
+        atualizarEnquadramento
+    );
+
+    e.faturamento?.addEventListener(
         "input",
         () => {
             atualizarDocumentacaoContabil();
-            atualizarEnquadramento();
-        }
-    );
 
-    e.faturamento.addEventListener(
-        "blur",
-        () => {
-            formatarMonetario(
-                e.faturamento
+            requestAnimationFrame(
+                atualizarEnquadramento
             );
-
-            atualizarDocumentacaoContabil();
         }
     );
 
-    e.valor.addEventListener(
+    e.valor?.addEventListener(
         "input",
         () => {
-            atualizarExcecoesGerente();
-            atualizarEnquadramento();
+            requestAnimationFrame(() => {
+                atualizarRegrasGarantias();
+                atualizarEnquadramento();
+            });
         }
     );
 
-    e.valor.addEventListener(
-        "blur",
-        () => {
-            formatarMonetario(
-                e.valor
-            );
-
-            atualizarExcecoesGerente();
-        }
-    );
-
-    e.valorLimiteAnterior.addEventListener(
-        "blur",
-        () => {
-            formatarMonetario(
-                e.valorLimiteAnterior
-            );
-        }
-    );
-
-    e.prazo.addEventListener(
+    e.valorLimiteAnterior?.addEventListener(
         "input",
         () => {
-            atualizarExcecoesGerente();
+            requestAnimationFrame(
+                atualizarEnquadramento
+            );
+        }
+    );
+
+    e.prazo?.addEventListener(
+        "input",
+        () => {
+            atualizarRegrasGarantias();
             atualizarEnquadramento();
         }
     );
 
-    e.taxa.addEventListener(
+    e.taxa?.addEventListener(
         "input",
         () => {
             atualizarAlcada();
             atualizarEnquadramento();
         }
     );
-
-    [
-        e.cotas,
-        e.crl,
-        e.emitente,
-        e.porcVista,
-        e.prazoMedio,
-        e.justRepac,
-        e.justPix,
-        e.justSerasa,
-        e.justBacen,
-        e.justSemGarantia,
-        e.justDispensa,
-        e.parecerGerente,
-        e.contratoMae
-    ].forEach(campo => {
-        campo?.addEventListener(
-            "input",
-            atualizarEnquadramento
-        );
-
-        campo?.addEventListener(
-            "change",
-            atualizarEnquadramento
-        );
-    });
 
     [
         e.avalista,
@@ -2583,7 +3155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     });
 
-    e.sistema.addEventListener(
+    e.sistema?.addEventListener(
         "change",
         () => {
             limparResultadoFinanceiro();
@@ -2591,12 +3163,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
-    e.btnSimular.addEventListener(
+    e.btnSimular?.addEventListener(
         "click",
         simular
     );
 
-    e.btnLimpar.addEventListener(
+    e.btnLimpar?.addEventListener(
         "click",
         limparTudo
     );
@@ -2605,9 +3177,11 @@ document.addEventListener("DOMContentLoaded", () => {
        INICIALIZAÇÃO
        ========================================================= */
 
+    configurarMascaras();
     esconderCondicionais();
     limparResultadoFinanceiro();
     limparTabela();
     atualizarGarantiasDisponiveis();
+    atualizarDocumentacaoContabil();
     atualizarEnquadramento();
 });
