@@ -2,29 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const $ = id => document.getElementById(id);
     const $$ = seletor => Array.from(document.querySelectorAll(seletor));
 
-    /*
-     * =========================================================
-     * IMAGENS DOS CARTÕES
-     * =========================================================
-     *
-     * TROQUE SOMENTE os caminhos abaixo quando tiver as imagens
-     * definitivas dos cartões.
-     *
-     * Sugestão de pasta:
-     *
-     * img/cartoes/cartao-gold.png
-     * img/cartoes/cartao-gold-plus.png
-     * img/cartoes/cartao-platinum.png
-     * img/cartoes/cartao-verth.png
-     * img/cartoes/cartao-merith.png
-     * img/cartoes/cartao-zenith.png
-     * img/cartoes/cartao-master-empresarial.png
-     * img/cartoes/cartao-visa-empresarial.png
-     *
-     * Não será necessário alterar nenhuma outra parte do JS.
-     * =========================================================
-     */
-
     const CARTOES = {
         gold: {
             nome: "Gold",
@@ -35,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 500,00",
             anuidade: "Isento",
-            imagem: "img/cartoes/cartao-gold.png",
+            imagem: "img/NEW_CARD_GOLD_a.png",
             bandeiras: ["Visa", "Mastercard"],
             beneficios: [
                 {
@@ -62,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 2.000,00",
             anuidade: "R$ 274,80",
-            imagem: "img/cartoes/cartao-gold-plus.png",
+            imagem: "img/NEW_CARD_GOLD_plus_a.png",
             bandeiras: ["Visa", "Mastercard"],
             beneficios: [
                 {
@@ -89,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 5.000,00",
             anuidade: "R$ 358,80",
-            imagem: "img/cartoes/cartao-platinum.png",
+            imagem: "img/NEW_CARD_PLATINUM_a.png",
             bandeiras: ["Visa", "Mastercard"],
             beneficios: [
                 {
@@ -124,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "4 acessos",
             limite: "R$ 10.000,00",
             anuidade: "R$ 708,00",
-            imagem: "img/cartoes/cartao-verth.png",
+            imagem: "img/NEW_CARD_BLACK_VERTH_a.png",
             bandeiras: ["Visa", "Mastercard"],
             beneficios: [
                 {
@@ -187,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "12 acessos",
             limite: "R$ 30.000,00",
             anuidade: "R$ 1.428,00",
-            imagem: "img/cartoes/cartao-merith.png",
+            imagem: "img/NEW_CARD_BLACK_MERITH_a.png",
             bandeiras: ["Visa", "Mastercard"],
             beneficios: [
                 {
@@ -250,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "Ilimitado +2",
             limite: "R$ 100.000,00",
             anuidade: "R$ 1.790,00",
-            imagem: "img/cartoes/cartao-zenith.png",
+            imagem: "img/NEW_CARD_BLACK_ZENITH_a.png",
             bandeiras: ["Visa", "Mastercard"],
             beneficios: [
                 {
@@ -313,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 5.000,00",
             anuidade: "R$ 220,00",
-            imagem: "img/cartoes/cartao-master-empresarial.png",
+            imagem: "",
             bandeiras: ["Mastercard"],
             beneficios: []
         },
@@ -327,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 5.000,00",
             anuidade: "R$ 220,00",
-            imagem: "img/cartoes/cartao-visa-empresarial.png",
+            imagem: "",
             bandeiras: ["Visa"],
             beneficios: []
         }
@@ -363,14 +340,10 @@ document.addEventListener("DOMContentLoaded", () => {
         item.className = "sicoobcard-beneficio";
 
         const classeBandeira =
-            obterClasseBandeira(
-                beneficio.bandeira
-            );
+            obterClasseBandeira(beneficio.bandeira);
 
         const nomeBandeira =
-            obterNomeBandeira(
-                beneficio.bandeira
-            );
+            obterNomeBandeira(beneficio.bandeira);
 
         item.innerHTML = `
             <div class="sicoobcard-beneficio-icone">
@@ -391,37 +364,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function atualizarBandeiras(cartao) {
-        const container =
-            $("cartaoBandeiras");
+        const container = $("cartaoBandeiras");
+
+        if (!container) {
+            return;
+        }
 
         container.innerHTML = "";
 
-        cartao.bandeiras.forEach(
-            bandeira => {
-                const tag =
-                    document.createElement(
-                        "span"
-                    );
+        cartao.bandeiras.forEach(bandeira => {
+            const tag = document.createElement("span");
 
-                tag.className =
-                    "sicoobcard-bandeira-tag";
+            tag.className = "sicoobcard-bandeira-tag";
+            tag.textContent = bandeira;
 
-                tag.textContent =
-                    bandeira;
-
-                container.appendChild(
-                    tag
-                );
-            }
-        );
+            container.appendChild(tag);
+        });
     }
 
     function atualizarBeneficios(cartao) {
-        const lista =
-            $("listaBeneficios");
+        const lista = $("listaBeneficios");
+        const mensagem = $("mensagemSemBeneficios");
+        const textoBeneficios = $("textoBeneficios");
 
-        const mensagem =
-            $("mensagemSemBeneficios");
+        if (!lista || !mensagem) {
+            return;
+        }
 
         lista.innerHTML = "";
 
@@ -429,41 +397,89 @@ document.addEventListener("DOMContentLoaded", () => {
             !cartao.beneficios ||
             cartao.beneficios.length === 0
         ) {
-            lista.classList.add(
-                "hide"
-            );
+            lista.classList.add("hide");
+            mensagem.classList.remove("hide");
 
-            mensagem.classList.remove(
-                "hide"
-            );
-
-            $("textoBeneficios")
-                .textContent =
-                `O material de referência não detalha benefícios individuais para o ${cartao.nomeCompleto}.`;
+            if (textoBeneficios) {
+                textoBeneficios.textContent =
+                    `O material de referência não detalha benefícios individuais para o ${cartao.nomeCompleto}.`;
+            }
 
             return;
         }
 
-        lista.classList.remove(
-            "hide"
-        );
+        lista.classList.remove("hide");
+        mensagem.classList.add("hide");
 
-        mensagem.classList.add(
-            "hide"
-        );
+        if (textoBeneficios) {
+            textoBeneficios.textContent =
+                `${cartao.beneficios.length} benefícios distintos disponíveis para o ${cartao.nomeCompleto}.`;
+        }
 
-        $("textoBeneficios")
-            .textContent =
-            `${cartao.beneficios.length} benefícios distintos disponíveis para o ${cartao.nomeCompleto}.`;
+        cartao.beneficios.forEach(beneficio => {
+            lista.appendChild(
+                criarBeneficio(beneficio)
+            );
+        });
+    }
 
-        cartao.beneficios.forEach(
-            beneficio => {
-                lista.appendChild(
-                    criarBeneficio(
-                        beneficio
-                    )
-                );
-            }
+    function removerPlaceholderImagem() {
+        const area =
+            document.querySelector(
+                ".sicoobcard-imagem-area"
+            );
+
+        if (!area) {
+            return;
+        }
+
+        const placeholder =
+            area.querySelector(
+                ".sicoobcard-imagem-placeholder"
+            );
+
+        if (placeholder) {
+            placeholder.remove();
+        }
+    }
+
+    function criarPlaceholderImagem(cartao) {
+        const area =
+            document.querySelector(
+                ".sicoobcard-imagem-area"
+            );
+
+        if (!area) {
+            return;
+        }
+
+        removerPlaceholderImagem();
+
+        const placeholder =
+            document.createElement("div");
+
+        placeholder.className =
+            "sicoobcard-imagem-placeholder";
+
+        placeholder.innerHTML = `
+            <strong>${cartao.nomeCompleto}</strong>
+            <span>Imagem ainda não cadastrada.</span>
+        `;
+
+        placeholder.style.textAlign =
+            "center";
+
+        placeholder.style.color =
+            "#33666E";
+
+        placeholder.style.fontSize =
+            "12px";
+
+        placeholder.style.lineHeight =
+            "1.5";
+
+        area.appendChild(
+            placeholder
         );
     }
 
@@ -471,9 +487,33 @@ document.addEventListener("DOMContentLoaded", () => {
         const imagem =
             $("imagemCartao");
 
+        if (!imagem) {
+            return;
+        }
+
+        removerPlaceholderImagem();
+
+        if (!cartao.imagem) {
+            imagem.removeAttribute("src");
+            imagem.alt =
+                cartao.nomeCompleto;
+
+            imagem.style.display =
+                "none";
+
+            criarPlaceholderImagem(
+                cartao
+            );
+
+            return;
+        }
+
         imagem.classList.add(
             "trocando"
         );
+
+        imagem.style.display =
+            "block";
 
         setTimeout(() => {
             imagem.src =
@@ -489,23 +529,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function atualizarSelecao(chave) {
-        $$(".sicoobcard-opcao")
-            .forEach(botao => {
-                botao.classList.toggle(
-                    "ativo",
-                    botao.dataset.cartao ===
-                    chave
-                );
-            });
+        $$(".sicoobcard-opcao").forEach(botao => {
+            botao.classList.toggle(
+                "ativo",
+                botao.dataset.cartao === chave
+            );
+        });
 
-        $$("#tabelaComparativo tr[data-cartao]")
-            .forEach(linha => {
-                linha.classList.toggle(
-                    "sicoobcard-linha-ativa",
-                    linha.dataset.cartao ===
-                    chave
-                );
-            });
+        $$("#tabelaComparativo tr[data-cartao]").forEach(linha => {
+            linha.classList.toggle(
+                "sicoobcard-linha-ativa",
+                linha.dataset.cartao === chave
+            );
+        });
     }
 
     function selecionarCartao(chave) {
@@ -516,213 +552,172 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        $("cartaoCategoria")
-            .textContent =
-            "Sicoobcard";
+        if ($("cartaoCategoria")) {
+            $("cartaoCategoria").textContent =
+                "Sicoobcard";
+        }
 
-        $("cartaoNome")
-            .textContent =
-            cartao.nome;
+        if ($("cartaoNome")) {
+            $("cartaoNome").textContent =
+                cartao.nome;
+        }
 
-        $("cartaoDescricao")
-            .textContent =
-            cartao.descricao;
+        if ($("cartaoDescricao")) {
+            $("cartaoDescricao").textContent =
+                cartao.descricao;
+        }
 
-        $("nomeCartaoImagem")
-            .textContent =
-            cartao.nomeCompleto;
+        if ($("nomeCartaoImagem")) {
+            $("nomeCartaoImagem").textContent =
+                cartao.nomeCompleto;
+        }
 
-        $("segmentoCartaoImagem")
-            .textContent =
-            cartao.segmento;
+        if ($("segmentoCartaoImagem")) {
+            $("segmentoCartaoImagem").textContent =
+                cartao.segmento;
+        }
 
-        $("infoSegmento")
-            .textContent =
-            cartao.segmento;
+        if ($("infoSegmento")) {
+            $("infoSegmento").textContent =
+                cartao.segmento;
+        }
 
-        $("infoPontuacao")
-            .textContent =
-            cartao.pontuacao;
+        if ($("infoPontuacao")) {
+            $("infoPontuacao").textContent =
+                cartao.pontuacao;
+        }
 
-        $("infoSalaVip")
-            .textContent =
-            cartao.salaVip;
+        if ($("infoSalaVip")) {
+            $("infoSalaVip").textContent =
+                cartao.salaVip;
+        }
 
-        $("infoLimite")
-            .textContent =
-            cartao.limite;
+        if ($("infoLimite")) {
+            $("infoLimite").textContent =
+                cartao.limite;
+        }
 
-        $("infoAnuidade")
-            .textContent =
-            cartao.anuidade;
+        if ($("infoAnuidade")) {
+            $("infoAnuidade").textContent =
+                cartao.anuidade;
+        }
 
-        $("infoQuantidadeBeneficios")
-            .textContent =
-            cartao.beneficios.length > 0
-                ? cartao.beneficios.length
-                : "—";
+        if ($("infoQuantidadeBeneficios")) {
+            $("infoQuantidadeBeneficios").textContent =
+                cartao.beneficios.length > 0
+                    ? cartao.beneficios.length
+                    : "—";
+        }
 
-        atualizarImagem(
-            cartao
-        );
-
-        atualizarBandeiras(
-            cartao
-        );
-
-        atualizarBeneficios(
-            cartao
-        );
-
-        atualizarSelecao(
-            chave
-        );
+        atualizarImagem(cartao);
+        atualizarBandeiras(cartao);
+        atualizarBeneficios(cartao);
+        atualizarSelecao(chave);
     }
 
     function montarTabelaComparativo() {
         const tbody =
             $("tabelaComparativo");
 
+        if (!tbody) {
+            return;
+        }
+
         tbody.innerHTML = "";
 
-        Object.entries(CARTOES)
-            .forEach(
-                ([chave, cartao]) => {
-                    const linha =
-                        document.createElement(
-                            "tr"
-                        );
+        Object.entries(CARTOES).forEach(
+            ([chave, cartao]) => {
+                const linha =
+                    document.createElement("tr");
 
-                    linha.dataset.cartao =
-                        chave;
+                linha.dataset.cartao =
+                    chave;
 
-                    linha.innerHTML = `
-                        <td><strong>${cartao.nome}</strong></td>
-                        <td>${cartao.segmento}</td>
-                        <td>${cartao.pontuacao}</td>
-                        <td>${cartao.salaVip}</td>
-                        <td>${cartao.limite}</td>
-                        <td>${cartao.anuidade}</td>
-                    `;
+                linha.innerHTML = `
+                    <td><strong>${cartao.nome}</strong></td>
+                    <td>${cartao.segmento}</td>
+                    <td>${cartao.pontuacao}</td>
+                    <td>${cartao.salaVip}</td>
+                    <td>${cartao.limite}</td>
+                    <td>${cartao.anuidade}</td>
+                `;
 
-                    linha.addEventListener(
-                        "click",
-                        () => {
-                            selecionarCartao(
-                                chave
+                linha.addEventListener(
+                    "click",
+                    () => {
+                        selecionarCartao(chave);
+
+                        const detalhes =
+                            document.querySelector(
+                                ".sicoobcard-detalhes-grid"
                             );
 
+                        if (detalhes) {
                             window.scrollTo({
                                 top:
-                                    document
-                                        .querySelector(
-                                            ".sicoobcard-detalhes-grid"
-                                        )
-                                        .offsetTop -
+                                    detalhes.offsetTop -
                                     80,
                                 behavior:
                                     "smooth"
                             });
                         }
-                    );
+                    }
+                );
 
-                    tbody.appendChild(
-                        linha
-                    );
-                }
-            );
+                tbody.appendChild(
+                    linha
+                );
+            }
+        );
     }
 
-    $$(".sicoobcard-opcao")
-        .forEach(botao => {
-            botao.addEventListener(
-                "click",
-                () => {
-                    selecionarCartao(
-                        botao.dataset.cartao
-                    );
-                }
-            );
-        });
+    $$(".sicoobcard-opcao").forEach(botao => {
+        botao.addEventListener(
+            "click",
+            () => {
+                selecionarCartao(
+                    botao.dataset.cartao
+                );
+            }
+        );
+    });
 
-    /*
-     * Caso alguma imagem ainda não exista, a página não
-     * exibirá o ícone padrão de imagem quebrada.
-     */
-    $("imagemCartao")
-        .addEventListener(
+    const imagemCartao =
+        $("imagemCartao");
+
+    if (imagemCartao) {
+        imagemCartao.addEventListener(
             "error",
             function () {
+                const chaveAtiva =
+                    document.querySelector(
+                        ".sicoobcard-opcao.ativo"
+                    )?.dataset.cartao;
+
+                const cartao =
+                    CARTOES[chaveAtiva];
+
                 this.style.display =
                     "none";
 
-                const area =
-                    this.closest(
-                        ".sicoobcard-imagem-area"
-                    );
-
-                if (
-                    area &&
-                    !area.querySelector(
-                        ".sicoobcard-imagem-placeholder"
-                    )
-                ) {
-                    const placeholder =
-                        document.createElement(
-                            "div"
-                        );
-
-                    placeholder.className =
-                        "sicoobcard-imagem-placeholder";
-
-                    placeholder.innerHTML = `
-                        <strong>Imagem do cartão</strong>
-                        <span>Substitua o arquivo indicado no JS pela imagem definitiva.</span>
-                    `;
-
-                    placeholder.style.textAlign =
-                        "center";
-
-                    placeholder.style.color =
-                        "#33666E";
-
-                    placeholder.style.fontSize =
-                        "12px";
-
-                    placeholder.style.lineHeight =
-                        "1.5";
-
-                    area.appendChild(
-                        placeholder
+                if (cartao) {
+                    criarPlaceholderImagem(
+                        cartao
                     );
                 }
             }
         );
 
-    $("imagemCartao")
-        .addEventListener(
+        imagemCartao.addEventListener(
             "load",
             function () {
                 this.style.display =
                     "block";
 
-                const area =
-                    this.closest(
-                        ".sicoobcard-imagem-area"
-                    );
-
-                const placeholder =
-                    area
-                        ? area.querySelector(
-                            ".sicoobcard-imagem-placeholder"
-                        )
-                        : null;
-
-                if (placeholder) {
-                    placeholder.remove();
-                }
+                removerPlaceholderImagem();
             }
         );
+    }
 
     montarTabelaComparativo();
     selecionarCartao("gold");
