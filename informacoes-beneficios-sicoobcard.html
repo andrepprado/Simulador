@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informações e Benefícios Sicoob Card | Caixa de Ferramentas</title>
+    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="topo">
+        <div class="container topo-conteudo">
+            <div class="topo-textos">
+                <h1>Informações e Benefícios Sicoob Card</h1>
+                <p>Consulte as principais informações, características e benefícios dos cartões Sicoobcard.</p>
+            </div>
+
+            <div class="topo-logo">
+                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
+            </div>
+        </div>
+    </header>
+
+    <nav class="menu-principal">
+        <div class="container menu-conteudo">
+            <a href="index.html" class="menu-item">Início</a>
+            <a href="credito-rural.html" class="menu-item">Crédito Rural</a>
+            <a href="antecipacao-sipag.html" class="menu-item">Antecipação Sipag</a>
+            <a href="precificacao-sipag.html" class="menu-item">Precificação Sipag</a>
+            <a href="cobranca.html" class="menu-item">Cobrança</a>
+            <a href="previdencia.html" class="menu-item">Previdência</a>
+            <a href="informacoes-beneficios-sicoobcard.html" class="menu-item ativo">Sicoob Card</a>
+        </div>
+    </nav>
+
+    <main class="container sicoobcard-container">
+
+        <section class="card sicoobcard-selecao-card">
+            <div class="titulo-secao">
+                <span class="categoria-etiqueta">Sicoobcard</span>
+                <h2>Escolha o cartão</h2>
+                <p>Selecione uma categoria para consultar suas informações e benefícios.</p>
+            </div>
+
+            <div class="sicoobcard-seletor" id="seletorCartoes">
+                <button type="button" class="sicoobcard-opcao ativo" data-cartao="gold">
+                    Gold
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="goldPlus">
+                    Gold Plus
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="platinum">
+                    Platinum
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="verth">
+                    Verth
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="merith">
+                    Merith
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="zenith">
+                    Zenith
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="masterEmpresarial">
+                    Master Emp.
+                </button>
+
+                <button type="button" class="sicoobcard-opcao" data-cartao="visaEmpresarial">
+                    Visa Emp.
+                </button>
+            </div>
+        </section>
+
+        <section class="sicoobcard-detalhes-grid">
+
+            <div class="card sicoobcard-cartao-card">
+
+                <div class="sicoobcard-cartao-topo">
+                    <div>
+                        <span class="categoria-etiqueta" id="cartaoCategoria">Cartão</span>
+                        <h2 id="cartaoNome">Gold</h2>
+                        <p id="cartaoDescricao">Cartão de entrada do portfólio Sicoobcard.</p>
+                    </div>
+
+                    <div class="sicoobcard-bandeiras" id="cartaoBandeiras"></div>
+                </div>
+
+                <div class="sicoobcard-imagem-area">
+                    <!-- =====================================================
+                         IMAGEM DO CARTÃO
+                         Troque posteriormente os arquivos genéricos dentro
+                         da pasta img/cartoes/.
+                         O JS controla automaticamente qual imagem será exibida.
+                         ===================================================== -->
+
+                    <img id="imagemCartao" src="img/cartoes/cartao-gold.png" alt="Cartão Sicoobcard Gold"
+                        class="sicoobcard-imagem">
+                </div>
+
+                <div class="sicoobcard-nome-imagem">
+                    <strong id="nomeCartaoImagem">Sicoobcard Gold</strong>
+                    <span id="segmentoCartaoImagem">Entrada</span>
+                </div>
+
+            </div>
+
+            <div class="card sicoobcard-informacoes-card">
+
+                <div class="titulo-secao">
+                    <h2>Informações do cartão</h2>
+                    <p>Principais características da categoria selecionada.</p>
+                </div>
+
+                <div class="sicoobcard-informacoes-grid">
+
+                    <div class="sicoobcard-info-item">
+                        <span>Segmento</span>
+                        <strong id="infoSegmento">Entrada</strong>
+                    </div>
+
+                    <div class="sicoobcard-info-item">
+                        <span>Pontuação</span>
+                        <strong id="infoPontuacao">—</strong>
+                    </div>
+
+                    <div class="sicoobcard-info-item">
+                        <span>Sala VIP</span>
+                        <strong id="infoSalaVip">—</strong>
+                    </div>
+
+                    <div class="sicoobcard-info-item">
+                        <span>Limite mínimo</span>
+                        <strong id="infoLimite">R$ 500,00</strong>
+                    </div>
+
+                    <div class="sicoobcard-info-item">
+                        <span>Anuidade</span>
+                        <strong id="infoAnuidade">Isento</strong>
+                    </div>
+
+                    <div class="sicoobcard-info-item sicoobcard-info-destaque">
+                        <span>Benefícios distintos</span>
+                        <strong id="infoQuantidadeBeneficios">3</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="card sicoobcard-beneficios-card">
+
+            <div class="sicoobcard-beneficios-cabecalho">
+                <div class="titulo-secao">
+                    <span class="categoria-etiqueta">Benefícios</span>
+                    <h2>Benefícios disponíveis</h2>
+                    <p id="textoBeneficios">
+                        Benefícios disponíveis para o Sicoobcard Gold.
+                    </p>
+                </div>
+
+                <div class="sicoobcard-legenda">
+                    <div>
+                        <span class="beneficio-bandeira beneficio-master">M</span>
+                        <span>Mastercard</span>
+                    </div>
+
+                    <div>
+                        <span class="beneficio-bandeira beneficio-visa">V</span>
+                        <span>Visa</span>
+                    </div>
+
+                    <div>
+                        <span class="beneficio-bandeira beneficio-ambas">V+M</span>
+                        <span>Visa e Mastercard</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="listaBeneficios" class="sicoobcard-beneficios-grid"></div>
+
+            <div id="mensagemSemBeneficios" class="sicoobcard-sem-beneficios hide">
+                <strong>Benefícios não detalhados no material de referência.</strong>
+                <span>
+                    As informações disponíveis para esta categoria estão apresentadas acima.
+                </span>
+            </div>
+
+        </section>
+
+        <section class="card sicoobcard-comparativo-card">
+
+            <div class="titulo-secao">
+                <span class="categoria-etiqueta">Portfólio</span>
+                <h2>Comparativo das categorias</h2>
+                <p>Visão resumida da evolução do portfólio Sicoobcard.</p>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table class="tabela-sicoobcard">
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Segmento</th>
+                            <th>Pontuação</th>
+                            <th>Sala VIP</th>
+                            <th>Limite mínimo</th>
+                            <th>Anuidade</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelaComparativo"></tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvimento e Gestão: Área de Processos</p>
+        </div>
+    </footer>
+
+    <script src="js/informacoes-beneficios-sicoobcard.js"></script>
+    <script src="./js/impressao-pdf.js"></script>
+</body>
+
+</html>

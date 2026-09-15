@@ -1594,3 +1594,529 @@ footer {
         display: none !important;
     }
 }
+
+/* =========================================================
+   INFORMAÇÕES E BENEFÍCIOS SICOOBCARD
+   ========================================================= */
+
+.sicoobcard-container {
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+.sicoobcard-selecao-card,
+.sicoobcard-cartao-card,
+.sicoobcard-informacoes-card,
+.sicoobcard-beneficios-card,
+.sicoobcard-comparativo-card {
+    padding: 28px;
+}
+
+.sicoobcard-selecao-card {
+    margin-bottom: 24px;
+}
+
+.sicoobcard-selecao-card .titulo-secao {
+    margin-bottom: 20px;
+}
+
+.sicoobcard-seletor {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.sicoobcard-opcao {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    padding: 0 10px;
+    background: #f7f9f9;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.sicoobcard-opcao:hover {
+    color: var(--turquesa);
+    border-color: var(--turquesa-claro);
+    background: rgba(0, 160, 145, 0.05);
+    transform: translateY(-1px);
+}
+
+.sicoobcard-opcao.ativo {
+    color: var(--branco);
+    border-color: var(--turquesa);
+    background: linear-gradient(135deg,
+            var(--turquesa),
+            var(--verde-escuro));
+    box-shadow: 0 5px 15px rgba(0, 54, 64, 0.14);
+}
+
+.sicoobcard-detalhes-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.72fr) minmax(0, 1.28fr);
+    gap: 24px;
+    margin-bottom: 24px;
+    align-items: stretch;
+}
+
+.sicoobcard-cartao-card,
+.sicoobcard-informacoes-card {
+    min-width: 0;
+}
+
+.sicoobcard-cartao-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.sicoobcard-cartao-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.sicoobcard-cartao-topo h2 {
+    color: var(--verde-escuro);
+    font-size: 27px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+}
+
+.sicoobcard-cartao-topo p {
+    max-width: 340px;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.sicoobcard-bandeiras {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.sicoobcard-bandeira-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 27px;
+    padding: 0 9px;
+    border-radius: 20px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sicoobcard-imagem-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 265px;
+    margin-top: 20px;
+    padding: 22px;
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 50% 30%,
+            rgba(0, 160, 145, 0.12),
+            rgba(0, 160, 145, 0.025) 55%,
+            transparent 75%),
+        var(--fundo-secundario);
+    border: 1px solid var(--borda);
+}
+
+.sicoobcard-imagem {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 230px;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 18px rgba(0, 54, 64, 0.18));
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sicoobcard-imagem.trocando {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+.sicoobcard-nome-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 14px;
+}
+
+.sicoobcard-nome-imagem strong {
+    color: var(--verde-escuro);
+    font-size: 14px;
+}
+
+.sicoobcard-nome-imagem span {
+    color: var(--texto-secundario);
+    font-size: 11px;
+}
+
+.sicoobcard-informacoes-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.sicoobcard-informacoes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.sicoobcard-info-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 105px;
+    padding: 17px 18px;
+    background: #fbfcfc;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.sicoobcard-info-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--turquesa);
+}
+
+.sicoobcard-info-item span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.sicoobcard-info-item strong {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 19px;
+    line-height: 1.25;
+}
+
+.sicoobcard-info-destaque {
+    background: linear-gradient(135deg,
+            rgba(0, 160, 145, 0.08),
+            rgba(201, 210, 0, 0.09));
+    border-color: rgba(0, 160, 145, 0.25);
+}
+
+.sicoobcard-info-destaque::before {
+    background: var(--verde-claro);
+}
+
+.sicoobcard-info-destaque strong {
+    color: var(--turquesa);
+    font-size: 24px;
+}
+
+.sicoobcard-beneficios-card {
+    margin-bottom: 24px;
+}
+
+.sicoobcard-beneficios-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 22px;
+}
+
+.sicoobcard-beneficios-cabecalho .titulo-secao {
+    margin-bottom: 0;
+}
+
+.sicoobcard-legenda {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.sicoobcard-legenda>div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.beneficio-bandeira {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 6px;
+    color: var(--branco);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.beneficio-master {
+    background: var(--verde-escuro);
+}
+
+.beneficio-visa {
+    background: var(--turquesa);
+}
+
+.beneficio-ambas {
+    background: var(--verde-medio);
+}
+
+.sicoobcard-beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.sicoobcard-beneficio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 76px;
+    padding: 14px;
+    background: #fbfcfc;
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    transition: 0.2s ease;
+}
+
+.sicoobcard-beneficio:hover {
+    border-color: var(--turquesa-claro);
+    box-shadow: 0 5px 16px rgba(0, 54, 64, 0.07);
+    transform: translateY(-1px);
+}
+
+.sicoobcard-beneficio-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    min-width: 39px;
+    border-radius: 10px;
+    background: rgba(0, 160, 145, 0.09);
+    color: var(--turquesa);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.sicoobcard-beneficio-conteudo {
+    flex: 1;
+    min-width: 0;
+}
+
+.sicoobcard-beneficio-conteudo strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--verde-escuro);
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.sicoobcard-beneficio-conteudo small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    line-height: 1.35;
+}
+
+.sicoobcard-sem-beneficios {
+    padding: 22px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    text-align: center;
+}
+
+.sicoobcard-sem-beneficios strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+}
+
+.sicoobcard-sem-beneficios span {
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.sicoobcard-comparativo-card {
+    margin-bottom: 0;
+}
+
+.tabela-sicoobcard {
+    min-width: 900px;
+}
+
+.tabela-sicoobcard th,
+.tabela-sicoobcard td {
+    vertical-align: middle;
+}
+
+.tabela-sicoobcard th:first-child,
+.tabela-sicoobcard td:first-child {
+    text-align: left;
+}
+
+.tabela-sicoobcard td {
+    text-align: right;
+}
+
+.tabela-sicoobcard tbody tr {
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.tabela-sicoobcard tbody tr:hover {
+    background: rgba(0, 160, 145, 0.07);
+}
+
+.tabela-sicoobcard tbody tr.sicoobcard-linha-ativa {
+    background: rgba(0, 160, 145, 0.11);
+}
+
+.tabela-sicoobcard tbody tr.sicoobcard-linha-ativa td:first-child {
+    color: var(--turquesa);
+    font-weight: 700;
+}
+
+@media (max-width: 1100px) {
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .sicoobcard-detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-beneficios-cabecalho {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .sicoobcard-legenda {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 650px) {
+    .sicoobcard-container {
+        padding-top: 18px;
+        padding-bottom: 35px;
+    }
+
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
+        padding: 20px;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sicoobcard-informacoes-grid,
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-cartao-topo {
+        flex-direction: column;
+    }
+
+    .sicoobcard-bandeiras {
+        justify-content: flex-start;
+    }
+
+    .sicoobcard-imagem-area {
+        min-height: 220px;
+    }
+
+    .sicoobcard-imagem {
+        max-height: 190px;
+    }
+
+    .sicoobcard-nome-imagem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 420px) {
+    .sicoobcard-seletor {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .sicoobcard-opcao {
+        height: 35px;
+        font-size: 9px;
+    }
+
+    .sicoobcard-detalhes-grid {
+        grid-template-columns: 0.72fr 1.28fr;
+        gap: 12px;
+    }
+
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
+        box-shadow: none;
+    }
+}
