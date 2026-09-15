@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Comprometimento de Renda",
                     arquivo: "comprometimento-renda.html"
+                },
+                {
+                    nome: "Simulador de Condições de Crédito",
+                    arquivo: "condicoes-credito.html"
                 }
             ]
         },
