@@ -1,39 +1,46 @@
 :root {
     --turquesa: #00A091;
     --turquesa-claro: #33BBAA;
+    --turquesa-mais-claro: #66CCC4;
+    --turquesa-forte: #00B3A4;
     --verde-escuro: #003640;
+    --verde-escuro-claro: #33666E;
+    --verde-escuro-mais-claro: #6699A1;
+    --verde-escuro-forte: #004D5C;
     --verde-claro: #C9D200;
+    --verde-claro-suave: #DCE633;
+    --verde-claro-mais-suave: #E6F266;
     --verde-medio: #7DB61C;
+    --verde-medio-claro: #A3D14D;
     --roxo: #49479D;
-    --branco: #FFFFFF;
     --fundo: #F4F7F7;
-    --fundo-secundario: #F7F9F9;
+    --fundo-secundario: #EEF4F3;
+    --branco: #FFFFFF;
     --texto: #18383D;
     --texto-secundario: #5D7175;
     --borda: #DDE6E6;
+    --borda-forte: #CBD8D9;
     --erro: #C73A3A;
     --erro-fundo: #FFF1F1;
     --atencao: #A66A00;
     --atencao-fundo: #FFF8E6;
     --sucesso: #477D0D;
     --sucesso-fundo: #F2F9E8;
-    --sombra: 0 8px 28px rgba(0, 54, 64, 0.08);
-    --sombra-hover: 0 14px 34px rgba(0, 54, 64, 0.13);
+    --sombra: 0 8px 28px rgba(0, 54, 64, .08);
+    --sombra-hover: 0 14px 34px rgba(0, 54, 64, .13);
 }
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
-    margin: 0;
-    padding: 0;
     scroll-behavior: smooth;
 }
 
 body {
-    margin: 0;
-    padding: 0;
     min-height: 100vh;
     background: var(--fundo);
     color: var(--texto);
@@ -44,6 +51,10 @@ body {
 
 img {
     max-width: 100%;
+}
+
+a {
+    color: inherit;
 }
 
 button,
@@ -57,42 +68,41 @@ button {
     border: 0;
 }
 
-a {
-    color: inherit;
-}
-
 .container {
     width: min(1180px, calc(100% - 40px));
     margin: 0 auto;
 }
 
+.hide {
+    display: none !important;
+}
+
 /* =========================================================
    CABEÇALHO
    ========================================================= */
-
 header,
-.cabecalho {
-    background: linear-gradient(115deg,
-            var(--turquesa) 0%,
-            var(--turquesa-claro) 35%,
-            var(--verde-escuro) 100%);
+.cabecalho,
+.topo {
+    background: linear-gradient(115deg, var(--turquesa) 0%, var(--turquesa-claro) 35%, var(--verde-escuro) 100%);
     color: var(--branco);
 }
 
 .header-conteudo,
-.cabecalho-conteudo {
+.cabecalho-conteudo,
+.topo-conteudo {
     min-height: 190px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 40px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding: 30px 0;
 }
 
 .header-texto,
-.cabecalho-texto {
+.cabecalho-texto,
+.topo-textos {
     min-width: 0;
+    flex: 1;
 }
 
 .header-tag,
@@ -102,12 +112,13 @@ header,
     color: var(--verde-claro);
     font-size: 13px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: .08em;
     text-transform: uppercase;
 }
 
 header h1,
-.cabecalho h1 {
+.cabecalho h1,
+.topo h1 {
     margin: 0 0 8px;
     color: var(--branco);
     font-size: clamp(30px, 4vw, 44px);
@@ -115,34 +126,40 @@ header h1,
 }
 
 header p,
-.cabecalho p {
+.cabecalho p,
+.topo p {
     max-width: 720px;
     margin: 0;
-    color: rgba(255, 255, 255, 0.88);
+    color: rgba(255, 255, 255, .88);
     font-size: 16px;
 }
 
 .header-logo,
-.cabecalho-logo {
+.cabecalho-logo,
+.topo-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     flex: 0 0 auto;
 }
 
 .header-logo img,
-.cabecalho-logo img {
+.cabecalho-logo img,
+.topo-logo img {
     display: block;
-    width: 180px;
+    width: 190px;
     max-width: 100%;
     height: auto;
+    object-fit: contain;
 }
 
 /* =========================================================
    MENU PRINCIPAL
    ========================================================= */
-
 .menu-principal {
     background: var(--branco);
     border-bottom: 1px solid var(--borda);
-    box-shadow: 0 3px 12px rgba(0, 54, 64, 0.05);
+    box-shadow: 0 3px 12px rgba(0, 54, 64, .05);
 }
 
 .menu-conteudo {
@@ -165,12 +182,12 @@ header p,
     font-weight: 700;
     white-space: nowrap;
     border-bottom: 3px solid transparent;
-    transition: 0.2s ease;
+    transition: .2s ease;
 }
 
 a.menu-item:hover {
     color: var(--turquesa);
-    background: rgba(0, 160, 145, 0.04);
+    background: rgba(0, 160, 145, .04);
 }
 
 .menu-item.ativo {
@@ -181,7 +198,6 @@ a.menu-item:hover {
 /* =========================================================
    CONTEÚDO GERAL
    ========================================================= */
-
 main {
     min-height: 500px;
 }
@@ -222,13 +238,63 @@ main {
     font-size: 13px;
 }
 
-/* =========================================================
-   PÁGINA INICIAL - CATEGORIAS E FERRAMENTAS
-   ========================================================= */
+.titulo-subsecao {
+    margin-bottom: 17px;
+}
 
+.titulo-subsecao h3 {
+    color: var(--verde-escuro);
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 5px;
+}
+
+.titulo-subsecao p {
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   HOME / CAIXA DE FERRAMENTAS
+   ========================================================= */
+.home,
 .caixa-ferramentas {
     padding-top: 34px;
     padding-bottom: 44px;
+}
+
+.home-apresentacao {
+    max-width: 720px;
+    margin-bottom: 38px;
+}
+
+.home-etiqueta,
+.categoria-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 160, 145, .10);
+    color: var(--turquesa);
+    padding: 7px 12px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.home-apresentacao h2,
+.categoria-titulo h2 {
+    font-size: 30px;
+    color: var(--verde-escuro);
+    margin-bottom: 10px;
+}
+
+.home-apresentacao p,
+.categoria-titulo p {
+    color: var(--texto-secundario);
+    font-size: 15px;
+    line-height: 1.6;
 }
 
 .categoria-ferramentas {
@@ -237,6 +303,17 @@ main {
 
 .categoria-ferramentas:last-child {
     margin-bottom: 0;
+}
+
+.categoria-titulo {
+    margin-bottom: 22px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid var(--borda);
+}
+
+.categoria-titulo h2 {
+    font-size: 23px;
+    margin-bottom: 5px;
 }
 
 .categoria-cabecalho {
@@ -285,12 +362,13 @@ main {
     border-radius: 16px;
     box-shadow: var(--sombra);
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
-a.ferramenta-card:hover {
+a.ferramenta-card:hover,
+.ferramenta-disponivel:hover {
     transform: translateY(-3px);
-    border-color: rgba(0, 160, 145, 0.35);
+    border-color: rgba(0, 160, 145, .35);
     box-shadow: var(--sombra-hover);
 }
 
@@ -303,7 +381,7 @@ a.ferramenta-card:hover {
     justify-content: center;
     border-radius: 16px;
     overflow: hidden;
-    background: rgba(0, 160, 145, 0.08);
+    background: rgba(0, 160, 145, .08);
 }
 
 .ferramenta-icone-imagem {
@@ -333,7 +411,12 @@ a.ferramenta-card:hover {
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: .04em;
+}
+
+.status-futuro {
+    background: #eef2f2;
+    color: var(--texto-secundario);
 }
 
 .ferramenta-card h3 {
@@ -357,23 +440,31 @@ a.ferramenta-card:hover {
 }
 
 .ferramenta-indisponivel {
-    opacity: 0.62;
+    opacity: .62;
     cursor: default;
 }
 
 /* =========================================================
    CARDS GERAIS
    ========================================================= */
-
 .card,
 .simulador-card,
 .resultado-card {
     min-width: 0;
-    padding: 28px;
     background: var(--branco);
     border: 1px solid var(--borda);
     border-radius: 16px;
     box-shadow: var(--sombra);
+}
+
+.formulario-card,
+.resultado-card,
+.tabela-card,
+.documentos-card,
+.configuracao-card,
+.resumo-card,
+.cobranca-card {
+    padding: 28px;
 }
 
 .card h2,
@@ -384,71 +475,201 @@ a.ferramenta-card:hover {
 }
 
 /* =========================================================
-   FORMULÁRIOS GERAIS
+   GRIDS GERAIS
    ========================================================= */
-
-.form-grid {
+.simulador-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 17px 18px;
+    grid-template-columns: minmax(0, 1.65fr) minmax(340px, .85fr);
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
 }
 
-.campo-grupo,
-.form-grupo {
+.formulario-card {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.resultado-card {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.tabela-card {
+    grid-column: 1;
+    grid-row: 2;
     min-width: 0;
 }
 
+.documentos-card {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+}
+
+.antecipacao-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(360px, .75fr);
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
+}
+
+.antecipacao-formulario {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.antecipacao-resultado {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.antecipacao-tabela {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
+}
+
+.antecipacao-documentos {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-width: 0;
+}
+
+.simulador-grid-igual {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
+}
+
+.card-largura-total {
+    grid-column: 1 / -1;
+}
+
+.cobranca-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
+}
+
+.cobranca-card-principal,
+.cobranca-card-largura-total {
+    grid-column: 1 / -1;
+}
+
+.cobranca-acoes {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: 0;
+}
+
+/* =========================================================
+   FORMULÁRIOS GERAIS
+   ========================================================= */
+.form-grid,
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.grid-form-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.grid-form-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.campo-grupo,
+.form-grupo,
+.campo {
+    min-width: 0;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .campo-grupo label,
-.form-grupo label {
+.form-grupo label,
+.campo label {
     display: block;
-    margin-bottom: 6px;
     color: var(--verde-escuro);
     font-size: 13px;
     font-weight: 700;
-}
-
-.campo-grupo small,
-.form-grupo small {
-    display: block;
-    margin-top: 6px;
-    color: var(--texto-secundario);
-    font-size: 11px;
     line-height: 1.4;
 }
 
-.campo-grupo input,
-.campo-grupo select,
-.campo-grupo textarea,
-.form-grupo input,
-.form-grupo select,
-.form-grupo textarea {
-    width: 100%;
-    min-height: 44px;
-    padding: 0 12px;
-    color: var(--texto);
-    background: var(--branco);
-    border: 1px solid #CBD8D9;
-    border-radius: 9px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.campo-grupo small,
+.form-grupo small,
+.campo small,
+.campo-ajuda {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.45;
 }
 
-.campo-grupo textarea,
-.form-grupo textarea {
+input,
+select,
+textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 13px;
+    color: var(--texto);
+    background: var(--branco);
+    border: 1px solid var(--borda-forte);
+    border-radius: 9px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+textarea {
     min-height: 100px;
     padding-top: 10px;
     padding-bottom: 10px;
     resize: vertical;
 }
 
-.campo-grupo input:focus,
-.campo-grupo select:focus,
-.campo-grupo textarea:focus,
-.form-grupo input:focus,
-.form-grupo select:focus,
-.form-grupo textarea:focus {
+select {
+    cursor: pointer;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: var(--turquesa-claro);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, 0.10);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
+}
+
+input[readonly],
+.bloqueado,
+input.bloqueado {
+    background: #eef2f2;
+    color: var(--texto-secundario);
+    cursor: default;
 }
 
 .input-prefixo,
@@ -468,9 +689,10 @@ a.ferramenta-card:hover {
     padding: 0 11px;
     color: var(--texto-secundario);
     background: var(--fundo-secundario);
-    border: 1px solid #CBD8D9;
+    border: 1px solid var(--borda-forte);
     font-size: 12px;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .input-prefixo>span {
@@ -493,10 +715,19 @@ a.ferramenta-card:hover {
     border-radius: 9px 0 0 9px;
 }
 
+.input-prefixo input,
+.input-sufixo input {
+    box-shadow: none !important;
+}
+
+.input-prefixo:focus-within>span,
+.input-sufixo:focus-within>span {
+    border-color: var(--turquesa);
+}
+
 /* =========================================================
    BOTÕES GERAIS
    ========================================================= */
-
 .acoes,
 .acoes-simulador,
 .acoes-comprometimento {
@@ -508,42 +739,107 @@ a.ferramenta-card:hover {
 
 .btn,
 .btn-primario,
-.btn-secundario {
+.btn-secundario,
+button,
+.btn-principal {
     min-width: 115px;
-    height: 43px;
+    height: 46px;
     padding: 0 20px;
     border-radius: 9px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 800;
-    transition: 0.2s ease;
+    transition: .2s ease;
 }
 
+.btn-principal,
+#btnSimular,
 .btn-primario {
     color: var(--branco);
     background: var(--turquesa);
     border: 1px solid var(--turquesa);
 }
 
+.btn-principal:hover,
+#btnSimular:hover,
 .btn-primario:hover {
     background: var(--verde-escuro);
     border-color: var(--verde-escuro);
 }
 
+.botao-secundario,
 .btn-secundario {
     color: var(--turquesa);
     background: var(--branco);
     border: 1px solid var(--turquesa);
 }
 
+.botao-secundario:hover,
 .btn-secundario:hover {
-    background: rgba(0, 160, 145, 0.06);
+    background: rgba(0, 160, 145, .06);
+}
+
+/* =========================================================
+   BLOCOS INFORMATIVOS
+   ========================================================= */
+.separador {
+    width: 100%;
+    height: 1px;
+    background: var(--borda);
+    margin: 24px 0;
+}
+
+.aviso {
+    margin-top: 22px;
+    background: #FFF8E5;
+    border-left: 4px solid var(--atencao);
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #665416;
+}
+
+.aviso-info {
+    margin-top: 18px;
+    background: rgba(0, 160, 145, .07);
+    border-left: 4px solid var(--turquesa);
+    padding: 13px 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--texto-secundario);
+}
+
+.indicador-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+.indicador-total strong {
+    color: var(--verde-escuro);
+    font-size: 14px;
+}
+
+.indicador-total strong.indicador-ok {
+    color: var(--sucesso);
+}
+
+.indicador-total strong.indicador-erro {
+    color: var(--erro);
 }
 
 /* =========================================================
    RESULTADOS GERAIS
    ========================================================= */
-
 .resultado-destaque {
     display: flex;
     align-items: center;
@@ -566,11 +862,24 @@ a.ferramenta-card:hover {
     line-height: 1;
 }
 
-.resultado-grid {
+.resultado-grid,
+.resultados-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.resultados-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
-    margin-top: 20px;
+}
+
+.resultados-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
 }
 
 .resultado-item {
@@ -586,6 +895,7 @@ a.ferramenta-card:hover {
     margin-bottom: 7px;
     color: var(--texto-secundario);
     font-size: 11px;
+    line-height: 1.35;
 }
 
 .resultado-item strong {
@@ -594,13 +904,46 @@ a.ferramenta-card:hover {
     font-size: 16px;
 }
 
+.resultado-item-neutro strong {
+    color: var(--verde-escuro);
+}
+
+.resultado-item.resultado-negativo strong {
+    color: var(--erro);
+}
+
+.resultado-item.resultado-positivo strong {
+    color: var(--sucesso);
+}
+
+.linha-selecionada {
+    margin-top: 16px;
+    background: var(--verde-escuro);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid var(--verde-claro);
+}
+
+.linha-selecionada span {
+    display: block;
+    color: rgba(255, 255, 255, .82);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.linha-selecionada strong {
+    color: var(--branco);
+    font-size: 14px;
+}
+
 /* =========================================================
    TABELAS
    ========================================================= */
-
-.tabela-responsiva {
+.tabela-responsiva,
+.tabela-wrapper {
     width: 100%;
     overflow-x: auto;
+    border-radius: 10px;
 }
 
 table {
@@ -609,161 +952,311 @@ table {
     border-spacing: 0;
 }
 
-table th,
-table td {
+th,
+td {
     padding: 13px 15px;
     border-bottom: 1px solid var(--borda);
     text-align: left;
 }
 
-table th {
+th {
     color: var(--verde-escuro);
     background: var(--fundo-secundario);
     font-size: 12px;
     font-weight: 800;
 }
 
-table td {
+td {
     color: var(--texto-secundario);
     font-size: 13px;
 }
 
+.sem-dados {
+    text-align: center !important;
+    color: var(--texto-secundario);
+    padding: 30px;
+}
+
+.tabela-input {
+    min-width: 80px;
+}
+
+.tabela-input input {
+    height: 34px;
+    font-size: 12px;
+    padding: 0 7px;
+    text-align: right;
+}
+
+.tabela-mix {
+    min-width: 720px;
+}
+
+.tabela-mix input {
+    width: 82px;
+    height: 34px;
+    font-size: 12px;
+    text-align: right;
+}
+
+.tabela-cobranca {
+    min-width: 700px;
+}
+
+.tabela-cobranca th:first-child,
+.tabela-cobranca td:first-child {
+    width: 46%;
+}
+
+.tabela-cobranca th:not(:first-child),
+.tabela-cobranca td:not(:first-child) {
+    text-align: right;
+}
+
+.tabela-previdencia {
+    width: 100%;
+    min-width: 850px;
+}
+
+.tabela-previdencia th:not(:first-child),
+.tabela-previdencia td:not(:first-child) {
+    text-align: right;
+}
+
+.tabela-sicoobcard {
+    min-width: 900px;
+}
+
+.tabela-sicoobcard th,
+.tabela-sicoobcard td {
+    vertical-align: middle;
+}
+
+.tabela-sicoobcard th:first-child,
+.tabela-sicoobcard td:first-child {
+    text-align: left;
+}
+
+.tabela-sicoobcard td {
+    text-align: right;
+}
+
+.tabela-sicoobcard tbody tr {
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.tabela-sicoobcard tbody tr:hover {
+    background: rgba(0, 160, 145, .07);
+}
+
+.tabela-sicoobcard tbody tr.sicoobcard-linha-ativa {
+    background: rgba(0, 160, 145, .11);
+}
+
+.tabela-sicoobcard tbody tr.sicoobcard-linha-ativa td:first-child {
+    color: var(--turquesa);
+    font-weight: 700;
+}
+
 /* =========================================================
-   CRÉDITO RURAL
+   DOCUMENTOS
    ========================================================= */
-
-.credito-rural-container {
-    padding-top: 30px;
-    padding-bottom: 40px;
+.documentos-titulo {
+    margin-bottom: 18px;
 }
 
-.credito-rural-grid,
-.simulador-credito-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-    align-items: start;
+.lista-documentos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.credito-rural-card {
-    min-width: 0;
-    padding: 28px;
-    background: var(--branco);
+.documento-grupo {
     border: 1px solid var(--borda);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
+    border-radius: 11px;
+    overflow: hidden;
+    background: #fbfcfc;
 }
 
-.credito-rural-resultado {
-    grid-column: 1 / -1;
+.documento-grupo-titulo {
+    padding: 10px 13px;
+    background: var(--verde-escuro);
+    color: var(--branco);
+    font-size: 12px;
+    font-weight: 700;
 }
 
-/* =========================================================
-   ANTECIPAÇÃO SIPAG
-   ========================================================= */
-
-.antecipacao-container {
-    padding-top: 30px;
-    padding-bottom: 40px;
+.documento-lista {
+    list-style: none;
 }
 
-.antecipacao-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-    align-items: start;
+.documento-item {
+    position: relative;
+    padding: 11px 13px 11px 31px;
+    color: var(--texto);
+    font-size: 12px;
+    line-height: 1.45;
+    border-bottom: 1px solid var(--borda);
 }
 
-.antecipacao-card {
-    min-width: 0;
-    padding: 28px;
-    background: var(--branco);
-    border: 1px solid var(--borda);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
+.documento-item:last-child {
+    border-bottom: none;
 }
 
-.antecipacao-resultado {
-    grid-column: 1 / -1;
+.documento-item::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 16px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--verde-claro);
 }
 
-/* =========================================================
-   PRECIFICAÇÃO SIPAG
-   ========================================================= */
-
-.precificacao-container {
-    padding-top: 30px;
-    padding-bottom: 40px;
-}
-
-.precificacao-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-    align-items: start;
-}
-
-.precificacao-card {
-    min-width: 0;
-    padding: 28px;
-    background: var(--branco);
-    border: 1px solid var(--borda);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
-}
-
-.precificacao-resultado,
-.precificacao-resumo {
-    grid-column: 1 / -1;
-}
-
-/* =========================================================
-   COBRANÇA
-   ========================================================= */
-
-.cobranca-container {
-    padding-top: 30px;
-    padding-bottom: 40px;
-}
-
-.cobranca-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-    align-items: start;
-}
-
-.cobranca-card {
-    min-width: 0;
-    padding: 28px;
-    background: var(--branco);
-    border: 1px solid var(--borda);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
-}
-
-.cobranca-resultado {
-    grid-column: 1 / -1;
+.documentos-observacao {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: rgba(0, 160, 145, .07);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 8px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.5;
 }
 
 /* =========================================================
    PREVIDÊNCIA
    ========================================================= */
-
 .previdencia-container {
     padding-top: 30px;
-    padding-bottom: 40px;
+    padding-bottom: 50px;
 }
 
-.previdencia-grid {
+.previdencia-progresso {
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+}
+
+.previdencia-progresso-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 14px;
+}
+
+.previdencia-progresso-topo>div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.previdencia-progresso-topo span {
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+.previdencia-progresso-topo strong {
+    color: var(--turquesa);
+    font-size: 14px;
+}
+
+.barra-progresso {
+    width: 100%;
+    height: 8px;
+    background: #e8efee;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.barra-progresso-valor {
+    width: 25%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--turquesa) 0%, var(--turquesa-claro) 55%, var(--verde-claro) 100%);
+    border-radius: 999px;
+    transition: width .3s ease;
+}
+
+.previdencia-etapas {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-    align-items: start;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.previdencia-card {
-    min-width: 0;
+.previdencia-etapa {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    padding: 9px 12px;
+    background: #f7f9f9;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.previdencia-etapa:hover {
+    border-color: var(--turquesa-claro);
+    background: rgba(0, 160, 145, .04);
+}
+
+.previdencia-etapa span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    background: #dfe8e7;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.previdencia-etapa.ativo {
+    background: rgba(0, 160, 145, .08);
+    border-color: var(--turquesa);
+    color: var(--turquesa);
+}
+
+.previdencia-etapa.ativo span {
+    background: var(--turquesa);
+    color: var(--branco);
+}
+
+.previdencia-etapa.concluido {
+    border-color: rgba(125, 182, 28, .35);
+}
+
+.previdencia-etapa.concluido span {
+    background: var(--verde-medio);
+    color: var(--branco);
+}
+
+.previdencia-painel {
+    display: none;
+}
+
+.previdencia-painel.ativo {
+    display: block;
+}
+
+.previdencia-painel>.card {
     padding: 28px;
     background: var(--branco);
     border: 1px solid var(--borda);
@@ -771,61 +1264,570 @@ table td {
     box-shadow: var(--sombra);
 }
 
-.previdencia-resultado {
+.previdencia-painel .formulario-card,
+.previdencia-painel .resultado-card,
+.previdencia-painel .tabela-card,
+.previdencia-painel .documentos-card {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+.previdencia-escolhas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.opcao-simulacao {
+    display: block;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+}
+
+.opcao-simulacao input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opcao-simulacao-conteudo {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 122px;
+    height: 100%;
+    padding: 18px;
+    background: #fbfcfc;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    transition: .2s ease;
+}
+
+.opcao-simulacao-conteudo strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--verde-escuro);
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.opcao-simulacao-conteudo small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.opcao-simulacao:hover .opcao-simulacao-conteudo {
+    border-color: var(--turquesa-claro);
+    box-shadow: 0 4px 16px rgba(0, 160, 145, .06);
+}
+
+.opcao-simulacao.ativo .opcao-simulacao-conteudo {
+    border-color: var(--turquesa);
+    background: rgba(0, 160, 145, .055);
+    box-shadow: inset 0 0 0 1px var(--turquesa);
+}
+
+.previdencia-painel .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.previdencia-painel .campo {
+    min-width: 0;
+}
+
+.previdencia-painel .campo label {
+    display: block;
+    min-height: 19px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.previdencia-painel input,
+.previdencia-painel select {
+    width: 100%;
+    min-width: 0;
+}
+
+.previdencia-painel .input-prefixo,
+.previdencia-painel .input-sufixo {
+    width: 100%;
+}
+
+.previdencia-acoes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.previdencia-acoes button {
+    min-width: 125px;
+}
+
+.previdencia-resultado-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    padding: 0;
+    align-items: start;
+}
+
+.previdencia-resultado-grid>.card {
+    min-width: 0;
+}
+
+.previdencia-resultado-grid .card-largura-total {
     grid-column: 1 / -1;
 }
 
-/* =========================================================
-   SICOOB CARD
-   ========================================================= */
-
-.sicoobcard-container,
-.sicoob-card-container {
-    padding-top: 30px;
-    padding-bottom: 40px;
+.previdencia-card-resultado {
+    grid-column: auto !important;
+    grid-row: auto !important;
 }
 
-.sicoobcard-grid,
-.sicoob-card-grid {
+.previdencia-resumo-dados {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    gap: 10px;
 }
 
-.sicoobcard-card,
-.sicoob-card {
+.previdencia-resumo-dados>div {
     min-width: 0;
-    padding: 22px;
-    background: var(--branco);
+    padding: 14px;
+    background: var(--fundo-secundario);
     border: 1px solid var(--borda);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
+    border-radius: 10px;
 }
 
-.sicoobcard-card img,
-.sicoob-card img {
+.previdencia-resumo-dados span {
     display: block;
-    width: 100%;
-    max-height: 220px;
-    object-fit: contain;
-    margin-bottom: 18px;
-}
-
-.sicoobcard-card h3,
-.sicoob-card h3 {
-    margin: 0 0 8px;
-    color: var(--verde-escuro);
-}
-
-.sicoobcard-card p,
-.sicoob-card p {
+    margin-bottom: 7px;
     color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.previdencia-resumo-dados strong {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.previdencia-status {
+    display: block;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border-left: 4px solid var(--turquesa);
+}
+
+.previdencia-status strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.previdencia-status span {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.previdencia-status.sucesso {
+    background: rgba(125, 182, 28, .09);
+    border-left-color: var(--verde-medio);
+    color: #426f13;
+}
+
+.previdencia-status.atencao {
+    background: #fff8e5;
+    border-left-color: #e0a500;
+    color: #665416;
 }
 
 /* =========================================================
-   COMPROMETIMENTO DE RENDA - PRONAMPE / FGI
+   SICOOBCARD
    ========================================================= */
+.sicoobcard-container {
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
 
+.sicoobcard-selecao-card,
+.sicoobcard-cartao-card,
+.sicoobcard-informacoes-card,
+.sicoobcard-beneficios-card,
+.sicoobcard-comparativo-card {
+    padding: 28px;
+}
+
+.sicoobcard-selecao-card {
+    margin-bottom: 24px;
+}
+
+.sicoobcard-selecao-card .titulo-secao {
+    margin-bottom: 20px;
+}
+
+.sicoobcard-seletor {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.sicoobcard-opcao {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    padding: 0 10px;
+    background: #f7f9f9;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.sicoobcard-opcao:hover {
+    color: var(--turquesa);
+    border-color: var(--turquesa-claro);
+    background: rgba(0, 160, 145, .05);
+    transform: translateY(-1px);
+}
+
+.sicoobcard-opcao.ativo {
+    color: var(--branco);
+    border-color: var(--turquesa);
+    background: linear-gradient(135deg, var(--turquesa), var(--verde-escuro));
+    box-shadow: 0 5px 15px rgba(0, 54, 64, .14);
+}
+
+.sicoobcard-detalhes-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
+    gap: 24px;
+    margin-bottom: 24px;
+    align-items: stretch;
+}
+
+.sicoobcard-cartao-card,
+.sicoobcard-informacoes-card {
+    min-width: 0;
+}
+
+.sicoobcard-cartao-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.sicoobcard-cartao-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.sicoobcard-cartao-topo h2 {
+    color: var(--verde-escuro);
+    font-size: 27px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+}
+
+.sicoobcard-cartao-topo p {
+    max-width: 340px;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.sicoobcard-bandeiras {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.sicoobcard-bandeira-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 27px;
+    padding: 0 9px;
+    border-radius: 20px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sicoobcard-imagem-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 400px;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 14px;
+    background: radial-gradient(circle at 50% 30%, rgba(0, 160, 145, .12), rgba(0, 160, 145, .025) 55%, transparent 75%), var(--fundo-secundario);
+    border: 1px solid var(--borda);
+}
+
+.sicoobcard-imagem {
+    display: block;
+    width: auto;
+    max-width: 92%;
+    max-height: 365px;
+    object-fit: contain;
+    object-position: center center;
+    filter: drop-shadow(0 14px 18px rgba(0, 54, 64, .18));
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.sicoobcard-imagem.trocando {
+    opacity: 0;
+    transform: scale(.97);
+}
+
+.sicoobcard-nome-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 14px;
+}
+
+.sicoobcard-nome-imagem strong {
+    color: var(--verde-escuro);
+    font-size: 14px;
+}
+
+.sicoobcard-nome-imagem span {
+    color: var(--texto-secundario);
+    font-size: 11px;
+}
+
+.sicoobcard-informacoes-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.sicoobcard-informacoes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.sicoobcard-info-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 105px;
+    padding: 17px 18px;
+    background: #fbfcfc;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.sicoobcard-info-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--turquesa);
+}
+
+.sicoobcard-info-item span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.sicoobcard-info-item strong {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 19px;
+    line-height: 1.25;
+}
+
+.sicoobcard-info-destaque {
+    background: linear-gradient(135deg, rgba(0, 160, 145, .08), rgba(201, 210, 0, .09));
+    border-color: rgba(0, 160, 145, .25);
+}
+
+.sicoobcard-info-destaque::before {
+    background: var(--verde-claro);
+}
+
+.sicoobcard-info-destaque strong {
+    color: var(--turquesa);
+    font-size: 24px;
+}
+
+.sicoobcard-beneficios-card {
+    margin-bottom: 24px;
+}
+
+.sicoobcard-beneficios-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 22px;
+}
+
+.sicoobcard-beneficios-cabecalho .titulo-secao {
+    margin-bottom: 0;
+}
+
+.sicoobcard-legenda {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.sicoobcard-legenda>div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.beneficio-bandeira {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 6px;
+    color: var(--branco);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.beneficio-master {
+    background: var(--verde-escuro);
+}
+
+.beneficio-visa {
+    background: var(--turquesa);
+}
+
+.beneficio-ambas {
+    background: var(--verde-medio);
+}
+
+.sicoobcard-beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.sicoobcard-beneficio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 76px;
+    padding: 14px;
+    background: #fbfcfc;
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    transition: .2s ease;
+}
+
+.sicoobcard-beneficio:hover {
+    border-color: var(--turquesa-claro);
+    box-shadow: 0 5px 16px rgba(0, 54, 64, .07);
+    transform: translateY(-1px);
+}
+
+.sicoobcard-beneficio-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    min-width: 39px;
+    border-radius: 10px;
+    background: rgba(0, 160, 145, .09);
+    color: var(--turquesa);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.sicoobcard-beneficio-conteudo {
+    flex: 1;
+    min-width: 0;
+}
+
+.sicoobcard-beneficio-conteudo strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--verde-escuro);
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.sicoobcard-beneficio-conteudo small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    line-height: 1.35;
+}
+
+.sicoobcard-sem-beneficios {
+    padding: 22px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    text-align: center;
+}
+
+.sicoobcard-sem-beneficios strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+}
+
+.sicoobcard-sem-beneficios span {
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   COMPROMETIMENTO DE RENDA
+   ========================================================= */
 .comprometimento-container {
     padding-top: 30px;
     padding-bottom: 40px;
@@ -877,7 +1879,7 @@ table td {
 .comprometimento-titulo-indicador {
     flex: 0 0 5px;
     width: 5px;
-    height: 42px;
+    height: 32px;
     border-radius: 10px;
     background: linear-gradient(180deg, var(--verde-claro), var(--turquesa));
 }
@@ -932,16 +1934,16 @@ table td {
     padding: 0 12px;
     color: var(--texto);
     background: var(--branco);
-    border: 1px solid #CBD8D9;
+    border: 1px solid var(--borda-forte);
     border-radius: 9px;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color .2s ease, box-shadow .2s ease;
 }
 
 .comprometimento-campo input:focus,
 .comprometimento-campo select:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, 0.10);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
 }
 
 .comprometimento-input-prefixo,
@@ -961,7 +1963,7 @@ table td {
     padding: 0 11px;
     color: var(--texto-secundario);
     background: var(--fundo-secundario);
-    border: 1px solid #CBD8D9;
+    border: 1px solid var(--borda-forte);
     font-size: 12px;
     font-weight: 700;
 }
@@ -1011,10 +2013,6 @@ table td {
     white-space: nowrap;
 }
 
-/* =========================================================
-   STATUS - COMPROMETIMENTO
-   ========================================================= */
-
 .comprometimento-status {
     display: block;
     width: 100%;
@@ -1043,7 +2041,7 @@ table td {
 
 .comprometimento-status.status-baixo {
     background: var(--sucesso-fundo);
-    border-color: rgba(125, 182, 28, 0.30);
+    border-color: rgba(125, 182, 28, .30);
     border-left-color: var(--verde-medio);
 }
 
@@ -1053,7 +2051,7 @@ table td {
 
 .comprometimento-status.status-atencao {
     background: var(--atencao-fundo);
-    border-color: rgba(201, 210, 0, 0.40);
+    border-color: rgba(201, 210, 0, .40);
     border-left-color: var(--verde-claro);
 }
 
@@ -1063,17 +2061,13 @@ table td {
 
 .comprometimento-status.status-alto {
     background: var(--erro-fundo);
-    border-color: rgba(199, 58, 58, 0.25);
+    border-color: rgba(199, 58, 58, .25);
     border-left-color: var(--erro);
 }
 
 .comprometimento-status.status-alto strong {
     color: var(--erro);
 }
-
-/* =========================================================
-   RESULTADO - COMPROMETIMENTO
-   ========================================================= */
 
 .comprometimento-resultado-destaque {
     display: flex;
@@ -1129,10 +2123,6 @@ table td {
     overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   TABELA - COMPROMETIMENTO
-   ========================================================= */
-
 .comprometimento-tabela-container {
     width: 100%;
     overflow-x: auto;
@@ -1172,13 +2162,9 @@ table td {
 
 .comprometimento-tabela-total td {
     color: var(--verde-escuro);
-    background: rgba(0, 160, 145, 0.05);
+    background: rgba(0, 160, 145, .05);
     font-weight: 800;
 }
-
-/* =========================================================
-   BOTÕES - COMPROMETIMENTO
-   ========================================================= */
 
 .comprometimento-acoes {
     display: flex;
@@ -1195,7 +2181,7 @@ table td {
     cursor: pointer;
     font-size: 13px;
     font-weight: 800;
-    transition: 0.2s ease;
+    transition: .2s ease;
 }
 
 .comprometimento-btn-primario {
@@ -1216,18 +2202,58 @@ table td {
 }
 
 .comprometimento-btn-secundario:hover {
-    background: rgba(0, 160, 145, 0.06);
+    background: rgba(0, 160, 145, .06);
+}
+
+/* =========================================================
+   BOTÃO IMPRIMIR / PDF
+   ========================================================= */
+.botao-impressao-pdf {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--verde-escuro);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0, 54, 64, .22);
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.botao-impressao-pdf:hover {
+    background: var(--turquesa);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0, 54, 64, .28);
+}
+
+.botao-impressao-pdf:active {
+    transform: translateY(0);
+}
+
+.botao-impressao-pdf:focus-visible {
+    outline: 3px solid var(--verde-claro);
+    outline-offset: 3px;
 }
 
 /* =========================================================
    RODAPÉ
    ========================================================= */
-
 footer,
 .rodape {
     margin-top: 10px;
     padding: 24px 0;
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba(255, 255, 255, .82);
     background: var(--verde-escuro);
     text-align: center;
 }
@@ -1235,21 +2261,29 @@ footer,
 footer p,
 .rodape p {
     margin: 0;
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba(255, 255, 255, .82);
     font-size: 12px;
 }
 
 /* =========================================================
    RESPONSIVIDADE
    ========================================================= */
+@media (max-width:1100px) {
 
-@media (max-width: 1100px) {
+    .grid-form-4,
+    .resultados-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .ferramentas-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .sicoobcard-grid,
-    .sicoob-card-grid {
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .sicoobcard-beneficios-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -1258,35 +2292,43 @@ footer p,
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width:900px) {
 
     .header-conteudo,
-    .cabecalho-conteudo {
+    .cabecalho-conteudo,
+    .topo-conteudo {
         min-height: 160px;
     }
 
     .header-logo img,
-    .cabecalho-logo img {
+    .cabecalho-logo img,
+    .topo-logo img {
         width: 145px;
     }
 
-    .credito-rural-grid,
-    .simulador-credito-grid,
+    .simulador-grid,
+    .simulador-grid-igual,
     .antecipacao-grid,
-    .precificacao-grid,
     .cobranca-grid,
-    .previdencia-grid,
+    .previdencia-resultado-grid,
     .comprometimento-grid {
         grid-template-columns: 1fr;
     }
 
-    .credito-rural-resultado,
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card,
+    .antecipacao-formulario,
     .antecipacao-resultado,
-    .precificacao-resultado,
-    .precificacao-resumo,
-    .cobranca-resultado,
-    .previdencia-resultado {
+    .antecipacao-tabela,
+    .antecipacao-documentos,
+    .cobranca-card,
+    .cobranca-card-principal,
+    .cobranca-card-largura-total,
+    .previdencia-card-resultado {
         grid-column: 1;
+        grid-row: auto;
     }
 
     .comprometimento-dados,
@@ -1296,44 +2338,97 @@ footer p,
         grid-column: 1;
         grid-row: auto;
     }
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-escolhas {
+        grid-template-columns: 1fr;
+    }
+
+    .previdencia-resultado-grid .card-largura-total {
+        grid-column: 1;
+    }
+
+    .previdencia-resumo-dados {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-beneficios-cabecalho {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .sicoobcard-legenda {
+        justify-content: flex-start;
+    }
 }
 
-@media (max-width: 700px) {
+@media (max-width:700px) {
     .container {
         width: min(100% - 24px, 1180px);
     }
 
     .header-conteudo,
-    .cabecalho-conteudo {
+    .cabecalho-conteudo,
+    .topo-conteudo {
         min-height: 0;
         padding-top: 26px;
         padding-bottom: 26px;
     }
 
     .header-logo,
-    .cabecalho-logo {
+    .cabecalho-logo,
+    .topo-logo {
         display: none;
     }
 
     header h1,
-    .cabecalho h1 {
+    .cabecalho h1,
+    .topo h1 {
         font-size: 29px;
     }
 
     header p,
-    .cabecalho p {
+    .cabecalho p,
+    .topo p {
         font-size: 14px;
     }
 
-    .ferramentas-grid {
-        grid-template-columns: 1fr;
+    .home,
+    .caixa-ferramentas,
+    .comprometimento-container,
+    .previdencia-container,
+    .sicoobcard-container {
+        padding-top: 18px;
     }
 
-    .ferramenta-card {
-        min-height: 0;
+    .home {
+        padding-bottom: 35px;
     }
 
+    .simulador-grid,
+    .simulador-grid-igual,
+    .antecipacao-grid,
+    .cobranca-grid {
+        padding-top: 18px;
+    }
+
+    .ferramentas-grid,
+    .grid-form,
+    .grid-form-3,
+    .grid-form-4,
     .form-grid,
+    .resultados-grid,
+    .resultados-grid-3,
+    .resultados-grid-4,
+    .previdencia-resumo-dados,
+    .previdencia-painel .grid-form,
     .comprometimento-form-grid {
         grid-template-columns: 1fr;
     }
@@ -1342,26 +2437,22 @@ footer p,
         grid-column: auto;
     }
 
-    .comprometimento-container,
-    .credito-rural-container,
-    .antecipacao-container,
-    .precificacao-container,
-    .cobranca-container,
-    .previdencia-container,
-    .sicoobcard-container,
-    .sicoob-card-container {
-        padding-top: 18px;
-    }
-
-    .comprometimento-card,
-    .credito-rural-card,
-    .antecipacao-card,
-    .precificacao-card,
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card,
+    .configuracao-card,
+    .resumo-card,
     .cobranca-card,
-    .previdencia-card,
+    .previdencia-painel>.card,
+    .comprometimento-card,
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card,
     .card,
-    .simulador-card,
-    .resultado-card {
+    .simulador-card {
         padding: 20px;
         border-radius: 13px;
     }
@@ -1385,6 +2476,7 @@ footer p,
     .acoes,
     .acoes-simulador,
     .acoes-comprometimento,
+    .previdencia-acoes,
     .comprometimento-acoes {
         flex-direction: column;
     }
@@ -1392,24 +2484,86 @@ footer p,
     .btn,
     .btn-primario,
     .btn-secundario,
-    .comprometimento-btn {
+    .comprometimento-btn,
+    .previdencia-acoes button,
+    button {
         width: 100%;
     }
 
-    .sicoobcard-grid,
-    .sicoob-card-grid {
+    .indicador-total {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .previdencia-progresso {
+        padding: 18px;
+    }
+
+    .previdencia-etapas {
         grid-template-columns: 1fr;
+    }
+
+    .previdencia-progresso-topo {
+        align-items: flex-start;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sicoobcard-informacoes-grid,
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sicoobcard-cartao-topo {
+        flex-direction: column;
+    }
+
+    .sicoobcard-bandeiras {
+        justify-content: flex-start;
+    }
+
+    .sicoobcard-imagem-area {
+        min-height: 220px;
+    }
+
+    .sicoobcard-imagem {
+        max-height: 190px;
+    }
+
+    .sicoobcard-nome-imagem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .botao-impressao-pdf {
+        right: 16px;
+        bottom: 16px;
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: 13px;
     }
 }
 
-@media (max-width: 480px) {
-    .ferramenta-card {
+@media (max-width:480px) {
+
+    .topo-conteudo,
+    .cabecalho-conteudo {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
     }
 
     .resultado-grid,
     .comprometimento-resultado-grid {
         grid-template-columns: 1fr;
+    }
+
+    .ferramenta-card {
+        flex-direction: column;
+        min-height: 0;
     }
 
     .comprometimento-formula {
@@ -1420,11 +2574,25 @@ footer p,
     .comprometimento-formula strong {
         white-space: normal;
     }
-}
 
-/* =========================================================
-   IMPRESSÃO / PDF
-   ========================================================= */
+    .previdencia-progresso-topo {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .previdencia-painel>.card {
+        padding: 17px;
+        border-radius: 12px;
+    }
+
+    .opcao-simulacao-conteudo {
+        min-height: auto;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: 1fr;
+    }
+}
 
 @media print {
     * {
@@ -1433,14 +2601,15 @@ footer p,
     }
 
     body {
-        background: #FFFFFF !important;
+        background: #fff !important;
     }
 
     .menu-principal,
     .acoes,
     .acoes-simulador,
     .acoes-comprometimento,
-    .comprometimento-acoes {
+    .comprometimento-acoes,
+    .botao-impressao-pdf {
         display: none !important;
     }
 
@@ -1457,7 +2626,12 @@ footer p,
     .precificacao-card,
     .cobranca-card,
     .previdencia-card,
-    .comprometimento-card {
+    .comprometimento-card,
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
         box-shadow: none !important;
         break-inside: avoid;
     }
@@ -1473,5 +2647,23 @@ footer p,
     footer,
     .rodape {
         break-inside: avoid;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .sicoobcard-opcao {
+        height: 35px;
+        font-size: 9px;
+    }
+
+    .sicoobcard-detalhes-grid {
+        grid-template-columns: .72fr 1.28fr;
+        gap: 12px;
+    }
+
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
