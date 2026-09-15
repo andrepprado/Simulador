@@ -1,3 +1,5 @@
+const LIMITE_VALOR_MONETARIO = 999999999999.99;
+
 const BANDEIRAS = [
     { id: "cabal", nome: "Cabal", debit: true },
     { id: "visa", nome: "Visa", debit: true },
@@ -53,26 +55,40 @@ const resultadoPayback = document.getElementById("resultadoPayback");
 const resultadoCustoOperacional = document.getElementById("resultadoCustoOperacional");
 const tabelaResultadoBandeiras = document.getElementById("tabelaResultadoBandeiras");
 
+function limitarValorMonetario(valor) {
+    const numero = Number(valor);
+
+    if (!Number.isFinite(numero) || numero < 0) {
+        return 0;
+    }
+
+    return Math.min(numero, LIMITE_VALOR_MONETARIO);
+}
+
 function moedaParaNumero(valor) {
     if (!valor) return 0;
 
-    return Number(
+    const numero = Number(
         String(valor)
             .replace(/\./g, "")
             .replace(",", ".")
             .replace(/[^\d.-]/g, "")
-    ) || 0;
+    );
+
+    return limitarValorMonetario(numero);
 }
 
 function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    const numero = Number(valor);
+
+    return (Number.isFinite(numero) ? numero : 0).toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     });
 }
 
 function formatarNumeroMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    return limitarValorMonetario(valor).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
@@ -93,9 +109,15 @@ function aplicarMascaraMoeda(input) {
         return;
     }
 
-    valor = Number(valor) / 100;
+    let numero = Number(valor) / 100;
 
-    input.value = valor.toLocaleString("pt-BR", {
+    if (!Number.isFinite(numero)) {
+        numero = 0;
+    }
+
+    numero = limitarValorMonetario(numero);
+
+    input.value = numero.toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
@@ -748,7 +770,10 @@ function calcularTudo() {
 
     faturamentoAnual.value =
         formatarNumeroMoeda(
-            faturamento * 12
+            Math.min(
+                faturamento * 12,
+                LIMITE_VALOR_MONETARIO
+            )
         );
 
     const calculoMdr =
@@ -841,6 +866,18 @@ function registrarMascara(input) {
         "input",
         () => {
             aplicarMascaraMoeda(input);
+            calcularTudo();
+        }
+    );
+
+    input.addEventListener(
+        "blur",
+        () => {
+            input.value =
+                formatarNumeroMoeda(
+                    moedaParaNumero(input.value)
+                );
+
             calcularTudo();
         }
     );

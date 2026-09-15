@@ -1,3 +1,5 @@
+const LIMITE_VALOR_MONETARIO = 999999999999.99;
+
 const PARAMETROS_COBRANCA = Object.freeze({
     distribuicaoPadrao: Object.freeze({
         redeBancaria: 46.08,
@@ -95,6 +97,16 @@ function numero(valor) {
     return Number.isFinite(convertido) ? convertido : 0;
 }
 
+function limitarValorMonetario(valor) {
+    const convertido = numero(valor);
+
+    if (convertido < 0) {
+        return 0;
+    }
+
+    return Math.min(convertido, LIMITE_VALOR_MONETARIO);
+}
+
 function moedaParaNumero(valor) {
     if (valor === null || valor === undefined || valor === "") {
         return 0;
@@ -115,7 +127,11 @@ function moedaParaNumero(valor) {
 
     const convertido = Number(texto);
 
-    return Number.isFinite(convertido) ? convertido : 0;
+    if (!Number.isFinite(convertido)) {
+        return 0;
+    }
+
+    return limitarValorMonetario(convertido);
 }
 
 function formatarMoeda(valor) {
@@ -128,7 +144,7 @@ function formatarMoeda(valor) {
 }
 
 function formatarNumeroMoeda(valor) {
-    return numero(valor).toLocaleString("pt-BR", {
+    return limitarValorMonetario(valor).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
@@ -156,7 +172,13 @@ function aplicarMascaraMoeda(input) {
         return;
     }
 
-    const numeroFormatado = Number(valor) / 100;
+    let numeroFormatado = Number(valor) / 100;
+
+    if (!Number.isFinite(numeroFormatado)) {
+        numeroFormatado = 0;
+    }
+
+    numeroFormatado = limitarValorMonetario(numeroFormatado);
 
     input.value = numeroFormatado.toLocaleString("pt-BR", {
         minimumFractionDigits: 2,

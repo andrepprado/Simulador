@@ -1,3 +1,5 @@
+const LIMITE_VALOR_MONETARIO = 999999999999.99;
+
 const taxaAntecipacao = document.getElementById("taxaAntecipacao");
 const taxaMdr = document.getElementById("taxaMdr");
 const dataVenda = document.getElementById("dataVenda");
@@ -17,27 +19,58 @@ const resultadoTaxaFinal = document.getElementById("resultadoTaxaFinal");
 const tabelaAntecipacao = document.getElementById("tabelaAntecipacao");
 const tabelaTaxaFlex = document.getElementById("tabelaTaxaFlex");
 
+function limitarValorMonetario(valor) {
+    const numero = Number(valor);
+
+    if (!Number.isFinite(numero) || numero < 0) {
+        return 0;
+    }
+
+    return Math.min(numero, LIMITE_VALOR_MONETARIO);
+}
+
 function moedaParaNumero(valor) {
     if (!valor) return 0;
-    return Number(valor.replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "")) || 0;
+
+    const numero = Number(
+        valor
+            .replace(/\./g, "")
+            .replace(",", ".")
+            .replace(/[^\d.-]/g, "")
+    );
+
+    return limitarValorMonetario(numero);
 }
 
 function formatarNumeroMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    const numero = limitarValorMonetario(valor);
+
+    return numero.toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 }
 
 function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    const numero = Number(valor);
+
+    if (!Number.isFinite(numero)) {
+        return (0).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+
+    return numero.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     });
 }
 
 function formatarPercentual(valorDecimal, casas = 4) {
-    return (Number(valorDecimal || 0) * 100).toLocaleString("pt-BR", {
+    const numero = Number(valorDecimal);
+
+    return (Number.isFinite(numero) ? numero * 100 : 0).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: casas
     }) + "%";
@@ -51,12 +84,26 @@ function aplicarMascaraMoeda(input) {
         return;
     }
 
-    valor = Number(valor) / 100;
+    let numero = Number(valor) / 100;
 
-    input.value = valor.toLocaleString("pt-BR", {
+    if (!Number.isFinite(numero)) {
+        numero = 0;
+    }
+
+    numero = limitarValorMonetario(numero);
+
+    input.value = numero.toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
+}
+
+function validarValorVenda() {
+    const valor = moedaParaNumero(valorVenda.value);
+
+    valorVenda.value = formatarNumeroMoeda(valor);
+
+    return valor;
 }
 
 function dataHojeInput() {
@@ -64,12 +111,17 @@ function dataHojeInput() {
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, "0");
     const dia = String(hoje.getDate()).padStart(2, "0");
+
     return `${ano}-${mes}-${dia}`;
 }
 
 function adicionarDias(data, dias) {
     const novaData = new Date(data);
-    novaData.setDate(novaData.getDate() + dias);
+
+    novaData.setDate(
+        novaData.getDate() + dias
+    );
+
     return novaData;
 }
 
@@ -82,8 +134,10 @@ function carregarParcelas() {
 
     for (let i = 1; i <= 21; i++) {
         const option = document.createElement("option");
+
         option.value = i;
         option.textContent = `${i}x`;
+
         parcelasAntecipacao.appendChild(option);
     }
 
@@ -94,9 +148,15 @@ function calcularOperacao(qtdParcelas) {
     const taxaAnt = (Number(taxaAntecipacao.value) || 0) / 100;
     const mdr = (Number(taxaMdr.value) || 0) / 100;
     const valorTotal = moedaParaNumero(valorVenda.value);
-    const dataBase = dataVenda.value ? new Date(`${dataVenda.value}T12:00:00`) : new Date();
+    const dataBase = dataVenda.value
+        ? new Date(`${dataVenda.value}T12:00:00`)
+        : new Date();
 
-    const parcelaBruta = qtdParcelas > 0 ? valorTotal / qtdParcelas : 0;
+    const parcelaBruta =
+        qtdParcelas > 0
+            ? valorTotal / qtdParcelas
+            : 0;
+
     const linhas = [];
 
     let totalLiquidoMdr = 0;
@@ -116,9 +176,11 @@ function calcularOperacao(qtdParcelas) {
 
         const desconto = liquidoMdr * desagio;
         const liquidoAntecipado = liquidoMdr - desconto;
-        const taxaFinal = parcelaBruta > 0
-            ? (parcelaBruta - liquidoAntecipado) / parcelaBruta
-            : 0;
+
+        const taxaFinal =
+            parcelaBruta > 0
+                ? (parcelaBruta - liquidoAntecipado) / parcelaBruta
+                : 0;
 
         totalLiquidoMdr += liquidoMdr;
         totalDesconto += desconto;
@@ -138,9 +200,10 @@ function calcularOperacao(qtdParcelas) {
         });
     }
 
-    const taxaFinalTotal = valorTotal > 0
-        ? (valorTotal - totalLiquidoAntecipado) / valorTotal
-        : 0;
+    const taxaFinalTotal =
+        valorTotal > 0
+            ? (valorTotal - totalLiquidoAntecipado) / valorTotal
+            : 0;
 
     return {
         valorTotal,
@@ -199,14 +262,29 @@ function calcular() {
     const qtdParcelas = Number(parcelasAntecipacao.value) || 1;
     const resultado = calcularOperacao(qtdParcelas);
 
-    resultadoLiquidoAntecipado.textContent = formatarMoeda(resultado.totalLiquidoAntecipado);
-    resultadoValorVenda.textContent = formatarMoeda(resultado.valorTotal);
-    resultadoQtdParcelas.textContent = `${resultado.qtdParcelas}x`;
-    resultadoLiquidoMdr.textContent = formatarMoeda(resultado.totalLiquidoMdr);
-    resultadoDescontoAntecipacao.textContent = formatarMoeda(resultado.totalDesconto);
-    resultadoMdr.textContent = formatarPercentual(resultado.mdr, 2);
-    resultadoTaxaAntecipacao.textContent = formatarPercentual(resultado.taxaAnt, 2);
-    resultadoTaxaFinal.textContent = formatarPercentual(resultado.taxaFinalTotal, 4);
+    resultadoLiquidoAntecipado.textContent =
+        formatarMoeda(resultado.totalLiquidoAntecipado);
+
+    resultadoValorVenda.textContent =
+        formatarMoeda(resultado.valorTotal);
+
+    resultadoQtdParcelas.textContent =
+        `${resultado.qtdParcelas}x`;
+
+    resultadoLiquidoMdr.textContent =
+        formatarMoeda(resultado.totalLiquidoMdr);
+
+    resultadoDescontoAntecipacao.textContent =
+        formatarMoeda(resultado.totalDesconto);
+
+    resultadoMdr.textContent =
+        formatarPercentual(resultado.mdr, 2);
+
+    resultadoTaxaAntecipacao.textContent =
+        formatarPercentual(resultado.taxaAnt, 2);
+
+    resultadoTaxaFinal.textContent =
+        formatarPercentual(resultado.taxaFinalTotal, 4);
 
     preencherDetalhamento(resultado);
     preencherTaxaFlex();
@@ -218,11 +296,17 @@ function limpar() {
     dataVenda.value = dataHojeInput();
     parcelasAntecipacao.value = "12";
     valorVenda.value = "48.000,00";
+
     calcular();
 }
 
 valorVenda.addEventListener("input", () => {
     aplicarMascaraMoeda(valorVenda);
+    calcular();
+});
+
+valorVenda.addEventListener("blur", () => {
+    validarValorVenda();
     calcular();
 });
 
@@ -235,4 +319,5 @@ btnLimparAntecipacao.addEventListener("click", limpar);
 
 carregarParcelas();
 dataVenda.value = dataHojeInput();
+validarValorVenda();
 calcular();

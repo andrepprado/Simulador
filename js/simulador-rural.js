@@ -1,3 +1,5 @@
+const LIMITE_VALOR_MONETARIO = 999999999999.99;
+
 const LINHAS_CREDITO = {
     custeio: [
         {
@@ -140,106 +142,241 @@ const resultadoLinha = document.getElementById("resultadoLinha");
 const tabelaParcelas = document.getElementById("tabelaParcelas");
 const listaDocumentos = document.getElementById("listaDocumentos");
 
-function moedaParaNumero(valor) {
-    if (!valor) {
+function limitarValorMonetario(valor) {
+    const numero = Number(valor);
+
+    if (!Number.isFinite(numero) || numero < 0) {
         return 0;
     }
 
-    return Number(
-        valor
+    return Math.min(
+        numero,
+        LIMITE_VALOR_MONETARIO
+    );
+}
+
+function moedaParaNumero(valor) {
+    if (
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ) {
+        return 0;
+    }
+
+    let texto = String(valor)
+        .trim()
+        .replace(/R\$/gi, "")
+        .replace(/\s/g, "");
+
+    if (
+        texto.includes(",") &&
+        texto.includes(".")
+    ) {
+        texto = texto
             .replace(/\./g, "")
-            .replace(",", ".")
-            .replace(/[^\d.-]/g, "")
-    ) || 0;
+            .replace(",", ".");
+    } else if (
+        texto.includes(",")
+    ) {
+        texto = texto.replace(
+            ",",
+            "."
+        );
+    }
+
+    texto = texto.replace(
+        /[^\d.-]/g,
+        ""
+    );
+
+    const convertido =
+        Number(texto);
+
+    return limitarValorMonetario(
+        convertido
+    );
 }
 
 function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    const numero =
+        Number(valor);
+
+    return (
+        Number.isFinite(numero)
+            ? numero
+            : 0
+    ).toLocaleString("pt-BR", {
         style: "currency",
-        currency: "BRL"
+        currency: "BRL",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
 }
 
 function formatarNumeroMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    return limitarValorMonetario(
+        valor
+    ).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 }
 
 function formatarPercentual(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
+    return Number(
+        valor || 0
+    ).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     }) + "%";
 }
 
 function aplicarMascaraMoeda(input) {
-    let valor = input.value.replace(/\D/g, "");
+    let digitos = String(
+        input.value || ""
+    ).replace(/\D/g, "");
 
-    if (!valor) {
+    if (!digitos) {
         input.value = "0,00";
         return;
     }
 
-    valor = (Number(valor) / 100).toFixed(2);
+    const limiteCentavos =
+        Math.round(
+            LIMITE_VALOR_MONETARIO *
+            100
+        );
 
-    input.value = Number(valor).toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+    let centavos =
+        Number(digitos);
+
+    if (
+        !Number.isFinite(centavos) ||
+        centavos < 0
+    ) {
+        centavos = 0;
+    }
+
+    centavos = Math.min(
+        centavos,
+        limiteCentavos
+    );
+
+    const valor =
+        centavos / 100;
+
+    input.value =
+        valor.toLocaleString(
+            "pt-BR",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 }
 
 function carregarLinhasCredito() {
-    const lista = LINHAS_CREDITO[finalidade.value] || [];
+    const lista =
+        LINHAS_CREDITO[
+        finalidade.value
+        ] || [];
 
-    linhaCredito.innerHTML = "";
+    linhaCredito.innerHTML =
+        "";
 
     lista.forEach(item => {
-        const option = document.createElement("option");
+        const option =
+            document.createElement(
+                "option"
+            );
 
-        option.value = item.id;
-        option.textContent = item.nome;
+        option.value =
+            item.id;
 
-        linhaCredito.appendChild(option);
+        option.textContent =
+            item.nome;
+
+        linhaCredito.appendChild(
+            option
+        );
     });
 
     aplicarParametrosLinha();
 }
 
 function obterLinhaSelecionada() {
-    const lista = LINHAS_CREDITO[finalidade.value] || [];
+    const lista =
+        LINHAS_CREDITO[
+        finalidade.value
+        ] || [];
 
-    return lista.find(item => item.id === linhaCredito.value);
+    return lista.find(
+        item =>
+            item.id ===
+            linhaCredito.value
+    );
 }
 
 function aplicarParametrosLinha() {
-    const linha = obterLinhaSelecionada();
+    const linha =
+        obterLinhaSelecionada();
 
     if (!linha) {
         return;
     }
 
-    taxa.value = linha.taxa.toFixed(2);
-    prazo.value = linha.prazo;
-    carencia.value = linha.carencia;
+    taxa.value =
+        linha.taxa.toFixed(2);
+
+    prazo.value =
+        linha.prazo;
+
+    carencia.value =
+        linha.carencia;
 
     calcularValorFinanciado();
     simularAutomaticamente();
 }
 
 function calcularValorFinanciado() {
-    const projeto = moedaParaNumero(valorProjeto.value);
-    const recursos = moedaParaNumero(recursosProprios.value);
-    const financiado = Math.max(projeto - recursos, 0);
+    const projeto =
+        moedaParaNumero(
+            valorProjeto.value
+        );
 
-    valorFinanciado.value = formatarNumeroMoeda(financiado);
+    const recursos =
+        moedaParaNumero(
+            recursosProprios.value
+        );
+
+    const financiado =
+        limitarValorMonetario(
+            Math.max(
+                projeto - recursos,
+                0
+            )
+        );
+
+    valorFinanciado.value =
+        formatarNumeroMoeda(
+            financiado
+        );
 
     return financiado;
 }
 
-function obterQuantidadeParcelas(prazoMeses, carenciaMeses, tipoPeriodicidade) {
-    const mesesFinanciamento = Math.max(prazoMeses - carenciaMeses, 1);
+function obterQuantidadeParcelas(
+    prazoMeses,
+    carenciaMeses,
+    tipoPeriodicidade
+) {
+    const mesesFinanciamento =
+        Math.max(
+            prazoMeses -
+            carenciaMeses,
+            1
+        );
 
     const divisor = {
         mensal: 1,
@@ -249,12 +386,17 @@ function obterQuantidadeParcelas(prazoMeses, carenciaMeses, tipoPeriodicidade) {
     }[tipoPeriodicidade] || 1;
 
     return Math.max(
-        Math.ceil(mesesFinanciamento / divisor),
+        Math.ceil(
+            mesesFinanciamento /
+            divisor
+        ),
         1
     );
 }
 
-function obterPeriodosPorAno(tipoPeriodicidade) {
+function obterPeriodosPorAno(
+    tipoPeriodicidade
+) {
     return {
         mensal: 12,
         trimestral: 4,
@@ -263,9 +405,17 @@ function obterPeriodosPorAno(tipoPeriodicidade) {
     }[tipoPeriodicidade] || 12;
 }
 
-function calcularTaxaPeriodo(taxaAnual, tipoPeriodicidade) {
-    const periodosAno = obterPeriodosPorAno(tipoPeriodicidade);
-    const taxaDecimal = taxaAnual / 100;
+function calcularTaxaPeriodo(
+    taxaAnual,
+    tipoPeriodicidade
+) {
+    const periodosAno =
+        obterPeriodosPorAno(
+            tipoPeriodicidade
+        );
+
+    const taxaDecimal =
+        taxaAnual / 100;
 
     return Math.pow(
         1 + taxaDecimal,
@@ -273,42 +423,85 @@ function calcularTaxaPeriodo(taxaAnual, tipoPeriodicidade) {
     ) - 1;
 }
 
-function calcularPrice(valor, taxaPeriodo, quantidadeParcelas) {
+function calcularPrice(
+    valor,
+    taxaPeriodo,
+    quantidadeParcelas
+) {
     const parcelas = [];
 
-    if (quantidadeParcelas <= 0) {
+    if (
+        quantidadeParcelas <= 0
+    ) {
         return parcelas;
     }
 
     let valorParcela;
 
-    if (taxaPeriodo === 0) {
-        valorParcela = valor / quantidadeParcelas;
+    if (
+        taxaPeriodo === 0
+    ) {
+        valorParcela =
+            valor /
+            quantidadeParcelas;
     } else {
         valorParcela =
             valor *
             (
                 taxaPeriodo *
-                Math.pow(1 + taxaPeriodo, quantidadeParcelas)
+                Math.pow(
+                    1 +
+                    taxaPeriodo,
+                    quantidadeParcelas
+                )
             ) /
             (
-                Math.pow(1 + taxaPeriodo, quantidadeParcelas) - 1
+                Math.pow(
+                    1 +
+                    taxaPeriodo,
+                    quantidadeParcelas
+                ) -
+                1
             );
     }
 
-    let saldo = valor;
+    let saldo =
+        valor;
 
-    for (let i = 1; i <= quantidadeParcelas; i++) {
-        const saldoInicial = saldo;
-        const juros = saldoInicial * taxaPeriodo;
-        let amortizacao = valorParcela - juros;
+    for (
+        let i = 1;
+        i <= quantidadeParcelas;
+        i++
+    ) {
+        const saldoInicial =
+            saldo;
 
-        if (i === quantidadeParcelas) {
-            amortizacao = saldoInicial;
-            valorParcela = amortizacao + juros;
+        const juros =
+            saldoInicial *
+            taxaPeriodo;
+
+        let amortizacao =
+            valorParcela -
+            juros;
+
+        if (
+            i ===
+            quantidadeParcelas
+        ) {
+            amortizacao =
+                saldoInicial;
+
+            valorParcela =
+                amortizacao +
+                juros;
         }
 
-        saldo = Math.max(saldoInicial - amortizacao, 0);
+        saldo =
+            Math.max(
+                saldoInicial -
+                amortizacao,
+                0
+            );
 
         parcelas.push({
             numero: i,
@@ -323,31 +516,59 @@ function calcularPrice(valor, taxaPeriodo, quantidadeParcelas) {
     return parcelas;
 }
 
-function calcularSac(valor, taxaPeriodo, quantidadeParcelas) {
+function calcularSac(
+    valor,
+    taxaPeriodo,
+    quantidadeParcelas
+) {
     const parcelas = [];
 
-    if (quantidadeParcelas <= 0) {
+    if (
+        quantidadeParcelas <= 0
+    ) {
         return parcelas;
     }
 
-    const amortizacaoBase = valor / quantidadeParcelas;
-    let saldo = valor;
+    const amortizacaoBase =
+        valor /
+        quantidadeParcelas;
 
-    for (let i = 1; i <= quantidadeParcelas; i++) {
-        const saldoInicial = saldo;
-        const juros = saldoInicial * taxaPeriodo;
-        let amortizacao = amortizacaoBase;
+    let saldo =
+        valor;
 
-        if (i === quantidadeParcelas) {
-            amortizacao = saldoInicial;
+    for (
+        let i = 1;
+        i <= quantidadeParcelas;
+        i++
+    ) {
+        const saldoInicial =
+            saldo;
+
+        const juros =
+            saldoInicial *
+            taxaPeriodo;
+
+        let amortizacao =
+            amortizacaoBase;
+
+        if (
+            i ===
+            quantidadeParcelas
+        ) {
+            amortizacao =
+                saldoInicial;
         }
 
-        const valorParcela = amortizacao + juros;
+        const valorParcela =
+            amortizacao +
+            juros;
 
-        saldo = Math.max(
-            saldoInicial - amortizacao,
-            0
-        );
+        saldo =
+            Math.max(
+                saldoInicial -
+                amortizacao,
+                0
+            );
 
         parcelas.push({
             numero: i,
@@ -362,8 +583,15 @@ function calcularSac(valor, taxaPeriodo, quantidadeParcelas) {
     return parcelas;
 }
 
-function calcularCarenciaCapitalizada(valor, taxaPeriodo, carenciaMeses, tipoPeriodicidade) {
-    if (carenciaMeses <= 0) {
+function calcularCarenciaCapitalizada(
+    valor,
+    taxaPeriodo,
+    carenciaMeses,
+    tipoPeriodicidade
+) {
+    if (
+        carenciaMeses <= 0
+    ) {
         return valor;
     }
 
@@ -374,47 +602,86 @@ function calcularCarenciaCapitalizada(valor, taxaPeriodo, carenciaMeses, tipoPer
         anual: 12
     }[tipoPeriodicidade] || 1;
 
-    const periodosCarencia = carenciaMeses / divisor;
+    const periodosCarencia =
+        carenciaMeses /
+        divisor;
 
     return valor *
         Math.pow(
-            1 + taxaPeriodo,
+            1 +
+            taxaPeriodo,
             periodosCarencia
         );
 }
 
-function validarSimulacao(mostrarAlerta = false) {
-    const valor = calcularValorFinanciado();
-    const prazoMeses = Number(prazo.value) || 0;
-    const carenciaMeses = Number(carencia.value) || 0;
+function validarSimulacao(
+    mostrarAlerta = false
+) {
+    const valor =
+        calcularValorFinanciado();
 
-    if (valor <= 0) {
-        if (mostrarAlerta) {
-            alert("Informe um valor financiado maior que zero.");
+    const prazoMeses =
+        Number(
+            prazo.value
+        ) || 0;
+
+    const carenciaMeses =
+        Number(
+            carencia.value
+        ) || 0;
+
+    if (
+        valor <= 0
+    ) {
+        if (
+            mostrarAlerta
+        ) {
+            alert(
+                "Informe um valor financiado maior que zero."
+            );
         }
 
         return false;
     }
 
-    if (prazoMeses <= 0) {
-        if (mostrarAlerta) {
-            alert("Informe um prazo válido.");
+    if (
+        prazoMeses <= 0
+    ) {
+        if (
+            mostrarAlerta
+        ) {
+            alert(
+                "Informe um prazo válido."
+            );
         }
 
         return false;
     }
 
-    if (carenciaMeses < 0) {
-        if (mostrarAlerta) {
-            alert("Informe uma carência válida.");
+    if (
+        carenciaMeses < 0
+    ) {
+        if (
+            mostrarAlerta
+        ) {
+            alert(
+                "Informe uma carência válida."
+            );
         }
 
         return false;
     }
 
-    if (carenciaMeses >= prazoMeses) {
-        if (mostrarAlerta) {
-            alert("A carência deve ser menor que o prazo total.");
+    if (
+        carenciaMeses >=
+        prazoMeses
+    ) {
+        if (
+            mostrarAlerta
+        ) {
+            alert(
+                "A carência deve ser menor que o prazo total."
+            );
         }
 
         return false;
@@ -423,82 +690,167 @@ function validarSimulacao(mostrarAlerta = false) {
     return true;
 }
 
-function simular(mostrarAlerta = true) {
-    if (!validarSimulacao(mostrarAlerta)) {
+function simular(
+    mostrarAlerta = true
+) {
+    if (
+        !validarSimulacao(
+            mostrarAlerta
+        )
+    ) {
         limparResultadosInvalidos();
         atualizarDocumentos();
         return;
     }
 
-    const valor = calcularValorFinanciado();
-    const prazoMeses = Number(prazo.value) || 0;
-    const carenciaMeses = Number(carencia.value) || 0;
-    const taxaAnual = Number(taxa.value) || 0;
-    const tipoPeriodicidade = periodicidade.value;
-    const sistemaSelecionado = sistema.value;
-    const linha = obterLinhaSelecionada();
+    const valor =
+        calcularValorFinanciado();
 
-    const quantidadeParcelas = obterQuantidadeParcelas(
-        prazoMeses,
-        carenciaMeses,
-        tipoPeriodicidade
-    );
+    const prazoMeses =
+        Number(
+            prazo.value
+        ) || 0;
 
-    const taxaPeriodo = calcularTaxaPeriodo(
-        taxaAnual,
-        tipoPeriodicidade
-    );
+    const carenciaMeses =
+        Number(
+            carencia.value
+        ) || 0;
 
-    const saldoAposCarencia = calcularCarenciaCapitalizada(
-        valor,
-        taxaPeriodo,
-        carenciaMeses,
-        tipoPeriodicidade
-    );
+    const taxaAnual =
+        Number(
+            taxa.value
+        ) || 0;
+
+    const tipoPeriodicidade =
+        periodicidade.value;
+
+    const sistemaSelecionado =
+        sistema.value;
+
+    const linha =
+        obterLinhaSelecionada();
+
+    const quantidadeParcelas =
+        obterQuantidadeParcelas(
+            prazoMeses,
+            carenciaMeses,
+            tipoPeriodicidade
+        );
+
+    const taxaPeriodo =
+        calcularTaxaPeriodo(
+            taxaAnual,
+            tipoPeriodicidade
+        );
+
+    const saldoAposCarencia =
+        calcularCarenciaCapitalizada(
+            valor,
+            taxaPeriodo,
+            carenciaMeses,
+            tipoPeriodicidade
+        );
 
     let parcelas;
 
-    if (sistemaSelecionado === "sac") {
-        parcelas = calcularSac(
-            saldoAposCarencia,
-            taxaPeriodo,
-            quantidadeParcelas
-        );
+    if (
+        sistemaSelecionado ===
+        "sac"
+    ) {
+        parcelas =
+            calcularSac(
+                saldoAposCarencia,
+                taxaPeriodo,
+                quantidadeParcelas
+            );
     } else {
-        parcelas = calcularPrice(
-            saldoAposCarencia,
-            taxaPeriodo,
-            quantidadeParcelas
-        );
+        parcelas =
+            calcularPrice(
+                saldoAposCarencia,
+                taxaPeriodo,
+                quantidadeParcelas
+            );
     }
 
-    const totalPago = parcelas.reduce(
-        (total, item) => total + item.valorParcela,
-        0
+    const totalPago =
+        parcelas.reduce(
+            (
+                total,
+                item
+            ) =>
+                total +
+                item.valorParcela,
+            0
+        );
+
+    const jurosTotais =
+        totalPago -
+        valor;
+
+    const primeiraParcela =
+        parcelas.length
+            ? parcelas[0]
+                .valorParcela
+            : 0;
+
+    const ultimaParcela =
+        parcelas.length
+            ? parcelas[
+                parcelas.length - 1
+            ].valorParcela
+            : 0;
+
+    resultadoValorFinanciado.textContent =
+        formatarMoeda(
+            valor
+        );
+
+    resultadoTaxa.textContent =
+        formatarPercentual(
+            taxaAnual
+        ) +
+        " a.a.";
+
+    resultadoPrazo.textContent =
+        prazoMeses +
+        " meses";
+
+    resultadoCarencia.textContent =
+        carenciaMeses +
+        " meses";
+
+    resultadoParcelas.textContent =
+        quantidadeParcelas;
+
+    resultadoPrimeiraParcela.textContent =
+        formatarMoeda(
+            primeiraParcela
+        );
+
+    resultadoUltimaParcela.textContent =
+        formatarMoeda(
+            ultimaParcela
+        );
+
+    resultadoJuros.textContent =
+        formatarMoeda(
+            jurosTotais
+        );
+
+    resultadoTotal.textContent =
+        formatarMoeda(
+            totalPago
+        );
+
+    resultadoLinha.textContent =
+        linha
+            ? linha.nome
+            : "-";
+
+    preencherTabela(
+        parcelas
     );
 
-    const jurosTotais = totalPago - valor;
-
-    const primeiraParcela = parcelas.length
-        ? parcelas[0].valorParcela
-        : 0;
-
-    const ultimaParcela = parcelas.length
-        ? parcelas[parcelas.length - 1].valorParcela
-        : 0;
-
-    resultadoValorFinanciado.textContent = formatarMoeda(valor);
-    resultadoTaxa.textContent = formatarPercentual(taxaAnual) + " a.a.";
-    resultadoPrazo.textContent = prazoMeses + " meses";
-    resultadoCarencia.textContent = carenciaMeses + " meses";
-    resultadoParcelas.textContent = quantidadeParcelas;
-    resultadoPrimeiraParcela.textContent = formatarMoeda(primeiraParcela);
-    resultadoUltimaParcela.textContent = formatarMoeda(ultimaParcela);
-    resultadoJuros.textContent = formatarMoeda(jurosTotais);
-    resultadoTotal.textContent = formatarMoeda(totalPago);
-    resultadoLinha.textContent = linha ? linha.nome : "-";
-
-    preencherTabela(parcelas);
     atualizarDocumentos();
 }
 
@@ -507,22 +859,65 @@ function simularAutomaticamente() {
 }
 
 function limparResultadosInvalidos() {
-    const valor = calcularValorFinanciado();
-    const prazoMeses = Number(prazo.value) || 0;
-    const carenciaMeses = Number(carencia.value) || 0;
-    const taxaAnual = Number(taxa.value) || 0;
-    const linha = obterLinhaSelecionada();
+    const valor =
+        calcularValorFinanciado();
 
-    resultadoValorFinanciado.textContent = formatarMoeda(valor);
-    resultadoTaxa.textContent = formatarPercentual(taxaAnual) + " a.a.";
-    resultadoPrazo.textContent = prazoMeses + " meses";
-    resultadoCarencia.textContent = carenciaMeses + " meses";
-    resultadoParcelas.textContent = "0";
-    resultadoPrimeiraParcela.textContent = "R$ 0,00";
-    resultadoUltimaParcela.textContent = "R$ 0,00";
-    resultadoJuros.textContent = "R$ 0,00";
-    resultadoTotal.textContent = "R$ 0,00";
-    resultadoLinha.textContent = linha ? linha.nome : "-";
+    const prazoMeses =
+        Number(
+            prazo.value
+        ) || 0;
+
+    const carenciaMeses =
+        Number(
+            carencia.value
+        ) || 0;
+
+    const taxaAnual =
+        Number(
+            taxa.value
+        ) || 0;
+
+    const linha =
+        obterLinhaSelecionada();
+
+    resultadoValorFinanciado.textContent =
+        formatarMoeda(
+            valor
+        );
+
+    resultadoTaxa.textContent =
+        formatarPercentual(
+            taxaAnual
+        ) +
+        " a.a.";
+
+    resultadoPrazo.textContent =
+        prazoMeses +
+        " meses";
+
+    resultadoCarencia.textContent =
+        carenciaMeses +
+        " meses";
+
+    resultadoParcelas.textContent =
+        "0";
+
+    resultadoPrimeiraParcela.textContent =
+        "R$ 0,00";
+
+    resultadoUltimaParcela.textContent =
+        "R$ 0,00";
+
+    resultadoJuros.textContent =
+        "R$ 0,00";
+
+    resultadoTotal.textContent =
+        "R$ 0,00";
+
+    resultadoLinha.textContent =
+        linha
+            ? linha.nome
+            : "-";
 
     tabelaParcelas.innerHTML = `
         <tr>
@@ -533,10 +928,15 @@ function limparResultadosInvalidos() {
     `;
 }
 
-function preencherTabela(parcelas) {
-    tabelaParcelas.innerHTML = "";
+function preencherTabela(
+    parcelas
+) {
+    tabelaParcelas.innerHTML =
+        "";
 
-    if (!parcelas.length) {
+    if (
+        !parcelas.length
+    ) {
         tabelaParcelas.innerHTML = `
             <tr>
                 <td colspan="6" class="sem-dados">
@@ -549,7 +949,10 @@ function preencherTabela(parcelas) {
     }
 
     parcelas.forEach(item => {
-        const tr = document.createElement("tr");
+        const tr =
+            document.createElement(
+                "tr"
+            );
 
         tr.innerHTML = `
             <td>${item.numero}</td>
@@ -560,18 +963,30 @@ function preencherTabela(parcelas) {
             <td>${formatarMoeda(item.saldoFinal)}</td>
         `;
 
-        tabelaParcelas.appendChild(tr);
+        tabelaParcelas.appendChild(
+            tr
+        );
     });
 }
 
-function criarGrupoDocumentos(titulo, documentos) {
-    if (!documentos || !documentos.length) {
+function criarGrupoDocumentos(
+    titulo,
+    documentos
+) {
+    if (
+        !documentos ||
+        !documentos.length
+    ) {
         return "";
     }
 
-    const itens = documentos
-        .map(documento => `<li class="documento-item">${documento}</li>`)
-        .join("");
+    const itens =
+        documentos
+            .map(
+                documento =>
+                    `<li class="documento-item">${documento}</li>`
+            )
+            .join("");
 
     return `
         <div class="documento-grupo">
@@ -586,113 +1001,237 @@ function criarGrupoDocumentos(titulo, documentos) {
 }
 
 function atualizarDocumentos() {
-    const finalidadeSelecionada = finalidade.value;
-    const atividadeSelecionada = atividade.value;
+    const finalidadeSelecionada =
+        finalidade.value;
+
+    const atividadeSelecionada =
+        atividade.value;
 
     let html = "";
 
-    html += criarGrupoDocumentos(
-        "Documentação Geral",
-        DOCUMENTOS.gerais
-    );
+    html +=
+        criarGrupoDocumentos(
+            "Documentação Geral",
+            DOCUMENTOS.gerais
+        );
 
-    if (DOCUMENTOS[finalidadeSelecionada]) {
+    if (
+        DOCUMENTOS[
+        finalidadeSelecionada
+        ]
+    ) {
         const tituloFinalidade = {
-            custeio: "Documentação para Custeio",
-            investimento: "Documentação para Investimento",
-            comercializacao: "Documentação para Comercialização",
-            industrializacao: "Documentação para Industrialização"
-        }[finalidadeSelecionada];
+            custeio:
+                "Documentação para Custeio",
+            investimento:
+                "Documentação para Investimento",
+            comercializacao:
+                "Documentação para Comercialização",
+            industrializacao:
+                "Documentação para Industrialização"
+        }[
+            finalidadeSelecionada
+        ];
 
-        html += criarGrupoDocumentos(
-            tituloFinalidade,
-            DOCUMENTOS[finalidadeSelecionada]
-        );
+        html +=
+            criarGrupoDocumentos(
+                tituloFinalidade,
+                DOCUMENTOS[
+                finalidadeSelecionada
+                ]
+            );
     }
 
-    if (DOCUMENTOS[atividadeSelecionada]) {
+    if (
+        DOCUMENTOS[
+        atividadeSelecionada
+        ]
+    ) {
         const tituloAtividade = {
-            agricultura: "Documentação da Atividade - Agricultura",
-            pecuaria: "Documentação da Atividade - Pecuária",
-            hortifruti: "Documentação da Atividade - Hortifrúti",
-            cafeicultura: "Documentação da Atividade - Cafeicultura",
-            avicultura: "Documentação da Atividade - Avicultura",
-            suinocultura: "Documentação da Atividade - Suinocultura"
-        }[atividadeSelecionada];
+            agricultura:
+                "Documentação da Atividade - Agricultura",
+            pecuaria:
+                "Documentação da Atividade - Pecuária",
+            hortifruti:
+                "Documentação da Atividade - Hortifrúti",
+            cafeicultura:
+                "Documentação da Atividade - Cafeicultura",
+            avicultura:
+                "Documentação da Atividade - Avicultura",
+            suinocultura:
+                "Documentação da Atividade - Suinocultura"
+        }[
+            atividadeSelecionada
+        ];
 
-        html += criarGrupoDocumentos(
-            tituloAtividade,
-            DOCUMENTOS[atividadeSelecionada]
-        );
+        html +=
+            criarGrupoDocumentos(
+                tituloAtividade,
+                DOCUMENTOS[
+                atividadeSelecionada
+                ]
+            );
     }
 
-    listaDocumentos.innerHTML = html;
+    listaDocumentos.innerHTML =
+        html;
 }
 
 function limparSimulacao() {
-    finalidade.value = "custeio";
-    atividade.value = "agricultura";
-    valorProjeto.value = "100.000,00";
-    recursosProprios.value = "20.000,00";
-    periodicidade.value = "mensal";
-    sistema.value = "price";
+    finalidade.value =
+        "custeio";
+
+    atividade.value =
+        "agricultura";
+
+    valorProjeto.value =
+        "100.000,00";
+
+    recursosProprios.value =
+        "20.000,00";
+
+    periodicidade.value =
+        "mensal";
+
+    sistema.value =
+        "price";
 
     carregarLinhasCredito();
     calcularValorFinanciado();
     simularAutomaticamente();
 }
 
-valorProjeto.addEventListener("input", () => {
-    aplicarMascaraMoeda(valorProjeto);
-    calcularValorFinanciado();
-    simularAutomaticamente();
-});
+valorProjeto.addEventListener(
+    "input",
+    () => {
+        aplicarMascaraMoeda(
+            valorProjeto
+        );
 
-recursosProprios.addEventListener("input", () => {
-    aplicarMascaraMoeda(recursosProprios);
-    calcularValorFinanciado();
-    simularAutomaticamente();
-});
+        calcularValorFinanciado();
+        simularAutomaticamente();
+    }
+);
 
-finalidade.addEventListener("change", () => {
-    carregarLinhasCredito();
-});
+recursosProprios.addEventListener(
+    "input",
+    () => {
+        aplicarMascaraMoeda(
+            recursosProprios
+        );
 
-linhaCredito.addEventListener("change", () => {
-    aplicarParametrosLinha();
-});
+        calcularValorFinanciado();
+        simularAutomaticamente();
+    }
+);
 
-atividade.addEventListener("change", () => {
-    simularAutomaticamente();
-});
+valorProjeto.addEventListener(
+    "blur",
+    () => {
+        valorProjeto.value =
+            formatarNumeroMoeda(
+                moedaParaNumero(
+                    valorProjeto.value
+                )
+            );
 
-prazo.addEventListener("input", () => {
-    simularAutomaticamente();
-});
+        calcularValorFinanciado();
+        simularAutomaticamente();
+    }
+);
 
-carencia.addEventListener("input", () => {
-    simularAutomaticamente();
-});
+recursosProprios.addEventListener(
+    "blur",
+    () => {
+        recursosProprios.value =
+            formatarNumeroMoeda(
+                moedaParaNumero(
+                    recursosProprios.value
+                )
+            );
 
-taxa.addEventListener("input", () => {
-    simularAutomaticamente();
-});
+        calcularValorFinanciado();
+        simularAutomaticamente();
+    }
+);
 
-periodicidade.addEventListener("change", () => {
-    simularAutomaticamente();
-});
+finalidade.addEventListener(
+    "change",
+    () => {
+        carregarLinhasCredito();
+    }
+);
 
-sistema.addEventListener("change", () => {
-    simularAutomaticamente();
-});
+linhaCredito.addEventListener(
+    "change",
+    () => {
+        aplicarParametrosLinha();
+    }
+);
 
-btnSimular.addEventListener("click", () => {
-    simular(true);
-});
+atividade.addEventListener(
+    "change",
+    () => {
+        simularAutomaticamente();
+    }
+);
 
-btnLimpar.addEventListener("click", () => {
-    limparSimulacao();
-});
+prazo.addEventListener(
+    "input",
+    () => {
+        simularAutomaticamente();
+    }
+);
+
+carencia.addEventListener(
+    "input",
+    () => {
+        simularAutomaticamente();
+    }
+);
+
+taxa.addEventListener(
+    "input",
+    () => {
+        simularAutomaticamente();
+    }
+);
+
+periodicidade.addEventListener(
+    "change",
+    () => {
+        simularAutomaticamente();
+    }
+);
+
+sistema.addEventListener(
+    "change",
+    () => {
+        simularAutomaticamente();
+    }
+);
+
+btnSimular.addEventListener(
+    "click",
+    () => {
+        simular(true);
+    }
+);
+
+btnLimpar.addEventListener(
+    "click",
+    () => {
+        limparSimulacao();
+    }
+);
+
+aplicarMascaraMoeda(
+    valorProjeto
+);
+
+aplicarMascaraMoeda(
+    recursosProprios
+);
 
 carregarLinhasCredito();
 calcularValorFinanciado();

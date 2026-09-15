@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const LIMITE_VALOR_MONETARIO = 999999999999.99;
+
     const $ = id => document.getElementById(id);
     const $$ = seletor => Array.from(document.querySelectorAll(seletor));
 
@@ -17,6 +19,16 @@ document.addEventListener("DOMContentLoaded", () => {
         3: "Coberturas",
         4: "Seu Futuro"
     };
+
+    function limitarValorMonetario(valor) {
+        const n = Number(valor);
+
+        if (!Number.isFinite(n) || n < 0) {
+            return 0;
+        }
+
+        return Math.min(n, LIMITE_VALOR_MONETARIO);
+    }
 
     function numero(valor) {
         if (typeof valor === "number") {
@@ -49,10 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
             : 0;
     }
 
-    function moeda(valor) {
-        const n = Number(valor) || 0;
+    function numeroMonetario(valor) {
+        return limitarValorMonetario(
+            numero(valor)
+        );
+    }
 
-        return n.toLocaleString("pt-BR", {
+    function moeda(valor) {
+        const n = Number(valor);
+
+        return (Number.isFinite(n) ? n : 0).toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
             minimumFractionDigits: 2,
@@ -74,7 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
        ========================================================= */
 
     function formatarCampoMoeda(campo) {
-        const valor = numero(campo.value);
+        const valor = numeroMonetario(
+            campo.value
+        );
 
         campo.value = valor.toLocaleString("pt-BR", {
             minimumFractionDigits: 2,
@@ -91,9 +111,19 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const centavos = Number(digitos);
+        let centavos = Number(digitos);
 
-        campo.value = (centavos / 100).toLocaleString("pt-BR", {
+        if (!Number.isFinite(centavos)) {
+            centavos = 0;
+        }
+
+        let valor = centavos / 100;
+
+        valor = limitarValorMonetario(
+            valor
+        );
+
+        campo.value = valor.toLocaleString("pt-BR", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
@@ -271,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             tipo === "renda" &&
-            numero(
+            numeroMonetario(
                 $("rendaDesejada").value
             ) <= 0
         ) {
@@ -299,13 +329,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function validarEtapa3() {
         const morte =
-            numero(
+            numeroMonetario(
                 $("coberturaMorteContribuicao")
                     .value
             );
 
         const invalidez =
-            numero(
+            numeroMonetario(
                 $("coberturaInvalidezContribuicao")
                     .value
             );
@@ -519,7 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tipo === "percentual"
         ) {
             const salario =
-                numero(
+                numeroMonetario(
                     $("salario").value
                 );
 
@@ -529,14 +559,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         .value
                 );
 
-            return (
+            return limitarValorMonetario(
                 salario *
                 percentual /
                 100
             );
         }
 
-        return numero(
+        return numeroMonetario(
             $("contribuicaoMensal")
                 .value
         );
@@ -550,7 +580,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return 0;
         }
 
-        return numero(
+        return numeroMonetario(
             $("contrapartidaMensal")
                 .value
         );
@@ -585,11 +615,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     $("taxaAnual").value
                 ),
             saldoInicial:
-                numero(
+                numeroMonetario(
                     $("saldoInicial").value
                 ),
             aporteEsporadico:
-                numero(
+                numeroMonetario(
                     $("aporteEsporadico")
                         .value
                 ),
@@ -1003,7 +1033,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function estimarCoberturaMorte() {
         const contribuicao =
-            numero(
+            numeroMonetario(
                 $("coberturaMorteContribuicao")
                     .value
             );
@@ -1049,7 +1079,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function estimarCoberturaInvalidez() {
         const contribuicao =
-            numero(
+            numeroMonetario(
                 $("coberturaInvalidezContribuicao")
                     .value
             );
@@ -1254,7 +1284,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tipo === "renda"
         ) {
             rendaMensal =
-                numero(
+                numeroMonetario(
                     $("rendaDesejada").value
                 );
 
