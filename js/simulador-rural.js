@@ -1,4 +1,4 @@
-const LIMITE_VALOR_MONETARIO = 999999999999.99;
+const LIMITE_VALOR_MONETARIO_CENTAVOS = 99999999999999999999n;
 
 const LINHAS_CREDITO = {
     custeio: [
@@ -24,7 +24,6 @@ const LINHAS_CREDITO = {
             carencia: 0
         }
     ],
-
     investimento: [
         {
             id: "investimento_rural",
@@ -48,7 +47,6 @@ const LINHAS_CREDITO = {
             carencia: 24
         }
     ],
-
     comercializacao: [
         {
             id: "comercializacao",
@@ -58,7 +56,6 @@ const LINHAS_CREDITO = {
             carencia: 0
         }
     ],
-
     industrializacao: [
         {
             id: "industrializacao",
@@ -76,51 +73,43 @@ const DOCUMENTOS = {
         "Comprovante de endereço atualizado.",
         "Documentos cadastrais necessários para análise da operação."
     ],
-
     custeio: [
         "Documentação relacionada à atividade rural.",
         "Comprovação ou documentação da área onde será realizada a atividade.",
         "Orçamentos, estimativas ou informações relacionadas aos itens financiados.",
         "Documentação complementar conforme cultura, atividade e enquadramento da operação."
     ],
-
     investimento: [
         "Documentação relacionada à propriedade ou área rural.",
         "Orçamento ou proposta comercial do bem ou investimento.",
         "Documentos técnicos relacionados ao investimento.",
         "Documentação complementar conforme o tipo de bem ou finalidade financiada."
     ],
-
     comercializacao: [
         "Documentação relacionada aos produtos objeto da comercialização.",
         "Comprovação da produção ou origem dos produtos.",
         "Documentos comerciais relacionados à operação."
     ],
-
     industrializacao: [
         "Documentação relacionada à atividade de industrialização.",
         "Documentação dos produtos ou matérias-primas envolvidos.",
         "Orçamentos ou informações referentes aos custos da operação."
     ],
-
     agricola: [
         "Informações da cultura ou produção agrícola envolvida.",
         "Informações referentes à área de cultivo.",
         "Documentação relacionada à produção e à atividade agrícola."
     ],
-
     pecuaria: [
         "Informações relacionadas ao rebanho ou à criação.",
         "Informações referentes à estrutura utilizada na atividade pecuária.",
         "Documentação relacionada à exploração pecuária."
     ],
-
     extrativismo: [
         "Informações relacionadas à atividade extrativista.",
         "Documentação referente à origem e à exploração dos produtos.",
         "Autorizações, licenças ou documentos aplicáveis à atividade, quando necessários."
     ],
-
     florestal_agroflorestal: [
         "Informações relacionadas à atividade florestal ou agroflorestal.",
         "Documentação referente à área utilizada na atividade.",
@@ -170,26 +159,33 @@ const resultadoLinha = document.getElementById("resultadoLinha");
 const tabelaParcelas = document.getElementById("tabelaParcelas");
 const listaDocumentos = document.getElementById("listaDocumentos");
 
-function limitarValorMonetario(valor) {
-    const numero = Number(valor);
+function limitarCentavos(valor) {
+    let centavos;
 
-    if (!Number.isFinite(numero) || numero < 0) {
-        return 0;
+    try {
+        centavos = BigInt(valor);
+    } catch {
+        return 0n;
     }
 
-    return Math.min(
-        numero,
-        LIMITE_VALOR_MONETARIO
-    );
+    if (centavos < 0n) {
+        return 0n;
+    }
+
+    if (centavos > LIMITE_VALOR_MONETARIO_CENTAVOS) {
+        return LIMITE_VALOR_MONETARIO_CENTAVOS;
+    }
+
+    return centavos;
 }
 
-function moedaParaNumero(valor) {
+function moedaParaCentavos(valor) {
     if (
         valor === null ||
         valor === undefined ||
         valor === ""
     ) {
-        return 0;
+        return 0n;
     }
 
     let texto = String(valor)
@@ -197,158 +193,246 @@ function moedaParaNumero(valor) {
         .replace(/R\$/gi, "")
         .replace(/\s/g, "");
 
-    if (
-        texto.includes(",") &&
-        texto.includes(".")
-    ) {
-        texto = texto
-            .replace(/\./g, "")
-            .replace(",", ".");
-    } else if (texto.includes(",")) {
-        texto = texto.replace(",", ".");
+    if (!texto) {
+        return 0n;
     }
 
-    texto = texto.replace(/[^\d.-]/g, "");
+    let parteInteira = "0";
+    let parteDecimal = "00";
 
-    const convertido = Number(texto);
+    if (texto.includes(",")) {
+        const partes = texto.split(",");
 
-    return limitarValorMonetario(convertido);
+        parteInteira = partes[0]
+            .replace(/\./g, "")
+            .replace(/\D/g, "");
+
+        parteDecimal = String(partes[1] || "")
+            .replace(/\D/g, "")
+            .padEnd(2, "0")
+            .slice(0, 2);
+    } else {
+        parteInteira = texto
+            .replace(/\./g, "")
+            .replace(/\D/g, "");
+    }
+
+    if (!parteInteira) {
+        parteInteira = "0";
+    }
+
+    try {
+        const centavos =
+            BigInt(parteInteira) * 100n +
+            BigInt(parteDecimal || "0");
+
+        return limitarCentavos(centavos);
+    } catch {
+        return 0n;
+    }
 }
 
-function formatarMoeda(valor) {
-    const numero = Number(valor);
-
-    return (
-        Number.isFinite(numero)
-            ? numero
-            : 0
-    ).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-}
-
-function formatarNumeroMoeda(valor) {
-    return limitarValorMonetario(valor).toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-}
-
-function formatarPercentual(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }) + "%";
-}
-
-function aplicarMascaraMoeda(input) {
-    let digitos = String(
-        input.value || ""
-    ).replace(/\D/g, "");
+function digitosParaCentavos(valor) {
+    const digitos = String(valor || "")
+        .replace(/\D/g, "");
 
     if (!digitos) {
-        input.value = "0,00";
-        return;
+        return 0n;
     }
 
-    const limiteCentavos = Math.round(
-        LIMITE_VALOR_MONETARIO * 100
-    );
+    try {
+        return limitarCentavos(
+            BigInt(digitos)
+        );
+    } catch {
+        return 0n;
+    }
+}
 
-    let centavos = Number(digitos);
+function centavosParaNumero(centavos) {
+    const valor = limitarCentavos(centavos);
 
-    if (
-        !Number.isFinite(centavos) ||
-        centavos < 0
-    ) {
-        centavos = 0;
+    return Number(valor) / 100;
+}
+
+function formatarCentavos(centavos, incluirSimbolo = false) {
+    const valor = limitarCentavos(centavos);
+
+    const inteiro = valor / 100n;
+    const decimal = valor % 100n;
+
+    const inteiroFormatado = inteiro
+        .toString()
+        .replace(
+            /\B(?=(\d{3})+(?!\d))/g,
+            "."
+        );
+
+    const decimalFormatado = decimal
+        .toString()
+        .padStart(2, "0");
+
+    const resultado =
+        `${inteiroFormatado},${decimalFormatado}`;
+
+    return incluirSimbolo
+        ? `R$ ${resultado}`
+        : resultado;
+}
+
+function formatarNumeroComoMoeda(valor) {
+    const numero = Number(valor);
+
+    if (!Number.isFinite(numero)) {
+        return "R$ 0,00";
     }
 
-    centavos = Math.min(
-        centavos,
-        limiteCentavos
-    );
-
-    const valor = centavos / 100;
-
-    input.value = valor.toLocaleString(
+    return numero.toLocaleString(
         "pt-BR",
         {
+            style: "currency",
+            currency: "BRL",
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }
     );
 }
 
+function formatarPercentual(valor) {
+    return Number(valor || 0).toLocaleString(
+        "pt-BR",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    ) + "%";
+}
+
+function aplicarMascaraMoeda(input) {
+    const centavos =
+        digitosParaCentavos(
+            input.value
+        );
+
+    input.value =
+        formatarCentavos(
+            centavos,
+            false
+        );
+}
+
+function normalizarCampoMonetario(input) {
+    const centavos =
+        moedaParaCentavos(
+            input.value
+        );
+
+    input.value =
+        formatarCentavos(
+            centavos,
+            false
+        );
+}
+
 function carregarLinhasCredito() {
-    const lista = LINHAS_CREDITO[
+    const lista =
+        LINHAS_CREDITO[
         finalidade.value
-    ] || [];
+        ] || [];
 
     linhaCredito.innerHTML = "";
 
     lista.forEach(item => {
-        const option = document.createElement("option");
+        const option =
+            document.createElement(
+                "option"
+            );
 
-        option.value = item.id;
-        option.textContent = item.nome;
+        option.value =
+            item.id;
 
-        linhaCredito.appendChild(option);
+        option.textContent =
+            item.nome;
+
+        linhaCredito.appendChild(
+            option
+        );
     });
 
     aplicarParametrosLinha();
 }
 
 function obterLinhaSelecionada() {
-    const lista = LINHAS_CREDITO[
+    const lista =
+        LINHAS_CREDITO[
         finalidade.value
-    ] || [];
+        ] || [];
 
     return lista.find(
         item =>
-            item.id === linhaCredito.value
+            item.id ===
+            linhaCredito.value
     );
 }
 
 function aplicarParametrosLinha() {
-    const linha = obterLinhaSelecionada();
+    const linha =
+        obterLinhaSelecionada();
 
     if (!linha) {
         return;
     }
 
-    taxa.value = linha.taxa.toFixed(2);
-    prazo.value = linha.prazo;
-    carencia.value = linha.carencia;
+    taxa.value =
+        linha.taxa.toFixed(2);
+
+    prazo.value =
+        linha.prazo;
+
+    carencia.value =
+        linha.carencia;
 
     calcularValorFinanciado();
     simularAutomaticamente();
 }
 
-function calcularValorFinanciado() {
-    const projeto = moedaParaNumero(
-        valorProjeto.value
-    );
+function calcularValorFinanciadoCentavos() {
+    const projeto =
+        moedaParaCentavos(
+            valorProjeto.value
+        );
 
-    const recursos = moedaParaNumero(
-        recursosProprios.value
-    );
+    const recursos =
+        moedaParaCentavos(
+            recursosProprios.value
+        );
 
-    const financiado = limitarValorMonetario(
-        Math.max(
-            projeto - recursos,
-            0
-        )
-    );
+    let financiado =
+        projeto -
+        recursos;
 
-    valorFinanciado.value = formatarNumeroMoeda(
-        financiado
-    );
+    if (financiado < 0n) {
+        financiado = 0n;
+    }
+
+    financiado =
+        limitarCentavos(
+            financiado
+        );
+
+    valorFinanciado.value =
+        formatarCentavos(
+            financiado,
+            false
+        );
 
     return financiado;
+}
+
+function calcularValorFinanciado() {
+    return centavosParaNumero(
+        calcularValorFinanciadoCentavos()
+    );
 }
 
 function obterQuantidadeParcelas(
@@ -356,10 +440,12 @@ function obterQuantidadeParcelas(
     carenciaMeses,
     tipoPeriodicidade
 ) {
-    const mesesFinanciamento = Math.max(
-        prazoMeses - carenciaMeses,
-        1
-    );
+    const mesesFinanciamento =
+        Math.max(
+            prazoMeses -
+            carenciaMeses,
+            1
+        );
 
     const divisor = {
         mensal: 1,
@@ -370,13 +456,16 @@ function obterQuantidadeParcelas(
 
     return Math.max(
         Math.ceil(
-            mesesFinanciamento / divisor
+            mesesFinanciamento /
+            divisor
         ),
         1
     );
 }
 
-function obterPeriodosPorAno(tipoPeriodicidade) {
+function obterPeriodosPorAno(
+    tipoPeriodicidade
+) {
     return {
         mensal: 12,
         trimestral: 4,
@@ -389,11 +478,14 @@ function calcularTaxaPeriodo(
     taxaAnual,
     tipoPeriodicidade
 ) {
-    const periodosAno = obterPeriodosPorAno(
-        tipoPeriodicidade
-    );
+    const periodosAno =
+        obterPeriodosPorAno(
+            tipoPeriodicidade
+        );
 
-    const taxaDecimal = taxaAnual / 100;
+    const taxaDecimal =
+        taxaAnual /
+        100;
 
     return Math.pow(
         1 + taxaDecimal,
@@ -408,40 +500,51 @@ function calcularPrice(
 ) {
     const parcelas = [];
 
-    if (quantidadeParcelas <= 0) {
+    if (
+        quantidadeParcelas <= 0
+    ) {
         return parcelas;
     }
 
     let valorParcela;
 
-    if (taxaPeriodo === 0) {
-        valorParcela = valor / quantidadeParcelas;
+    if (
+        taxaPeriodo === 0
+    ) {
+        valorParcela =
+            valor /
+            quantidadeParcelas;
     } else {
         valorParcela =
             valor *
             (
                 taxaPeriodo *
                 Math.pow(
-                    1 + taxaPeriodo,
+                    1 +
+                    taxaPeriodo,
                     quantidadeParcelas
                 )
             ) /
             (
                 Math.pow(
-                    1 + taxaPeriodo,
+                    1 +
+                    taxaPeriodo,
                     quantidadeParcelas
-                ) - 1
+                ) -
+                1
             );
     }
 
-    let saldo = valor;
+    let saldo =
+        valor;
 
     for (
         let i = 1;
         i <= quantidadeParcelas;
         i++
     ) {
-        const saldoInicial = saldo;
+        const saldoInicial =
+            saldo;
 
         const juros =
             saldoInicial *
@@ -451,19 +554,24 @@ function calcularPrice(
             valorParcela -
             juros;
 
-        if (i === quantidadeParcelas) {
-            amortizacao = saldoInicial;
+        if (
+            i ===
+            quantidadeParcelas
+        ) {
+            amortizacao =
+                saldoInicial;
 
             valorParcela =
                 amortizacao +
                 juros;
         }
 
-        saldo = Math.max(
-            saldoInicial -
-            amortizacao,
-            0
-        );
+        saldo =
+            Math.max(
+                saldoInicial -
+                amortizacao,
+                0
+            );
 
         parcelas.push({
             numero: i,
@@ -485,7 +593,9 @@ function calcularSac(
 ) {
     const parcelas = [];
 
-    if (quantidadeParcelas <= 0) {
+    if (
+        quantidadeParcelas <= 0
+    ) {
         return parcelas;
     }
 
@@ -493,14 +603,16 @@ function calcularSac(
         valor /
         quantidadeParcelas;
 
-    let saldo = valor;
+    let saldo =
+        valor;
 
     for (
         let i = 1;
         i <= quantidadeParcelas;
         i++
     ) {
-        const saldoInicial = saldo;
+        const saldoInicial =
+            saldo;
 
         const juros =
             saldoInicial *
@@ -509,19 +621,24 @@ function calcularSac(
         let amortizacao =
             amortizacaoBase;
 
-        if (i === quantidadeParcelas) {
-            amortizacao = saldoInicial;
+        if (
+            i ===
+            quantidadeParcelas
+        ) {
+            amortizacao =
+                saldoInicial;
         }
 
         const valorParcela =
             amortizacao +
             juros;
 
-        saldo = Math.max(
-            saldoInicial -
-            amortizacao,
-            0
-        );
+        saldo =
+            Math.max(
+                saldoInicial -
+                amortizacao,
+                0
+            );
 
         parcelas.push({
             numero: i,
@@ -542,7 +659,9 @@ function calcularCarenciaCapitalizada(
     carenciaMeses,
     tipoPeriodicidade
 ) {
-    if (carenciaMeses <= 0) {
+    if (
+        carenciaMeses <= 0
+    ) {
         return valor;
     }
 
@@ -559,7 +678,8 @@ function calcularCarenciaCapitalizada(
 
     return valor *
         Math.pow(
-            1 + taxaPeriodo,
+            1 +
+            taxaPeriodo,
             periodosCarencia
         );
 }
@@ -567,17 +687,25 @@ function calcularCarenciaCapitalizada(
 function validarSimulacao(
     mostrarAlerta = false
 ) {
-    const valor =
-        calcularValorFinanciado();
+    const valorCentavos =
+        calcularValorFinanciadoCentavos();
 
     const prazoMeses =
-        Number(prazo.value) || 0;
+        Number(
+            prazo.value
+        ) || 0;
 
     const carenciaMeses =
-        Number(carencia.value) || 0;
+        Number(
+            carencia.value
+        ) || 0;
 
-    if (valor <= 0) {
-        if (mostrarAlerta) {
+    if (
+        valorCentavos <= 0n
+    ) {
+        if (
+            mostrarAlerta
+        ) {
             alert(
                 "Informe um valor financiado maior que zero."
             );
@@ -586,8 +714,12 @@ function validarSimulacao(
         return false;
     }
 
-    if (prazoMeses <= 0) {
-        if (mostrarAlerta) {
+    if (
+        prazoMeses <= 0
+    ) {
+        if (
+            mostrarAlerta
+        ) {
             alert(
                 "Informe um prazo válido."
             );
@@ -596,8 +728,12 @@ function validarSimulacao(
         return false;
     }
 
-    if (carenciaMeses < 0) {
-        if (mostrarAlerta) {
+    if (
+        carenciaMeses < 0
+    ) {
+        if (
+            mostrarAlerta
+        ) {
             alert(
                 "Informe uma carência válida."
             );
@@ -606,8 +742,13 @@ function validarSimulacao(
         return false;
     }
 
-    if (carenciaMeses >= prazoMeses) {
-        if (mostrarAlerta) {
+    if (
+        carenciaMeses >=
+        prazoMeses
+    ) {
+        if (
+            mostrarAlerta
+        ) {
             alert(
                 "A carência deve ser menor que o prazo total."
             );
@@ -632,17 +773,28 @@ function simular(
         return;
     }
 
+    const valorCentavos =
+        calcularValorFinanciadoCentavos();
+
     const valor =
-        calcularValorFinanciado();
+        centavosParaNumero(
+            valorCentavos
+        );
 
     const prazoMeses =
-        Number(prazo.value) || 0;
+        Number(
+            prazo.value
+        ) || 0;
 
     const carenciaMeses =
-        Number(carencia.value) || 0;
+        Number(
+            carencia.value
+        ) || 0;
 
     const taxaAnual =
-        Number(taxa.value) || 0;
+        Number(
+            taxa.value
+        ) || 0;
 
     const tipoPeriodicidade =
         periodicidade.value;
@@ -676,7 +828,10 @@ function simular(
 
     let parcelas;
 
-    if (sistemaSelecionado === "sac") {
+    if (
+        sistemaSelecionado ===
+        "sac"
+    ) {
         parcelas =
             calcularSac(
                 saldoAposCarencia,
@@ -694,7 +849,10 @@ function simular(
 
     const totalPago =
         parcelas.reduce(
-            (total, item) =>
+            (
+                total,
+                item
+            ) =>
                 total +
                 item.valorParcela,
             0
@@ -706,7 +864,8 @@ function simular(
 
     const primeiraParcela =
         parcelas.length
-            ? parcelas[0].valorParcela
+            ? parcelas[0]
+                .valorParcela
             : 0;
 
     const ultimaParcela =
@@ -717,10 +876,15 @@ function simular(
             : 0;
 
     resultadoValorFinanciado.textContent =
-        formatarMoeda(valor);
+        formatarCentavos(
+            valorCentavos,
+            true
+        );
 
     resultadoTaxa.textContent =
-        formatarPercentual(taxaAnual) +
+        formatarPercentual(
+            taxaAnual
+        ) +
         " a.a.";
 
     resultadoPrazo.textContent =
@@ -735,22 +899,22 @@ function simular(
         quantidadeParcelas;
 
     resultadoPrimeiraParcela.textContent =
-        formatarMoeda(
+        formatarNumeroComoMoeda(
             primeiraParcela
         );
 
     resultadoUltimaParcela.textContent =
-        formatarMoeda(
+        formatarNumeroComoMoeda(
             ultimaParcela
         );
 
     resultadoJuros.textContent =
-        formatarMoeda(
+        formatarNumeroComoMoeda(
             jurosTotais
         );
 
     resultadoTotal.textContent =
-        formatarMoeda(
+        formatarNumeroComoMoeda(
             totalPago
         );
 
@@ -759,7 +923,10 @@ function simular(
             ? linha.nome
             : "-";
 
-    preencherTabela(parcelas);
+    preencherTabela(
+        parcelas
+    );
+
     atualizarDocumentos();
 }
 
@@ -768,26 +935,37 @@ function simularAutomaticamente() {
 }
 
 function limparResultadosInvalidos() {
-    const valor =
-        calcularValorFinanciado();
+    const valorCentavos =
+        calcularValorFinanciadoCentavos();
 
     const prazoMeses =
-        Number(prazo.value) || 0;
+        Number(
+            prazo.value
+        ) || 0;
 
     const carenciaMeses =
-        Number(carencia.value) || 0;
+        Number(
+            carencia.value
+        ) || 0;
 
     const taxaAnual =
-        Number(taxa.value) || 0;
+        Number(
+            taxa.value
+        ) || 0;
 
     const linha =
         obterLinhaSelecionada();
 
     resultadoValorFinanciado.textContent =
-        formatarMoeda(valor);
+        formatarCentavos(
+            valorCentavos,
+            true
+        );
 
     resultadoTaxa.textContent =
-        formatarPercentual(taxaAnual) +
+        formatarPercentual(
+            taxaAnual
+        ) +
         " a.a.";
 
     resultadoPrazo.textContent =
@@ -827,10 +1005,15 @@ function limparResultadosInvalidos() {
     `;
 }
 
-function preencherTabela(parcelas) {
-    tabelaParcelas.innerHTML = "";
+function preencherTabela(
+    parcelas
+) {
+    tabelaParcelas.innerHTML =
+        "";
 
-    if (!parcelas.length) {
+    if (
+        !parcelas.length
+    ) {
         tabelaParcelas.innerHTML = `
             <tr>
                 <td colspan="6" class="sem-dados">
@@ -844,18 +1027,22 @@ function preencherTabela(parcelas) {
 
     parcelas.forEach(item => {
         const tr =
-            document.createElement("tr");
+            document.createElement(
+                "tr"
+            );
 
         tr.innerHTML = `
             <td>${item.numero}</td>
-            <td>${formatarMoeda(item.saldoInicial)}</td>
-            <td>${formatarMoeda(item.amortizacao)}</td>
-            <td>${formatarMoeda(item.juros)}</td>
-            <td>${formatarMoeda(item.valorParcela)}</td>
-            <td>${formatarMoeda(item.saldoFinal)}</td>
+            <td>${formatarNumeroComoMoeda(item.saldoInicial)}</td>
+            <td>${formatarNumeroComoMoeda(item.amortizacao)}</td>
+            <td>${formatarNumeroComoMoeda(item.juros)}</td>
+            <td>${formatarNumeroComoMoeda(item.valorParcela)}</td>
+            <td>${formatarNumeroComoMoeda(item.saldoFinal)}</td>
         `;
 
-        tabelaParcelas.appendChild(tr);
+        tabelaParcelas.appendChild(
+            tr
+        );
     });
 }
 
@@ -946,24 +1133,26 @@ function atualizarDocumentos() {
 
     let html = "";
 
-    html += criarGrupoDocumentos(
-        "Documentação Geral",
-        DOCUMENTOS.gerais
-    );
+    html +=
+        criarGrupoDocumentos(
+            "Documentação Geral",
+            DOCUMENTOS.gerais
+        );
 
     if (
         DOCUMENTOS[
         finalidadeSelecionada
         ]
     ) {
-        html += criarGrupoDocumentos(
-            TITULOS_DOCUMENTOS_FINALIDADE[
-            finalidadeSelecionada
-            ],
-            DOCUMENTOS[
-            finalidadeSelecionada
-            ]
-        );
+        html +=
+            criarGrupoDocumentos(
+                TITULOS_DOCUMENTOS_FINALIDADE[
+                finalidadeSelecionada
+                ],
+                DOCUMENTOS[
+                finalidadeSelecionada
+                ]
+            );
     }
 
     if (
@@ -971,27 +1160,32 @@ function atualizarDocumentos() {
         grupoSelecionado
         ]
     ) {
-        html += criarGrupoDocumentos(
-            TITULOS_DOCUMENTOS_GRUPO[
-            grupoSelecionado
-            ] ||
-            `Documentação da Atividade - ${nomeGrupoSelecionado}`,
-            DOCUMENTOS[
-            grupoSelecionado
-            ]
-        );
+        html +=
+            criarGrupoDocumentos(
+                TITULOS_DOCUMENTOS_GRUPO[
+                grupoSelecionado
+                ] ||
+                `Documentação da Atividade - ${nomeGrupoSelecionado}`,
+                DOCUMENTOS[
+                grupoSelecionado
+                ]
+            );
     }
 
-    if (nomeAtividadeSelecionada) {
-        html += criarGrupoDocumentos(
-            "Atividade Selecionada",
-            [
-                `Atividade: ${nomeAtividadeSelecionada}.`
-            ]
-        );
+    if (
+        nomeAtividadeSelecionada
+    ) {
+        html +=
+            criarGrupoDocumentos(
+                "Atividade Selecionada",
+                [
+                    `Atividade: ${nomeAtividadeSelecionada}.`
+                ]
+            );
     }
 
-    listaDocumentos.innerHTML = html;
+    listaDocumentos.innerHTML =
+        html;
 }
 
 function redefinirAtividadeRural() {
@@ -1069,12 +1263,9 @@ recursosProprios.addEventListener(
 valorProjeto.addEventListener(
     "blur",
     () => {
-        valorProjeto.value =
-            formatarNumeroMoeda(
-                moedaParaNumero(
-                    valorProjeto.value
-                )
-            );
+        normalizarCampoMonetario(
+            valorProjeto
+        );
 
         calcularValorFinanciado();
         simularAutomaticamente();
@@ -1084,12 +1275,9 @@ valorProjeto.addEventListener(
 recursosProprios.addEventListener(
     "blur",
     () => {
-        recursosProprios.value =
-            formatarNumeroMoeda(
-                moedaParaNumero(
-                    recursosProprios.value
-                )
-            );
+        normalizarCampoMonetario(
+            recursosProprios
+        );
 
         calcularValorFinanciado();
         simularAutomaticamente();
