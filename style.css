@@ -157,11 +157,14 @@ header p,
     object-fit: contain;
 }
 
+
 /* =========================================================
    MENU PRINCIPAL
    ========================================================= */
 
 .menu-principal {
+    position: relative;
+    z-index: 1000;
     background: var(--branco);
     border-bottom: 1px solid var(--borda);
     box-shadow: 0 3px 12px rgba(0, 54, 64, .05);
@@ -169,11 +172,10 @@ header p,
 
 .menu-conteudo {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     min-height: 52px;
     gap: 4px;
-    overflow-x: auto;
-    scrollbar-width: thin;
+    overflow: visible;
 }
 
 .menu-item {
@@ -181,23 +183,141 @@ header p,
     align-items: center;
     min-height: 52px;
     padding: 0 17px;
-    text-decoration: none;
+    background: transparent;
     color: var(--texto-secundario);
+    border: 0;
+    border-bottom: 3px solid transparent;
+    text-decoration: none;
     font-size: 14px;
     font-weight: 700;
     white-space: nowrap;
-    border-bottom: 3px solid transparent;
+    cursor: pointer;
     transition: .2s ease;
 }
 
-a.menu-item:hover {
+a.menu-item:hover,
+.menu-grupo-botao:hover {
     color: var(--turquesa);
     background: rgba(0, 160, 145, .04);
 }
 
-.menu-item.ativo {
+.menu-item.ativo,
+.menu-grupo.ativo>.menu-grupo-botao {
     color: var(--turquesa);
     border-bottom-color: var(--verde-claro);
+}
+
+/* =========================================================
+   AGRUPADORES
+   ========================================================= */
+
+.menu-grupo {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.menu-grupo-botao {
+    gap: 7px;
+}
+
+.menu-grupo-seta {
+    display: inline-block;
+    color: currentColor;
+    font-size: 11px;
+    line-height: 1;
+    transition: transform .2s ease;
+}
+
+.menu-grupo.aberto .menu-grupo-seta {
+    transform: rotate(180deg);
+}
+
+/* =========================================================
+   SUBMENU
+   ========================================================= */
+
+.menu-submenu {
+    position: absolute;
+    top: calc(100% - 1px);
+    left: 0;
+    z-index: 1100;
+    display: none;
+    min-width: 235px;
+    padding: 7px 0;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 12px 28px rgba(0, 54, 64, .14);
+}
+
+.menu-grupo.aberto>.menu-submenu {
+    display: block;
+}
+
+.menu-subitem {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 16px;
+    color: var(--texto-secundario);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+    transition: .2s ease;
+}
+
+.menu-subitem:hover {
+    background: rgba(0, 160, 145, .06);
+    color: var(--turquesa);
+}
+
+.menu-subitem.ativo {
+    background: rgba(0, 160, 145, .07);
+    color: var(--turquesa);
+    border-left-color: var(--verde-claro);
+}
+
+/* =========================================================
+   MENU RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .menu-conteudo {
+        overflow-x: auto;
+        overflow-y: visible;
+        scrollbar-width: thin;
+    }
+
+    .menu-item {
+        padding: 0 14px;
+    }
+
+    .menu-submenu {
+        min-width: 215px;
+    }
+}
+
+@media (max-width: 700px) {
+    .menu-conteudo {
+        gap: 0;
+    }
+
+    .menu-item {
+        min-height: 48px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    .menu-subitem {
+        min-height: 40px;
+        padding: 9px 14px;
+        font-size: 12px;
+    }
 }
 
 /* =========================================================
