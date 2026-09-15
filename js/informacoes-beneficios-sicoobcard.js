@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Vai de Visa",
                     bandeira: "V"
                 }
-            ]
+            ],
+            faixaRenda: "Até um salário mínimo",
+
         },
 
         goldPlus: {
@@ -54,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Vai de Visa",
                     bandeira: "V"
                 }
-            ]
+            ],
+            faixaRenda: "R$ 1.622,00 a R$ 4.999,00",
         },
 
         platinum: {
@@ -89,7 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Vai de Visa",
                     bandeira: "V"
                 }
-            ]
+            ],
+            faixaRenda: "R$ 5.000,00 a R$ 9.999,00",
         },
 
         verth: {
@@ -152,7 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Airport Concierge",
                     bandeira: "V"
                 }
-            ]
+            ],
+            faixaRenda: "R$ 10.000,00 a R$ 14.999,00",
         },
 
         merith: {
@@ -215,7 +220,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Airport Concierge",
                     bandeira: "V+M"
                 }
-            ]
+            ],
+            faixaRenda: "R$ 15.000,00 a R$ 49.999,00",
         },
 
         zenith: {
@@ -278,7 +284,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Airport Concierge",
                     bandeira: "V+M"
                 }
-            ]
+            ],
+            faixaRenda: "A partir de R$ 50.000,00",
         },
 
         masterEmpresarial: {
@@ -292,7 +299,8 @@ document.addEventListener("DOMContentLoaded", () => {
             anuidade: "R$ 220,00",
             imagem: "img/masterEmpresarial.png",
             bandeiras: ["Mastercard"],
-            beneficios: []
+            beneficios: [],
+            faixaRenda: "Não se aplica - Cartão Empresarial",
         },
 
         visaEmpresarial: {
@@ -306,7 +314,8 @@ document.addEventListener("DOMContentLoaded", () => {
             anuidade: "R$ 220,00",
             imagem: "img/visaEmpresarial.png",
             bandeiras: ["Visa"],
-            beneficios: []
+            beneficios: [],
+            faixaRenda: "Não se aplica - Cartão Empresarial",
         }
     };
 
@@ -620,6 +629,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if ($("infoAnuidade")) {
             $("infoAnuidade").textContent =
                 cartao.anuidade;
+        }
+
+        if ($("infoFaixaRenda")) {
+            $("infoFaixaRenda").textContent =
+                cartao.faixaRenda || "Não informado";
         }
 
         if ($("infoQuantidadeBeneficios")) {
