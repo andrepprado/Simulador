@@ -58,25 +58,15 @@ function numeroSeguro(valor) {
 function limitarValorMonetario(valor) {
     const convertido = Number(valor);
 
-    if (
-        !Number.isFinite(convertido) ||
-        convertido < 0
-    ) {
+    if (!Number.isFinite(convertido) || convertido < 0) {
         return 0;
     }
 
-    return Math.min(
-        convertido,
-        LIMITE_VALOR_MONETARIO
-    );
+    return Math.min(convertido, LIMITE_VALOR_MONETARIO);
 }
 
 function moedaParaNumero(valor) {
-    if (
-        valor === null ||
-        valor === undefined ||
-        valor === ""
-    ) {
+    if (valor === null || valor === undefined || valor === "") {
         return 0;
     }
 
@@ -85,35 +75,27 @@ function moedaParaNumero(valor) {
         .replace(/R\$/gi, "")
         .replace(/\s/g, "");
 
-    if (
-        texto.includes(",") &&
-        texto.includes(".")
-    ) {
+    if (texto.includes(",") && texto.includes(".")) {
         texto = texto
             .replace(/\./g, "")
             .replace(",", ".");
-    } else if (
-        texto.includes(",")
-    ) {
+    } else if (texto.includes(",")) {
         texto = texto.replace(",", ".");
     }
 
     texto = texto.replace(/[^\d.-]/g, "");
 
-    return limitarValorMonetario(
-        Number(texto)
-    );
+    return limitarValorMonetario(Number(texto));
 }
 
 function formatarNumeroMoeda(valor) {
-    return limitarValorMonetario(valor)
-        .toLocaleString(
-            "pt-BR",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
+    return limitarValorMonetario(valor).toLocaleString(
+        "pt-BR",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
 }
 
 function formatarMoeda(valor) {
@@ -143,45 +125,30 @@ function formatarPercentual(valor) {
 }
 
 function aplicarMascaraMoeda(input) {
-    let digitos = String(
-        input.value || ""
-    ).replace(/\D/g, "");
+    let digitos = String(input.value || "").replace(/\D/g, "");
 
     if (!digitos) {
         input.value = "0,00";
         return;
     }
 
-    const limiteCentavos =
-        Math.round(
-            LIMITE_VALOR_MONETARIO * 100
-        );
+    const limiteCentavos = Math.round(LIMITE_VALOR_MONETARIO * 100);
 
-    let centavos =
-        Number(digitos);
+    let centavos = Number(digitos);
 
-    if (
-        !Number.isFinite(centavos) ||
-        centavos < 0
-    ) {
+    if (!Number.isFinite(centavos) || centavos < 0) {
         centavos = 0;
     }
 
-    centavos =
-        Math.min(
-            centavos,
-            limiteCentavos
-        );
+    centavos = Math.min(centavos, limiteCentavos);
 
-    input.value =
-        (centavos / 100)
-            .toLocaleString(
-                "pt-BR",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            );
+    input.value = (centavos / 100).toLocaleString(
+        "pt-BR",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
 }
 
 function limitarPercentual(valor) {
@@ -195,10 +162,7 @@ function limitarPercentual(valor) {
 }
 
 function limitarPrazo(valor) {
-    const convertido =
-        Math.trunc(
-            numeroSeguro(valor)
-        );
+    const convertido = Math.trunc(numeroSeguro(valor));
 
     return Math.max(
         1,
@@ -214,38 +178,27 @@ function calcularParcelaPrice(
     taxaMensalPercentual,
     prazoMeses
 ) {
-    const principal =
-        limitarValorMonetario(valor);
-
-    const prazo =
-        limitarPrazo(prazoMeses);
+    const principal = limitarValorMonetario(valor);
+    const prazo = limitarPrazo(prazoMeses);
 
     const taxa =
         Math.max(
             0,
-            numeroSeguro(
-                taxaMensalPercentual
-            )
+            numeroSeguro(taxaMensalPercentual)
         ) / 100;
 
-    if (
-        principal <= 0 ||
-        prazo <= 0
-    ) {
+    if (principal <= 0 || prazo <= 0) {
         return 0;
     }
 
-    if (
-        taxa === 0
-    ) {
+    if (taxa === 0) {
         return principal / prazo;
     }
 
-    const fator =
-        Math.pow(
-            1 + taxa,
-            prazo
-        );
+    const fator = Math.pow(
+        1 + taxa,
+        prazo
+    );
 
     const parcela =
         principal *
@@ -330,9 +283,7 @@ function calcularPercentualComprometimento(
     valor,
     renda
 ) {
-    if (
-        renda <= 0
-    ) {
+    if (renda <= 0) {
         return 0;
     }
 
@@ -340,6 +291,81 @@ function calcularPercentualComprometimento(
         valor /
         renda
     ) * 100;
+}
+
+/*
+ * =========================================================
+ * VALIDAÇÃO ESPECÍFICA PRONAMPE
+ * =========================================================
+ * Para PRONAMPE, o Valor Solicitado não pode ultrapassar
+ * 30% da Renda Atualizada Comprovada.
+ *
+ * A regra não se aplica ao FGI.
+ * =========================================================
+ */
+function validarLimiteValorSolicitadoPronampe(
+    valorSolicitado,
+    renda
+) {
+    const tipoOperacao =
+        elementosComprometimento
+            .tipoOperacao
+            .value;
+
+    if (tipoOperacao !== "pronampe") {
+        return {
+            valido: true,
+            limite: null
+        };
+    }
+
+    /*
+     * Caso ainda não exista renda válida, deixamos a
+     * validação normal de renda tratar a situação.
+     */
+    if (renda <= 0) {
+        return {
+            valido: true,
+            limite: 0
+        };
+    }
+
+    const limite = renda * 0.30;
+
+    return {
+        valido: valorSolicitado <= limite,
+        limite: limite
+    };
+}
+
+function exibirBloqueioPronampe(
+    valorSolicitado,
+    renda,
+    limite
+) {
+    const elemento =
+        elementosComprometimento
+            .statusComprometimento;
+
+    elemento.classList.remove(
+        "status-baixo",
+        "status-atencao",
+        "status-alto"
+    );
+
+    elemento.classList.add(
+        "status-alto"
+    );
+
+    elemento.innerHTML = `
+        <strong>Valor solicitado acima do limite permitido para PRONAMPE.</strong>
+        <span>
+            Para operações PRONAMPE, o valor solicitado não pode ser superior a 30% da renda informada.
+            Valor solicitado: ${formatarMoeda(valorSolicitado)}.
+            Renda informada: ${formatarMoeda(renda)}.
+            Limite máximo permitido: ${formatarMoeda(limite)}.
+        </span>
+    `;
 }
 
 function atualizarStatus(
@@ -356,9 +382,7 @@ function atualizarStatus(
         "status-alto"
     );
 
-    if (
-        renda <= 0
-    ) {
+    if (renda <= 0) {
         elemento.innerHTML = `
             <strong>Informe uma renda comprovada válida.</strong>
             <span>
@@ -369,9 +393,7 @@ function atualizarStatus(
         return;
     }
 
-    if (
-        percentual <= 30
-    ) {
+    if (percentual <= 30) {
         elemento.classList.add(
             "status-baixo"
         );
@@ -386,9 +408,7 @@ function atualizarStatus(
         return;
     }
 
-    if (
-        percentual <= 50
-    ) {
+    if (percentual <= 50) {
         elemento.classList.add(
             "status-atencao"
         );
@@ -429,6 +449,41 @@ function calcularComprometimento() {
                 .rendaComprovada
                 .value
         );
+
+    /*
+     * =====================================================
+     * BLOQUEIO PRONAMPE - LIMITE DE 30% DA RENDA
+     * =====================================================
+     */
+    const validacaoPronampe =
+        validarLimiteValorSolicitadoPronampe(
+            valorSolicitado,
+            renda
+        );
+
+    if (!validacaoPronampe.valido) {
+        elementosComprometimento
+            .resultadoValorSolicitado
+            .textContent =
+            formatarMoeda(
+                valorSolicitado
+            );
+
+        elementosComprometimento
+            .resultadoRendaComprovada
+            .textContent =
+            formatarMoeda(
+                renda
+            );
+
+        exibirBloqueioPronampe(
+            valorSolicitado,
+            renda,
+            validacaoPronampe.limite
+        );
+
+        return;
+    }
 
     const contratosSicoob =
         moedaParaNumero(
