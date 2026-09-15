@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 5.000,00",
             anuidade: "R$ 220,00",
-            imagem: "",
+            imagem: "img/masterEmpresarial.png",
             bandeiras: ["Mastercard"],
             beneficios: []
         },
@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
             salaVip: "—",
             limite: "R$ 5.000,00",
             anuidade: "R$ 220,00",
-            imagem: "",
+            imagem: "img/visaEmpresarial.png",
             bandeiras: ["Visa"],
             beneficios: []
         }
