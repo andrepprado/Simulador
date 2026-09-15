@@ -157,7 +157,6 @@ header p,
     object-fit: contain;
 }
 
-
 /* =========================================================
    MENU PRINCIPAL
    ========================================================= */
@@ -474,13 +473,19 @@ main {
     font-size: 13px;
 }
 
+/* =========================================================
+   GRID DOS CARDS DA HOME
+   ========================================================= */
+
 .ferramentas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
-    justify-content: start;
+    justify-content: center;
     align-items: stretch;
     gap: 20px;
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .ferramenta-card {
@@ -1628,8 +1633,6 @@ td {
     margin-bottom: 20px;
 }
 
-/* SELETOR */
-
 .sicoobcard-seletor {
     display: grid;
     grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -1667,8 +1670,6 @@ td {
     box-shadow: 0 5px 15px rgba(0, 54, 64, .14);
 }
 
-/* GRID PRINCIPAL */
-
 .sicoobcard-detalhes-grid {
     display: grid;
     grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
@@ -1681,8 +1682,6 @@ td {
 .sicoobcard-informacoes-card {
     min-width: 0;
 }
-
-/* CARTÃO / IMAGEM */
 
 .sicoobcard-cartao-card {
     display: flex;
@@ -1786,8 +1785,6 @@ td {
     font-size: 11px;
 }
 
-/* INFORMAÇÕES DO CARTÃO */
-
 .sicoobcard-informacoes-card {
     display: flex;
     flex-direction: column;
@@ -1839,8 +1836,6 @@ td {
     line-height: 1.25;
 }
 
-/* Destaque continua ocupando apenas UMA célula */
-
 .sicoobcard-info-destaque {
     background: linear-gradient(135deg,
             rgba(0, 160, 145, .08),
@@ -1856,8 +1851,6 @@ td {
     color: var(--turquesa);
     font-size: 24px;
 }
-
-/* FAIXA DE RENDA - ÚNICO ITEM QUE OCUPA DUAS COLUNAS */
 
 .sicoobcard-faixa-renda {
     position: relative;
@@ -1934,8 +1927,6 @@ td {
     font-size: 11px;
     line-height: 1.45;
 }
-
-/* BENEFÍCIOS */
 
 .sicoobcard-beneficios-cabecalho {
     display: flex;
@@ -2071,8 +2062,6 @@ td {
     font-size: 11px;
     line-height: 1.5;
 }
-
-/* COMPARATIVO */
 
 .sicoobcard-comparativo-card {
     min-width: 0;
@@ -2578,7 +2567,7 @@ footer p,
 
     .ferramentas-grid {
         grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
-        justify-content: start;
+        justify-content: center;
     }
 
     .sicoobcard-seletor {
@@ -2735,7 +2724,8 @@ footer p,
     }
 
     .ferramentas-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        justify-content: stretch;
     }
 
     .ferramenta-card {
@@ -2826,7 +2816,6 @@ footer p,
         grid-template-columns: 1fr;
     }
 
-    /* Apenas a faixa de renda precisa resetar o span no mobile */
     .sicoobcard-faixa-renda {
         grid-column: 1;
         align-items: flex-start;
@@ -3002,10 +2991,6 @@ footer p,
     display: none !important;
 }
 
-/* =========================================================
-   ESTRUTURA PRINCIPAL
-   ========================================================= */
-
 .simulador-grid-igual {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -3028,10 +3013,6 @@ footer p,
 .simulador-grid-igual>.card-largura-total {
     grid-column: 1;
 }
-
-/* =========================================================
-   TÍTULOS
-   ========================================================= */
 
 .simulador-grid-igual .titulo-secao {
     display: block;
@@ -3064,10 +3045,6 @@ footer p,
     font-size: 13px;
     line-height: 1.55;
 }
-
-/* =========================================================
-   FORMULÁRIO
-   ========================================================= */
 
 .simulador-grid-igual .grid-form-4 {
     display: grid;
@@ -3125,10 +3102,6 @@ footer p,
     opacity: 1;
 }
 
-/* =========================================================
-   INPUT COM PREFIXO / SUFIXO
-   ========================================================= */
-
 .simulador-grid-igual .input-prefixo,
 .simulador-grid-igual .input-sufixo {
     width: 100%;
@@ -3142,20 +3115,12 @@ footer p,
     min-width: 0;
 }
 
-/* =========================================================
-   AÇÕES
-   ========================================================= */
-
 .simulador-grid-igual .acoes {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     margin-top: 24px;
 }
-
-/* =========================================================
-   CARDS COM DESTAQUE SUPERIOR
-   ========================================================= */
 
 #cardTaxasCredito,
 #cardCondicoesLinha,
@@ -3178,10 +3143,6 @@ footer p,
             var(--turquesa),
             var(--verde-escuro));
 }
-
-/* =========================================================
-   TAXAS
-   ========================================================= */
 
 #cardTaxasCredito .resultados-grid {
     display: grid;
@@ -3226,10 +3187,6 @@ footer p,
     overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   RESULTADO DE ALÇADA
-   ========================================================= */
-
 #cardTaxasCredito .resultado-destaque,
 #statusEnquadramentoCredito {
     min-height: 82px;
@@ -3239,10 +3196,6 @@ footer p,
 #statusEnquadramentoCredito strong {
     font-size: clamp(17px, 2vw, 26px);
 }
-
-/* =========================================================
-   CAMPOS CONDICIONAIS
-   ========================================================= */
 
 #blocoJustRepac,
 #blocoJustPix,
@@ -3279,10 +3232,6 @@ footer p,
     color: var(--verde-escuro);
     border-color: rgba(0, 160, 145, .25);
 }
-
-/* =========================================================
-   GARANTIAS
-   ========================================================= */
 
 #cardGarantiasCredito .grid-form-4 {
     align-items: stretch;
@@ -3328,7 +3277,6 @@ footer p,
         transform .2s ease;
 }
 
-/* Quadrado do checkbox */
 #cardGarantiasCredito .opcao-simulacao-conteudo::before {
     content: "";
     position: absolute;
@@ -3343,7 +3291,6 @@ footer p,
     transition: .2s ease;
 }
 
-/* Check */
 #cardGarantiasCredito .opcao-simulacao-conteudo::after {
     content: "";
     position: absolute;
@@ -3373,14 +3320,12 @@ footer p,
     line-height: 1.4;
 }
 
-/* Hover */
 #cardGarantiasCredito .opcao-simulacao:hover .opcao-simulacao-conteudo {
     transform: translateY(-1px);
     border-color: var(--turquesa-claro);
     box-shadow: 0 5px 14px rgba(0, 54, 64, .08);
 }
 
-/* Selecionado */
 #cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo {
     background: rgba(0, 160, 145, .07);
     border-color: var(--turquesa);
@@ -3400,7 +3345,6 @@ footer p,
     color: var(--turquesa);
 }
 
-/* Desabilitado */
 #cardGarantiasCredito .opcao-simulacao>input:disabled+.opcao-simulacao-conteudo {
     background: #EEF2F2;
     border-color: var(--borda);
@@ -3415,7 +3359,6 @@ footer p,
     border-color: #C6D1D2;
 }
 
-/* Sem garantia */
 #cardGarantiasCredito #labelSemGarantia .opcao-simulacao-conteudo {
     background: var(--atencao-fundo);
 }
@@ -3433,10 +3376,6 @@ footer p,
 #cardGarantiasCredito #labelSemGarantia>input:checked+.opcao-simulacao-conteudo strong {
     color: var(--atencao);
 }
-
-/* =========================================================
-   LISTAS DE REGRAS
-   ========================================================= */
 
 #regrasGarantiasCredito,
 #listaRegrasLinhaCredito,
@@ -3481,10 +3420,6 @@ footer p,
     color: var(--verde-escuro);
 }
 
-/* =========================================================
-   RESUMO DA LINHA
-   ========================================================= */
-
 .simulador-grid-igual .resultados-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3515,17 +3450,9 @@ footer p,
     overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   LINHA SELECIONADA
-   ========================================================= */
-
 .simulador-grid-igual .linha-selecionada {
     margin-top: 16px;
 }
-
-/* =========================================================
-   RESULTADO FINANCEIRO
-   ========================================================= */
 
 .simulador-grid-igual .resultado-destaque {
     width: 100%;
@@ -3539,10 +3466,6 @@ footer p,
 .simulador-grid-igual .resultado-destaque strong {
     max-width: 55%;
 }
-
-/* =========================================================
-   TABELA
-   ========================================================= */
 
 .simulador-grid-igual .tabela-wrapper {
     width: 100%;
@@ -3567,17 +3490,9 @@ footer p,
     background: rgba(0, 160, 145, .04);
 }
 
-/* =========================================================
-   SEPARADORES
-   ========================================================= */
-
 .simulador-grid-igual .separador {
     margin: 24px 0;
 }
-
-/* =========================================================
-   RESPONSIVIDADE
-   ========================================================= */
 
 @media (max-width: 1100px) {
 
@@ -3643,10 +3558,6 @@ footer p,
         padding: 15px;
     }
 }
-
-/* =========================================================
-   IMPRESSÃO
-   ========================================================= */
 
 @media print {
     .simulador-grid-igual {
