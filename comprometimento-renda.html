@@ -10,15 +10,14 @@
 </head>
 
 <body>
-    <header>
-        <div class="container header-conteudo">
-            <div class="header-texto">
-                <span class="header-tag">Caixa de Ferramentas</span>
+    <header class="cabecalho">
+        <div class="container cabecalho-conteudo">
+            <div class="cabecalho-texto">
+                <span class="cabecalho-tag">Caixa de Ferramentas</span>
                 <h1>Comprometimento de Renda</h1>
                 <p>Simulação de comprometimento de renda para operações PRONAMPE e FGI.</p>
             </div>
-
-            <div class="header-logo">
+            <div class="cabecalho-logo">
                 <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
         </div>
@@ -26,172 +25,163 @@
 
     <div id="menuPrincipal"></div>
 
-    <main class="container">
+    <main class="container comprometimento-container">
         <section class="comprometimento-grid">
 
-            <!-- =========================================================
-                 DADOS DA OPERAÇÃO
-                 ========================================================= -->
             <div class="comprometimento-card comprometimento-dados">
-                <div class="titulo-secao">
-                    <span class="titulo-secao-indicador"></span>
+                <div class="comprometimento-titulo">
+                    <span class="comprometimento-titulo-indicador"></span>
                     <div>
                         <h2>Dados da Operação</h2>
-                        <p>Informe os dados da operação e da renda do cooperado.</p>
+                        <p>Informe os dados da operação e a renda mensal comprovada do cooperado.</p>
                     </div>
                 </div>
 
-                <div class="campo-grupo">
-                    <label for="tipoOperacao">Tipo de Operação</label>
-                    <select id="tipoOperacao">
-                        <option value="pronampe">PRONAMPE</option>
-                        <option value="fgi">FGI</option>
-                    </select>
-                </div>
+                <div class="comprometimento-form-grid">
+                    <div class="comprometimento-campo">
+                        <label for="tipoOperacao">Tipo de Operação</label>
+                        <select id="tipoOperacao">
+                            <option value="pronampe">PRONAMPE</option>
+                            <option value="fgi">FGI</option>
+                        </select>
+                    </div>
 
-                <div class="campo-grupo">
-                    <label for="riscoCooperado">Classificação de Risco</label>
-                    <select id="riscoCooperado">
-                        <option value="R1">R1</option>
-                        <option value="R2">R2</option>
-                        <option value="R3">R3</option>
-                        <option value="R4">R4</option>
-                        <option value="R5">R5</option>
-                        <option value="R6">R6</option>
-                        <option value="R7">R7</option>
-                        <option value="R8">R8</option>
-                        <option value="R9">R9</option>
-                        <option value="R10">R10</option>
-                    </select>
-                </div>
+                    <div class="comprometimento-campo">
+                        <label for="riscoCooperado">Classificação de Risco</label>
+                        <select id="riscoCooperado">
+                            <option value="R1">R1</option>
+                            <option value="R2">R2</option>
+                            <option value="R3">R3</option>
+                            <option value="R4">R4</option>
+                            <option value="R5">R5</option>
+                            <option value="R6">R6</option>
+                            <option value="R7">R7</option>
+                            <option value="R8">R8</option>
+                            <option value="R9">R9</option>
+                            <option value="R10">R10</option>
+                        </select>
+                    </div>
 
-                <div class="campo-grupo">
-                    <label for="valorSolicitado">Valor Solicitado</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="valorSolicitado" value="100.000,00">
+                    <div class="comprometimento-campo">
+                        <label for="valorSolicitado">Valor Solicitado</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="valorSolicitado" value="100.000,00">
+                        </div>
+                    </div>
+
+                    <div class="comprometimento-campo">
+                        <label for="rendaComprovada">Renda Atualizada Comprovada</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="rendaComprovada" value="20.000,00">
+                        </div>
+                        <small>Informe a renda mensal. Para PRONAMPE, o limite considera a renda mensal × 12.</small>
+                    </div>
+
+                    <div class="comprometimento-campo">
+                        <label for="prazoOperacao">Prazo da Operação</label>
+                        <div class="comprometimento-input-sufixo">
+                            <input type="number" id="prazoOperacao" value="33" min="1" max="600" step="1">
+                            <span>meses</span>
+                        </div>
+                    </div>
+
+                    <div class="comprometimento-campo">
+                        <label for="taxaMensal">Taxa Mensal</label>
+                        <div class="comprometimento-input-sufixo">
+                            <input type="number" id="taxaMensal" value="1.00" min="0" step="0.01">
+                            <span>% a.m.</span>
+                        </div>
+                    </div>
+
+                    <div class="comprometimento-campo">
+                        <label for="perdaEsperada">Perda Esperada</label>
+                        <div class="comprometimento-input-sufixo">
+                            <input type="number" id="perdaEsperada" value="0" min="0" max="100" step="0.01">
+                            <span>%</span>
+                        </div>
+                    </div>
+
+                    <div class="comprometimento-campo">
+                        <label for="contratosSicoob">Contratos já Existentes - Sicoob</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="contratosSicoob" value="0,00">
+                        </div>
                     </div>
                 </div>
 
-                <div class="campo-grupo">
-                    <label for="rendaComprovada">Renda Atualizada Comprovada</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="rendaComprovada" value="20.000,00">
-                    </div>
-                    <small>Informe a renda mensal comprovada. Para PRONAMPE, o sistema considera a renda anual
-                        equivalente para validação do limite da operação.</small>
-                </div>
-
-                <div class="campo-grupo">
-                    <label for="prazoOperacao">Prazo da Operação</label>
-                    <div class="input-sufixo">
-                        <input type="number" id="prazoOperacao" value="33" min="1" max="600" step="1">
-                        <span>meses</span>
-                    </div>
-                </div>
-
-                <div class="campo-grupo">
-                    <label for="taxaMensal">Taxa Mensal</label>
-                    <div class="input-sufixo">
-                        <input type="number" id="taxaMensal" value="1.00" min="0" step="0.01">
-                        <span>% a.m.</span>
-                    </div>
-                </div>
-
-                <div class="campo-grupo">
-                    <label for="perdaEsperada">Perda Esperada</label>
-                    <div class="input-sufixo">
-                        <input type="number" id="perdaEsperada" value="0" min="0" max="100" step="0.01">
-                        <span>%</span>
-                    </div>
-                </div>
-
-                <div class="campo-grupo">
-                    <label for="contratosSicoob">Contratos já Existentes - Sicoob</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="contratosSicoob" value="0,00">
-                    </div>
-                </div>
-
-                <!-- =====================================================
-                     STATUS DO LIMITE PRONAMPE
-                     Exclusivo para validação do Valor Solicitado
-                     em relação a 30% da renda anual.
-                     ===================================================== -->
-                <div id="statusLimitePronampe" class="comprometimento-status">
-                    <strong>Limite da operação</strong>
-                    <span>Informe os dados da operação para validação.</span>
+                <div id="statusLimitePronampe" class="comprometimento-status status-atencao">
+                    <strong>Limite PRONAMPE</strong>
+                    <span>A validação do limite da operação será atualizada automaticamente.</span>
                 </div>
             </div>
 
-            <!-- =========================================================
-                 ENDIVIDAMENTO SFN
-                 ========================================================= -->
             <div class="comprometimento-card comprometimento-sfn">
-                <div class="titulo-secao">
-                    <span class="titulo-secao-indicador"></span>
+                <div class="comprometimento-titulo">
+                    <span class="comprometimento-titulo-indicador"></span>
                     <div>
                         <h2>Endividamento SFN</h2>
-                        <p>Informe os valores do endividamento de curto prazo para cálculo do comprometimento mensal.
-                        </p>
+                        <p>Informe os valores de curto prazo utilizados no cálculo do endividamento mensal.</p>
                     </div>
                 </div>
 
-                <div class="campo-grupo">
-                    <label for="riscoBacenCurtoPrazo">Risco Bacen Total - Curto Prazo</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="riscoBacenCurtoPrazo" value="0,00">
+                <div class="comprometimento-form-grid">
+                    <div class="comprometimento-campo">
+                        <label for="riscoBacenCurtoPrazo">Risco Bacen Total - Curto Prazo</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="riscoBacenCurtoPrazo" value="0,00">
+                        </div>
                     </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <label for="chequeEspecial">Cheque Especial</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="chequeEspecial" value="0,00">
+                    <div class="comprometimento-campo">
+                        <label for="chequeEspecial">Cheque Especial</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="chequeEspecial" value="0,00">
+                        </div>
                     </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <label for="contaGarantida">Conta Garantida</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="contaGarantida" value="0,00">
+                    <div class="comprometimento-campo">
+                        <label for="contaGarantida">Conta Garantida</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="contaGarantida" value="0,00">
+                        </div>
                     </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <label for="descontoTitulos">Desconto de Títulos</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="descontoTitulos" value="0,00">
+                    <div class="comprometimento-campo">
+                        <label for="descontoTitulos">Desconto de Títulos</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="descontoTitulos" value="0,00">
+                        </div>
                     </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <label for="outrosValoresExcluir1">Outros Valores a Excluir 1</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="outrosValoresExcluir1" value="0,00">
+                    <div class="comprometimento-campo">
+                        <label for="outrosValoresExcluir1">Outros Valores a Excluir 1</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="outrosValoresExcluir1" value="0,00">
+                        </div>
                     </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <label for="outrosValoresExcluir2">Outros Valores a Excluir 2</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="outrosValoresExcluir2" value="0,00">
+                    <div class="comprometimento-campo">
+                        <label for="outrosValoresExcluir2">Outros Valores a Excluir 2</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="outrosValoresExcluir2" value="0,00">
+                        </div>
                     </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <label for="outrosValoresExcluir3">Outros Valores a Excluir 3</label>
-                    <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="outrosValoresExcluir3" value="0,00">
+                    <div class="comprometimento-campo comprometimento-campo-largo">
+                        <label for="outrosValoresExcluir3">Outros Valores a Excluir 3</label>
+                        <div class="comprometimento-input-prefixo">
+                            <span>R$</span>
+                            <input type="text" id="outrosValoresExcluir3" value="0,00">
+                        </div>
                     </div>
                 </div>
 
@@ -201,96 +191,80 @@
                 </div>
             </div>
 
-            <!-- =========================================================
-                 RESULTADO
-                 ========================================================= -->
             <div class="comprometimento-card comprometimento-resultado">
-                <div class="titulo-secao">
-                    <span class="titulo-secao-indicador"></span>
+                <div class="comprometimento-titulo">
+                    <span class="comprometimento-titulo-indicador"></span>
                     <div>
                         <h2>Resultado da Simulação</h2>
                         <p>Resultado consolidado do comprometimento mensal de renda.</p>
                     </div>
                 </div>
 
-                <div class="resultado-destaque">
+                <div class="comprometimento-resultado-destaque">
                     <span>Comprometimento Mensal Global</span>
                     <strong id="resultadoComprometimentoGlobal">0,00%</strong>
                 </div>
 
-                <div class="resultado-grid">
-                    <div class="resultado-item">
+                <div class="comprometimento-resultado-grid">
+                    <div class="comprometimento-resultado-item">
                         <span>Valor Solicitado</span>
                         <strong id="resultadoValorSolicitado">R$ 0,00</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Renda Comprovada</span>
                         <strong id="resultadoRendaComprovada">R$ 0,00</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Parcela da Nova Operação</span>
                         <strong id="resultadoParcelaOperacao">R$ 0,00</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Endividamento Mensal SFN</span>
                         <strong id="resultadoEndividamentoSfn">R$ 0,00</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Contratos Existentes - Sicoob</span>
                         <strong id="resultadoContratosSicoob">R$ 0,00</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Comprometimento SFN</span>
                         <strong id="resultadoPercentualSfn">0,00%</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Comprometimento Nova Operação</span>
                         <strong id="resultadoPercentualOperacao">0,00%</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Perda Esperada</span>
                         <strong id="resultadoPerdaEsperada">0,00%</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Classificação de Risco</span>
                         <strong id="resultadoRisco">R1</strong>
                     </div>
-
-                    <div class="resultado-item">
+                    <div class="comprometimento-resultado-item">
                         <span>Prazo da Operação</span>
                         <strong id="resultadoPrazo">33 meses</strong>
                     </div>
                 </div>
 
-                <!-- STATUS GERAL DO COMPROMETIMENTO -->
                 <div id="statusComprometimento" class="comprometimento-status">
                     <strong>Comprometimento de 0,00%</strong>
-                    <span>Informe os dados para realizar a análise do comprometimento de renda.</span>
+                    <span>O resultado será atualizado automaticamente conforme os dados informados.</span>
                 </div>
             </div>
 
-            <!-- =========================================================
-                 RESUMO DO COMPROMETIMENTO
-                 ========================================================= -->
             <div class="comprometimento-card comprometimento-resumo">
-                <div class="titulo-secao">
-                    <span class="titulo-secao-indicador"></span>
+                <div class="comprometimento-titulo">
+                    <span class="comprometimento-titulo-indicador"></span>
                     <div>
                         <h2>Resumo do Comprometimento</h2>
                         <p>Composição dos valores considerados no comprometimento mensal.</p>
                     </div>
                 </div>
 
-                <div class="tabela-responsiva">
-                    <table class="tabela-comprometimento">
+                <div class="comprometimento-tabela-container">
+                    <table class="comprometimento-tabela">
                         <thead>
                             <tr>
                                 <th>Componente</th>
@@ -298,27 +272,23 @@
                                 <th>% da Renda</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             <tr>
                                 <td>Endividamento SFN</td>
                                 <td id="tabelaValorSfn">R$ 0,00</td>
                                 <td id="tabelaPercentualSfn">0,00%</td>
                             </tr>
-
                             <tr>
                                 <td>Nova Operação</td>
                                 <td id="tabelaValorOperacao">R$ 0,00</td>
                                 <td id="tabelaPercentualOperacao">0,00%</td>
                             </tr>
-
                             <tr>
                                 <td>Contratos Existentes - Sicoob</td>
                                 <td id="tabelaValorSicoob">R$ 0,00</td>
                                 <td id="tabelaPercentualSicoob">0,00%</td>
                             </tr>
-
-                            <tr class="tabela-total">
+                            <tr class="comprometimento-tabela-total">
                                 <td>Total</td>
                                 <td id="tabelaValorTotal">R$ 0,00</td>
                                 <td id="tabelaPercentualTotal">0,00%</td>
@@ -327,21 +297,18 @@
                     </table>
                 </div>
 
-                <div class="acoes-comprometimento">
-                    <button type="button" id="btnCalcularComprometimento" class="btn-primario">
-                        Calcular
-                    </button>
-
-                    <button type="button" id="btnLimparComprometimento" class="btn-secundario">
-                        Limpar
-                    </button>
+                <div class="comprometimento-acoes">
+                    <button type="button" id="btnCalcularComprometimento"
+                        class="comprometimento-btn comprometimento-btn-primario">Calcular</button>
+                    <button type="button" id="btnLimparComprometimento"
+                        class="comprometimento-btn comprometimento-btn-secundario">Limpar</button>
                 </div>
             </div>
 
         </section>
     </main>
 
-    <footer>
+    <footer class="rodape">
         <div class="container">
             <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvimento e Gestão: Área de Processos</p>
         </div>

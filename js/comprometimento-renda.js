@@ -43,23 +43,20 @@ const elementosComprometimento = {
 };
 
 function numeroSeguro(valor) {
-    const convertido = Number(valor);
-    return Number.isFinite(convertido) ? convertido : 0;
+    const numero = Number(valor);
+    return Number.isFinite(numero) ? numero : 0;
 }
 
 function limitarValorMonetario(valor) {
-    const convertido = Number(valor);
-    if (!Number.isFinite(convertido) || convertido < 0) return 0;
-    return Math.min(convertido, LIMITE_VALOR_MONETARIO);
+    const numero = Number(valor);
+    if (!Number.isFinite(numero) || numero < 0) return 0;
+    return Math.min(numero, LIMITE_VALOR_MONETARIO);
 }
 
 function moedaParaNumero(valor) {
     if (valor === null || valor === undefined || valor === "") return 0;
 
-    let texto = String(valor)
-        .trim()
-        .replace(/R\$/gi, "")
-        .replace(/\s/g, "");
+    let texto = String(valor).trim().replace(/R\$/gi, "").replace(/\s/g, "");
 
     if (texto.includes(",") && texto.includes(".")) {
         texto = texto.replace(/\./g, "").replace(",", ".");
@@ -120,8 +117,8 @@ function limitarPercentual(valor) {
 }
 
 function limitarPrazo(valor) {
-    const convertido = Math.trunc(numeroSeguro(valor));
-    return Math.max(1, Math.min(600, convertido));
+    const prazo = Math.trunc(numeroSeguro(valor));
+    return Math.max(1, Math.min(600, prazo));
 }
 
 function calcularParcelaPrice(valor, taxaMensalPercentual, prazoMeses) {
@@ -148,13 +145,7 @@ function calcularEndividamentoMensalSfn() {
     const outros3 = moedaParaNumero(elementosComprometimento.outrosValoresExcluir3.value);
 
     const riscoConsiderado = Math.max(
-        riscoTotal -
-        chequeEspecial -
-        contaGarantida -
-        descontoTitulos -
-        outros1 -
-        outros2 -
-        outros3,
+        riscoTotal - chequeEspecial - contaGarantida - descontoTitulos - outros1 - outros2 - outros3,
         0
     );
 
@@ -166,40 +157,19 @@ function calcularPercentualComprometimento(valor, renda) {
     return (valor / renda) * 100;
 }
 
-/*
- * =========================================================
- * REGRA PRONAMPE
- * =========================================================
- *
- * rendaComprovada = renda MENSAL.
- *
- * Para PRONAMPE:
- *
- * Renda anual = rendaComprovada x 12
- * Limite da operação = renda anual x 30%
- *
- * Exemplo:
- *
- * Renda mensal = R$ 20.000,00
- * Renda anual = R$ 240.000,00
- * Limite PRONAMPE = R$ 72.000,00
- *
- * Esta regra não se aplica ao FGI.
- * =========================================================
- */
 function validarLimiteValorSolicitadoPronampe(valorSolicitado, rendaMensal) {
-    const tipoOperacao = elementosComprometimento.tipoOperacao.value;
-
-    if (tipoOperacao !== "pronampe") {
+    if (elementosComprometimento.tipoOperacao.value !== "pronampe") {
         return {
+            aplicavel: false,
             valido: true,
-            rendaAnual: null,
-            limite: null
+            rendaAnual: 0,
+            limite: 0
         };
     }
 
     if (rendaMensal <= 0) {
         return {
+            aplicavel: true,
             valido: true,
             rendaAnual: 0,
             limite: 0
@@ -210,81 +180,65 @@ function validarLimiteValorSolicitadoPronampe(valorSolicitado, rendaMensal) {
     const limite = rendaAnual * 0.30;
 
     return {
+        aplicavel: true,
         valido: valorSolicitado <= limite,
-        rendaAnual: rendaAnual,
-        limite: limite
+        rendaAnual,
+        limite
     };
 }
 
 function atualizarStatusLimitePronampe(valorSolicitado, rendaMensal) {
     const elemento = elementosComprometimento.statusLimitePronampe;
-    if (!elemento) return;
+    if (!elemento) return true;
 
-    const tipoOperacao = elementosComprometimento.tipoOperacao.value;
+    const validacao = validarLimiteValorSolicitadoPronampe(valorSolicitado, rendaMensal);
 
-    elemento.classList.remove(
-        "status-baixo",
-        "status-atencao",
-        "status-alto"
-    );
+    elemento.classList.remove("status-baixo", "status-atencao", "status-alto");
 
-    if (tipoOperacao !== "pronampe") {
+    if (!validacao.aplicavel) {
         elemento.classList.add("status-baixo");
         elemento.innerHTML = `
             <strong>Operação FGI</strong>
-            <span>O limite de 30% da renda anual não se aplica a esta operação.</span>
+            <span>O limite de 30% da renda anual é uma validação exclusiva das operações PRONAMPE.</span>
         `;
-        return;
+        return true;
     }
 
     if (rendaMensal <= 0) {
         elemento.classList.add("status-atencao");
         elemento.innerHTML = `
             <strong>Limite PRONAMPE</strong>
-            <span>Informe uma renda mensal comprovada válida para calcular o limite máximo da operação.</span>
+            <span>Informe uma renda mensal comprovada maior que zero para calcular o limite máximo da operação.</span>
         `;
-        return;
+        return true;
     }
 
-    const rendaAnual = rendaMensal * 12;
-    const limite = rendaAnual * 0.30;
-
-    if (valorSolicitado > limite) {
+    if (!validacao.valido) {
         elemento.classList.add("status-alto");
         elemento.innerHTML = `
             <strong>Valor solicitado acima do limite permitido para PRONAMPE.</strong>
-            <span>
-                Renda mensal comprovada: ${formatarMoeda(rendaMensal)}.<br>
-                Renda anual considerada: ${formatarMoeda(rendaAnual)}.<br>
-                Limite máximo da operação: ${formatarMoeda(limite)}.<br>
-                Valor solicitado: ${formatarMoeda(valorSolicitado)}.
-            </span>
+            <span>Renda mensal: ${formatarMoeda(rendaMensal)} | Renda anual considerada: ${formatarMoeda(validacao.rendaAnual)} | Limite de 30%: ${formatarMoeda(validacao.limite)} | Valor solicitado: ${formatarMoeda(valorSolicitado)}.</span>
         `;
-        return;
+        return false;
     }
 
     elemento.classList.add("status-baixo");
     elemento.innerHTML = `
         <strong>Valor solicitado dentro do limite do PRONAMPE.</strong>
-        <span>
-            Renda mensal comprovada: ${formatarMoeda(rendaMensal)}.<br>
-            Renda anual considerada: ${formatarMoeda(rendaAnual)}.<br>
-            Limite máximo da operação: ${formatarMoeda(limite)}.<br>
-            Valor solicitado: ${formatarMoeda(valorSolicitado)}.
-        </span>
+        <span>Renda mensal: ${formatarMoeda(rendaMensal)} | Renda anual considerada: ${formatarMoeda(validacao.rendaAnual)} | Limite de 30%: ${formatarMoeda(validacao.limite)} | Valor solicitado: ${formatarMoeda(valorSolicitado)}.</span>
     `;
+
+    return true;
 }
 
 function atualizarStatus(percentual, renda) {
     const elemento = elementosComprometimento.statusComprometimento;
+    if (!elemento) return;
 
-    elemento.classList.remove(
-        "status-baixo",
-        "status-atencao",
-        "status-alto"
-    );
+    elemento.classList.remove("status-baixo", "status-atencao", "status-alto");
 
     if (renda <= 0) {
+        elemento.classList.add("status-atencao");
         elemento.innerHTML = `
             <strong>Informe uma renda comprovada válida.</strong>
             <span>O comprometimento somente pode ser calculado quando houver renda mensal comprovada maior que zero.</span>
@@ -317,32 +271,53 @@ function atualizarStatus(percentual, renda) {
     `;
 }
 
+function limparResultadosBloqueados(valorSolicitado, renda) {
+    elementosComprometimento.endividamentoMensalSfn.textContent = "R$ 0,00";
+    elementosComprometimento.resultadoComprometimentoGlobal.textContent = "0,00%";
+    elementosComprometimento.resultadoValorSolicitado.textContent = formatarMoeda(valorSolicitado);
+    elementosComprometimento.resultadoRendaComprovada.textContent = formatarMoeda(renda);
+    elementosComprometimento.resultadoParcelaOperacao.textContent = "R$ 0,00";
+    elementosComprometimento.resultadoEndividamentoSfn.textContent = "R$ 0,00";
+    elementosComprometimento.resultadoContratosSicoob.textContent = "R$ 0,00";
+    elementosComprometimento.resultadoPercentualSfn.textContent = "0,00%";
+    elementosComprometimento.resultadoPercentualOperacao.textContent = "0,00%";
+    elementosComprometimento.resultadoPerdaEsperada.textContent = formatarPercentual(
+        limitarPercentual(elementosComprometimento.perdaEsperada.value)
+    );
+    elementosComprometimento.resultadoRisco.textContent = elementosComprometimento.riscoCooperado.value;
+    elementosComprometimento.resultadoPrazo.textContent = `${limitarPrazo(elementosComprometimento.prazoOperacao.value)} meses`;
+    elementosComprometimento.tabelaValorSfn.textContent = "R$ 0,00";
+    elementosComprometimento.tabelaPercentualSfn.textContent = "0,00%";
+    elementosComprometimento.tabelaValorOperacao.textContent = "R$ 0,00";
+    elementosComprometimento.tabelaPercentualOperacao.textContent = "0,00%";
+    elementosComprometimento.tabelaValorSicoob.textContent = "R$ 0,00";
+    elementosComprometimento.tabelaPercentualSicoob.textContent = "0,00%";
+    elementosComprometimento.tabelaValorTotal.textContent = "R$ 0,00";
+    elementosComprometimento.tabelaPercentualTotal.textContent = "0,00%";
+
+    if (elementosComprometimento.statusComprometimento) {
+        elementosComprometimento.statusComprometimento.classList.remove(
+            "status-baixo",
+            "status-atencao",
+            "status-alto"
+        );
+
+        elementosComprometimento.statusComprometimento.classList.add("status-atencao");
+        elementosComprometimento.statusComprometimento.innerHTML = `
+            <strong>Simulação bloqueada pelo limite do PRONAMPE.</strong>
+            <span>Ajuste o valor solicitado para continuar o cálculo do comprometimento de renda.</span>
+        `;
+    }
+}
+
 function calcularComprometimento() {
     const valorSolicitado = moedaParaNumero(elementosComprometimento.valorSolicitado.value);
     const renda = moedaParaNumero(elementosComprometimento.rendaComprovada.value);
 
-    /*
-     * O status localizado no card "Dados da Operação"
-     * é atualizado independentemente do resultado geral.
-     */
-    atualizarStatusLimitePronampe(valorSolicitado, renda);
+    const limitePronampeValido = atualizarStatusLimitePronampe(valorSolicitado, renda);
 
-    /*
-     * Validação exclusiva do PRONAMPE.
-     *
-     * Somente esta validação utiliza:
-     * renda mensal x 12 x 30%.
-     *
-     * Os demais cálculos continuam usando a renda mensal.
-     */
-    const validacaoPronampe = validarLimiteValorSolicitadoPronampe(
-        valorSolicitado,
-        renda
-    );
-
-    if (!validacaoPronampe.valido) {
-        elementosComprometimento.resultadoValorSolicitado.textContent = formatarMoeda(valorSolicitado);
-        elementosComprometimento.resultadoRendaComprovada.textContent = formatarMoeda(renda);
+    if (!limitePronampeValido) {
+        limparResultadosBloqueados(valorSolicitado, renda);
         return;
     }
 
@@ -354,106 +329,42 @@ function calcularComprometimento() {
     elementosComprometimento.prazoOperacao.value = prazo;
     elementosComprometimento.perdaEsperada.value = perdaEsperada;
 
-    const parcelaOperacao = calcularParcelaPrice(
-        valorSolicitado,
-        taxaMensal,
-        prazo
-    );
-
+    const parcelaOperacao = calcularParcelaPrice(valorSolicitado, taxaMensal, prazo);
     const endividamentoSfn = calcularEndividamentoMensalSfn();
+    const percentualSfn = calcularPercentualComprometimento(endividamentoSfn, renda);
+    const percentualOperacao = calcularPercentualComprometimento(parcelaOperacao, renda);
+    const percentualSicoob = calcularPercentualComprometimento(contratosSicoob, renda);
+    const endividamentoGlobal = endividamentoSfn + parcelaOperacao + contratosSicoob;
+    const percentualGlobal = calcularPercentualComprometimento(endividamentoGlobal, renda);
 
-    const percentualSfn = calcularPercentualComprometimento(
-        endividamentoSfn,
-        renda
-    );
+    elementosComprometimento.endividamentoMensalSfn.textContent = formatarMoeda(endividamentoSfn);
+    elementosComprometimento.resultadoComprometimentoGlobal.textContent = formatarPercentual(percentualGlobal);
+    elementosComprometimento.resultadoValorSolicitado.textContent = formatarMoeda(valorSolicitado);
+    elementosComprometimento.resultadoRendaComprovada.textContent = formatarMoeda(renda);
+    elementosComprometimento.resultadoParcelaOperacao.textContent = formatarMoeda(parcelaOperacao);
+    elementosComprometimento.resultadoEndividamentoSfn.textContent = formatarMoeda(endividamentoSfn);
+    elementosComprometimento.resultadoContratosSicoob.textContent = formatarMoeda(contratosSicoob);
+    elementosComprometimento.resultadoPercentualSfn.textContent = formatarPercentual(percentualSfn);
+    elementosComprometimento.resultadoPercentualOperacao.textContent = formatarPercentual(percentualOperacao);
+    elementosComprometimento.resultadoPerdaEsperada.textContent = formatarPercentual(perdaEsperada);
+    elementosComprometimento.resultadoRisco.textContent = elementosComprometimento.riscoCooperado.value;
+    elementosComprometimento.resultadoPrazo.textContent = `${prazo} meses`;
 
-    const percentualOperacao = calcularPercentualComprometimento(
-        parcelaOperacao,
-        renda
-    );
+    elementosComprometimento.tabelaValorSfn.textContent = formatarMoeda(endividamentoSfn);
+    elementosComprometimento.tabelaPercentualSfn.textContent = formatarPercentual(percentualSfn);
+    elementosComprometimento.tabelaValorOperacao.textContent = formatarMoeda(parcelaOperacao);
+    elementosComprometimento.tabelaPercentualOperacao.textContent = formatarPercentual(percentualOperacao);
+    elementosComprometimento.tabelaValorSicoob.textContent = formatarMoeda(contratosSicoob);
+    elementosComprometimento.tabelaPercentualSicoob.textContent = formatarPercentual(percentualSicoob);
+    elementosComprometimento.tabelaValorTotal.textContent = formatarMoeda(endividamentoGlobal);
+    elementosComprometimento.tabelaPercentualTotal.textContent = formatarPercentual(percentualGlobal);
 
-    const percentualSicoob = calcularPercentualComprometimento(
-        contratosSicoob,
-        renda
-    );
-
-    const endividamentoGlobal =
-        endividamentoSfn +
-        parcelaOperacao +
-        contratosSicoob;
-
-    const percentualGlobal = calcularPercentualComprometimento(
-        endividamentoGlobal,
-        renda
-    );
-
-    elementosComprometimento.endividamentoMensalSfn.textContent =
-        formatarMoeda(endividamentoSfn);
-
-    elementosComprometimento.resultadoComprometimentoGlobal.textContent =
-        formatarPercentual(percentualGlobal);
-
-    elementosComprometimento.resultadoValorSolicitado.textContent =
-        formatarMoeda(valorSolicitado);
-
-    elementosComprometimento.resultadoRendaComprovada.textContent =
-        formatarMoeda(renda);
-
-    elementosComprometimento.resultadoParcelaOperacao.textContent =
-        formatarMoeda(parcelaOperacao);
-
-    elementosComprometimento.resultadoEndividamentoSfn.textContent =
-        formatarMoeda(endividamentoSfn);
-
-    elementosComprometimento.resultadoContratosSicoob.textContent =
-        formatarMoeda(contratosSicoob);
-
-    elementosComprometimento.resultadoPercentualSfn.textContent =
-        formatarPercentual(percentualSfn);
-
-    elementosComprometimento.resultadoPercentualOperacao.textContent =
-        formatarPercentual(percentualOperacao);
-
-    elementosComprometimento.resultadoPerdaEsperada.textContent =
-        formatarPercentual(perdaEsperada);
-
-    elementosComprometimento.resultadoRisco.textContent =
-        elementosComprometimento.riscoCooperado.value;
-
-    elementosComprometimento.resultadoPrazo.textContent =
-        `${prazo} meses`;
-
-    elementosComprometimento.tabelaValorSfn.textContent =
-        formatarMoeda(endividamentoSfn);
-
-    elementosComprometimento.tabelaPercentualSfn.textContent =
-        formatarPercentual(percentualSfn);
-
-    elementosComprometimento.tabelaValorOperacao.textContent =
-        formatarMoeda(parcelaOperacao);
-
-    elementosComprometimento.tabelaPercentualOperacao.textContent =
-        formatarPercentual(percentualOperacao);
-
-    elementosComprometimento.tabelaValorSicoob.textContent =
-        formatarMoeda(contratosSicoob);
-
-    elementosComprometimento.tabelaPercentualSicoob.textContent =
-        formatarPercentual(percentualSicoob);
-
-    elementosComprometimento.tabelaValorTotal.textContent =
-        formatarMoeda(endividamentoGlobal);
-
-    elementosComprometimento.tabelaPercentualTotal.textContent =
-        formatarPercentual(percentualGlobal);
-
-    atualizarStatus(
-        percentualGlobal,
-        renda
-    );
+    atualizarStatus(percentualGlobal, renda);
 }
 
 function registrarCampoMoeda(input) {
+    if (!input) return;
+
     input.setAttribute("inputmode", "numeric");
     input.setAttribute("autocomplete", "off");
 
@@ -463,10 +374,7 @@ function registrarCampoMoeda(input) {
     });
 
     input.addEventListener("blur", () => {
-        input.value = formatarNumeroMoeda(
-            moedaParaNumero(input.value)
-        );
-
+        input.value = formatarNumeroMoeda(moedaParaNumero(input.value));
         calcularComprometimento();
     });
 }
@@ -485,34 +393,24 @@ function registrarEventosComprometimento() {
         elementosComprometimento.outrosValoresExcluir3
     ];
 
-    camposMoeda.forEach(campo => {
-        registrarCampoMoeda(campo);
-    });
+    camposMoeda.forEach(registrarCampoMoeda);
 
-    [
-        elementosComprometimento.tipoOperacao,
-        elementosComprometimento.riscoCooperado
-    ].forEach(campo => {
-        campo.addEventListener(
-            "change",
-            calcularComprometimento
-        );
-    });
+    if (elementosComprometimento.tipoOperacao) {
+        elementosComprometimento.tipoOperacao.addEventListener("change", calcularComprometimento);
+    }
+
+    if (elementosComprometimento.riscoCooperado) {
+        elementosComprometimento.riscoCooperado.addEventListener("change", calcularComprometimento);
+    }
 
     [
         elementosComprometimento.prazoOperacao,
         elementosComprometimento.taxaMensal,
         elementosComprometimento.perdaEsperada
     ].forEach(campo => {
-        campo.addEventListener(
-            "input",
-            calcularComprometimento
-        );
-
-        campo.addEventListener(
-            "change",
-            calcularComprometimento
-        );
+        if (!campo) return;
+        campo.addEventListener("input", calcularComprometimento);
+        campo.addEventListener("change", calcularComprometimento);
     });
 
     if (elementosComprometimento.btnCalcularComprometimento) {
@@ -551,6 +449,19 @@ function limparComprometimento() {
 }
 
 function iniciarComprometimentoRenda() {
+    const camposObrigatorios = [
+        elementosComprometimento.tipoOperacao,
+        elementosComprometimento.valorSolicitado,
+        elementosComprometimento.rendaComprovada,
+        elementosComprometimento.statusLimitePronampe,
+        elementosComprometimento.statusComprometimento
+    ];
+
+    if (camposObrigatorios.some(campo => !campo)) {
+        console.error("Comprometimento de Renda: existem elementos obrigatórios ausentes no HTML.");
+        return;
+    }
+
     registrarEventosComprometimento();
 
     [
@@ -565,12 +476,10 @@ function iniciarComprometimentoRenda() {
         elementosComprometimento.outrosValoresExcluir2,
         elementosComprometimento.outrosValoresExcluir3
     ].forEach(campo => {
-        campo.value = formatarNumeroMoeda(
-            moedaParaNumero(campo.value)
-        );
+        campo.value = formatarNumeroMoeda(moedaParaNumero(campo.value));
     });
 
     calcularComprometimento();
 }
 
-iniciarComprometimentoRenda();
+document.addEventListener("DOMContentLoaded", iniciarComprometimentoRenda);
