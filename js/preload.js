@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ÍCONES DA PÁGINA INICIAL
         "img/simuladorCredito.png",
-        "img/antecipacaoSipag(1).png",
-        "img/precificacaoSipag(1).png",
+        "img/antecipacaoSipag.png",
+        "img/precificacaoSipag.png",
         "img/cobranca.png",
         "img/previdencia.png",
 
