@@ -1,101 +1,23 @@
 const LIMITE_VALOR_MONETARIO_CENTAVOS = 999999999999n;
 
-const PARAMETROS_COBRANCA = Object.freeze({
-    distribuicaoPadrao: Object.freeze({
-        redeBancaria: 46.08,
-        redeSicoob: 5.18,
-        liqPropria: 2.70,
-        correspondente: 46.06
-    }),
-    custosPadrao: Object.freeze({
-        redeBancaria: 0.31,
-        redeSicoob: 0.20,
-        liqPropria: 0.09,
-        correspondente: 1.83,
-        processamento: 0.05,
-        tarifaNova: 0.10
-    }),
-    diasUteisMes: 21,
-    diasUteisAno: 252
-});
+const taxaAntecipacao = document.getElementById("taxaAntecipacao");
+const taxaMdr = document.getElementById("taxaMdr");
+const dataVenda = document.getElementById("dataVenda");
+const parcelasAntecipacao = document.getElementById("parcelasAntecipacao");
+const valorVenda = document.getElementById("valorVenda");
+const btnCalcularAntecipacao = document.getElementById("btnCalcularAntecipacao");
+const btnLimparAntecipacao = document.getElementById("btnLimparAntecipacao");
 
-const elementos = {
-    quantidadeBoletos: document.getElementById("quantidadeBoletos"),
-    percentualLiquidados: document.getElementById("percentualLiquidados"),
-    ticketMedio: document.getElementById("ticketMedio"),
-    percentRedeBancaria: document.getElementById("percentRedeBancaria"),
-    percentRedeSicoob: document.getElementById("percentRedeSicoob"),
-    percentLiqPropria: document.getElementById("percentLiqPropria"),
-    percentCorrespondente: document.getElementById("percentCorrespondente"),
-    percentBaixaCedente: document.getElementById("percentBaixaCedente"),
-    percentBaixaDecurso: document.getElementById("percentBaixaDecurso"),
-    centralizacaoFinanceira: document.getElementById("centralizacaoFinanceira"),
-    percentualSaldoMedio: document.getElementById("percentualSaldoMedio"),
-    taxaCdiAno: document.getElementById("taxaCdiAno"),
-    diasFloat: document.getElementById("diasFloat"),
-    custoRedeBancaria: document.getElementById("custoRedeBancaria"),
-    custoRedeSicoob: document.getElementById("custoRedeSicoob"),
-    custoLiqPropria: document.getElementById("custoLiqPropria"),
-    custoCorrespondente: document.getElementById("custoCorrespondente"),
-    custoProcessamento: document.getElementById("custoProcessamento"),
-    custoTarifaNova: document.getElementById("custoTarifaNova"),
-    tarifaDecurso: document.getElementById("tarifaDecurso"),
-    tarifaBaixaCedente: document.getElementById("tarifaBaixaCedente"),
-    tarifaLiquidacao: document.getElementById("tarifaLiquidacao"),
-    tarifaEntrada: document.getElementById("tarifaEntrada"),
-    totalDistribuicao: document.getElementById("totalDistribuicao"),
-    resultadoMensal: document.getElementById("resultadoMensal"),
-    receitaFinanceira: document.getElementById("receitaFinanceira"),
-    receitaTarifas: document.getElementById("receitaTarifas"),
-    custosOperacionais: document.getElementById("custosOperacionais"),
-    resultadoAnual: document.getElementById("resultadoAnual"),
-    qtdLiquidados: document.getElementById("qtdLiquidados"),
-    saldoMedio: document.getElementById("saldoMedio"),
-    taxaCdiMensal: document.getElementById("taxaCdiMensal"),
-    receitaSaldoMedio: document.getElementById("receitaSaldoMedio"),
-    taxaFloat: document.getElementById("taxaFloat"),
-    receitaFloat: document.getElementById("receitaFloat"),
-    receitaPorBoleto: document.getElementById("receitaPorBoleto"),
-    custoMedioBoleto: document.getElementById("custoMedioBoleto"),
-    qtdRedeBancaria: document.getElementById("qtdRedeBancaria"),
-    qtdRedeSicoob: document.getElementById("qtdRedeSicoob"),
-    qtdLiqPropria: document.getElementById("qtdLiqPropria"),
-    qtdCorrespondente: document.getElementById("qtdCorrespondente"),
-    qtdProcessamento: document.getElementById("qtdProcessamento"),
-    qtdTarifaNova: document.getElementById("qtdTarifaNova"),
-    unitRedeBancaria: document.getElementById("unitRedeBancaria"),
-    unitRedeSicoob: document.getElementById("unitRedeSicoob"),
-    unitLiqPropria: document.getElementById("unitLiqPropria"),
-    unitCorrespondente: document.getElementById("unitCorrespondente"),
-    unitProcessamento: document.getElementById("unitProcessamento"),
-    unitTarifaNova: document.getElementById("unitTarifaNova"),
-    totalRedeBancaria: document.getElementById("totalRedeBancaria"),
-    totalRedeSicoob: document.getElementById("totalRedeSicoob"),
-    totalLiqPropria: document.getElementById("totalLiqPropria"),
-    totalCorrespondente: document.getElementById("totalCorrespondente"),
-    totalProcessamento: document.getElementById("totalProcessamento"),
-    totalTarifaNova: document.getElementById("totalTarifaNova"),
-    totalCustosTabela: document.getElementById("totalCustosTabela"),
-    baseTarifaDecurso: document.getElementById("baseTarifaDecurso"),
-    baseTarifaCedente: document.getElementById("baseTarifaCedente"),
-    baseTarifaLiquidacao: document.getElementById("baseTarifaLiquidacao"),
-    baseTarifaEntrada: document.getElementById("baseTarifaEntrada"),
-    unitTarifaDecurso: document.getElementById("unitTarifaDecurso"),
-    unitTarifaCedente: document.getElementById("unitTarifaCedente"),
-    unitTarifaLiquidacao: document.getElementById("unitTarifaLiquidacao"),
-    unitTarifaEntrada: document.getElementById("unitTarifaEntrada"),
-    totalTarifaDecurso: document.getElementById("totalTarifaDecurso"),
-    totalTarifaCedente: document.getElementById("totalTarifaCedente"),
-    totalTarifaLiquidacao: document.getElementById("totalTarifaLiquidacao"),
-    totalTarifaEntrada: document.getElementById("totalTarifaEntrada"),
-    totalReceitaTarifasTabela: document.getElementById("totalReceitaTarifasTabela"),
-    btnLimpar: document.getElementById("btnLimpar")
-};
-
-function numero(valor) {
-    const convertido = Number(valor);
-    return Number.isFinite(convertido) ? convertido : 0;
-}
+const resultadoLiquidoAntecipado = document.getElementById("resultadoLiquidoAntecipado");
+const resultadoValorVenda = document.getElementById("resultadoValorVenda");
+const resultadoQtdParcelas = document.getElementById("resultadoQtdParcelas");
+const resultadoLiquidoMdr = document.getElementById("resultadoLiquidoMdr");
+const resultadoDescontoAntecipacao = document.getElementById("resultadoDescontoAntecipacao");
+const resultadoMdr = document.getElementById("resultadoMdr");
+const resultadoTaxaAntecipacao = document.getElementById("resultadoTaxaAntecipacao");
+const resultadoTaxaFinal = document.getElementById("resultadoTaxaFinal");
+const tabelaAntecipacao = document.getElementById("tabelaAntecipacao");
+const tabelaTaxaFlex = document.getElementById("tabelaTaxaFlex");
 
 function limitarCentavos(valor) {
     let centavos;
@@ -200,15 +122,10 @@ function formatarCentavos(
     centavos,
     incluirSimbolo = false
 ) {
-    const valor = limitarCentavos(
-        centavos
-    );
+    const valor = limitarCentavos(centavos);
 
-    const inteiro =
-        valor / 100n;
-
-    const decimal =
-        valor % 100n;
+    const inteiro = valor / 100n;
+    const decimal = valor % 100n;
 
     const inteiroFormatado = inteiro
         .toString()
@@ -230,14 +147,13 @@ function formatarCentavos(
 }
 
 function formatarMoeda(valor) {
-    const convertido =
-        Number(valor);
+    const numero = Number(valor);
 
-    return (
-        Number.isFinite(convertido)
-            ? convertido
-            : 0
-    ).toLocaleString("pt-BR", {
+    if (!Number.isFinite(numero)) {
+        return "R$ 0,00";
+    }
+
+    return numero.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
         minimumFractionDigits: 2,
@@ -245,1084 +161,506 @@ function formatarMoeda(valor) {
     });
 }
 
-function formatarNumeroMoeda(valor) {
-    if (typeof valor === "bigint") {
-        return formatarCentavos(
-            limitarCentavos(valor),
-            false
-        );
-    }
+function formatarPercentual(
+    valorDecimal,
+    casas = 4
+) {
+    const numero = Number(valorDecimal);
 
-    const convertido =
-        Number(valor);
+    return (
+        Number.isFinite(numero)
+            ? numero * 100
+            : 0
+    ).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: casas
+    }) + "%";
+}
 
-    if (!Number.isFinite(convertido) || convertido <= 0) {
-        return "0,00";
-    }
+function aplicarMascaraMoeda(input) {
+    const centavos = digitosParaCentavos(
+        input.value
+    );
 
-    const centavos =
-        BigInt(
-            Math.round(
-                convertido * 100
-            )
-        );
-
-    return formatarCentavos(
+    input.value = formatarCentavos(
         centavos,
         false
     );
 }
 
-function formatarPercentual(valor, casas = 2) {
-    return numero(valor).toLocaleString("pt-BR", {
-        minimumFractionDigits: casas,
-        maximumFractionDigits: casas
-    }) + "%";
-}
+function validarValorVenda() {
+    const centavos = moedaParaCentavos(
+        valorVenda.value
+    );
 
-function formatarQuantidade(valor) {
-    return numero(valor).toLocaleString("pt-BR", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-    });
-}
+    valorVenda.value = formatarCentavos(
+        centavos,
+        false
+    );
 
-function aplicarMascaraMoeda(input) {
-    const centavos =
-        digitosParaCentavos(
-            input.value
-        );
-
-    input.value =
-        formatarCentavos(
-            centavos,
-            false
-        );
-}
-
-function normalizarCampoMoeda(input) {
-    const centavos =
-        moedaParaCentavos(
-            input.value
-        );
-
-    input.value =
-        formatarCentavos(
-            centavos,
-            false
-        );
-}
-
-function limitarPercentual(valor) {
-    return Math.max(
-        0,
-        Math.min(
-            100,
-            numero(valor)
-        )
+    return centavosParaNumero(
+        centavos
     );
 }
 
-function calcularTaxaCdiMensal(taxaAnualPercentual) {
-    const taxaAno =
-        numero(taxaAnualPercentual) /
-        100;
+function dataHojeInput() {
+    const hoje = new Date();
 
-    if (taxaAno <= -1) {
-        return 0;
-    }
+    const ano = hoje.getFullYear();
 
-    return (
-        Math.pow(
-            1 + taxaAno,
-            PARAMETROS_COBRANCA.diasUteisMes /
-            PARAMETROS_COBRANCA.diasUteisAno
-        ) - 1
-    ) * 100;
+    const mes = String(
+        hoje.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dia = String(
+        hoje.getDate()
+    ).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
 }
 
-function calcularTaxaFloat(
-    taxaCdiAnualPercentual,
-    centralizacaoPercentual,
-    diasFloat
+function adicionarDias(
+    data,
+    dias
 ) {
-    const taxaAno =
-        numero(
-            taxaCdiAnualPercentual
-        ) / 100;
+    const novaData =
+        new Date(data);
 
-    const centralizacao =
-        limitarPercentual(
-            centralizacaoPercentual
-        ) / 100;
+    novaData.setDate(
+        novaData.getDate() +
+        dias
+    );
 
-    const dias =
-        Math.max(
-            0,
-            numero(diasFloat)
-        );
-
-    if (
-        taxaAno <= -1 ||
-        dias <= 0
-    ) {
-        return 0;
-    }
-
-    const taxaDia =
-        Math.pow(
-            1 + taxaAno,
-            1 /
-            PARAMETROS_COBRANCA.diasUteisAno
-        ) - 1;
-
-    return (
-        Math.pow(
-            1 +
-            taxaDia *
-            centralizacao,
-            dias
-        ) - 1
-    ) * 100;
+    return novaData;
 }
 
-function calcularSimulacao() {
-    const qtdBoletos =
-        Math.max(
-            0,
-            numero(
-                elementos
-                    .quantidadeBoletos
-                    .value
-            )
+function formatarData(data) {
+    return data.toLocaleDateString(
+        "pt-BR"
+    );
+}
+
+function carregarParcelas() {
+    parcelasAntecipacao.innerHTML = "";
+
+    for (
+        let i = 1;
+        i <= 21;
+        i++
+    ) {
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value = i;
+        option.textContent = `${i}x`;
+
+        parcelasAntecipacao.appendChild(
+            option
         );
+    }
 
-    const percentualLiquidados =
-        limitarPercentual(
-            elementos
-                .percentualLiquidados
-                .value
-        );
+    parcelasAntecipacao.value =
+        "12";
+}
 
-    const ticketMedio =
-        moedaParaNumero(
-            elementos
-                .ticketMedio
-                .value
-        );
-
-    const percentRedeBancaria =
-        limitarPercentual(
-            elementos
-                .percentRedeBancaria
-                .value
-        );
-
-    const percentRedeSicoob =
-        limitarPercentual(
-            elementos
-                .percentRedeSicoob
-                .value
-        );
-
-    const percentLiqPropria =
-        limitarPercentual(
-            elementos
-                .percentLiqPropria
-                .value
-        );
-
-    const percentCorrespondente =
-        limitarPercentual(
-            elementos
-                .percentCorrespondente
-                .value
-        );
-
-    const percentualBaixaCedente =
-        limitarPercentual(
-            elementos
-                .percentBaixaCedente
-                .value
-        );
-
-    const percentualBaixaDecurso =
-        limitarPercentual(
-            elementos
-                .percentBaixaDecurso
-                .value
-        );
-
-    const centralizacao =
-        limitarPercentual(
-            elementos
-                .centralizacaoFinanceira
-                .value
-        );
-
-    const percentualSaldoMedio =
-        limitarPercentual(
-            elementos
-                .percentualSaldoMedio
-                .value
-        );
-
-    const taxaCdiAno =
-        Math.max(
-            0,
-            numero(
-                elementos
-                    .taxaCdiAno
-                    .value
-            )
-        );
-
-    const diasFloat =
-        Math.max(
-            0,
-            numero(
-                elementos
-                    .diasFloat
-                    .value
-            )
-        );
-
-    const custoRedeBancaria =
-        moedaParaNumero(
-            elementos
-                .custoRedeBancaria
-                .value
-        );
-
-    const custoRedeSicoob =
-        moedaParaNumero(
-            elementos
-                .custoRedeSicoob
-                .value
-        );
-
-    const custoLiqPropria =
-        moedaParaNumero(
-            elementos
-                .custoLiqPropria
-                .value
-        );
-
-    const custoCorrespondente =
-        moedaParaNumero(
-            elementos
-                .custoCorrespondente
-                .value
-        );
-
-    const custoProcessamento =
-        moedaParaNumero(
-            elementos
-                .custoProcessamento
-                .value
-        );
-
-    const custoTarifaNova =
-        moedaParaNumero(
-            elementos
-                .custoTarifaNova
-                .value
-        );
-
-    const tarifaDecurso =
-        moedaParaNumero(
-            elementos
-                .tarifaDecurso
-                .value
-        );
-
-    const tarifaBaixaCedente =
-        moedaParaNumero(
-            elementos
-                .tarifaBaixaCedente
-                .value
-        );
-
-    const tarifaLiquidacao =
-        moedaParaNumero(
-            elementos
-                .tarifaLiquidacao
-                .value
-        );
-
-    const tarifaEntrada =
-        moedaParaNumero(
-            elementos
-                .tarifaEntrada
-                .value
-        );
-
-    const totalDistribuicao =
-        percentRedeBancaria +
-        percentRedeSicoob +
-        percentLiqPropria +
-        percentCorrespondente;
-
-    const qtdBoletosLiquidados =
-        qtdBoletos *
-        percentualLiquidados /
-        100;
-
-    const saldoMedio =
-        ticketMedio *
-        qtdBoletosLiquidados;
-
-    const taxaCdiMensal =
-        calcularTaxaCdiMensal(
-            taxaCdiAno
-        );
-
-    const receitaSaldoMedio =
-        saldoMedio *
+function calcularOperacao(qtdParcelas) {
+    const taxaAnt =
         (
-            percentualSaldoMedio /
-            100
-        ) *
+            Number(
+                taxaAntecipacao.value
+            ) || 0
+        ) / 100;
+
+    const mdr =
         (
-            taxaCdiMensal /
-            100
-        ) *
-        (
-            centralizacao /
-            100
+            Number(
+                taxaMdr.value
+            ) || 0
+        ) / 100;
+
+    const valorTotal =
+        moedaParaNumero(
+            valorVenda.value
         );
 
-    const taxaFloat =
-        calcularTaxaFloat(
-            taxaCdiAno,
-            centralizacao,
-            diasFloat
-        );
+    const dataBase =
+        dataVenda.value
+            ? new Date(
+                `${dataVenda.value}T12:00:00`
+            )
+            : new Date();
 
-    const receitaFloat =
-        saldoMedio *
-        taxaFloat /
-        100;
-
-    const receitaFinanceira =
-        receitaSaldoMedio +
-        receitaFloat;
-
-    const receitaPorBoleto =
-        qtdBoletosLiquidados > 0
-            ? receitaFinanceira /
-            qtdBoletosLiquidados
+    const parcelaBruta =
+        qtdParcelas > 0
+            ? valorTotal /
+            qtdParcelas
             : 0;
 
-    const qtdRedeBancaria =
-        Math.ceil(
-            qtdBoletos *
-            percentRedeBancaria /
-            100
-        );
+    const linhas = [];
 
-    const qtdRedeSicoob =
-        Math.ceil(
-            qtdBoletos *
-            percentRedeSicoob /
-            100
-        );
+    let totalLiquidoMdr = 0;
+    let totalDesconto = 0;
+    let totalLiquidoAntecipado = 0;
 
-    const qtdLiqPropria =
-        Math.ceil(
-            qtdBoletos *
-            percentLiqPropria /
-            100
-        );
+    for (
+        let i = 1;
+        i <= qtdParcelas;
+        i++
+    ) {
+        const prazo =
+            i * 30;
 
-    const qtdCorrespondente =
-        Math.ceil(
-            qtdBoletos *
-            percentCorrespondente /
-            100
-        );
+        const vencimento =
+            adicionarDias(
+                dataBase,
+                prazo
+            );
 
-    const percentualLiquidadosDecimal =
-        percentualLiquidados /
-        100;
+        const valorMdr =
+            parcelaBruta *
+            mdr;
 
-    const qtdProcessamentoBruta =
-        (
-            qtdBoletos *
-            (
-                percentRedeBancaria /
-                100
-            ) *
-            percentualLiquidadosDecimal
-        ) +
-        (
-            qtdBoletos *
-            (
-                percentRedeSicoob /
-                100
-            ) *
-            percentualLiquidadosDecimal
-        ) +
-        (
-            qtdBoletos *
-            (
-                percentCorrespondente /
-                100
-            ) *
-            percentualLiquidadosDecimal
-        );
+        const liquidoMdr =
+            parcelaBruta -
+            valorMdr;
 
-    const qtdProcessamento =
-        Math.ceil(
-            qtdProcessamentoBruta
-        );
+        const desagio =
+            Math.pow(
+                Math.pow(
+                    1 + taxaAnt,
+                    1 / 30
+                ),
+                prazo
+            ) - 1;
 
-    const qtdTarifaNova =
-        Math.ceil(
-            qtdBoletos *
-            (
-                percentualBaixaCedente +
-                percentualBaixaDecurso
+        const desconto =
+            liquidoMdr *
+            desagio;
+
+        const liquidoAntecipado =
+            liquidoMdr -
+            desconto;
+
+        const taxaFinal =
+            parcelaBruta > 0
+                ? (
+                    parcelaBruta -
+                    liquidoAntecipado
+                ) /
+                parcelaBruta
+                : 0;
+
+        totalLiquidoMdr +=
+            liquidoMdr;
+
+        totalDesconto +=
+            desconto;
+
+        totalLiquidoAntecipado +=
+            liquidoAntecipado;
+
+        linhas.push({
+            parcela: i,
+            vencimento,
+            prazo,
+            parcelaBruta,
+            mdr,
+            liquidoMdr,
+            desagio,
+            taxaFinal,
+            desconto,
+            liquidoAntecipado
+        });
+    }
+
+    const taxaFinalTotal =
+        valorTotal > 0
+            ? (
+                valorTotal -
+                totalLiquidoAntecipado
             ) /
-            100
-        );
-
-    const totalRedeBancaria =
-        qtdRedeBancaria *
-        custoRedeBancaria;
-
-    const totalRedeSicoob =
-        qtdRedeSicoob *
-        custoRedeSicoob;
-
-    const totalLiqPropria =
-        qtdLiqPropria *
-        custoLiqPropria;
-
-    const totalCorrespondente =
-        qtdCorrespondente *
-        custoCorrespondente;
-
-    const totalProcessamento =
-        qtdProcessamento *
-        custoProcessamento;
-
-    const totalTarifaNova =
-        qtdTarifaNova *
-        custoTarifaNova;
-
-    const custosOperacionais =
-        totalRedeBancaria +
-        totalRedeSicoob +
-        totalLiqPropria +
-        totalCorrespondente +
-        totalProcessamento +
-        totalTarifaNova;
-
-    const custoMedioBoleto =
-        qtdBoletos > 0
-            ? custosOperacionais /
-            qtdBoletos
+            valorTotal
             : 0;
 
-    const baseTarifaDecurso =
-        percentualBaixaDecurso /
-        100 *
-        qtdBoletos;
+    return {
+        valorTotal,
+        qtdParcelas,
+        mdr,
+        taxaAnt,
+        totalLiquidoMdr,
+        totalDesconto,
+        totalLiquidoAntecipado,
+        taxaFinalTotal,
+        linhas
+    };
+}
 
-    const baseTarifaCedente =
-        percentualBaixaCedente /
-        100 *
-        qtdBoletos;
+function preencherDetalhamento(
+    resultado
+) {
+    tabelaAntecipacao.innerHTML = "";
 
-    const baseTarifaLiquidacao =
-        percentualLiquidados /
-        100 *
-        qtdBoletos;
+    resultado.linhas.forEach(item => {
+        const tr =
+            document.createElement(
+                "tr"
+            );
 
-    const baseTarifaEntrada =
-        qtdBoletos;
+        tr.innerHTML = `
+            <td>${item.parcela}</td>
+            <td>${formatarData(item.vencimento)}</td>
+            <td>${item.prazo} dias</td>
+            <td>${formatarMoeda(item.parcelaBruta)}</td>
+            <td>${formatarPercentual(item.mdr, 2)}</td>
+            <td>${formatarMoeda(item.liquidoMdr)}</td>
+            <td>${formatarPercentual(item.desagio, 4)}</td>
+            <td>${formatarPercentual(item.taxaFinal, 4)}</td>
+            <td>${formatarMoeda(item.desconto)}</td>
+            <td>${formatarMoeda(item.liquidoAntecipado)}</td>
+        `;
 
-    const totalTarifaDecurso =
-        baseTarifaDecurso *
-        tarifaDecurso;
-
-    const totalTarifaCedente =
-        baseTarifaCedente *
-        tarifaBaixaCedente;
-
-    const totalTarifaLiquidacao =
-        baseTarifaLiquidacao *
-        tarifaLiquidacao;
-
-    const totalTarifaEntrada =
-        baseTarifaEntrada *
-        tarifaEntrada;
-
-    const receitaTarifas =
-        totalTarifaDecurso +
-        totalTarifaCedente +
-        totalTarifaLiquidacao +
-        totalTarifaEntrada;
-
-    const resultadoMensal =
-        receitaFinanceira +
-        receitaTarifas -
-        custosOperacionais;
-
-    const resultadoAnual =
-        resultadoMensal *
-        12;
-
-    atualizarTela({
-        totalDistribuicao,
-        qtdBoletosLiquidados,
-        saldoMedio,
-        taxaCdiMensal,
-        receitaSaldoMedio,
-        taxaFloat,
-        receitaFloat,
-        receitaFinanceira,
-        receitaPorBoleto,
-        qtdRedeBancaria,
-        qtdRedeSicoob,
-        qtdLiqPropria,
-        qtdCorrespondente,
-        qtdProcessamento,
-        qtdTarifaNova,
-        custoRedeBancaria,
-        custoRedeSicoob,
-        custoLiqPropria,
-        custoCorrespondente,
-        custoProcessamento,
-        custoTarifaNova,
-        totalRedeBancaria,
-        totalRedeSicoob,
-        totalLiqPropria,
-        totalCorrespondente,
-        totalProcessamento,
-        totalTarifaNova,
-        custosOperacionais,
-        custoMedioBoleto,
-        baseTarifaDecurso,
-        baseTarifaCedente,
-        baseTarifaLiquidacao,
-        baseTarifaEntrada,
-        tarifaDecurso,
-        tarifaBaixaCedente,
-        tarifaLiquidacao,
-        tarifaEntrada,
-        totalTarifaDecurso,
-        totalTarifaCedente,
-        totalTarifaLiquidacao,
-        totalTarifaEntrada,
-        receitaTarifas,
-        resultadoMensal,
-        resultadoAnual
+        tabelaAntecipacao.appendChild(
+            tr
+        );
     });
 }
 
-function atualizarTela(r) {
-    elementos.totalDistribuicao.textContent =
-        formatarPercentual(
-            r.totalDistribuicao
-        );
+function preencherTaxaFlex() {
+    tabelaTaxaFlex.innerHTML = "";
 
-    elementos.totalDistribuicao.classList.toggle(
-        "indicador-ok",
-        Math.abs(
-            r.totalDistribuicao -
-            100
-        ) <= 0.05
-    );
-
-    elementos.totalDistribuicao.classList.toggle(
-        "indicador-erro",
-        Math.abs(
-            r.totalDistribuicao -
-            100
-        ) > 0.05
-    );
-
-    elementos.resultadoMensal.textContent =
-        formatarMoeda(
-            r.resultadoMensal
-        );
-
-    elementos.receitaFinanceira.textContent =
-        formatarMoeda(
-            r.receitaFinanceira
-        );
-
-    elementos.receitaTarifas.textContent =
-        formatarMoeda(
-            r.receitaTarifas
-        );
-
-    elementos.custosOperacionais.textContent =
-        formatarMoeda(
-            r.custosOperacionais
-        );
-
-    elementos.resultadoAnual.textContent =
-        formatarMoeda(
-            r.resultadoAnual
-        );
-
-    elementos.qtdLiquidados.textContent =
-        formatarQuantidade(
-            r.qtdBoletosLiquidados
-        );
-
-    elementos.saldoMedio.textContent =
-        formatarMoeda(
-            r.saldoMedio
-        );
-
-    elementos.taxaCdiMensal.textContent =
-        formatarPercentual(
-            r.taxaCdiMensal
-        );
-
-    elementos.receitaSaldoMedio.textContent =
-        formatarMoeda(
-            r.receitaSaldoMedio
-        );
-
-    elementos.taxaFloat.textContent =
-        formatarPercentual(
-            r.taxaFloat
-        );
-
-    elementos.receitaFloat.textContent =
-        formatarMoeda(
-            r.receitaFloat
-        );
-
-    elementos.receitaPorBoleto.textContent =
-        formatarMoeda(
-            r.receitaPorBoleto
-        );
-
-    elementos.custoMedioBoleto.textContent =
-        formatarMoeda(
-            r.custoMedioBoleto
-        );
-
-    elementos.qtdRedeBancaria.textContent =
-        formatarQuantidade(
-            r.qtdRedeBancaria
-        );
-
-    elementos.qtdRedeSicoob.textContent =
-        formatarQuantidade(
-            r.qtdRedeSicoob
-        );
-
-    elementos.qtdLiqPropria.textContent =
-        formatarQuantidade(
-            r.qtdLiqPropria
-        );
-
-    elementos.qtdCorrespondente.textContent =
-        formatarQuantidade(
-            r.qtdCorrespondente
-        );
-
-    elementos.qtdProcessamento.textContent =
-        formatarQuantidade(
-            r.qtdProcessamento
-        );
-
-    elementos.qtdTarifaNova.textContent =
-        formatarQuantidade(
-            r.qtdTarifaNova
-        );
-
-    elementos.unitRedeBancaria.textContent =
-        formatarMoeda(
-            r.custoRedeBancaria
-        );
-
-    elementos.unitRedeSicoob.textContent =
-        formatarMoeda(
-            r.custoRedeSicoob
-        );
-
-    elementos.unitLiqPropria.textContent =
-        formatarMoeda(
-            r.custoLiqPropria
-        );
-
-    elementos.unitCorrespondente.textContent =
-        formatarMoeda(
-            r.custoCorrespondente
-        );
-
-    elementos.unitProcessamento.textContent =
-        formatarMoeda(
-            r.custoProcessamento
-        );
-
-    elementos.unitTarifaNova.textContent =
-        formatarMoeda(
-            r.custoTarifaNova
-        );
-
-    elementos.totalRedeBancaria.textContent =
-        formatarMoeda(
-            r.totalRedeBancaria
-        );
-
-    elementos.totalRedeSicoob.textContent =
-        formatarMoeda(
-            r.totalRedeSicoob
-        );
-
-    elementos.totalLiqPropria.textContent =
-        formatarMoeda(
-            r.totalLiqPropria
-        );
-
-    elementos.totalCorrespondente.textContent =
-        formatarMoeda(
-            r.totalCorrespondente
-        );
-
-    elementos.totalProcessamento.textContent =
-        formatarMoeda(
-            r.totalProcessamento
-        );
-
-    elementos.totalTarifaNova.textContent =
-        formatarMoeda(
-            r.totalTarifaNova
-        );
-
-    elementos.totalCustosTabela.textContent =
-        formatarMoeda(
-            r.custosOperacionais
-        );
-
-    elementos.baseTarifaDecurso.textContent =
-        formatarQuantidade(
-            r.baseTarifaDecurso
-        );
-
-    elementos.baseTarifaCedente.textContent =
-        formatarQuantidade(
-            r.baseTarifaCedente
-        );
-
-    elementos.baseTarifaLiquidacao.textContent =
-        formatarQuantidade(
-            r.baseTarifaLiquidacao
-        );
-
-    elementos.baseTarifaEntrada.textContent =
-        formatarQuantidade(
-            r.baseTarifaEntrada
-        );
-
-    elementos.unitTarifaDecurso.textContent =
-        formatarMoeda(
-            r.tarifaDecurso
-        );
-
-    elementos.unitTarifaCedente.textContent =
-        formatarMoeda(
-            r.tarifaBaixaCedente
-        );
-
-    elementos.unitTarifaLiquidacao.textContent =
-        formatarMoeda(
-            r.tarifaLiquidacao
-        );
-
-    elementos.unitTarifaEntrada.textContent =
-        formatarMoeda(
-            r.tarifaEntrada
-        );
-
-    elementos.totalTarifaDecurso.textContent =
-        formatarMoeda(
-            r.totalTarifaDecurso
-        );
-
-    elementos.totalTarifaCedente.textContent =
-        formatarMoeda(
-            r.totalTarifaCedente
-        );
-
-    elementos.totalTarifaLiquidacao.textContent =
-        formatarMoeda(
-            r.totalTarifaLiquidacao
-        );
-
-    elementos.totalTarifaEntrada.textContent =
-        formatarMoeda(
-            r.totalTarifaEntrada
-        );
-
-    elementos.totalReceitaTarifasTabela.textContent =
-        formatarMoeda(
-            r.receitaTarifas
-        );
-
-    atualizarClasseResultado(
-        elementos.resultadoMensal,
-        r.resultadoMensal
-    );
-
-    atualizarClasseResultado(
-        elementos.resultadoAnual,
-        r.resultadoAnual
-    );
-}
-
-function atualizarClasseResultado(
-    elemento,
-    valor
-) {
-    const card =
-        elemento.closest(
-            ".resultado-item"
-        );
-
-    if (card) {
-        card.classList.remove(
-            "resultado-positivo",
-            "resultado-negativo"
-        );
-
-        if (valor > 0) {
-            card.classList.add(
-                "resultado-positivo"
-            );
-        } else if (
-            valor < 0
-        ) {
-            card.classList.add(
-                "resultado-negativo"
-            );
-        }
-    }
-
-    if (
-        elemento ===
-        elementos.resultadoMensal
+    for (
+        let qtd = 1;
+        qtd <= 21;
+        qtd++
     ) {
-        elemento.classList.remove(
-            "valor-positivo",
-            "valor-negativo"
-        );
+        const resultado =
+            calcularOperacao(
+                qtd
+            );
 
-        if (
-            valor > 0
-        ) {
-            elemento.classList.add(
-                "valor-positivo"
+        const tr =
+            document.createElement(
+                "tr"
             );
-        } else if (
-            valor < 0
-        ) {
-            elemento.classList.add(
-                "valor-negativo"
-            );
-        }
+
+        tr.innerHTML = `
+            <td>${qtd}x</td>
+            <td>${formatarPercentual(resultado.taxaFinalTotal, 4)}</td>
+            <td>${formatarMoeda(resultado.totalLiquidoAntecipado)}</td>
+        `;
+
+        tabelaTaxaFlex.appendChild(
+            tr
+        );
     }
 }
 
-function limparSimulacao() {
-    elementos.quantidadeBoletos.value =
-        0;
+function calcular() {
+    const qtdParcelas =
+        Number(
+            parcelasAntecipacao.value
+        ) || 1;
 
-    elementos.percentualLiquidados.value =
-        100;
-
-    elementos.ticketMedio.value =
-        "0,00";
-
-    elementos.percentRedeBancaria.value =
-        PARAMETROS_COBRANCA
-            .distribuicaoPadrao
-            .redeBancaria;
-
-    elementos.percentRedeSicoob.value =
-        PARAMETROS_COBRANCA
-            .distribuicaoPadrao
-            .redeSicoob;
-
-    elementos.percentLiqPropria.value =
-        PARAMETROS_COBRANCA
-            .distribuicaoPadrao
-            .liqPropria;
-
-    elementos.percentCorrespondente.value =
-        PARAMETROS_COBRANCA
-            .distribuicaoPadrao
-            .correspondente;
-
-    elementos.percentBaixaCedente.value =
-        0;
-
-    elementos.percentBaixaDecurso.value =
-        0;
-
-    elementos.centralizacaoFinanceira.value =
-        100;
-
-    elementos.percentualSaldoMedio.value =
-        0;
-
-    elementos.taxaCdiAno.value =
-        15;
-
-    elementos.diasFloat.value =
-        0;
-
-    elementos.custoRedeBancaria.value =
-        formatarNumeroMoeda(
-            PARAMETROS_COBRANCA
-                .custosPadrao
-                .redeBancaria
+    const resultado =
+        calcularOperacao(
+            qtdParcelas
         );
 
-    elementos.custoRedeSicoob.value =
-        formatarNumeroMoeda(
-            PARAMETROS_COBRANCA
-                .custosPadrao
-                .redeSicoob
+    resultadoLiquidoAntecipado.textContent =
+        formatarMoeda(
+            resultado.totalLiquidoAntecipado
         );
 
-    elementos.custoLiqPropria.value =
-        formatarNumeroMoeda(
-            PARAMETROS_COBRANCA
-                .custosPadrao
-                .liqPropria
+    resultadoValorVenda.textContent =
+        formatarMoeda(
+            resultado.valorTotal
         );
 
-    elementos.custoCorrespondente.value =
-        formatarNumeroMoeda(
-            PARAMETROS_COBRANCA
-                .custosPadrao
-                .correspondente
+    resultadoQtdParcelas.textContent =
+        `${resultado.qtdParcelas}x`;
+
+    resultadoLiquidoMdr.textContent =
+        formatarMoeda(
+            resultado.totalLiquidoMdr
         );
 
-    elementos.custoProcessamento.value =
-        formatarNumeroMoeda(
-            PARAMETROS_COBRANCA
-                .custosPadrao
-                .processamento
+    resultadoDescontoAntecipacao.textContent =
+        formatarMoeda(
+            resultado.totalDesconto
         );
 
-    elementos.custoTarifaNova.value =
-        formatarNumeroMoeda(
-            PARAMETROS_COBRANCA
-                .custosPadrao
-                .tarifaNova
+    resultadoMdr.textContent =
+        formatarPercentual(
+            resultado.mdr,
+            2
         );
 
-    elementos.tarifaDecurso.value =
-        "0,00";
+    resultadoTaxaAntecipacao.textContent =
+        formatarPercentual(
+            resultado.taxaAnt,
+            2
+        );
 
-    elementos.tarifaBaixaCedente.value =
-        "0,00";
+    resultadoTaxaFinal.textContent =
+        formatarPercentual(
+            resultado.taxaFinalTotal,
+            4
+        );
 
-    elementos.tarifaLiquidacao.value =
-        "0,00";
+    preencherDetalhamento(
+        resultado
+    );
 
-    elementos.tarifaEntrada.value =
-        "0,00";
+    preencherTaxaFlex();
+}
 
-    calcularSimulacao();
+function limpar() {
+    taxaAntecipacao.value =
+        "1.55";
+
+    taxaMdr.value =
+        "2.23";
+
+    dataVenda.value =
+        dataHojeInput();
+
+    parcelasAntecipacao.value =
+        "12";
+
+    valorVenda.value =
+        "48.000,00";
+
+    calcular();
 }
 
 function registrarEventos() {
-    const camposNumericos = [
-        elementos.quantidadeBoletos,
-        elementos.percentualLiquidados,
-        elementos.percentRedeBancaria,
-        elementos.percentRedeSicoob,
-        elementos.percentLiqPropria,
-        elementos.percentCorrespondente,
-        elementos.percentBaixaCedente,
-        elementos.percentBaixaDecurso,
-        elementos.centralizacaoFinanceira,
-        elementos.percentualSaldoMedio,
-        elementos.taxaCdiAno,
-        elementos.diasFloat
-    ];
-
-    camposNumericos.forEach(input => {
-        input.addEventListener(
-            "input",
-            calcularSimulacao
-        );
-
-        input.addEventListener(
-            "change",
-            calcularSimulacao
-        );
-    });
-
-    const camposMoeda = [
-        elementos.ticketMedio,
-        elementos.custoRedeBancaria,
-        elementos.custoRedeSicoob,
-        elementos.custoLiqPropria,
-        elementos.custoCorrespondente,
-        elementos.custoProcessamento,
-        elementos.custoTarifaNova,
-        elementos.tarifaDecurso,
-        elementos.tarifaBaixaCedente,
-        elementos.tarifaLiquidacao,
-        elementos.tarifaEntrada
-    ];
-
-    camposMoeda.forEach(input => {
-        input.setAttribute(
+    if (valorVenda) {
+        valorVenda.setAttribute(
             "inputmode",
             "numeric"
         );
 
-        input.setAttribute(
+        valorVenda.setAttribute(
             "autocomplete",
             "off"
         );
 
-        normalizarCampoMoeda(
-            input
-        );
-
-        input.addEventListener(
+        valorVenda.addEventListener(
             "input",
             () => {
                 aplicarMascaraMoeda(
-                    input
+                    valorVenda
                 );
 
-                calcularSimulacao();
+                calcular();
             }
         );
 
-        input.addEventListener(
+        valorVenda.addEventListener(
             "blur",
             () => {
-                normalizarCampoMoeda(
-                    input
-                );
-
-                calcularSimulacao();
+                validarValorVenda();
+                calcular();
             }
         );
-    });
+    }
 
-    elementos.btnLimpar.addEventListener(
-        "click",
-        limparSimulacao
-    );
+    if (taxaAntecipacao) {
+        taxaAntecipacao.addEventListener(
+            "input",
+            calcular
+        );
+    }
+
+    if (taxaMdr) {
+        taxaMdr.addEventListener(
+            "input",
+            calcular
+        );
+    }
+
+    if (dataVenda) {
+        dataVenda.addEventListener(
+            "change",
+            calcular
+        );
+    }
+
+    if (parcelasAntecipacao) {
+        parcelasAntecipacao.addEventListener(
+            "change",
+            calcular
+        );
+    }
+
+    if (btnCalcularAntecipacao) {
+        btnCalcularAntecipacao.addEventListener(
+            "click",
+            calcular
+        );
+    }
+
+    if (btnLimparAntecipacao) {
+        btnLimparAntecipacao.addEventListener(
+            "click",
+            limpar
+        );
+    }
 }
 
-registrarEventos();
-calcularSimulacao();
+function iniciarAntecipacaoSipag() {
+    const camposObrigatorios = [
+        taxaAntecipacao,
+        taxaMdr,
+        dataVenda,
+        parcelasAntecipacao,
+        valorVenda,
+        resultadoLiquidoAntecipado,
+        resultadoValorVenda,
+        resultadoQtdParcelas,
+        resultadoLiquidoMdr,
+        resultadoDescontoAntecipacao,
+        resultadoMdr,
+        resultadoTaxaAntecipacao,
+        resultadoTaxaFinal,
+        tabelaAntecipacao,
+        tabelaTaxaFlex
+    ];
+
+    if (
+        camposObrigatorios.some(
+            campo => !campo
+        )
+    ) {
+        console.error(
+            "Antecipação Sipag: existem elementos obrigatórios ausentes no HTML."
+        );
+
+        return;
+    }
+
+    carregarParcelas();
+
+    dataVenda.value =
+        dataHojeInput();
+
+    validarValorVenda();
+
+    registrarEventos();
+
+    calcular();
+}
+
+if (
+    document.readyState ===
+    "loading"
+) {
+    document.addEventListener(
+        "DOMContentLoaded",
+        iniciarAntecipacaoSipag
+    );
+} else {
+    iniciarAntecipacaoSipag();
+}
