@@ -69,6 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
         })}%`;
     }
 
+    /* =========================================================
+       CAMPOS MONETÁRIOS
+       ========================================================= */
+
     function formatarCampoMoeda(campo) {
         const valor = numero(campo.value);
 
@@ -78,20 +82,103 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function formatarCampoMoedaDigitacao(campo) {
+        const digitos = String(campo.value || "")
+            .replace(/\D/g, "");
+
+        if (!digitos) {
+            campo.value = "0,00";
+            return;
+        }
+
+        const centavos = Number(digitos);
+
+        campo.value = (centavos / 100).toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function posicionarCursorFinal(campo) {
+        requestAnimationFrame(() => {
+            const tamanho = campo.value.length;
+
+            try {
+                campo.setSelectionRange(
+                    tamanho,
+                    tamanho
+                );
+            } catch (erro) {
+                // Campo não suporta seleção de texto.
+            }
+        });
+    }
+
     function configurarCamposMoeda() {
         $$(".campo-moeda").forEach(campo => {
-            campo.addEventListener("focus", () => {
-                const valor = numero(campo.value);
+            campo.setAttribute(
+                "inputmode",
+                "numeric"
+            );
 
-                campo.value = valor
-                    ? String(valor).replace(".", ",")
-                    : "";
-            });
+            campo.setAttribute(
+                "autocomplete",
+                "off"
+            );
 
-            campo.addEventListener("blur", () => {
-                formatarCampoMoeda(campo);
-                atualizarCoberturas();
-            });
+            formatarCampoMoeda(campo);
+
+            campo.addEventListener(
+                "input",
+                () => {
+                    formatarCampoMoedaDigitacao(
+                        campo
+                    );
+
+                    posicionarCursorFinal(
+                        campo
+                    );
+
+                    atualizarCoberturas();
+
+                    if (etapaAtual === 4) {
+                        calcularTudo();
+                    }
+                }
+            );
+
+            campo.addEventListener(
+                "focus",
+                () => {
+                    posicionarCursorFinal(
+                        campo
+                    );
+                }
+            );
+
+            campo.addEventListener(
+                "click",
+                () => {
+                    posicionarCursorFinal(
+                        campo
+                    );
+                }
+            );
+
+            campo.addEventListener(
+                "blur",
+                () => {
+                    formatarCampoMoeda(
+                        campo
+                    );
+
+                    atualizarCoberturas();
+
+                    if (etapaAtual === 4) {
+                        calcularTudo();
+                    }
+                }
+            );
         });
     }
 
@@ -153,12 +240,18 @@ document.addEventListener("DOMContentLoaded", () => {
             numero($("idadeAposentadoria").value);
 
         if (idadeAtual < 18) {
-            alert("Informe uma idade atual válida.");
+            alert(
+                "Informe uma idade atual válida."
+            );
+
             $("idadeAtual").focus();
             return false;
         }
 
-        if (idadeAposentadoria <= idadeAtual) {
+        if (
+            idadeAposentadoria <=
+            idadeAtual
+        ) {
             alert(
                 "A idade para início da renda deve ser maior que a idade atual."
             );
@@ -178,7 +271,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             tipo === "renda" &&
-            numero($("rendaDesejada").value) <= 0
+            numero(
+                $("rendaDesejada").value
+            ) <= 0
         ) {
             alert(
                 "Informe o valor da renda mensal pretendida."
@@ -205,29 +300,41 @@ document.addEventListener("DOMContentLoaded", () => {
     function validarEtapa3() {
         const morte =
             numero(
-                $("coberturaMorteContribuicao").value
+                $("coberturaMorteContribuicao")
+                    .value
             );
 
         const invalidez =
             numero(
-                $("coberturaInvalidezContribuicao").value
+                $("coberturaInvalidezContribuicao")
+                    .value
             );
 
-        if (morte > 0 && morte < 9) {
+        if (
+            morte > 0 &&
+            morte < 9
+        ) {
             alert(
                 "A contribuição mínima para cobertura por morte é R$ 9,00."
             );
 
-            $("coberturaMorteContribuicao").focus();
+            $("coberturaMorteContribuicao")
+                .focus();
+
             return false;
         }
 
-        if (invalidez > 0 && invalidez < 6) {
+        if (
+            invalidez > 0 &&
+            invalidez < 6
+        ) {
             alert(
                 "A contribuição mínima para cobertura por invalidez é R$ 6,00."
             );
 
-            $("coberturaInvalidezContribuicao").focus();
+            $("coberturaInvalidezContribuicao")
+                .focus();
+
             return false;
         }
 
@@ -251,33 +358,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     $$("[data-avancar]").forEach(botao => {
-        botao.addEventListener("click", () => {
-            const destino =
-                Number(botao.dataset.avancar);
+        botao.addEventListener(
+            "click",
+            () => {
+                const destino =
+                    Number(
+                        botao.dataset.avancar
+                    );
 
-            if (podeAvancar(destino)) {
-                mostrarEtapa(destino);
+                if (
+                    podeAvancar(
+                        destino
+                    )
+                ) {
+                    mostrarEtapa(
+                        destino
+                    );
+                }
             }
-        });
+        );
     });
 
     $$("[data-voltar]").forEach(botao => {
-        botao.addEventListener("click", () => {
-            mostrarEtapa(
-                Number(botao.dataset.voltar)
-            );
-        });
+        botao.addEventListener(
+            "click",
+            () => {
+                mostrarEtapa(
+                    Number(
+                        botao.dataset.voltar
+                    )
+                );
+            }
+        );
     });
 
     $$(".previdencia-etapa").forEach(botao => {
-        botao.addEventListener("click", () => {
-            const destino =
-                Number(botao.dataset.etapa);
+        botao.addEventListener(
+            "click",
+            () => {
+                const destino =
+                    Number(
+                        botao.dataset.etapa
+                    );
 
-            if (destino <= etapaAtual) {
-                mostrarEtapa(destino);
+                if (
+                    destino <=
+                    etapaAtual
+                ) {
+                    mostrarEtapa(
+                        destino
+                    );
+                }
             }
-        });
+        );
     });
 
     function atualizarTipoSimulacao() {
@@ -289,74 +422,90 @@ document.addEventListener("DOMContentLoaded", () => {
         $$(".opcao-simulacao").forEach(label => {
             label.classList.toggle(
                 "ativo",
-                label.querySelector("input").checked
+                label.querySelector("input")
+                    .checked
             );
         });
 
-        $("blocoRendaDesejada").classList.toggle(
-            "hide",
-            tipo !== "renda"
-        );
+        $("blocoRendaDesejada")
+            .classList.toggle(
+                "hide",
+                tipo !== "renda"
+            );
 
-        $("blocoContribuicaoMensal").classList.toggle(
-            "hide",
-            tipo !== "contribuicao"
-        );
+        $("blocoContribuicaoMensal")
+            .classList.toggle(
+                "hide",
+                tipo !== "contribuicao"
+            );
     }
 
-    $$('input[name="tipoSimulacao"]').forEach(radio => {
+    $$(
+        'input[name="tipoSimulacao"]'
+    ).forEach(radio => {
         radio.addEventListener(
             "change",
             atualizarTipoSimulacao
         );
     });
 
-    $("possuiBeneficiarios").addEventListener(
-        "change",
-        () => {
-            $("blocoBeneficiario").classList.toggle(
-                "hide",
-                $("possuiBeneficiarios").value === "nao"
-            );
-        }
-    );
+    $("possuiBeneficiarios")
+        .addEventListener(
+            "change",
+            () => {
+                $("blocoBeneficiario")
+                    .classList.toggle(
+                        "hide",
+                        $("possuiBeneficiarios")
+                            .value === "nao"
+                    );
+            }
+        );
 
-    $("tipoContribuicao").addEventListener(
-        "change",
-        () => {
-            const percentualSelecionado =
-                $("tipoContribuicao").value ===
-                "percentual";
+    $("tipoContribuicao")
+        .addEventListener(
+            "change",
+            () => {
+                const percentualSelecionado =
+                    $("tipoContribuicao")
+                        .value ===
+                    "percentual";
 
-            $("campoContribuicaoValor")
-                .classList.toggle(
-                    "hide",
-                    percentualSelecionado
-                );
+                $("campoContribuicaoValor")
+                    .classList.toggle(
+                        "hide",
+                        percentualSelecionado
+                    );
 
-            $("campoContribuicaoPercentual")
-                .classList.toggle(
-                    "hide",
-                    !percentualSelecionado
-                );
-        }
-    );
+                $("campoContribuicaoPercentual")
+                    .classList.toggle(
+                        "hide",
+                        !percentualSelecionado
+                    );
+            }
+        );
 
-    $("possuiContrapartida").addEventListener(
-        "change",
-        () => {
-            $("campoContrapartida").classList.toggle(
-                "hide",
-                $("possuiContrapartida").value ===
-                "nao"
-            );
-        }
-    );
+    $("possuiContrapartida")
+        .addEventListener(
+            "change",
+            () => {
+                $("campoContrapartida")
+                    .classList.toggle(
+                        "hide",
+                        $("possuiContrapartida")
+                            .value ===
+                        "nao"
+                    );
+            }
+        );
 
-    function taxaMensalEquivalente(taxaAnual) {
+    function taxaMensalEquivalente(
+        taxaAnual
+    ) {
         return (
             Math.pow(
-                1 + taxaAnual / 100,
+                1 +
+                taxaAnual / 100,
                 1 / 12
             ) - 1
         );
@@ -366,44 +515,58 @@ document.addEventListener("DOMContentLoaded", () => {
         const tipo =
             $("tipoContribuicao").value;
 
-        if (tipo === "percentual") {
+        if (
+            tipo === "percentual"
+        ) {
             const salario =
-                numero($("salario").value);
+                numero(
+                    $("salario").value
+                );
 
             const percentual =
                 numero(
-                    $("contribuicaoPercentual").value
+                    $("contribuicaoPercentual")
+                        .value
                 );
 
-            return salario *
+            return (
+                salario *
                 percentual /
-                100;
+                100
+            );
         }
 
         return numero(
-            $("contribuicaoMensal").value
+            $("contribuicaoMensal")
+                .value
         );
     }
 
     function obterContrapartida() {
         if (
-            $("possuiContrapartida").value !==
-            "sim"
+            $("possuiContrapartida")
+                .value !== "sim"
         ) {
             return 0;
         }
 
         return numero(
-            $("contrapartidaMensal").value
+            $("contrapartidaMensal")
+                .value
         );
     }
 
     function obterParametrosBase() {
         const idadeAtual =
-            numero($("idadeAtual").value);
+            numero(
+                $("idadeAtual").value
+            );
 
         const idadeAposentadoria =
-            numero($("idadeAposentadoria").value);
+            numero(
+                $("idadeAposentadoria")
+                    .value
+            );
 
         const anos =
             Math.max(
@@ -418,16 +581,22 @@ document.addEventListener("DOMContentLoaded", () => {
             anos,
             meses: anos * 12,
             taxaAnual:
-                numero($("taxaAnual").value),
+                numero(
+                    $("taxaAnual").value
+                ),
             saldoInicial:
-                numero($("saldoInicial").value),
+                numero(
+                    $("saldoInicial").value
+                ),
             aporteEsporadico:
                 numero(
-                    $("aporteEsporadico").value
+                    $("aporteEsporadico")
+                        .value
                 ),
             periodicidadeAporte:
                 numero(
-                    $("periodicidadeAporte").value
+                    $("periodicidadeAporte")
+                        .value
                 ),
             contrapartida:
                 obterContrapartida()
@@ -445,7 +614,9 @@ document.addEventListener("DOMContentLoaded", () => {
         idadeAtual
     }) {
         const taxaMensal =
-            taxaMensalEquivalente(taxaAnual);
+            taxaMensalEquivalente(
+                taxaAnual
+            );
 
         let saldo =
             saldoInicial;
@@ -495,7 +666,8 @@ document.addEventListener("DOMContentLoaded", () => {
             totalContrapartida +=
                 contrapartidaMensal;
 
-            totalAportes += aporte;
+            totalAportes +=
+                aporte;
 
             historicoMensal.push({
                 mes: mes + 1,
@@ -539,7 +711,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 mesesAteAgora
                             )
                             .reduce(
-                                (soma, item) =>
+                                (
+                                    soma,
+                                    item
+                                ) =>
                                     soma +
                                     item.aporte,
                                 0
@@ -551,7 +726,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 mesesAteAgora
                             )
                             .reduce(
-                                (soma, item) =>
+                                (
+                                    soma,
+                                    item
+                                ) =>
                                     soma +
                                     item.rendimento,
                                 0
@@ -562,7 +740,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return {
-            saldoFinal: saldo,
+            saldoFinal:
+                saldo,
             taxaMensal,
             totalRendimentos,
             totalContribuicoes,
@@ -595,7 +774,9 @@ document.addEventListener("DOMContentLoaded", () => {
         let reservaTotal =
             reservaParaRenda;
 
-        if (percentual > 0) {
+        if (
+            percentual > 0
+        ) {
             reservaTotal =
                 reservaParaRenda /
                 (1 - percentual);
@@ -646,7 +827,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 : 0;
 
         return {
-            rendaMensal: renda,
+            rendaMensal:
+                renda,
             parcelaUnica,
             saldoRenda
         };
@@ -661,7 +843,9 @@ document.addEventListener("DOMContentLoaded", () => {
         periodicidadeAporte,
         contrapartida
     }) {
-        if (meses <= 0) {
+        if (
+            meses <= 0
+        ) {
             return 0;
         }
 
@@ -679,7 +863,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         if (
-            projecaoSemContribuicao.saldoFinal >=
+            projecaoSemContribuicao
+                .saldoFinal >=
             saldoObjetivo
         ) {
             return 0;
@@ -690,7 +875,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 taxaAnual
             );
 
-        if (Math.abs(taxaMensal) < 1e-12) {
+        if (
+            Math.abs(
+                taxaMensal
+            ) < 1e-12
+        ) {
             const faltante =
                 saldoObjetivo -
                 projecaoSemContribuicao
@@ -698,15 +887,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             return Math.max(
                 0,
-                faltante / meses
+                faltante /
+                meses
             );
         }
 
         let minimo = 0;
-        let maximo = Math.max(
-            100,
-            saldoObjetivo
-        );
+
+        let maximo =
+            Math.max(
+                100,
+                saldoObjetivo
+            );
 
         for (
             let tentativa = 0;
@@ -714,7 +906,8 @@ document.addEventListener("DOMContentLoaded", () => {
             tentativa++
         ) {
             const meio =
-                (minimo + maximo) / 2;
+                (minimo + maximo) /
+                2;
 
             const resultado =
                 projetarReserva({
@@ -734,9 +927,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 resultado.saldoFinal >=
                 saldoObjetivo
             ) {
-                maximo = meio;
+                maximo =
+                    meio;
             } else {
-                minimo = meio;
+                minimo =
+                    meio;
             }
         }
 
@@ -749,32 +944,41 @@ document.addEventListener("DOMContentLoaded", () => {
     function fatorAtuarialEstimado() {
         const idadeAposentadoria =
             numero(
-                $("idadeAposentadoria").value
+                $("idadeAposentadoria")
+                    .value
             );
 
         const sexo =
             $("sexo").value;
 
         const possuiBeneficiarios =
-            $("possuiBeneficiarios").value ===
+            $("possuiBeneficiarios")
+                .value ===
             "sim";
 
         const idadeBeneficiario =
             numero(
-                $("idadeBeneficiario").value
+                $("idadeBeneficiario")
+                    .value
             );
 
         let fator =
             191.402 +
-            (55 -
-                idadeAposentadoria) *
+            (
+                55 -
+                idadeAposentadoria
+            ) *
             2.437;
 
-        if (sexo === "M") {
+        if (
+            sexo === "M"
+        ) {
             fator *= 0.94;
         }
 
-        if (possuiBeneficiarios) {
+        if (
+            possuiBeneficiarios
+        ) {
             const diferenca =
                 Math.max(
                     0,
@@ -804,12 +1008,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     .value
             );
 
-        if (contribuicao <= 0) {
+        if (
+            contribuicao <= 0
+        ) {
             return 0;
         }
 
         const idade =
-            numero($("idadeAtual").value);
+            numero(
+                $("idadeAtual").value
+            );
 
         const sexo =
             $("sexo").value;
@@ -826,13 +1034,16 @@ document.addEventListener("DOMContentLoaded", () => {
         fator *=
             ajusteIdade;
 
-        if (sexo === "M") {
+        if (
+            sexo === "M"
+        ) {
             fator *= 0.90;
         }
 
         return Math.max(
             0,
-            contribuicao * fator
+            contribuicao *
+            fator
         );
     }
 
@@ -843,12 +1054,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     .value
             );
 
-        if (contribuicao <= 0) {
+        if (
+            contribuicao <= 0
+        ) {
             return 0;
         }
 
         const idade =
-            numero($("idadeAtual").value);
+            numero(
+                $("idadeAtual").value
+            );
 
         const sexo =
             $("sexo").value;
@@ -865,13 +1080,16 @@ document.addEventListener("DOMContentLoaded", () => {
         fator *=
             ajusteIdade;
 
-        if (sexo === "M") {
+        if (
+            sexo === "M"
+        ) {
             fator *= 0.92;
         }
 
         return Math.max(
             0,
-            contribuicao * fator
+            contribuicao *
+            fator
         );
     }
 
@@ -910,31 +1128,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 parametros.taxaAnual
             );
 
-        $("resumoPeriodo").textContent =
+        $("resumoPeriodo")
+            .textContent =
             `${parametros.anos} ${parametros.anos === 1
                 ? "ano"
                 : "anos"
             }`;
 
-        $("resumoTaxa").textContent =
+        $("resumoTaxa")
+            .textContent =
             `${parametros.taxaAnual}%`;
 
-        $("resumoTaxaMensal").textContent =
+        $("resumoTaxaMensal")
+            .textContent =
             percentual(
                 taxaMensal * 100,
                 4
             );
     }
 
-    function montarTabela(resultado) {
+    function montarTabela(
+        resultado
+    ) {
         const tbody =
             $("tabelaProjecao");
 
-        tbody.innerHTML = "";
+        tbody.innerHTML =
+            "";
 
         if (
             !resultado ||
-            !resultado.historicoAnual.length
+            !resultado
+                .historicoAnual
+                .length
         ) {
             tbody.innerHTML = `
                 <tr>
@@ -947,12 +1173,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        resultado.historicoAnual.forEach(
-            item => {
+        resultado
+            .historicoAnual
+            .forEach(item => {
                 const tr =
-                    document.createElement(
-                        "tr"
-                    );
+                    document
+                        .createElement(
+                            "tr"
+                        );
 
                 tr.innerHTML = `
                     <td>${item.ano}</td>
@@ -963,9 +1191,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td><strong>${moeda(item.saldo)}</strong></td>
                 `;
 
-                tbody.appendChild(tr);
-            }
-        );
+                tbody.appendChild(
+                    tr
+                );
+            });
     }
 
     function calcularTudo() {
@@ -1013,12 +1242,17 @@ document.addEventListener("DOMContentLoaded", () => {
         let parcelaUnica = 0;
         let contribuicaoNecessaria = 0;
 
-        if (tipo === "contribuicao") {
+        if (
+            tipo ===
+            "contribuicao"
+        ) {
             contribuicaoMensal =
                 obterContribuicaoMensalInformada();
         }
 
-        if (tipo === "renda") {
+        if (
+            tipo === "renda"
+        ) {
             rendaMensal =
                 numero(
                     $("rendaDesejada").value
@@ -1032,28 +1266,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
             reservaNecessaria =
-                objetivo.reservaNecessaria;
+                objetivo
+                    .reservaNecessaria;
 
             parcelaUnica =
-                objetivo.parcelaUnica;
+                objetivo
+                    .parcelaUnica;
 
             contribuicaoNecessaria =
                 calcularContribuicaoNecessaria({
                     saldoInicial:
-                        parametros.saldoInicial,
+                        parametros
+                            .saldoInicial,
                     saldoObjetivo:
                         reservaNecessaria,
                     taxaAnual:
-                        parametros.taxaAnual,
+                        parametros
+                            .taxaAnual,
                     meses:
-                        parametros.meses,
+                        parametros
+                            .meses,
                     aporteEsporadico:
-                        parametros.aporteEsporadico,
+                        parametros
+                            .aporteEsporadico,
                     periodicidadeAporte:
                         parametros
                             .periodicidadeAporte,
                     contrapartida:
-                        parametros.contrapartida
+                        parametros
+                            .contrapartida
                 });
 
             contribuicaoMensal =
@@ -1063,39 +1304,52 @@ document.addEventListener("DOMContentLoaded", () => {
         const resultado =
             projetarReserva({
                 saldoInicial:
-                    parametros.saldoInicial,
+                    parametros
+                        .saldoInicial,
                 contribuicaoMensal,
                 contrapartidaMensal:
-                    parametros.contrapartida,
+                    parametros
+                        .contrapartida,
                 aporteEsporadico:
-                    parametros.aporteEsporadico,
+                    parametros
+                        .aporteEsporadico,
                 periodicidadeAporte:
                     parametros
                         .periodicidadeAporte,
                 taxaAnual:
-                    parametros.taxaAnual,
+                    parametros
+                        .taxaAnual,
                 meses:
-                    parametros.meses,
+                    parametros
+                        .meses,
                 idadeAtual:
-                    parametros.idadeAtual
+                    parametros
+                        .idadeAtual
             });
 
-        if (tipo === "contribuicao") {
+        if (
+            tipo ===
+            "contribuicao"
+        ) {
             const calculoRenda =
                 calcularRendaPrazoDeterminado(
-                    resultado.saldoFinal,
+                    resultado
+                        .saldoFinal,
                     prazoRenda,
                     percentualParcela
                 );
 
             rendaMensal =
-                calculoRenda.rendaMensal;
+                calculoRenda
+                    .rendaMensal;
 
             parcelaUnica =
-                calculoRenda.parcelaUnica;
+                calculoRenda
+                    .parcelaUnica;
 
             reservaNecessaria =
-                resultado.saldoFinal;
+                resultado
+                    .saldoFinal;
 
             contribuicaoNecessaria =
                 contribuicaoMensal;
@@ -1112,7 +1366,8 @@ document.addEventListener("DOMContentLoaded", () => {
         $("resultadoReservaProjetada")
             .textContent =
             moeda(
-                resultado.saldoFinal
+                resultado
+                    .saldoFinal
             );
 
         $("resultadoRendaMensal")
@@ -1142,13 +1397,15 @@ document.addEventListener("DOMContentLoaded", () => {
         $("resultadoRendimentos")
             .textContent =
             moeda(
-                resultado.totalRendimentos
+                resultado
+                    .totalRendimentos
             );
 
         $("resultadoAportes")
             .textContent =
             moeda(
-                resultado.totalAportes
+                resultado
+                    .totalAportes
             );
 
         const fator =
@@ -1157,7 +1414,9 @@ document.addEventListener("DOMContentLoaded", () => {
         let rendaIndeterminada = 0;
         let reservaIndeterminada = 0;
 
-        if (tipo === "renda") {
+        if (
+            tipo === "renda"
+        ) {
             rendaIndeterminada =
                 rendaMensal;
 
@@ -1166,11 +1425,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 fator;
         } else {
             reservaIndeterminada =
-                resultado.saldoFinal;
+                resultado
+                    .saldoFinal;
 
             rendaIndeterminada =
                 fator > 0
-                    ? resultado.saldoFinal /
+                    ? resultado
+                        .saldoFinal /
                     fator
                     : 0;
         }
@@ -1206,7 +1467,9 @@ document.addEventListener("DOMContentLoaded", () => {
             "atencao"
         );
 
-        if (tipo === "renda") {
+        if (
+            tipo === "renda"
+        ) {
             if (
                 resultado.saldoFinal >=
                 reservaNecessaria
@@ -1246,7 +1509,10 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         }
 
-        montarTabela(resultado);
+        montarTabela(
+            resultado
+        );
+
         atualizarResumo();
     }
 
@@ -1267,7 +1533,9 @@ document.addEventListener("DOMContentLoaded", () => {
         $(id).addEventListener(
             "change",
             () => {
-                if (etapaAtual === 4) {
+                if (
+                    etapaAtual === 4
+                ) {
                     calcularTudo();
                 }
             }
