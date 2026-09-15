@@ -2129,125 +2129,224 @@ footer {
 .comprometimento-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
-    padding-top: 28px;
-    padding-bottom: 42px;
+    gap: 24px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: start;
 }
 
 .comprometimento-card {
     min-width: 0;
+    padding: 28px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
 }
 
-.comprometimento-dados,
+.comprometimento-dados {
+    grid-column: 1;
+    grid-row: 1;
+}
+
 .comprometimento-sfn {
-    grid-column: span 1;
+    grid-column: 2;
+    grid-row: 1;
 }
 
-.comprometimento-resultado,
+.comprometimento-resultado {
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+
 .comprometimento-resumo {
     grid-column: 1 / -1;
+    grid-row: 3;
 }
+
+/* =========================================================
+   FÓRMULA / INDICADOR
+   ========================================================= */
 
 .comprometimento-formula {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    margin-top: 22px;
-    padding: 18px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 160, 145, 0.18);
-    background: rgba(0, 160, 145, 0.055);
+    align-items: center;
+    gap: 15px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    font-size: 13px;
 }
 
 .comprometimento-formula span {
     color: var(--texto-secundario);
     font-size: 13px;
-    font-weight: 700;
 }
 
 .comprometimento-formula strong {
-    color: var(--turquesa);
-    font-size: 20px;
+    color: var(--verde-escuro);
+    font-size: 14px;
     white-space: nowrap;
 }
 
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
 .comprometimento-resultado .resultado-destaque {
-    margin-bottom: 22px;
+    margin-bottom: 20px;
+}
+
+.comprometimento-resultado .resultado-destaque span {
+    display: block;
+    font-size: 13px;
+    opacity: 0.92;
+    margin-bottom: 8px;
 }
 
 .comprometimento-resultado .resultado-destaque strong {
-    transition: color 0.2s ease;
+    display: block;
+    color: var(--branco);
+    font-size: 28px;
 }
 
+.comprometimento-resultado .resultados-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+/* =========================================================
+   STATUS DO COMPROMETIMENTO
+   ========================================================= */
+
 .comprometimento-status {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-top: 22px;
-    padding: 17px 19px;
-    border: 1px solid var(--borda);
-    border-left: 4px solid var(--turquesa);
+    display: block;
+    margin-top: 18px;
+    padding: 14px 16px;
     border-radius: 10px;
-    background: var(--fundo-secundario);
+    border-left: 4px solid var(--turquesa);
+    background: rgba(0, 160, 145, 0.07);
+    color: var(--texto-secundario);
 }
 
 .comprometimento-status strong {
+    display: block;
+    margin-bottom: 5px;
     color: var(--verde-escuro);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .comprometimento-status span {
+    display: block;
     color: var(--texto-secundario);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.5;
 }
 
+/* STATUS BAIXO */
+
 .comprometimento-status.status-baixo {
+    background: rgba(125, 182, 28, 0.09);
     border-left-color: var(--verde-medio);
-    background: rgba(125, 182, 28, 0.06);
+    color: #426f13;
 }
 
 .comprometimento-status.status-baixo strong {
-    color: var(--verde-medio);
+    color: #426f13;
 }
 
+.comprometimento-status.status-baixo span {
+    color: #426f13;
+}
+
+/* STATUS ATENÇÃO */
+
 .comprometimento-status.status-atencao {
-    border-left-color: #d89b00;
-    background: rgba(216, 155, 0, 0.06);
+    background: #fff8e5;
+    border-left-color: var(--aviso);
+    color: #665416;
 }
 
 .comprometimento-status.status-atencao strong {
-    color: #a87400;
+    color: #665416;
 }
 
+.comprometimento-status.status-atencao span {
+    color: #665416;
+}
+
+/* STATUS ALTO */
+
 .comprometimento-status.status-alto {
-    border-left-color: #c62828;
-    background: rgba(198, 40, 40, 0.055);
+    background: rgba(198, 40, 40, 0.07);
+    border-left-color: var(--erro);
+    color: var(--erro);
 }
 
 .comprometimento-status.status-alto strong {
-    color: #c62828;
+    color: var(--erro);
 }
+
+.comprometimento-status.status-alto span {
+    color: #8f2020;
+}
+
+/* =========================================================
+   RESUMO / TABELA
+   ========================================================= */
 
 .comprometimento-resumo .tabela-wrapper {
-    margin-top: 4px;
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
 }
 
-.comprometimento-resumo table tfoot th {
-    background: rgba(0, 160, 145, 0.07);
+.comprometimento-resumo table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comprometimento-resumo thead {
+    background: var(--verde-escuro);
+    color: var(--branco);
+}
+
+.comprometimento-resumo tfoot {
+    background: var(--fundo-secundario);
+}
+
+.comprometimento-resumo tfoot th,
+.comprometimento-resumo tfoot td {
+    font-weight: 700;
     color: var(--verde-escuro);
-    font-weight: 800;
-    border-top: 2px solid rgba(0, 160, 145, 0.18);
+    border-top: 2px solid var(--borda-forte);
+    border-bottom: none;
 }
 
 .comprometimento-resumo .acoes {
-    margin-top: 22px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
 }
 
-.comprometimento-grid input:read-only {
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.comprometimento-grid input[readonly] {
+    background: #eef2f2;
+    color: var(--texto-secundario);
     cursor: default;
 }
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
 
 @media (max-width: 900px) {
     .comprometimento-grid {
@@ -2259,25 +2358,34 @@ footer {
     .comprometimento-resultado,
     .comprometimento-resumo {
         grid-column: 1;
+        grid-row: auto;
     }
 }
 
 @media (max-width: 650px) {
     .comprometimento-grid {
         padding-top: 18px;
+        padding-bottom: 30px;
     }
 
     .comprometimento-card {
         padding: 20px;
     }
 
+    .comprometimento-resultado .resultados-grid {
+        grid-template-columns: 1fr;
+    }
+
     .comprometimento-formula {
         align-items: flex-start;
         flex-direction: column;
-        gap: 8px;
     }
 
-    .comprometimento-formula strong {
-        font-size: 18px;
+    .comprometimento-resumo .acoes {
+        flex-direction: column;
+    }
+
+    .comprometimento-resumo .acoes button {
+        width: 100%;
     }
 }
