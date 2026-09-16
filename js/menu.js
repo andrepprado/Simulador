@@ -12,15 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    /*
-     * =========================================================
-     * CADASTRO CENTRALIZADO DO MENU
-     * =========================================================
-     * disponivel: true  -> permite clique e navegação
-     * disponivel: false -> apenas exibe como "Em breve"
-     * =========================================================
-     */
-
     const ITENS_MENU = [
         {
             nome: "Início",
@@ -87,10 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    /* =========================================================
-       PÁGINA ATUAL
-       ========================================================= */
-
     function obterPaginaAtual() {
         let paginaAtual = window.location.pathname
             .split("/")
@@ -107,10 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return paginaAtual.toLowerCase();
     }
 
-    /* =========================================================
-       ITEM ATIVO
-       ========================================================= */
-
     function itemEstaAtivo(item, paginaAtual) {
         if (item.arquivo && item.disponivel !== false) {
             return item.arquivo.toLowerCase() === paginaAtual;
@@ -125,9 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
     }
 
-    /* =========================================================
-       FECHAR SUBMENUS
-       ========================================================= */
+    function ehMobile() {
+        return window.matchMedia("(max-width: 700px)").matches;
+    }
 
     function fecharTodosSubmenus(excecao = null) {
         document.querySelectorAll(".menu-grupo.aberto").forEach(grupo => {
@@ -143,9 +126,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* =========================================================
-       LINK DISPONÍVEL
-       ========================================================= */
+    function fecharMenuMobile() {
+        const nav = document.querySelector(".menu-principal");
+        const botao = document.querySelector(".menu-mobile-botao");
+
+        if (!nav || !botao) {
+            return;
+        }
+
+        nav.classList.remove("menu-mobile-aberto");
+        botao.classList.remove("ativo");
+        botao.setAttribute("aria-expanded", "false");
+
+        fecharTodosSubmenus();
+    }
 
     function criarLinkDisponivel(item, paginaAtual, classe = "menu-item") {
         const link = document.createElement("a");
@@ -158,12 +152,14 @@ document.addEventListener("DOMContentLoaded", () => {
             link.classList.add("ativo");
         }
 
+        link.addEventListener("click", () => {
+            if (ehMobile()) {
+                fecharMenuMobile();
+            }
+        });
+
         return link;
     }
-
-    /* =========================================================
-       ITEM INDISPONÍVEL
-       ========================================================= */
 
     function criarItemIndisponivel(item, classe = "menu-item") {
         const elemento = document.createElement("span");
@@ -173,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
         elemento.setAttribute("title", "Em breve");
 
         const texto = document.createElement("span");
+        texto.className = "menu-item-texto";
         texto.textContent = item.nome;
 
         const status = document.createElement("small");
@@ -185,28 +182,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return elemento;
     }
 
-    /* =========================================================
-       CRIAÇÃO DE ITEM
-       ========================================================= */
-
     function criarItemMenu(item, paginaAtual, classe = "menu-item") {
         if (item.disponivel === false) {
-            return criarItemIndisponivel(
-                item,
-                classe
-            );
+            return criarItemIndisponivel(item, classe);
         }
 
-        return criarLinkDisponivel(
-            item,
-            paginaAtual,
-            classe
-        );
+        return criarLinkDisponivel(item, paginaAtual, classe);
     }
-
-    /* =========================================================
-       GRUPO DISPONÍVEL
-       ========================================================= */
 
     function criarGrupoDisponivel(item, paginaAtual) {
         const grupo = document.createElement("div");
@@ -224,6 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         botao.setAttribute("aria-haspopup", "true");
 
         const texto = document.createElement("span");
+        texto.className = "menu-item-texto";
         texto.textContent = item.nome;
 
         const seta = document.createElement("span");
@@ -238,27 +221,23 @@ document.addEventListener("DOMContentLoaded", () => {
         submenu.className = "menu-submenu";
 
         item.itens.forEach(subitem => {
-            const elemento = criarItemMenu(
-                subitem,
-                paginaAtual,
-                "menu-subitem"
+            submenu.appendChild(
+                criarItemMenu(
+                    subitem,
+                    paginaAtual,
+                    "menu-subitem"
+                )
             );
-
-            submenu.appendChild(elemento);
         });
 
         botao.addEventListener("click", event => {
             event.stopPropagation();
 
-            const abrir =
-                !grupo.classList.contains("aberto");
+            const abrir = !grupo.classList.contains("aberto");
 
             fecharTodosSubmenus(grupo);
 
-            grupo.classList.toggle(
-                "aberto",
-                abrir
-            );
+            grupo.classList.toggle("aberto", abrir);
 
             botao.setAttribute(
                 "aria-expanded",
@@ -268,6 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         grupo.addEventListener("mouseenter", () => {
             if (
+                !ehMobile() &&
                 window.matchMedia("(hover: hover)").matches
             ) {
                 fecharTodosSubmenus(grupo);
@@ -283,6 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         grupo.addEventListener("mouseleave", () => {
             if (
+                !ehMobile() &&
                 window.matchMedia("(hover: hover)").matches
             ) {
                 grupo.classList.remove("aberto");
@@ -299,10 +280,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return grupo;
     }
-
-    /* =========================================================
-       GRUPO INDISPONÍVEL
-       ========================================================= */
 
     function criarGrupoIndisponivel(item) {
         const grupo = document.createElement("div");
@@ -327,8 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const texto = document.createElement("span");
 
-        texto.textContent =
-            item.nome;
+        texto.className = "menu-item-texto";
+        texto.textContent = item.nome;
 
         const status = document.createElement("small");
 
@@ -346,10 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return grupo;
     }
 
-    /* =========================================================
-       CRIAÇÃO DOS GRUPOS
-       ========================================================= */
-
     function criarGrupo(item, paginaAtual) {
         if (item.disponivel === false) {
             return criarGrupoIndisponivel(item);
@@ -361,22 +334,86 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    /* =========================================================
-       CRIAÇÃO DO MENU
-       ========================================================= */
+    function criarBotaoMobile() {
+        const topo = document.createElement("div");
+        topo.className = "menu-mobile-topo";
+
+        const container = document.createElement("div");
+        container.className = "container menu-mobile-topo-conteudo";
+
+        const titulo = document.createElement("span");
+        titulo.className = "menu-mobile-titulo";
+        titulo.textContent = "Menu";
+
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "menu-mobile-botao";
+        botao.setAttribute("aria-label", "Abrir menu");
+        botao.setAttribute("aria-expanded", "false");
+
+        const linha1 = document.createElement("span");
+        const linha2 = document.createElement("span");
+        const linha3 = document.createElement("span");
+
+        botao.appendChild(linha1);
+        botao.appendChild(linha2);
+        botao.appendChild(linha3);
+
+        botao.addEventListener("click", event => {
+            event.stopPropagation();
+
+            const nav = botao.closest(".menu-principal");
+
+            if (!nav) {
+                return;
+            }
+
+            const abrir =
+                !nav.classList.contains("menu-mobile-aberto");
+
+            nav.classList.toggle(
+                "menu-mobile-aberto",
+                abrir
+            );
+
+            botao.classList.toggle(
+                "ativo",
+                abrir
+            );
+
+            botao.setAttribute(
+                "aria-expanded",
+                abrir ? "true" : "false"
+            );
+
+            botao.setAttribute(
+                "aria-label",
+                abrir ? "Fechar menu" : "Abrir menu"
+            );
+
+            if (!abrir) {
+                fecharTodosSubmenus();
+            }
+        });
+
+        container.appendChild(titulo);
+        container.appendChild(botao);
+        topo.appendChild(container);
+
+        return topo;
+    }
 
     function criarMenu() {
-        const paginaAtual =
-            obterPaginaAtual();
+        const paginaAtual = obterPaginaAtual();
 
-        const nav =
-            document.createElement("nav");
+        const nav = document.createElement("nav");
+        nav.className = "menu-principal";
 
-        nav.className =
-            "menu-principal";
+        nav.appendChild(
+            criarBotaoMobile()
+        );
 
-        const container =
-            document.createElement("div");
+        const container = document.createElement("div");
 
         container.className =
             "container menu-conteudo";
@@ -411,27 +448,43 @@ document.addEventListener("DOMContentLoaded", () => {
         containerMenu.replaceChildren(nav);
     }
 
-    /* =========================================================
-       EVENTOS GERAIS
-       ========================================================= */
-
     document.addEventListener("click", event => {
         if (
-            !event.target.closest(".menu-grupo")
+            !event.target.closest(".menu-grupo") &&
+            !event.target.closest(".menu-mobile-botao")
         ) {
             fecharTodosSubmenus();
+
+            if (
+                ehMobile() &&
+                !event.target.closest(".menu-principal")
+            ) {
+                fecharMenuMobile();
+            }
         }
     });
 
     document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
             fecharTodosSubmenus();
+            fecharMenuMobile();
         }
     });
 
-    /* =========================================================
-       INICIALIZAÇÃO
-       ========================================================= */
+    let larguraAnterior = window.innerWidth;
+
+    window.addEventListener("resize", () => {
+        const larguraAtual = window.innerWidth;
+
+        if (
+            larguraAnterior <= 700 &&
+            larguraAtual > 700
+        ) {
+            fecharMenuMobile();
+        }
+
+        larguraAnterior = larguraAtual;
+    });
 
     criarMenu();
 });
