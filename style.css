@@ -158,7 +158,7 @@ header h1,
     color: var(--branco);
     font-size: clamp(30px, 4vw, 44px);
     line-height: 1.1;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 header p,
@@ -310,7 +310,7 @@ a.menu-item:hover,
 }
 
 /* =========================================================
-   AGRUPADORES DO MENU
+   AGRUPADORES
    ========================================================= */
 
 .menu-grupo {
@@ -372,7 +372,7 @@ a.menu-item:hover,
     font-weight: 700;
     line-height: 1.35;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     border-left: 3px solid transparent;
     transition: .2s ease;
 }
@@ -386,15 +386,6 @@ a.menu-item:hover,
     background: rgba(0, 160, 145, .07);
     color: var(--turquesa);
     border-left-color: var(--verde-claro);
-}
-
-/* =========================================================
-   MENU MOBILE
-   ========================================================= */
-
-.menu-mobile-topo,
-.menu-mobile-botao {
-    display: none;
 }
 
 /* =========================================================
@@ -444,7 +435,7 @@ main {
     color: var(--verde-escuro);
     font-size: 22px;
     line-height: 1.25;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .secao-titulo p,
@@ -452,7 +443,8 @@ main {
     margin: 0;
     color: var(--texto-secundario);
     font-size: 13px;
-    overflow-wrap: anywhere;
+    line-height: 1.5;
+    overflow-wrap: break-word;
 }
 
 .titulo-subsecao {
@@ -465,18 +457,18 @@ main {
     color: var(--verde-escuro);
     font-size: 16px;
     line-height: 1.3;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .titulo-subsecao p {
     color: var(--texto-secundario);
     font-size: 12px;
     line-height: 1.5;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 /* =========================================================
-   HOME / CAIXA DE FERRAMENTAS
+   HOME
    ========================================================= */
 
 .home,
@@ -514,7 +506,7 @@ main {
     color: var(--verde-escuro);
     font-size: 30px;
     line-height: 1.2;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .home-apresentacao p,
@@ -522,7 +514,7 @@ main {
     color: var(--texto-secundario);
     font-size: 15px;
     line-height: 1.6;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .categoria-ferramentas {
@@ -585,7 +577,7 @@ main {
 }
 
 /* =========================================================
-   GRID DOS CARDS
+   GRID HOME
    ========================================================= */
 
 .ferramentas-grid {
@@ -749,7 +741,7 @@ a.ferramenta-card:hover,
     color: var(--verde-escuro);
     font-size: 17px;
     line-height: 1.25;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .ferramenta-card p {
@@ -757,14 +749,14 @@ a.ferramenta-card:hover,
     color: var(--texto-secundario);
     font-size: 12px;
     line-height: 1.5;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .ferramenta-link {
     color: var(--turquesa);
     font-size: 12px;
     font-weight: 800;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 /* =========================================================
@@ -797,11 +789,11 @@ a.ferramenta-card:hover,
 .resultado-card h2 {
     margin-top: 0;
     color: var(--verde-escuro);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 /* =========================================================
-   GRIDS GERAIS
+   GRIDS
    ========================================================= */
 
 .simulador-grid {
@@ -958,7 +950,7 @@ a.ferramenta-card:hover,
     font-size: 13px;
     font-weight: 700;
     line-height: 1.4;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .campo-grupo small,
@@ -969,7 +961,7 @@ a.ferramenta-card:hover,
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.45;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 input,
@@ -1058,14 +1050,12 @@ input.bloqueado {
 
 .input-prefixo input {
     flex: 1 1 auto;
-    width: 1%;
     min-width: 0;
     border-radius: 0 9px 9px 0;
 }
 
 .input-sufixo input {
     flex: 1 1 auto;
-    width: 1%;
     min-width: 0;
     border-radius: 9px 0 0 9px;
 }
@@ -1137,7 +1127,7 @@ input.bloqueado {
 }
 
 /* =========================================================
-   BLOCOS INFORMATIVOS
+   BLOCOS
    ========================================================= */
 
 .separador {
@@ -1158,7 +1148,7 @@ input.bloqueado {
     border-radius: 8px;
     font-size: 13px;
     line-height: 1.5;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .aviso-info {
@@ -1172,7 +1162,7 @@ input.bloqueado {
     border-radius: 8px;
     font-size: 12px;
     line-height: 1.5;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .indicador-total {
@@ -1194,7 +1184,7 @@ input.bloqueado {
     min-width: 0;
     color: var(--verde-escuro);
     font-size: 14px;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .indicador-total strong.indicador-ok {
@@ -1243,8 +1233,8 @@ input.bloqueado {
     line-height: 1.1;
     text-align: right;
     white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .resultado-grid,
@@ -1288,7 +1278,7 @@ input.bloqueado {
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .resultado-item strong {
@@ -1299,8 +1289,8 @@ input.bloqueado {
     font-size: clamp(12px, .9vw, 16px);
     line-height: 1.3;
     white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .resultado-item-neutro strong {
@@ -1339,8 +1329,7 @@ input.bloqueado {
     color: var(--branco);
     font-size: 14px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* =========================================================
@@ -1466,7 +1455,7 @@ td {
     color: var(--branco);
     font-size: 12px;
     font-weight: 700;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .documento-lista {
@@ -1480,7 +1469,7 @@ td {
     border-bottom: 1px solid var(--borda);
     font-size: 12px;
     line-height: 1.45;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .documento-item:last-child {
@@ -1508,7 +1497,7 @@ td {
     border-radius: 8px;
     font-size: 11px;
     line-height: 1.5;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 /* =========================================================
@@ -1713,7 +1702,7 @@ td {
     color: var(--verde-escuro);
     font-size: 15px;
     line-height: 1.4;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .opcao-simulacao-conteudo small {
@@ -1721,7 +1710,7 @@ td {
     color: var(--texto-secundario);
     font-size: 12px;
     line-height: 1.55;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .opcao-simulacao:hover .opcao-simulacao-conteudo {
@@ -1831,7 +1820,7 @@ td {
     color: var(--verde-escuro);
     font-size: 14px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .previdencia-status {
@@ -1910,7 +1899,7 @@ td {
     min-width: 0;
     min-height: 48px;
     height: auto;
-    padding: 10px;
+    padding: 10px 8px;
     background: #F7F9F9;
     color: var(--texto-secundario);
     border: 1px solid var(--borda);
@@ -1919,13 +1908,10 @@ td {
     font-weight: 700;
     line-height: 1.2;
     cursor: pointer;
-    overflow-wrap: anywhere;
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        color .2s ease,
-        border-color .2s ease,
-        box-shadow .2s ease;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    transition: .2s ease;
 }
 
 .sicoobcard-opcao:hover {
@@ -1981,7 +1967,8 @@ td {
     color: var(--verde-escuro);
     font-size: 27px;
     line-height: 1.2;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-cartao-topo p {
@@ -2062,14 +2049,16 @@ td {
     min-width: 0;
     color: var(--verde-escuro);
     font-size: 14px;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-nome-imagem span {
     min-width: 0;
     color: var(--texto-secundario);
     font-size: 11px;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-informacoes-card {
@@ -2123,7 +2112,8 @@ td {
     color: var(--verde-escuro);
     font-size: 19px;
     line-height: 1.25;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-info-destaque {
@@ -2209,7 +2199,8 @@ td {
     color: var(--verde-escuro);
     font-size: 18px;
     line-height: 1.3;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-faixa-renda-conteudo>small {
@@ -2217,7 +2208,8 @@ td {
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.45;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-beneficios-cabecalho {
@@ -2327,7 +2319,8 @@ td {
     color: var(--verde-escuro);
     font-size: 12px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-beneficio-conteudo small {
@@ -2335,7 +2328,8 @@ td {
     color: var(--texto-secundario);
     font-size: 10px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .sicoobcard-sem-beneficios {
@@ -2400,7 +2394,7 @@ td {
 }
 
 /* =========================================================
-   COMPROMETIMENTO DE RENDA
+   COMPROMETIMENTO
    ========================================================= */
 
 .comprometimento-container {
@@ -2474,14 +2468,14 @@ td {
     color: var(--verde-escuro);
     font-size: 21px;
     line-height: 1.25;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .comprometimento-titulo p {
     margin: 0;
     color: var(--texto-secundario);
     font-size: 13px;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .comprometimento-form-grid {
@@ -2506,7 +2500,7 @@ td {
     color: var(--verde-escuro);
     font-size: 13px;
     font-weight: 700;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .comprometimento-campo small {
@@ -2515,7 +2509,7 @@ td {
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.4;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .comprometimento-campo input,
@@ -2574,15 +2568,11 @@ td {
 }
 
 .comprometimento-input-prefixo input {
-    width: 1%;
-    flex: 1 1 auto;
     min-width: 0;
     border-radius: 0 9px 9px 0;
 }
 
 .comprometimento-input-sufixo input {
-    width: 1%;
-    flex: 1 1 auto;
     min-width: 0;
     border-radius: 9px 0 0 9px;
 }
@@ -2729,7 +2719,7 @@ td {
     display: block;
     color: var(--verde-escuro);
     font-size: 15px;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .comprometimento-tabela {
@@ -2811,7 +2801,7 @@ td {
 }
 
 /* =========================================================
-   BOTÃO IMPRIMIR
+   BOTÃO IMPRESSÃO
    ========================================================= */
 
 .botao-impressao-pdf {
@@ -3064,7 +3054,7 @@ footer p,
     color: var(--turquesa);
     font-size: 17px;
     line-height: 1.3;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 #cardTaxasCredito .resultado-destaque,
@@ -3172,7 +3162,7 @@ footer p,
     color: var(--verde-escuro);
     font-size: 13px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 #cardGarantiasCredito .opcao-simulacao-conteudo small {
@@ -3181,7 +3171,7 @@ footer p,
     color: var(--texto-secundario);
     font-size: 10px;
     line-height: 1.4;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 #cardGarantiasCredito .opcao-simulacao:hover .opcao-simulacao-conteudo {
@@ -3265,7 +3255,7 @@ footer p,
     border-radius: 9px;
     font-size: 12px;
     line-height: 1.55;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 #regrasGarantiasCredito .documentos-observacao::before,
@@ -3315,7 +3305,7 @@ footer p,
     color: var(--verde-escuro);
     font-size: 14px;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .simulador-grid-igual .linha-selecionada {
@@ -3365,7 +3355,7 @@ footer p,
 }
 
 /* =========================================================
-   TABLET / TELAS INTERMEDIÁRIAS
+   TABLET
    ========================================================= */
 
 @media (max-width: 1100px) {
@@ -3430,27 +3420,6 @@ footer p,
         margin-bottom: 18px;
     }
 
-    .menu-conteudo {
-        flex-wrap: wrap;
-        gap: 0;
-        min-height: 0;
-        padding: 4px 0;
-        overflow: visible;
-    }
-
-    .menu-item {
-        min-height: 46px;
-        padding: 0 14px;
-    }
-
-    .menu-grupo {
-        position: relative;
-    }
-
-    .menu-submenu {
-        min-width: 230px;
-    }
-
     .ferramentas-grid {
         grid-template-columns: repeat(auto-fit,
                 minmax(min(260px, 100%), 320px));
@@ -3506,6 +3475,10 @@ footer p,
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     .sicoobcard-beneficios-cabecalho {
         flex-direction: column;
         gap: 10px;
@@ -3521,89 +3494,31 @@ footer p,
 }
 
 /* =========================================================
-   MOBILE + MENU HAMBÚRGUER
+   MENU MOBILE HAMBÚRGUER
    ========================================================= */
 
+.menu-mobile-topo,
+.menu-mobile-botao {
+    display: none;
+}
+
 @media (max-width: 700px) {
-
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-    }
-
-    body {
-        font-size: 14px;
-    }
-
-    .container {
-        width: calc(100% - 24px);
-        max-width: none;
-        min-width: 0;
-        margin-right: auto;
-        margin-left: auto;
-    }
-
-    /* =====================================================
-       CABEÇALHO
-       ===================================================== */
-
-    .header-conteudo,
-    .cabecalho-conteudo,
-    .topo-conteudo {
-        min-height: 0;
-        padding-top: 22px;
-        padding-bottom: 22px;
-    }
-
-    .header-logo,
-    .cabecalho-logo,
-    .topo-logo {
-        display: none;
-    }
-
-    header h1,
-    .cabecalho h1,
-    .topo h1 {
-        font-size: clamp(27px, 8vw, 34px);
-        line-height: 1.1;
-    }
-
-    header p,
-    .cabecalho p,
-    .topo p {
-        font-size: 14px;
-        line-height: 1.45;
-    }
-
-    /* =====================================================
-       MENU HAMBÚRGUER
-       ===================================================== */
-
     .menu-principal {
         position: relative;
         z-index: 1000;
         width: 100%;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
         background: var(--branco);
         border-bottom: 1px solid var(--borda);
         box-shadow: 0 3px 12px rgba(0, 54, 64, .05);
     }
 
     .menu-mobile-topo {
-        display: block;
-        width: 100%;
-        background: var(--branco);
-    }
-
-    .menu-mobile-topo-conteudo {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         width: calc(100% - 24px);
-        max-width: none;
-        min-height: 54px;
+        min-height: 52px;
         margin: 0 auto;
     }
 
@@ -3613,25 +3528,23 @@ footer p,
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        flex: 0 0 42px;
+        flex: 0 0 40px;
         gap: 5px;
-        width: 42px !important;
-        min-width: 42px !important;
-        height: 42px;
-        min-height: 42px;
+        width: 40px !important;
+        min-width: 40px !important;
+        height: 40px;
+        min-height: 40px;
         padding: 0;
         background: transparent;
         color: var(--verde-escuro);
         border: 1px solid var(--borda);
         border-radius: 9px;
         cursor: pointer;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
     }
 
     .menu-mobile-botao>span {
         display: block;
-        width: 20px;
+        width: 19px;
         height: 2px;
         margin: 0;
         background: var(--verde-escuro);
@@ -3693,24 +3606,19 @@ footer p,
         justify-content: flex-start;
         width: 100%;
         min-width: 0;
-        min-height: 46px;
+        min-height: 44px;
         height: auto;
-        padding: 11px 12px;
+        padding: 10px 11px;
         background: transparent;
         color: var(--texto-secundario);
         border: 0;
         border-bottom: 1px solid var(--borda);
         border-radius: 0;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
         line-height: 1.35;
         text-align: left;
         white-space: normal;
-    }
-
-    a.menu-item:hover {
-        background: rgba(0, 160, 145, .05);
-        color: var(--turquesa);
     }
 
     .menu-item.ativo,
@@ -3738,13 +3646,13 @@ footer p,
 
     .menu-item-texto {
         min-width: 0;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 
     .menu-grupo-seta {
         flex: 0 0 auto;
         margin-left: auto;
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .menu-submenu {
@@ -3772,27 +3680,22 @@ footer p,
         align-items: center;
         width: 100%;
         min-width: 0;
-        min-height: 44px;
-        padding: 10px 14px 10px 28px;
+        min-height: 42px;
+        padding: 9px 13px 9px 26px;
         color: var(--texto-secundario);
         background: transparent;
         border: 0;
         border-bottom: 1px solid rgba(203, 216, 217, .75);
         border-left: 3px solid transparent;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 700;
         line-height: 1.4;
         white-space: normal;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 
     .menu-subitem:last-child {
         border-bottom: 0;
-    }
-
-    .menu-subitem:hover {
-        background: rgba(0, 160, 145, .06);
-        color: var(--turquesa);
     }
 
     .menu-subitem.ativo {
@@ -3816,8 +3719,8 @@ footer p,
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
-        min-height: 18px;
-        padding: 2px 6px;
+        min-height: 17px;
+        padding: 2px 5px;
         background: var(--indisponivel-fundo);
         color: var(--indisponivel);
         border: 1px solid var(--indisponivel-borda);
@@ -3827,14 +3730,66 @@ footer p,
         line-height: 1;
         white-space: nowrap;
     }
+}
 
-    .menu-grupo-indisponivel .menu-grupo-botao {
-        pointer-events: none;
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
     }
 
-    /* =====================================================
-       HOME
-       ===================================================== */
+    body {
+        font-size: 13px;
+    }
+
+    .container {
+        width: calc(100% - 24px);
+        max-width: none;
+        min-width: 0;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    /* CABEÇALHO */
+
+    .header-conteudo,
+    .cabecalho-conteudo,
+    .topo-conteudo {
+        min-height: 0;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .header-logo,
+    .cabecalho-logo,
+    .topo-logo {
+        display: none;
+    }
+
+    header h1,
+    .cabecalho h1,
+    .topo h1 {
+        margin-bottom: 7px;
+        font-size: clamp(24px, 7vw, 30px);
+        line-height: 1.08;
+    }
+
+    header p,
+    .cabecalho p,
+    .topo p {
+        max-width: 100%;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    /* HOME */
 
     .home,
     .caixa-ferramentas,
@@ -3843,85 +3798,90 @@ footer p,
     .sicoobcard-container {
         width: 100%;
         min-width: 0;
-        padding-top: 12px;
+        padding-top: 10px;
     }
 
     .home {
-        padding-bottom: 30px;
+        padding-bottom: 28px;
     }
 
     .home-apresentacao {
-        margin-bottom: 26px;
+        margin-bottom: 24px;
     }
 
     .home-apresentacao h2,
     .categoria-titulo h2 {
-        font-size: 23px;
+        font-size: 21px;
         line-height: 1.2;
     }
 
     .home-apresentacao p,
     .categoria-titulo p {
-        font-size: 13px;
+        font-size: 12px;
+        line-height: 1.5;
     }
 
     .home-etiqueta,
     .categoria-etiqueta {
-        margin-bottom: 10px;
-        padding: 6px 10px;
-        font-size: 10px;
+        margin-bottom: 9px;
+        padding: 5px 9px;
+        font-size: 9px;
     }
 
     .categoria-ferramentas {
-        width: calc(100% - 24px);
+        width: 100%;
         max-width: none;
-        margin-right: auto;
-        margin-bottom: 30px;
-        margin-left: auto;
+        margin-bottom: 28px;
     }
 
     .categoria-titulo {
-        margin-bottom: 18px;
-        padding-bottom: 14px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
     }
 
     .ferramentas-grid {
         grid-template-columns: minmax(0, 1fr);
         justify-content: stretch;
-        gap: 14px;
+        gap: 12px;
     }
 
     .ferramenta-card {
         width: 100%;
         max-width: none;
         min-height: 0;
-        padding: 18px;
-        gap: 14px;
-        border-radius: 13px;
+        padding: 15px;
+        gap: 12px;
+        border-radius: 12px;
     }
 
     .ferramenta-icone {
-        flex: 0 0 62px;
-        width: 62px;
-        height: 62px;
-        border-radius: 13px;
+        flex: 0 0 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 11px;
     }
 
     .ferramenta-card h3 {
-        font-size: 16px;
+        font-size: 15px;
+        line-height: 1.25;
     }
 
     .ferramenta-card p {
-        font-size: 12px;
+        font-size: 11px;
+        line-height: 1.45;
     }
 
-    .ferramenta-indisponivel {
-        opacity: .8;
+    .ferramenta-link {
+        font-size: 11px;
     }
 
-    /* =====================================================
-       CARDS
-       ===================================================== */
+    .ferramenta-status {
+        margin-bottom: 6px;
+        padding: 3px 7px;
+        font-size: 9px;
+    }
+
+    /* CARDS */
 
     .formulario-card,
     .resultado-card,
@@ -3943,8 +3903,8 @@ footer p,
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        padding: 18px;
-        border-radius: 13px;
+        padding: 16px;
+        border-radius: 12px;
     }
 
     .simulador-grid,
@@ -3953,41 +3913,38 @@ footer p,
     .cobranca-grid,
     .comprometimento-grid,
     .previdencia-resultado-grid {
-        width: 100%;
-        min-width: 0;
-        gap: 16px;
-        padding-top: 12px;
-        padding-bottom: 26px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding-top: 10px;
+        padding-bottom: 24px;
     }
 
-    /* =====================================================
-       TÍTULOS
-       ===================================================== */
+    /* TÍTULOS GERAIS */
 
     .secao-titulo,
     .titulo-secao,
     .comprometimento-titulo {
-        gap: 9px;
-        margin-bottom: 18px;
+        gap: 8px;
+        margin-bottom: 16px;
     }
 
     .secao-titulo h2,
     .titulo-secao h2,
     .simulador-grid-igual .titulo-secao h2,
     .comprometimento-titulo h2 {
-        font-size: 19px;
+        font-size: 18px;
+        line-height: 1.25;
     }
 
     .secao-titulo p,
     .titulo-secao p,
     .simulador-grid-igual .titulo-secao p,
     .comprometimento-titulo p {
-        font-size: 12px;
+        font-size: 11px;
+        line-height: 1.45;
     }
 
-    /* =====================================================
-       GRIDS
-       ===================================================== */
+    /* GRIDS */
 
     .grid-form,
     .grid-form-3,
@@ -4012,52 +3969,46 @@ footer p,
         grid-column: auto;
     }
 
-    /* =====================================================
-       INPUTS
-       ===================================================== */
+    /* FORM */
 
     input,
     select,
     textarea,
     .comprometimento-campo input,
     .comprometimento-campo select {
-        min-height: 46px;
+        min-height: 44px;
         font-size: 16px;
     }
 
     textarea {
-        min-height: 90px;
+        min-height: 84px;
     }
 
-    .input-prefixo,
-    .input-sufixo,
-    .comprometimento-input-prefixo,
-    .comprometimento-input-sufixo {
-        width: 100%;
-        min-width: 0;
+    .campo-grupo label,
+    .form-grupo label,
+    .campo label,
+    .comprometimento-campo label {
+        font-size: 12px;
     }
 
-    .input-prefixo input,
-    .input-sufixo input,
-    .comprometimento-input-prefixo input,
-    .comprometimento-input-sufixo input {
-        flex: 1 1 auto;
-        width: 1%;
-        min-width: 0;
+    .campo-grupo small,
+    .form-grupo small,
+    .campo small,
+    .campo-ajuda,
+    .comprometimento-campo small {
+        font-size: 10px;
     }
 
     .input-prefixo>span,
     .input-sufixo>span,
     .comprometimento-input-prefixo>span,
     .comprometimento-input-sufixo>span {
-        min-width: 44px;
-        padding: 0 9px;
-        font-size: 11px;
+        min-width: 42px;
+        padding: 0 8px;
+        font-size: 10px;
     }
 
-    /* =====================================================
-       BOTÕES
-       ===================================================== */
+    /* BOTÕES */
 
     .acoes,
     .acoes-simulador,
@@ -4067,7 +4018,8 @@ footer p,
     .simulador-grid-igual .acoes {
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;
+        gap: 7px;
+        margin-top: 18px;
     }
 
     .acoes button,
@@ -4075,23 +4027,28 @@ footer p,
     .acoes-comprometimento button,
     .previdencia-acoes button,
     .comprometimento-acoes button,
-    .simulador-grid-igual .acoes button {
+    .simulador-grid-igual .acoes button,
+    .btn,
+    .btn-primario,
+    .btn-secundario,
+    .btn-principal {
         width: 100%;
         min-width: 0;
-        min-height: 46px;
+        min-height: 42px;
+        height: 42px;
+        padding: 0 14px;
+        font-size: 12px;
     }
 
-    /* =====================================================
-       RESULTADOS
-       ===================================================== */
+    /* RESULTADOS */
 
     .resultado-destaque,
     .comprometimento-resultado-destaque,
     .simulador-grid-igual .resultado-destaque {
         align-items: flex-start;
         flex-direction: column;
-        gap: 8px;
-        padding: 18px;
+        gap: 7px;
+        padding: 15px;
     }
 
     .resultado-destaque span,
@@ -4103,11 +4060,16 @@ footer p,
         text-align: left;
     }
 
+    .resultado-destaque span,
+    .comprometimento-resultado-destaque span {
+        font-size: 12px;
+    }
+
     .resultado-destaque strong,
     .comprometimento-resultado-destaque strong {
-        font-size: clamp(22px, 7vw, 28px);
+        font-size: 22px;
         white-space: normal;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 
     .resultado-grid,
@@ -4116,7 +4078,7 @@ footer p,
     }
 
     .resultado-item {
-        padding: 13px;
+        padding: 12px;
     }
 
     .indicador-total {
@@ -4125,13 +4087,11 @@ footer p,
         gap: 6px;
     }
 
-    /* =====================================================
-       PREVIDÊNCIA
-       ===================================================== */
+    /* PREVIDÊNCIA */
 
     .previdencia-progresso {
-        padding: 16px;
-        border-radius: 13px;
+        padding: 15px;
+        border-radius: 12px;
     }
 
     .previdencia-progresso-topo {
@@ -4142,11 +4102,20 @@ footer p,
 
     .previdencia-etapas {
         grid-template-columns: minmax(0, 1fr);
-        gap: 8px;
+        gap: 7px;
     }
 
     .previdencia-etapa {
-        min-height: 46px;
+        min-height: 43px;
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .previdencia-etapa span {
+        flex-basis: 25px;
+        width: 25px;
+        height: 25px;
+        font-size: 10px;
     }
 
     .previdencia-escolhas {
@@ -4155,195 +4124,326 @@ footer p,
 
     .opcao-simulacao-conteudo {
         min-height: auto;
-        padding: 15px;
+        padding: 13px;
+    }
+
+    .opcao-simulacao-conteudo strong {
+        font-size: 13px;
+    }
+
+    .opcao-simulacao-conteudo small {
+        font-size: 10px;
     }
 
     /* =====================================================
-       SICOOBCARD - MOBILE
+       SICOOBCARD MOBILE
        ===================================================== */
 
-    /*
-       O seletor deixa de ser um bloco gigante vertical.
-       No celular passa a ser uma faixa horizontal navegável
-       por toque/swipe.
-    */
-
-    .sicoobcard-selecao-card {
-        padding-right: 0;
-        padding-left: 0;
-        overflow: hidden;
+    .sicoobcard-container {
+        padding-top: 10px;
+        padding-bottom: 30px;
     }
 
-    .sicoobcard-selecao-card>.titulo-secao,
-    .sicoobcard-selecao-card>.titulo-subsecao {
-        padding-right: 18px;
-        padding-left: 18px;
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
+        padding: 15px;
+        border-radius: 12px;
     }
 
-    .sicoobcard-seletor {
-        display: flex;
-        grid-template-columns: none;
-        gap: 9px;
-        width: 100%;
-        min-width: 0;
-        padding: 2px 18px 11px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scroll-snap-type: x proximity;
-        scroll-padding-inline: 18px;
-        overscroll-behavior-x: contain;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .sicoobcard-seletor::-webkit-scrollbar {
-        display: none;
-    }
-
-    .sicoobcard-opcao {
-        flex: 0 0 auto;
-        width: auto;
-        min-width: 120px;
-        max-width: 165px;
-        min-height: 46px;
-        padding: 9px 14px;
-        scroll-snap-align: start;
-        background: #F7F9F9;
-        border-radius: 10px;
-        font-size: 11px;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .sicoobcard-opcao:hover {
-        transform: none;
-    }
-
-    .sicoobcard-opcao.ativo {
-        transform: none;
-        box-shadow: 0 4px 12px rgba(0, 54, 64, .15);
+    .sicoobcard-selecao-card,
+    .sicoobcard-beneficios-card {
+        margin-bottom: 14px;
     }
 
     .sicoobcard-detalhes-grid {
         grid-template-columns: minmax(0, 1fr);
-        gap: 16px;
-        margin-bottom: 16px;
+        gap: 14px;
+        margin-bottom: 14px;
     }
+
+    /* Títulos internos deixam de ficar lado a lado */
+
+    .sicoobcard-selecao-card .titulo-secao,
+    .sicoobcard-informacoes-card .titulo-secao,
+    .sicoobcard-beneficios-card .titulo-secao,
+    .sicoobcard-comparativo-card .titulo-secao {
+        display: block;
+        margin-bottom: 14px;
+    }
+
+    .sicoobcard-selecao-card .titulo-secao .categoria-etiqueta,
+    .sicoobcard-informacoes-card .titulo-secao .categoria-etiqueta,
+    .sicoobcard-beneficios-card .titulo-secao .categoria-etiqueta,
+    .sicoobcard-comparativo-card .titulo-secao .categoria-etiqueta {
+        display: inline-flex;
+        margin-bottom: 8px;
+    }
+
+    .sicoobcard-selecao-card .titulo-secao h2,
+    .sicoobcard-informacoes-card .titulo-secao h2,
+    .sicoobcard-beneficios-card .titulo-secao h2,
+    .sicoobcard-comparativo-card .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        margin: 0 0 5px;
+        font-size: 17px;
+        line-height: 1.25;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .sicoobcard-selecao-card .titulo-secao p,
+    .sicoobcard-informacoes-card .titulo-secao p,
+    .sicoobcard-beneficios-card .titulo-secao p,
+    .sicoobcard-comparativo-card .titulo-secao p {
+        display: block;
+        width: 100%;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.45;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* seletor */
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .sicoobcard-opcao {
+        min-height: 40px;
+        padding: 7px 5px;
+        border-radius: 8px;
+        font-size: 10px;
+        line-height: 1.15;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* cartão */
 
     .sicoobcard-cartao-topo {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 
     .sicoobcard-cartao-topo h2 {
-        font-size: 22px;
+        margin-bottom: 4px;
+        font-size: 20px;
+        line-height: 1.2;
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
     .sicoobcard-cartao-topo p {
-        max-width: none;
-        font-size: 12px;
+        max-width: 100%;
+        font-size: 10px;
+        line-height: 1.45;
     }
 
     .sicoobcard-bandeiras {
         justify-content: flex-start;
+        gap: 5px;
+    }
+
+    .sicoobcard-bandeira-tag {
+        min-height: 24px;
+        padding: 0 8px;
+        font-size: 9px;
     }
 
     .sicoobcard-imagem-area {
-        min-height: 210px;
-        margin-top: 14px;
+        min-height: 190px;
+        margin-top: 12px;
         padding: 12px;
+        border-radius: 11px;
     }
 
     .sicoobcard-imagem {
         width: auto;
         max-width: 100%;
-        max-height: 180px;
+        max-height: 165px;
     }
 
     .sicoobcard-nome-imagem {
         flex-direction: column;
         align-items: flex-start;
-        gap: 4px;
+        gap: 2px;
+        margin-top: 9px;
     }
 
+    .sicoobcard-nome-imagem strong {
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .sicoobcard-nome-imagem span {
+        font-size: 9px;
+    }
+
+    /* Informações */
+
     .sicoobcard-informacoes-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
     }
 
     .sicoobcard-info-item {
-        min-height: 82px;
-        padding: 14px 15px;
-        border-radius: 10px;
+        min-height: 76px;
+        padding: 11px 12px;
+        border-radius: 9px;
+    }
+
+    .sicoobcard-info-item::before {
+        width: 3px;
     }
 
     .sicoobcard-info-item>span {
         margin-bottom: 5px;
-        font-size: 10px;
+        font-size: 8px;
+        line-height: 1.25;
     }
 
     .sicoobcard-info-item>strong {
-        font-size: 17px;
+        font-size: 14px;
+        line-height: 1.2;
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
     .sicoobcard-info-destaque>strong {
-        font-size: 21px;
+        font-size: 17px;
     }
 
+    /* faixa de renda */
+
     .sicoobcard-faixa-renda {
-        grid-column: 1;
-        padding: 15px;
-        gap: 12px;
+        grid-column: 1 / -1;
+        gap: 11px;
+        padding: 12px 13px;
+        border-radius: 9px;
+    }
+
+    .sicoobcard-faixa-renda-icone {
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        margin-left: 0;
+        border-radius: 9px;
+        font-size: 11px;
+    }
+
+    .sicoobcard-faixa-renda-conteudo>span {
+        margin-bottom: 2px;
+        font-size: 8px;
     }
 
     .sicoobcard-faixa-renda-conteudo>strong {
-        font-size: 16px;
+        margin-bottom: 2px;
+        font-size: 14px;
+        line-height: 1.25;
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
+    .sicoobcard-faixa-renda-conteudo>small {
+        font-size: 9px;
+        line-height: 1.35;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* benefícios */
+
     .sicoobcard-beneficios-cabecalho {
-        flex-direction: column;
-        gap: 8px;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .sicoobcard-beneficios-cabecalho .titulo-secao {
+        margin-bottom: 10px;
     }
 
     .sicoobcard-legenda {
         justify-content: flex-start;
+        gap: 7px;
         padding-top: 0;
+    }
+
+    .sicoobcard-legenda>div {
+        gap: 4px;
+        font-size: 8px;
+    }
+
+    .beneficio-bandeira {
+        min-width: 25px;
+        height: 20px;
+        padding: 0 4px;
+        border-radius: 5px;
+        font-size: 7px;
     }
 
     .sicoobcard-beneficios-grid {
         grid-template-columns: minmax(0, 1fr);
-        gap: 9px;
+        gap: 8px;
     }
 
     .sicoobcard-beneficio {
-        min-height: 68px;
-        padding: 13px;
+        gap: 10px;
+        min-height: 58px;
+        padding: 10px 11px;
+        border-radius: 9px;
     }
 
     .sicoobcard-beneficio-icone {
-        flex-basis: 37px;
-        width: 37px;
-        height: 37px;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        font-size: 14px;
     }
 
-    .sicoobcard-comparativo-card {
-        overflow: hidden;
+    .sicoobcard-beneficio-conteudo strong {
+        margin-bottom: 3px;
+        font-size: 11px;
+        line-height: 1.3;
+        word-break: normal;
+        overflow-wrap: normal;
     }
+
+    .sicoobcard-beneficio-conteudo small {
+        font-size: 9px;
+        line-height: 1.3;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* Comparativo */
 
     .sicoobcard-comparativo-card .tabela-wrapper,
     .sicoobcard-comparativo-card .tabela-responsiva {
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
     }
 
-    /* =====================================================
-       COMPROMETIMENTO
-       ===================================================== */
+    .tabela-sicoobcard {
+        min-width: 650px;
+    }
+
+    .tabela-sicoobcard th,
+    .tabela-sicoobcard td {
+        padding: 9px 10px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    /* COMPROMETIMENTO */
 
     .comprometimento-formula {
         align-items: flex-start;
@@ -4353,41 +4453,37 @@ footer p,
 
     .comprometimento-formula strong {
         white-space: normal;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 
     .comprometimento-resultado-destaque strong {
         text-align: left;
     }
 
-    /* =====================================================
-       SIMULADOR CONDIÇÕES
-       ===================================================== */
+    /* SIMULADOR */
 
     #cardGarantiasCredito .opcao-simulacao-conteudo {
-        min-height: 76px;
+        min-height: 72px;
     }
 
     #blocoContratoMae {
-        padding: 14px;
+        padding: 13px;
     }
 
     #regrasGarantiasCredito .documentos-observacao,
     #listaRegrasLinhaCredito .documentos-observacao,
     #listaAlertasCredito .documentos-observacao {
-        padding: 12px 12px 12px 31px;
-        font-size: 11px;
+        padding: 11px 11px 11px 30px;
+        font-size: 10px;
     }
 
     #regrasGarantiasCredito .documentos-observacao::before,
     #listaRegrasLinhaCredito .documentos-observacao::before,
     #listaAlertasCredito .documentos-observacao::before {
-        left: 12px;
+        left: 11px;
     }
 
-    /* =====================================================
-       TABELAS MOBILE
-       ===================================================== */
+    /* TABELAS */
 
     .tabela-responsiva,
     .tabela-wrapper,
@@ -4398,7 +4494,6 @@ footer p,
         margin-right: 0;
         margin-left: 0;
         overflow-x: auto;
-        overflow-y: hidden;
         border: 1px solid var(--borda);
         border-radius: 8px;
         -webkit-overflow-scrolling: touch;
@@ -4408,31 +4503,28 @@ footer p,
     td,
     .comprometimento-tabela th,
     .comprometimento-tabela td {
-        padding: 10px 11px;
-        font-size: 11px;
+        padding: 9px 10px;
+        font-size: 10px;
         white-space: nowrap;
     }
 
     .simulador-grid-igual table {
-        min-width: 680px;
+        min-width: 650px;
     }
 
-    .tabela-mix,
+    .tabela-mix {
+        min-width: 600px;
+    }
+
     .tabela-cobranca {
-        min-width: 620px;
+        min-width: 600px;
     }
 
     .tabela-previdencia {
-        min-width: 720px;
+        min-width: 680px;
     }
 
-    .tabela-sicoobcard {
-        min-width: 760px;
-    }
-
-    /* =====================================================
-       BOTÃO PDF
-       ===================================================== */
+    /* PDF */
 
     .botao-impressao-pdf {
         right: 10px;
@@ -4440,45 +4532,41 @@ footer p,
         width: auto !important;
         max-width: calc(100vw - 20px);
         min-width: 0;
-        min-height: 40px;
-        padding: 0 13px;
-        font-size: 11px;
+        min-height: 38px;
+        padding: 0 12px;
+        border-radius: 8px;
+        font-size: 10px;
     }
 
-    /* =====================================================
-       RODAPÉ
-       ===================================================== */
+    /* RODAPÉ */
 
     footer,
     .rodape {
-        padding: 20px 0;
+        padding: 18px 0;
     }
 
     footer p,
     .rodape p {
-        font-size: 11px;
+        font-size: 10px;
+        line-height: 1.45;
     }
 }
 
 /* =========================================================
-   MOBILE PEQUENO
+   MOBILE ATÉ 480PX
    ========================================================= */
 
 @media (max-width: 480px) {
 
     .container,
-    .menu-mobile-topo-conteudo {
-        width: calc(100% - 20px);
-    }
-
-    .categoria-ferramentas {
+    .menu-mobile-topo {
         width: calc(100% - 20px);
     }
 
     header h1,
     .cabecalho h1,
     .topo h1 {
-        font-size: 27px;
+        font-size: 25px;
     }
 
     .home,
@@ -4486,48 +4574,39 @@ footer p,
     .comprometimento-container,
     .previdencia-container,
     .sicoobcard-container {
-        padding-top: 8px;
+        padding-top: 7px;
     }
 
     .home-apresentacao h2,
     .categoria-titulo h2 {
-        font-size: 21px;
+        font-size: 20px;
     }
 
     .categoria-titulo p {
-        font-size: 12px;
+        font-size: 11px;
     }
-
-    /* HOME CARDS */
 
     .ferramenta-card {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        gap: 12px;
-        padding: 15px;
+        gap: 10px;
+        padding: 13px;
     }
 
     .ferramenta-icone {
-        flex: 0 0 54px;
-        width: 54px;
-        height: 54px;
-    }
-
-    .ferramenta-conteudo {
-        flex: 1 1 auto;
-        min-width: 0;
+        flex: 0 0 50px;
+        width: 50px;
+        height: 50px;
     }
 
     .ferramenta-card h3 {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .ferramenta-status {
-        font-size: 9px;
+        font-size: 8px;
     }
-
-    /* CARDS */
 
     .formulario-card,
     .resultado-card,
@@ -4538,6 +4617,7 @@ footer p,
     .cobranca-card,
     .previdencia-painel>.card,
     .comprometimento-card,
+    .sicoobcard-selecao-card,
     .sicoobcard-cartao-card,
     .sicoobcard-informacoes-card,
     .sicoobcard-beneficios-card,
@@ -4545,140 +4625,171 @@ footer p,
     .card,
     .simulador-card,
     .simulador-grid-igual>.card {
-        padding: 15px;
-        border-radius: 11px;
-    }
-
-    /*
-       O seletor SicoobCard permanece horizontal.
-       Não voltar para grid de uma coluna.
-    */
-
-    .sicoobcard-selecao-card {
-        padding-right: 0;
-        padding-left: 0;
-    }
-
-    .sicoobcard-selecao-card>.titulo-secao,
-    .sicoobcard-selecao-card>.titulo-subsecao {
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-
-    .sicoobcard-seletor {
-        display: flex;
-        grid-template-columns: none;
-        padding-right: 15px;
-        padding-bottom: 10px;
-        padding-left: 15px;
-        scroll-padding-inline: 15px;
-    }
-
-    .sicoobcard-opcao {
-        width: auto;
-        min-width: 112px;
-        max-width: 145px;
-        min-height: 44px;
-        padding: 9px 12px;
-    }
-
-    .sicoobcard-faixa-renda {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .sicoobcard-faixa-renda-icone {
-        margin-left: 0;
-    }
-
-    .sicoobcard-beneficio {
-        align-items: flex-start;
+        padding: 13px;
+        border-radius: 10px;
     }
 
     .secao-titulo h2,
     .titulo-secao h2,
     .simulador-grid-igual .titulo-secao h2,
     .comprometimento-titulo h2 {
-        font-size: 18px;
+        font-size: 17px;
     }
 
     .resultado-destaque,
     .comprometimento-resultado-destaque,
     .simulador-grid-igual .resultado-destaque {
-        padding: 15px;
-        border-radius: 10px;
+        padding: 13px;
+        border-radius: 9px;
     }
 
     .resultado-destaque strong,
     .comprometimento-resultado-destaque strong {
-        font-size: 23px;
+        font-size: 20px;
     }
 
-    .previdencia-painel>.card {
-        padding: 15px;
-    }
+    /* Sicoobcard 400px */
 
-    .opcao-simulacao-conteudo {
-        padding: 14px;
-    }
-
-    .simulador-grid-igual table {
-        min-width: 620px;
-    }
-
-    .menu-status-em-breve {
-        font-size: 7px;
-        padding: 2px 5px;
-    }
-}
-
-/* =========================================================
-   MOBILE 390px
-   ========================================================= */
-
-@media (max-width: 390px) {
-
-    .container,
-    .menu-mobile-topo-conteudo {
-        width: calc(100% - 16px);
-    }
-
-    .categoria-ferramentas {
-        width: calc(100% - 16px);
-    }
-
-    .menu-conteudo {
-        padding-right: 8px;
-        padding-left: 8px;
-    }
-
-    .ferramenta-card {
-        gap: 10px;
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
         padding: 13px;
     }
 
-    .ferramenta-icone {
-        flex-basis: 50px;
-        width: 50px;
-        height: 50px;
+    .sicoobcard-selecao-card .titulo-secao h2,
+    .sicoobcard-informacoes-card .titulo-secao h2,
+    .sicoobcard-beneficios-card .titulo-secao h2,
+    .sicoobcard-comparativo-card .titulo-secao h2 {
+        font-size: 16px;
     }
 
-    .ferramenta-card h3 {
-        font-size: 14px;
+    .sicoobcard-selecao-card .titulo-secao p,
+    .sicoobcard-informacoes-card .titulo-secao p,
+    .sicoobcard-beneficios-card .titulo-secao p,
+    .sicoobcard-comparativo-card .titulo-secao p {
+        font-size: 9px;
     }
 
-    .ferramenta-card p,
-    .ferramenta-link {
-        font-size: 11px;
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
     }
 
     .sicoobcard-opcao {
-        min-width: 106px;
-        max-width: 138px;
+        min-height: 38px;
+        padding: 6px 4px;
+        font-size: 9px;
+        border-radius: 7px;
+    }
+
+    .sicoobcard-cartao-topo h2 {
+        font-size: 18px;
+    }
+
+    .sicoobcard-cartao-topo p {
+        font-size: 9px;
+    }
+
+    .sicoobcard-imagem-area {
+        min-height: 175px;
+        padding: 10px;
+    }
+
+    .sicoobcard-imagem {
+        max-height: 150px;
+    }
+
+    .sicoobcard-informacoes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
     }
 
     .sicoobcard-info-item {
+        min-height: 69px;
+        padding: 10px;
+    }
+
+    .sicoobcard-info-item>span {
+        font-size: 7px;
+    }
+
+    .sicoobcard-info-item>strong {
+        font-size: 13px;
+    }
+
+    .sicoobcard-info-destaque>strong {
+        font-size: 16px;
+    }
+
+    .sicoobcard-faixa-renda {
+        flex-direction: row;
+        align-items: center;
+        gap: 9px;
+        padding: 11px;
+    }
+
+    .sicoobcard-faixa-renda-icone {
+        flex-basis: 34px;
+        width: 34px;
+        height: 34px;
+        font-size: 10px;
+    }
+
+    .sicoobcard-faixa-renda-conteudo>strong {
+        font-size: 13px;
+    }
+
+    .sicoobcard-faixa-renda-conteudo>small {
+        font-size: 8px;
+    }
+
+    .sicoobcard-beneficio {
+        min-height: 54px;
+        padding: 9px;
+    }
+
+    .sicoobcard-beneficio-icone {
+        flex-basis: 31px;
+        width: 31px;
+        height: 31px;
+        font-size: 13px;
+    }
+
+    .sicoobcard-beneficio-conteudo strong {
+        font-size: 10px;
+    }
+
+    .sicoobcard-beneficio-conteudo small {
+        font-size: 8px;
+    }
+
+    .tabela-sicoobcard {
+        min-width: 610px;
+    }
+
+    .tabela-sicoobcard th,
+    .tabela-sicoobcard td {
+        padding: 8px 9px;
+        font-size: 9px;
+    }
+
+    .previdencia-painel>.card {
         padding: 13px;
+    }
+
+    .opcao-simulacao-conteudo {
+        padding: 12px;
+    }
+
+    .simulador-grid-igual table {
+        min-width: 600px;
+    }
+
+    .menu-status-em-breve {
+        font-size: 6px;
+        padding: 2px 4px;
     }
 }
 
@@ -4689,39 +4800,35 @@ footer p,
 @media (max-width: 360px) {
 
     .container,
-    .menu-mobile-topo-conteudo {
-        width: calc(100% - 16px);
-    }
-
-    .categoria-ferramentas {
+    .menu-mobile-topo {
         width: calc(100% - 16px);
     }
 
     header h1,
     .cabecalho h1,
     .topo h1 {
-        font-size: 24px;
+        font-size: 23px;
     }
 
     .ferramenta-card {
-        padding: 13px;
-        gap: 10px;
+        padding: 12px;
+        gap: 9px;
     }
 
     .ferramenta-icone {
-        flex: 0 0 48px;
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
+        flex-basis: 46px;
+        width: 46px;
+        height: 46px;
+        border-radius: 9px;
     }
 
     .ferramenta-card h3 {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .ferramenta-card p,
     .ferramenta-link {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .formulario-card,
@@ -4733,6 +4840,7 @@ footer p,
     .cobranca-card,
     .previdencia-painel>.card,
     .comprometimento-card,
+    .sicoobcard-selecao-card,
     .sicoobcard-cartao-card,
     .sicoobcard-informacoes-card,
     .sicoobcard-beneficios-card,
@@ -4740,27 +4848,41 @@ footer p,
     .card,
     .simulador-card,
     .simulador-grid-igual>.card {
-        padding: 13px;
+        padding: 12px;
     }
 
     .input-prefixo>span,
     .input-sufixo>span,
     .comprometimento-input-prefixo>span,
     .comprometimento-input-sufixo>span {
-        min-width: 40px;
-        padding: 0 7px;
+        min-width: 38px;
+        padding: 0 6px;
     }
 
     .resultado-destaque strong,
     .comprometimento-resultado-destaque strong {
-        font-size: 21px;
+        font-size: 19px;
+    }
+
+    .sicoobcard-seletor {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .sicoobcard-opcao {
-        min-width: 100px;
-        max-width: 130px;
-        padding-right: 10px;
-        padding-left: 10px;
+        min-height: 37px;
+        font-size: 9px;
+    }
+
+    .sicoobcard-informacoes-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sicoobcard-info-item {
+        min-height: 62px;
+    }
+
+    .sicoobcard-faixa-renda {
+        flex-direction: row;
     }
 
     .botao-impressao-pdf {
@@ -4771,7 +4893,7 @@ footer p,
 }
 
 /* =========================================================
-   DISPOSITIVOS TOUCH
+   TOUCH
    ========================================================= */
 
 @media (hover: none) and (pointer: coarse) {
@@ -4787,17 +4909,14 @@ footer p,
 
     .menu-item,
     .menu-subitem,
-    .menu-mobile-botao,
     .btn,
     .btn-primario,
     .btn-secundario,
     .btn-principal,
     .comprometimento-btn,
     .previdencia-etapa,
-    .sicoobcard-opcao,
-    .opcao-simulacao {
+    .sicoobcard-opcao {
         touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
     }
 }
 
@@ -4817,7 +4936,6 @@ footer p,
     }
 
     .menu-principal,
-    .menu-mobile-topo,
     .acoes,
     .acoes-simulador,
     .acoes-comprometimento,
@@ -4863,21 +4981,12 @@ footer p,
     }
 
     .sicoobcard-seletor {
-        display: grid;
         grid-template-columns: repeat(8, minmax(0, 1fr));
-        gap: 5px;
-        overflow: visible;
-        padding: 0;
     }
 
     .sicoobcard-opcao {
-        width: 100%;
-        min-width: 0;
-        max-width: none;
         min-height: 35px;
-        padding: 5px;
         font-size: 9px;
-        white-space: normal;
     }
 
     .sicoobcard-detalhes-grid {
