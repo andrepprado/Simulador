@@ -41,38 +41,38 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             nome: "Produtos e Serviços",
-            disponivel: false,
+            disponivel: true,
             itens: [
                 {
                     nome: "Antecipação Sipag",
                     arquivo: "antecipacao-sipag.html",
-                    disponivel: false
+                    disponivel: true
                 },
                 {
                     nome: "Precificação Sipag",
                     arquivo: "precificacao-sipag.html",
-                    disponivel: false
+                    disponivel: true
                 },
                 {
                     nome: "Informações Sicoob Card",
                     arquivo: "informacoes-beneficios-sicoobcard.html",
-                    disponivel: false
+                    disponivel: true
                 },
                 {
                     nome: "Cobrança",
                     arquivo: "cobranca.html",
-                    disponivel: false
+                    disponivel: true
                 }
             ]
         },
         {
             nome: "Seguros e Previdência",
-            disponivel: false,
+            disponivel: true,
             itens: [
                 {
                     nome: "Previdência",
                     arquivo: "previdencia.html",
-                    disponivel: false
+                    disponivel: true
                 }
             ]
         }
@@ -137,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         nav.classList.remove("menu-mobile-aberto");
         botao.classList.remove("ativo");
         botao.setAttribute("aria-expanded", "false");
+        botao.setAttribute("aria-label", "Abrir menu");
 
         fecharTodosSubmenus();
     }
@@ -150,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (itemEstaAtivo(item, paginaAtual)) {
             link.classList.add("ativo");
+            link.setAttribute("aria-current", "page");
         }
 
         link.addEventListener("click", () => {
