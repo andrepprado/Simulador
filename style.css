@@ -5346,6 +5346,680 @@ footer p,
 }
 
 /* =========================================================
+   MOBILE - CREDITO-RURAL.HTML
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .simulador-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+        width: 100%;
+        min-width: 0;
+        padding-top: 18px;
+        padding-bottom: 30px;
+        align-items: start;
+    }
+
+    .simulador-grid .formulario-card,
+    .simulador-grid .resultado-card,
+    .simulador-grid .tabela-card,
+    .simulador-grid .documentos-card {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid .grid-form {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .simulador-grid .resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    /* =====================================================
+       ESTRUTURA DA PÁGINA
+       ===================================================== */
+
+    .simulador-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding-top: 8px;
+        padding-bottom: 24px;
+        align-items: start;
+    }
+
+    .simulador-grid .formulario-card,
+    .simulador-grid .resultado-card,
+    .simulador-grid .tabela-card,
+    .simulador-grid .documentos-card {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    /* =====================================================
+       TÍTULOS DOS CARDS
+       ===================================================== */
+
+    .simulador-grid .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    .simulador-grid .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 10px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       FORMULÁRIO
+       ===================================================== */
+
+    .simulador-grid .grid-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid .campo label {
+        display: block;
+        width: 100%;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid input,
+    .simulador-grid select {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 42px;
+        height: 42px;
+        padding-right: 11px;
+        padding-left: 11px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .simulador-grid select {
+        text-overflow: ellipsis;
+    }
+
+    /* =====================================================
+       PREFIXOS E SUFIXOS
+       ===================================================== */
+
+    .simulador-grid .input-prefixo,
+    .simulador-grid .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid .input-prefixo>span,
+    .simulador-grid .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 40px;
+        padding: 0 8px;
+        font-size: 10px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .simulador-grid .input-prefixo input,
+    .simulador-grid .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    .simulador-grid .input-sufixo>span {
+        min-width: 54px;
+    }
+
+    #taxa+span {
+        min-width: 58px;
+    }
+
+    /* =====================================================
+       BOTÕES
+       ===================================================== */
+
+    .simulador-grid .acoes {
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        margin-top: 17px;
+    }
+
+    .simulador-grid .acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+
+    #btnSimular,
+    #btnLimpar {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       AVISO
+       ===================================================== */
+
+    .simulador-grid .aviso {
+        margin-top: 15px;
+        padding: 11px 12px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 9px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    .simulador-grid .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    .simulador-grid .resultado-destaque span {
+        flex: 0 1 42%;
+        width: auto;
+        max-width: 42%;
+        min-width: 0;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+    }
+
+    .simulador-grid .resultado-destaque strong {
+        flex: 1 1 58%;
+        width: auto;
+        max-width: 58%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(16px, 4.8vw, 21px);
+        line-height: 1.1;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       GRID DE RESULTADOS
+       ===================================================== */
+
+    .simulador-grid .resultados-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+    }
+
+    .simulador-grid .resultado-item {
+        min-width: 0;
+        min-height: 62px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .simulador-grid .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        color: var(--texto-secundario);
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        color: var(--verde-escuro);
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       LINHA SELECIONADA
+       ===================================================== */
+
+    .simulador-grid .linha-selecionada {
+        width: 100%;
+        min-width: 0;
+        margin-top: 11px;
+        padding: 11px 12px;
+        border-left-width: 4px;
+        border-radius: 8px;
+    }
+
+    .simulador-grid .linha-selecionada span {
+        margin-bottom: 3px;
+        font-size: 8px;
+        line-height: 1.25;
+    }
+
+    .simulador-grid .linha-selecionada strong {
+        font-size: 11px;
+        line-height: 1.35;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       TABELA DE PARCELAS
+       ===================================================== */
+
+    .simulador-grid .tabela-card {
+        overflow: hidden;
+    }
+
+    .simulador-grid .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .simulador-grid .tabela-wrapper table {
+        width: 100%;
+        min-width: 610px;
+        table-layout: auto;
+    }
+
+    .simulador-grid .tabela-wrapper th,
+    .simulador-grid .tabela-wrapper td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .simulador-grid .tabela-wrapper th {
+        font-size: 8px;
+    }
+
+    .simulador-grid .sem-dados {
+        padding: 20px 12px;
+        font-size: 9px;
+        white-space: normal;
+        text-align: center !important;
+    }
+
+    /* =====================================================
+       DOCUMENTOS NECESSÁRIOS
+       ===================================================== */
+
+    .simulador-grid .documentos-card {
+        overflow: hidden;
+    }
+
+    .simulador-grid .documentos-titulo {
+        margin-bottom: 13px;
+    }
+
+    .simulador-grid .lista-documentos {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid .documento-grupo {
+        width: 100%;
+        min-width: 0;
+        border-radius: 8px;
+    }
+
+    .simulador-grid .documento-grupo-titulo {
+        padding: 8px 10px;
+        font-size: 9px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid .documento-item {
+        padding:
+            9px 10px 9px 27px;
+        font-size: 9px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid .documento-item::before {
+        top: 13px;
+        left: 11px;
+        width: 6px;
+        height: 6px;
+    }
+
+    .simulador-grid .documentos-observacao {
+        margin-top: 12px;
+        padding: 10px 11px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO - CREDITO-RURAL.HTML
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .simulador-grid {
+        gap: 12px;
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .simulador-grid .formulario-card,
+    .simulador-grid .resultado-card,
+    .simulador-grid .tabela-card,
+    .simulador-grid .documentos-card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .simulador-grid .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    .simulador-grid .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .simulador-grid .titulo-secao p {
+        font-size: 9px;
+    }
+
+    .simulador-grid .grid-form {
+        gap: 10px;
+    }
+
+    .simulador-grid .campo label {
+        font-size: 10px;
+    }
+
+    .simulador-grid input,
+    .simulador-grid select {
+        min-height: 40px;
+        height: 40px;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .simulador-grid .input-prefixo>span,
+    .simulador-grid .input-sufixo>span {
+        min-width: 38px;
+        padding: 0 7px;
+        font-size: 9px;
+    }
+
+    .simulador-grid .input-sufixo>span {
+        min-width: 48px;
+    }
+
+    #taxa+span {
+        min-width: 54px;
+    }
+
+    .simulador-grid .acoes {
+        gap: 7px;
+        margin-top: 14px;
+    }
+
+    .simulador-grid .acoes button {
+        min-height: 38px;
+        height: 38px;
+        padding: 0 8px;
+        font-size: 10px;
+    }
+
+    .simulador-grid .aviso {
+        margin-top: 13px;
+        padding: 10px;
+        font-size: 8px;
+    }
+
+    .simulador-grid .resultado-destaque {
+        padding: 11px;
+    }
+
+    .simulador-grid .resultado-destaque span {
+        font-size: 9px;
+    }
+
+    .simulador-grid .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    .simulador-grid .resultados-grid {
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    .simulador-grid .resultado-item {
+        min-height: 58px;
+        padding: 9px;
+    }
+
+    .simulador-grid .resultado-item span {
+        font-size: 7px;
+    }
+
+    .simulador-grid .resultado-item strong {
+        font-size: 11px;
+    }
+
+    .simulador-grid .linha-selecionada {
+        margin-top: 9px;
+        padding: 10px;
+    }
+
+    .simulador-grid .linha-selecionada strong {
+        font-size: 10px;
+    }
+
+    .simulador-grid .tabela-wrapper table {
+        min-width: 560px;
+    }
+
+    .simulador-grid .tabela-wrapper th,
+    .simulador-grid .tabela-wrapper td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .simulador-grid .documento-grupo-titulo {
+        font-size: 8px;
+    }
+
+    .simulador-grid .documento-item {
+        font-size: 8px;
+    }
+
+    .simulador-grid .documentos-observacao {
+        font-size: 8px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - CREDITO-RURAL.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .simulador-grid .formulario-card,
+    .simulador-grid .resultado-card,
+    .simulador-grid .tabela-card,
+    .simulador-grid .documentos-card {
+        padding: 11px;
+    }
+
+    .simulador-grid .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .simulador-grid .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .simulador-grid .campo label {
+        font-size: 9px;
+    }
+
+    .simulador-grid .acoes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .simulador-grid .acoes button {
+        width: 100%;
+    }
+
+    .simulador-grid .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .simulador-grid .resultado-destaque span,
+    .simulador-grid .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .simulador-grid .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .simulador-grid .resultado-item {
+        min-height: 52px;
+    }
+
+    .simulador-grid .tabela-wrapper table {
+        min-width: 520px;
+    }
+}
+
+
+
+/* =========================================================
    MOBILE PEQUENO - UNIVERSAL
    ========================================================= */
 
