@@ -4313,85 +4313,1180 @@ footer p,
     }
 }
 
+
+/* =========================================================
+   MOBILE - PREVIDENCIA.HTML
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .previdencia-container {
+        width: 100%;
+        min-width: 0;
+        padding-top: 18px;
+        padding-bottom: 32px;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-painel .grid-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-escolhas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-resultado-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .previdencia-resultado-grid>.card,
+    .previdencia-resultado-grid .card-largura-total {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .previdencia-resumo-dados {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 /* =========================================================
    MOBILE - PREVIDENCIA.HTML
    ========================================================= */
 
 @media (max-width: 700px) {
 
+    /* =====================================================
+       ESTRUTURA PRINCIPAL
+       ===================================================== */
+
     .previdencia-container {
         width: 100%;
+        max-width: none;
         min-width: 0;
-        padding-top: 10px;
+        padding-top: 8px;
+        padding-bottom: 24px;
     }
 
-    .previdencia-progresso {
-        padding: 15px;
-        border-radius: 12px;
+    .previdencia-painel {
+        width: 100%;
+        min-width: 0;
     }
 
-    .previdencia-progresso-topo {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 5px;
+    .previdencia-painel.ativo {
+        display: block;
     }
 
-    .previdencia-etapas {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 7px;
-    }
-
-    .previdencia-etapa {
-        min-height: 44px;
-        font-size: 11px;
-    }
-
-    .previdencia-escolhas {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .opcao-simulacao-conteudo {
-        min-height: auto;
-        padding: 14px;
-    }
-
-    .previdencia-painel>.card {
+    .previdencia-painel>.card,
+    .previdencia-resultado-grid>.card {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        padding: 16px;
-        border-radius: 12px;
+        padding: 15px;
+        border-radius: 11px;
     }
 
-    .previdencia-painel .grid-form,
-    .previdencia-resumo-dados {
-        grid-template-columns: minmax(0, 1fr);
+    /* =====================================================
+       PROGRESSO
+       ===================================================== */
+
+    .previdencia-progresso {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
+        padding: 14px;
+        border-radius: 11px;
     }
+
+    .previdencia-progresso-topo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 10px;
+    }
+
+    .previdencia-progresso-topo>div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .previdencia-progresso-topo span {
+        font-size: 9px;
+        line-height: 1.2;
+    }
+
+    .previdencia-progresso-topo strong {
+        font-size: 11px;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .barra-progresso {
+        height: 6px;
+        border-radius: 999px;
+    }
+
+    /* =====================================================
+       ETAPAS DE NAVEGAÇÃO
+       ===================================================== */
+
+    .previdencia-etapas {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+    }
+
+    .previdencia-etapa {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+        min-height: 54px;
+        padding: 6px 3px;
+        border-radius: 8px;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1.15;
+        text-align: center;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-etapa span {
+        flex: 0 0 22px;
+        width: 22px;
+        height: 22px;
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .previdencia-painel .titulo-secao,
+    .previdencia-resultado-grid .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    .previdencia-painel .titulo-secao .categoria-etiqueta {
+        display: inline-flex;
+        margin-bottom: 7px;
+        padding: 5px 8px;
+        font-size: 8px;
+        line-height: 1.1;
+    }
+
+    .previdencia-painel .titulo-secao h2,
+    .previdencia-resultado-grid .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel .titulo-secao p,
+    .previdencia-resultado-grid .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 10px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel .titulo-subsecao {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 11px;
+    }
+
+    .previdencia-painel .titulo-subsecao h3 {
+        margin: 0 0 4px;
+        font-size: 13px;
+        line-height: 1.3;
+    }
+
+    .previdencia-painel .titulo-subsecao p {
+        margin: 0;
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+    /* =====================================================
+       ETAPA 1 - ESCOLHA DO TIPO DE SIMULAÇÃO
+       ===================================================== */
+
+    .previdencia-escolhas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 0;
+    }
+
+    .previdencia-escolhas .opcao-simulacao {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        min-width: 0;
+        min-height: 104px;
+        padding: 12px;
+        border-radius: 9px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo strong {
+        display: block;
+        margin: 0 0 5px;
+        font-size: 11px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo small {
+        display: block;
+        margin: 0;
+        font-size: 8px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       FORMULÁRIOS
+       ===================================================== */
+
+    .previdencia-painel .grid-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 11px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel .campo label {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel .campo small,
+    .previdencia-painel .campo-ajuda {
+        margin-top: 1px;
+        font-size: 8px;
+        line-height: 1.4;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select,
+    .previdencia-painel textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 41px;
+        height: 41px;
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    /* =====================================================
+       PREFIXOS E SUFIXOS
+       ===================================================== */
+
+    .previdencia-painel .input-prefixo,
+    .previdencia-painel .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel .input-prefixo>span,
+    .previdencia-painel .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 38px;
+        padding: 0 7px;
+        background: var(--fundo-secundario);
+        color: var(--texto-secundario);
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .previdencia-painel .input-prefixo input,
+    .previdencia-painel .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    #idadeAtual+span,
+    #idadeAposentadoria+span,
+    #idadeBeneficiario+span,
+    #prazoRenda+span {
+        min-width: 42px;
+    }
+
+    /* =====================================================
+       SEPARADORES
+       ===================================================== */
+
+    .previdencia-painel .separador {
+        width: 100%;
+        height: 1px;
+        margin: 16px 0;
+    }
+
+    /* =====================================================
+       AVISOS
+       ===================================================== */
+
+    .previdencia-painel .aviso,
+    .previdencia-painel .aviso-info,
+    .previdencia-resultado-grid .aviso-info {
+        width: 100%;
+        min-width: 0;
+        margin-top: 13px;
+        padding: 10px 11px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       BOTÕES DE NAVEGAÇÃO
+       ===================================================== */
 
     .previdencia-acoes {
-        flex-direction: column;
-        align-items: stretch;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 17px;
     }
 
     .previdencia-acoes button {
         width: 100%;
         min-width: 0;
+        min-height: 40px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+
+    .previdencia-acoes button:only-child {
+        grid-column: 1 / -1;
+    }
+
+    /* =====================================================
+       ETAPA 3 - COBERTURAS
+       ===================================================== */
+
+    #etapa3 .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+    #etapa3 .resultado-item {
+        min-width: 0;
+        min-height: 61px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    #etapa3 .resultado-item span {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    #etapa3 .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       ETAPA 4 - ESTRUTURA DE RESULTADO
+       ===================================================== */
+
+    .previdencia-resultado-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: 100%;
+        min-width: 0;
+        padding: 0;
+        align-items: start;
+    }
+
+    .previdencia-resultado-grid>.card,
+    .previdencia-resultado-grid .card-largura-total,
+    .previdencia-card-resultado {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       RESUMO DOS PARÂMETROS
+       ===================================================== */
+
+    .previdencia-resumo-dados {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-resumo-dados>div {
+        min-width: 0;
+        padding: 9px;
+        border-radius: 8px;
+    }
+
+    .previdencia-resumo-dados span {
+        display: block;
+        min-height: 22px;
+        margin-bottom: 4px;
+        font-size: 7px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-resumo-dados strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 10px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    .previdencia-card-resultado .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque span {
+        flex: 0 1 43%;
+        width: auto;
+        max-width: 43%;
+        min-width: 0;
+        margin: 0;
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-card-resultado .resultado-destaque strong {
+        flex: 1 1 57%;
+        width: auto;
+        max-width: 57%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(16px, 4.8vw, 21px);
+        line-height: 1.1;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       GRID DE RESULTADOS
+       ===================================================== */
+
+    .previdencia-card-resultado .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+    }
+
+    .previdencia-card-resultado .resultado-item {
+        min-width: 0;
+        min-height: 61px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .previdencia-card-resultado .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-card-resultado .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       STATUS / MENSAGEM DO OBJETIVO
+       ===================================================== */
+
+    .previdencia-status {
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+        padding: 10px 11px;
+        border-left-width: 3px;
+        border-radius: 8px;
+    }
+
+    .previdencia-status strong {
+        margin-bottom: 3px;
+        font-size: 10px;
+        line-height: 1.3;
+    }
+
+    .previdencia-status span {
+        font-size: 8px;
+        line-height: 1.4;
+    }
+
+    /* =====================================================
+       TABELA DE PROJEÇÃO
+       ===================================================== */
+
+    .previdencia-resultado-grid .tabela-card {
+        overflow: hidden;
+    }
+
+    .previdencia-resultado-grid .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        overscroll-behavior-x: contain;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia {
+        width: 100%;
+        min-width: 680px;
+        table-layout: auto;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th,
+    .previdencia-resultado-grid .tabela-previdencia td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th:first-child,
+    .previdencia-resultado-grid .tabela-previdencia td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        min-width: 58px;
+        text-align: center;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th:first-child {
+        background: var(--fundo-secundario);
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia td:first-child {
+        background: var(--branco);
+    }
+
+    .previdencia-resultado-grid .sem-dados {
+        padding: 20px 12px;
+        font-size: 9px;
+        line-height: 1.4;
+        white-space: normal;
+        text-align: center !important;
+    }
+
+    /* =====================================================
+       RENDA POR PRAZO INDETERMINADO
+       ===================================================== */
+
+    .previdencia-resultado-grid .documentos-card {
+        overflow: hidden;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
+        min-width: 0;
+        min-height: 61px;
+        padding: 9px;
+        border-radius: 8px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
+        display: block;
+        min-height: 22px;
+        margin-bottom: 4px;
+        font-size: 7px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 10px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
     }
 }
+
+/* =========================================================
+   MOBILE PEQUENO - PREVIDENCIA.HTML
+   ========================================================= */
 
 @media (max-width: 480px) {
 
     .previdencia-container {
-        padding-top: 7px;
+        padding-top: 6px;
+        padding-bottom: 20px;
     }
 
-    .previdencia-painel>.card {
-        padding: 14px;
+    .previdencia-progresso {
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 10px;
     }
 
-    .opcao-simulacao-conteudo {
+    /* =====================================================
+       ETAPAS
+       ===================================================== */
+
+    .previdencia-etapas {
+        gap: 4px;
+        margin-top: 10px;
+    }
+
+    .previdencia-etapa {
+        min-height: 50px;
+        padding: 5px 2px;
+        border-radius: 7px;
+        font-size: 7px;
+    }
+
+    .previdencia-etapa span {
+        flex-basis: 20px;
+        width: 20px;
+        height: 20px;
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
+    .previdencia-painel>.card,
+    .previdencia-resultado-grid>.card {
         padding: 13px;
+        border-radius: 10px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .previdencia-painel .titulo-secao,
+    .previdencia-resultado-grid .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    .previdencia-painel .titulo-secao h2,
+    .previdencia-resultado-grid .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .previdencia-painel .titulo-secao p,
+    .previdencia-resultado-grid .titulo-secao p {
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+    .previdencia-painel .titulo-secao .categoria-etiqueta {
+        margin-bottom: 6px;
+        padding: 4px 7px;
+        font-size: 7px;
+    }
+
+    /* =====================================================
+       ESCOLHAS
+       ===================================================== */
+
+    .previdencia-escolhas {
+        gap: 6px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo {
+        min-height: 96px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo strong {
+        font-size: 10px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo small {
+        font-size: 7px;
+    }
+
+    /* =====================================================
+       CAMPOS
+       ===================================================== */
+
+    .previdencia-painel .grid-form {
+        gap: 9px;
+    }
+
+    .previdencia-painel .campo label {
+        font-size: 9px;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select,
+    .previdencia-painel textarea {
+        min-height: 39px;
+        height: 39px;
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .previdencia-painel .input-prefixo>span,
+    .previdencia-painel .input-sufixo>span {
+        min-width: 36px;
+        padding: 0 6px;
+        font-size: 8px;
+    }
+
+    #idadeAtual+span,
+    #idadeAposentadoria+span,
+    #idadeBeneficiario+span,
+    #prazoRenda+span {
+        min-width: 39px;
+    }
+
+    /* =====================================================
+       AÇÕES
+       ===================================================== */
+
+    .previdencia-acoes {
+        gap: 6px;
+        margin-top: 14px;
+    }
+
+    .previdencia-acoes button {
+        min-height: 38px;
+        height: 38px;
+        padding: 0 8px;
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       RESUMO DOS PARÂMETROS
+       ===================================================== */
+
+    .previdencia-resumo-dados {
+        gap: 5px;
+    }
+
+    .previdencia-resumo-dados>div {
+        padding: 8px;
+    }
+
+    .previdencia-resumo-dados span {
+        min-height: 20px;
+        font-size: 6px;
+    }
+
+    .previdencia-resumo-dados strong {
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       RESULTADO DESTAQUE
+       ===================================================== */
+
+    .previdencia-card-resultado .resultado-destaque {
+        padding: 11px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque span {
+        font-size: 8px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    /* =====================================================
+       RESULTADOS
+       ===================================================== */
+
+    .previdencia-card-resultado .resultados-grid,
+    #etapa3 .resultados-grid {
+        gap: 6px;
+    }
+
+    .previdencia-card-resultado .resultado-item,
+    #etapa3 .resultado-item {
+        min-height: 56px;
+        padding: 9px;
+    }
+
+    .previdencia-card-resultado .resultado-item span,
+    #etapa3 .resultado-item span {
+        font-size: 7px;
+    }
+
+    .previdencia-card-resultado .resultado-item strong,
+    #etapa3 .resultado-item strong {
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       RENDA INDETERMINADA
+       ===================================================== */
+
+    .previdencia-resultado-grid .resultados-grid-3 {
+        gap: 5px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
+        min-height: 56px;
+        padding: 8px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
+        min-height: 19px;
+        font-size: 6px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       TABELA
+       ===================================================== */
+
+    .previdencia-resultado-grid .tabela-previdencia {
+        min-width: 620px;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th,
+    .previdencia-resultado-grid .tabela-previdencia td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th {
+        font-size: 7px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - PREVIDENCIA.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .previdencia-progresso {
+        padding: 10px;
+    }
+
+    /* =====================================================
+       ETAPAS COMPACTAS
+       ===================================================== */
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .previdencia-etapa {
+        flex-direction: row;
+        justify-content: flex-start;
+        min-height: 40px;
+        padding: 6px 8px;
+        font-size: 8px;
+        text-align: left;
+    }
+
+    .previdencia-etapa span {
+        flex: 0 0 20px;
+    }
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
+    .previdencia-painel>.card,
+    .previdencia-resultado-grid>.card {
+        padding: 11px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .previdencia-painel .titulo-secao h2,
+    .previdencia-resultado-grid .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .previdencia-painel .titulo-secao p,
+    .previdencia-resultado-grid .titulo-secao p {
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       ESCOLHAS EM UMA COLUNA
+       ===================================================== */
+
+    .previdencia-escolhas {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo {
+        min-height: auto;
+    }
+
+    /* =====================================================
+       BOTÕES
+       ===================================================== */
+
+    .previdencia-acoes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-acoes button,
+    .previdencia-acoes button:only-child {
+        grid-column: 1;
+        width: 100%;
+    }
+
+    /* =====================================================
+       RESUMO EM UMA COLUNA
+       ===================================================== */
+
+    .previdencia-resumo-dados {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-resumo-dados span {
+        min-height: 0;
+        font-size: 7px;
+    }
+
+    .previdencia-resumo-dados strong {
+        font-size: 10px;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    .previdencia-card-resultado .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque span,
+    .previdencia-card-resultado .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    /* =====================================================
+       RESULTADOS EM UMA COLUNA
+       ===================================================== */
+
+    .previdencia-card-resultado .resultados-grid,
+    #etapa3 .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-card-resultado .resultado-item,
+    #etapa3 .resultado-item {
+        min-height: 50px;
+    }
+
+    /* =====================================================
+       RENDA INDETERMINADA
+       ===================================================== */
+
+    .previdencia-resultado-grid .resultados-grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
+        min-height: 50px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
+        min-height: 0;
+        font-size: 7px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
+        font-size: 10px;
+    }
+
+    /* =====================================================
+       TABELA
+       ===================================================== */
+
+    .previdencia-resultado-grid .tabela-previdencia {
+        min-width: 590px;
     }
 }
 
@@ -5177,138 +6272,1824 @@ footer p,
    MOBILE - CONDICOES-CREDITO.HTML
    ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
 
-    .simulador-grid-igual {
+    main.simulador-grid-igual:has(#cardTaxasCredito) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
         width: 100%;
         min-width: 0;
-        gap: 14px;
-        padding-top: 10px;
-        padding-bottom: 24px;
+        padding-top: 18px;
+        padding-bottom: 30px;
+        align-items: start;
     }
 
-    .simulador-grid-igual>.card {
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card {
+        grid-column: 1;
         width: 100%;
-        max-width: 100%;
         min-width: 0;
-        padding: 16px;
-        border-radius: 12px;
     }
 
-    .simulador-grid-igual .titulo-secao {
-        margin-bottom: 16px;
-    }
-
-    .simulador-grid-igual .titulo-secao h2 {
-        font-size: 18px;
-        line-height: 1.25;
-    }
-
-    .simulador-grid-igual .titulo-secao p {
-        font-size: 11px;
-        line-height: 1.45;
-    }
-
-    .simulador-grid-igual .grid-form-4,
-    .simulador-grid-igual .resultados-grid,
-    #cardTaxasCredito .resultados-grid {
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .simulador-grid-igual .acoes {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 7px;
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form-4,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultados-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   MOBILE - CONDICOES-CREDITO.HTML
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    /* =====================================================
+       ESTRUTURA PRINCIPAL
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 13px;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding-top: 8px;
+        padding-bottom: 24px;
+        align-items: start;
     }
 
-    .simulador-grid-igual .acoes button {
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card,
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card-largura-total {
+        grid-column: 1;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        overflow: hidden;
+        border-radius: 11px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao .categoria-etiqueta {
+        display: inline-flex;
+        max-width: 100%;
+        margin-bottom: 7px;
+        padding: 5px 8px;
+        font-size: 8px;
+        line-height: 1.1;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao h3 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 10px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       FORMULÁRIOS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form-3,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form-4 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 11px;
         width: 100%;
         min-width: 0;
     }
 
-    .simulador-grid-igual .resultado-destaque {
+    main.simulador-grid-igual:has(#cardTaxasCredito) .campo {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 7px;
-        padding: 15px;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
     }
 
-    .simulador-grid-igual .resultado-destaque span,
-    .simulador-grid-igual .resultado-destaque strong {
+    main.simulador-grid-igual:has(#cardTaxasCredito) .campo>label:not(.opcao-simulacao) {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .campo small,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .campo-ajuda {
+        display: block;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 8px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) input,
+    main.simulador-grid-igual:has(#cardTaxasCredito) select,
+    main.simulador-grid-igual:has(#cardTaxasCredito) textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 41px;
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) input,
+    main.simulador-grid-igual:has(#cardTaxasCredito) select {
+        height: 41px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) textarea {
+        min-height: 78px;
+        height: auto;
+        padding-top: 9px;
+        padding-bottom: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) select {
+        text-overflow: ellipsis;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) input[readonly] {
+        background: var(--fundo-secundario);
+        color: var(--verde-escuro);
+        font-weight: 700;
+    }
+
+    /* =====================================================
+       PREFIXOS / SUFIXOS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-prefixo,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-prefixo>span,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 38px;
+        padding: 0 7px;
+        background: var(--fundo-secundario);
+        color: var(--texto-secundario);
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-prefixo input,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       SEPARADORES
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .separador {
+        width: 100%;
+        height: 1px;
+        margin: 16px 0;
+    }
+
+    /* =====================================================
+       AÇÕES
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .acoes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 16px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+
+    /* =====================================================
+       CARD - TAXAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito {
+        position: relative;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito::before {
+        height: 3px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item {
+        position: relative;
+        min-width: 0;
+        min-height: 66px;
+        padding: 10px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item::before {
+        height: 2px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        color: var(--texto-secundario);
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        color: var(--turquesa);
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       RESULTADO DE ENQUADRAMENTO
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-destaque,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #statusEnquadramentoCredito,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        margin-bottom: 13px;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque span {
+        flex: 0 1 44%;
+        width: auto;
+        max-width: 44%;
+        min-width: 0;
+        margin: 0;
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque strong,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #statusEnquadramentoCredito strong {
+        flex: 1 1 56%;
+        width: auto;
+        max-width: 56%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(15px, 4.6vw, 20px);
+        line-height: 1.1;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       CARD - CONDIÇÕES DA LINHA
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardCondicoesLinha {
+        position: relative;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardCondicoesLinha::before {
+        height: 3px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardCondicoesLinha .resultados-grid,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardCondicoesLinha .resultado-item,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item {
+        min-width: 0;
+        min-height: 61px;
+        padding: 10px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardCondicoesLinha .resultado-item span,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardCondicoesLinha .resultado-item strong,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       CONTRATO MÃE
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #blocoContratoMae {
+        width: 100%;
+        min-width: 0;
+        margin-top: 13px;
+        padding: 11px;
+        border-left-width: 3px;
+        border-radius: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #blocoContratoMae .grid-form,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #blocoContratoMae .grid-form-4 {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    /* =====================================================
+       GARANTIAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito {
+        position: relative;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito::before {
+        height: 3px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .grid-form-4 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .campo {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        height: auto;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        min-height: 64px;
+        height: auto;
+        padding: 10px 11px 10px 41px;
+        border-radius: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo::before {
+        left: 13px;
+        width: 17px;
+        height: 17px;
+        border-width: 2px;
+        border-radius: 5px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo::after {
+        left: 19px;
+        width: 5px;
+        height: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo strong {
+        display: block;
+        margin: 0 0 2px;
+        font-size: 10px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo small {
+        display: block;
+        margin: 0;
+        font-size: 8px;
+        line-height: 1.35;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       REGRAS / ALERTAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #regrasGarantiasCredito,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaRegrasLinhaCredito,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaAlertasCredito {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #regrasGarantiasCredito .documentos-observacao,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaRegrasLinhaCredito .documentos-observacao,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaAlertasCredito .documentos-observacao {
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 9px 9px 9px 27px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #regrasGarantiasCredito .documentos-observacao::before,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaRegrasLinhaCredito .documentos-observacao::before,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaAlertasCredito .documentos-observacao::before {
+        top: 13px;
+        left: 10px;
+        width: 6px;
+        height: 6px;
+    }
+
+    /* =====================================================
+       DOCUMENTAÇÃO CONTÁBIL
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #documentacaoContabilCredito {
+        width: 100%;
+        min-width: 0;
+        padding: 10px 11px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       LINHA SELECIONADA
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .linha-selecionada {
+        width: 100%;
+        min-width: 0;
+        margin-top: 11px;
+        padding: 10px 11px;
+        border-left-width: 4px;
+        border-radius: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .linha-selecionada span {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 8px;
+        line-height: 1.25;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .linha-selecionada strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 11px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       TABELA DE PARCELAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .tabela-card {
+        overflow: hidden;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        overscroll-behavior-x: contain;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table {
+        width: 100%;
+        min-width: 680px;
+        table-layout: auto;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table th,
+    main.simulador-grid-igual:has(#cardTaxasCredito) table td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table th:first-child,
+    main.simulador-grid-igual:has(#cardTaxasCredito) table td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        min-width: 55px;
+        text-align: center;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table th:first-child {
+        background: var(--fundo-secundario);
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table td:first-child {
+        background: var(--branco);
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .sem-dados {
+        padding: 20px 12px;
+        font-size: 9px;
+        line-height: 1.4;
+        white-space: normal;
+        text-align: center !important;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO - CONDICOES-CREDITO.HTML
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) {
+        gap: 11px;
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card,
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card-largura-total {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao h3 {
+        font-size: 13px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao p {
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+    /* =====================================================
+       CAMPOS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form-3,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .grid-form-4 {
+        gap: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .campo>label:not(.opcao-simulacao) {
+        font-size: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) input,
+    main.simulador-grid-igual:has(#cardTaxasCredito) select {
+        min-height: 39px;
+        height: 39px;
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-prefixo>span,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .input-sufixo>span {
+        min-width: 36px;
+        padding: 0 6px;
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       AÇÕES
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .acoes {
+        gap: 6px;
+        margin-top: 14px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .acoes button {
+        min-height: 38px;
+        height: 38px;
+        padding: 0 8px;
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       TAXAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item {
+        min-height: 59px;
+        padding: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item span {
+        font-size: 7px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item strong {
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       RESULTADO DESTAQUE
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #statusEnquadramentoCredito {
+        padding: 11px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque span {
+        font-size: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque strong,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #statusEnquadramentoCredito strong {
+        font-size: 16px;
+    }
+
+    /* =====================================================
+       RESULTADOS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultados-grid {
+        gap: 6px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item {
+        min-height: 56px;
+        padding: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item span {
+        font-size: 7px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item strong {
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       GARANTIAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo {
+        min-height: 60px;
+        padding: 9px 10px 9px 39px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo::before {
+        left: 12px;
+        width: 16px;
+        height: 16px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo::after {
+        left: 18px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo strong {
+        font-size: 9px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardGarantiasCredito .opcao-simulacao-conteudo small {
+        font-size: 7px;
+    }
+
+    /* =====================================================
+       ALERTAS
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #regrasGarantiasCredito .documentos-observacao,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaRegrasLinhaCredito .documentos-observacao,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaAlertasCredito .documentos-observacao {
+        padding: 8px 8px 8px 25px;
+        font-size: 7px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) #regrasGarantiasCredito .documentos-observacao::before,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaRegrasLinhaCredito .documentos-observacao::before,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #listaAlertasCredito .documentos-observacao::before {
+        top: 12px;
+        left: 9px;
+        width: 5px;
+        height: 5px;
+    }
+
+    /* =====================================================
+       TABELA
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table {
+        min-width: 620px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table th,
+    main.simulador-grid-igual:has(#cardTaxasCredito) table td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table th {
+        font-size: 7px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - CONDICOES-CREDITO.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card,
+    main.simulador-grid-igual:has(#cardTaxasCredito)>.card-largura-total {
+        padding: 11px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao h3 {
+        font-size: 12px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .titulo-secao p {
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       BOTÕES EM UMA COLUNA
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .acoes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .acoes button {
+        width: 100%;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #statusEnquadramentoCredito {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque span,
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultado-destaque strong,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #statusEnquadramentoCredito strong {
         width: 100%;
         max-width: 100%;
         text-align: left;
     }
 
-    #cardGarantiasCredito .opcao-simulacao-conteudo {
-        min-height: 70px;
-        padding:
-            12px 12px 12px 44px;
+    /* =====================================================
+       RESULTADOS EM UMA COLUNA
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    #cardGarantiasCredito .opcao-simulacao-conteudo::before {
-        left: 14px;
-        width: 18px;
-        height: 18px;
+    main.simulador-grid-igual:has(#cardTaxasCredito) .resultados-grid .resultado-item,
+    main.simulador-grid-igual:has(#cardTaxasCredito) #cardTaxasCredito .resultado-item {
+        min-height: 50px;
     }
 
-    #cardGarantiasCredito .opcao-simulacao-conteudo::after {
-        left: 20px;
+    /* =====================================================
+       TABELA
+       ===================================================== */
+
+    main.simulador-grid-igual:has(#cardTaxasCredito) table {
+        min-width: 590px;
+    }
+}
+
+/* =========================================================
+   MOBILE - PRECIFICACAO-SIPAG.HTML
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .simulador-grid-igual {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+        width: 100%;
+        min-width: 0;
+        padding-top: 18px;
+        padding-bottom: 30px;
+        align-items: start;
     }
 
-    #blocoContratoMae {
-        padding: 13px;
+    .simulador-grid-igual>.card {
+        grid-column: 1;
+        width: 100%;
+        min-width: 0;
     }
 
-    #regrasGarantiasCredito .documentos-observacao,
-    #listaRegrasLinhaCredito .documentos-observacao,
-    #listaAlertasCredito .documentos-observacao {
-        padding:
-            11px 11px 11px 30px;
+    .simulador-grid-igual .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .simulador-grid-igual .grid-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .simulador-grid-igual .resultados-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    /* =====================================================
+       ESTRUTURA PRINCIPAL
+       ===================================================== */
+
+    .simulador-grid-igual {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding-top: 8px;
+        padding-bottom: 24px;
+        align-items: start;
+    }
+
+    .simulador-grid-igual>.card,
+    .simulador-grid-igual>.configuracao-card,
+    .simulador-grid-igual>.resumo-card,
+    .simulador-grid-igual>.tabela-card {
+        grid-column: 1;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .simulador-grid-igual .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    .simulador-grid-igual .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid-igual .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
         font-size: 10px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
-    #regrasGarantiasCredito .documentos-observacao::before,
-    #listaRegrasLinhaCredito .documentos-observacao::before,
-    #listaAlertasCredito .documentos-observacao::before {
-        left: 11px;
+    /* =====================================================
+       STATUS MOTOR SIPAG
+       ===================================================== */
+
+    #statusMotorSipag {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
+        padding: 10px 11px;
+        border-radius: 8px;
+        font-size: 9px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
     }
+
+    /* =====================================================
+       DADOS DA NEGOCIAÇÃO
+       ===================================================== */
+
+    .simulador-grid-igual .grid-form-4 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 11px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid-igual .grid-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 11px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid-igual .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid-igual .campo label {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid-igual input,
+    .simulador-grid-igual select {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 41px;
+        height: 41px;
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .simulador-grid-igual select {
+        text-overflow: ellipsis;
+    }
+
+    .simulador-grid-igual input[readonly] {
+        background: var(--fundo-secundario);
+        color: var(--verde-escuro);
+        font-weight: 700;
+    }
+
+    /* =====================================================
+       PREFIXOS E SUFIXOS
+       ===================================================== */
+
+    .simulador-grid-igual .input-prefixo,
+    .simulador-grid-igual .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid-igual .input-prefixo>span,
+    .simulador-grid-igual .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 40px;
+        padding: 0 8px;
+        background: var(--fundo-secundario);
+        color: var(--texto-secundario);
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .simulador-grid-igual .input-prefixo input,
+    .simulador-grid-igual .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    #taxaAntecipacaoPrecificacao+span {
+        min-width: 52px;
+    }
+
+    #durationAntecipacao+span,
+    #mesesSmartPos+span,
+    #mesesPinPad+span {
+        min-width: 44px;
+    }
+
+    /* =====================================================
+       PERCENTUAIS DE FATURAMENTO
+       ===================================================== */
 
     .simulador-grid-igual .tabela-wrapper {
         width: 100%;
         max-width: 100%;
+        min-width: 0;
         overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        overscroll-behavior-x: contain;
     }
 
-    .simulador-grid-igual table {
+    .simulador-grid-igual .tabela-mix {
+        width: 100%;
+        min-width: 600px;
+        table-layout: auto;
+    }
+
+    .simulador-grid-igual .tabela-mix th,
+    .simulador-grid-igual .tabela-mix td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .simulador-grid-igual .tabela-mix th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .simulador-grid-igual .tabela-mix input {
+        width: 68px;
+        min-width: 68px;
+        height: 32px;
+        min-height: 32px;
+        padding: 0 6px;
+        font-size: 10px;
+        text-align: right;
+    }
+
+    /* =====================================================
+       TOTAL MIX FATURAMENTO
+       ===================================================== */
+
+    .simulador-grid-igual .linha-selecionada {
+        width: 100%;
+        min-width: 0;
+        margin-top: 11px;
+        padding: 10px 11px;
+        border-left-width: 4px;
+        border-radius: 8px;
+    }
+
+    .simulador-grid-igual .linha-selecionada span {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+    }
+
+    .simulador-grid-igual .linha-selecionada strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 11px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       TAXAS SOLICITADAS
+       ===================================================== */
+
+    #blocosTaxasSipag {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    #blocosTaxasSipag>* {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    #blocosTaxasSipag .grid-form,
+    #blocosTaxasSipag .grid-form-3,
+    #blocosTaxasSipag .grid-form-4 {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    #blocosTaxasSipag table {
+        min-width: 560px;
+    }
+
+    #blocosTaxasSipag th,
+    #blocosTaxasSipag td {
+        padding: 7px 8px;
+        font-size: 8px;
+        white-space: nowrap;
+    }
+
+    #blocosTaxasSipag input {
+        min-height: 38px;
+        height: 38px;
+        font-size: 15px;
+    }
+
+    /* =====================================================
+       ANTECIPAÇÃO
+       ===================================================== */
+
+    .simulador-grid-igual>.configuracao-card:nth-of-type(4) {
+        min-width: 0;
+    }
+
+    #volumeAntecipado,
+    #taxaAntecipacaoPrecificacao,
+    #durationAntecipacao {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       EQUIPAMENTOS
+       ===================================================== */
+
+    #qtdSmartPos,
+    #valorSmartPos,
+    #mesesSmartPos,
+    #qtdPinPad,
+    #valorPinPad,
+    #mesesPinPad {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       RESULTADO FINANCEIRO
+       ===================================================== */
+
+    .simulador-grid-igual .resumo-card .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 12px;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    .simulador-grid-igual .resumo-card .resultado-destaque span {
+        flex: 0 1 42%;
+        width: auto;
+        max-width: 42%;
+        min-width: 0;
+        margin: 0;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+    }
+
+    .simulador-grid-igual .resumo-card .resultado-destaque strong {
+        flex: 1 1 58%;
+        width: auto;
+        max-width: 58%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(16px, 4.8vw, 21px);
+        line-height: 1.1;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item {
+        min-width: 0;
+        min-height: 62px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        color: var(--texto-secundario);
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        color: var(--verde-escuro);
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       RESULTADO POR BANDEIRA
+       ===================================================== */
+
+    .simulador-grid-igual>.tabela-card {
+        overflow: hidden;
+    }
+
+    .simulador-grid-igual>.tabela-card .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .simulador-grid-igual>.tabela-card table {
+        width: 100%;
         min-width: 640px;
+        table-layout: auto;
+    }
+
+    .simulador-grid-igual>.tabela-card th,
+    .simulador-grid-igual>.tabela-card td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .simulador-grid-igual>.tabela-card th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .simulador-grid-igual>.tabela-card th:first-child,
+    .simulador-grid-igual>.tabela-card td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        text-align: left;
+    }
+
+    .simulador-grid-igual>.tabela-card th:first-child {
+        background: var(--fundo-secundario);
+    }
+
+    .simulador-grid-igual>.tabela-card td:first-child {
+        background: var(--branco);
+    }
+
+    /* =====================================================
+       BOTÕES GERADOS / AÇÕES
+       ===================================================== */
+
+    .simulador-grid-igual .acoes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .simulador-grid-igual .acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 39px;
+        height: auto;
+        padding: 7px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.15;
     }
 }
+
+/* =========================================================
+   MOBILE PEQUENO - PRECIFICACAO-SIPAG.HTML
+   ========================================================= */
 
 @media (max-width: 480px) {
 
-    .simulador-grid-igual>.card {
-        padding: 14px;
+    .simulador-grid-igual {
+        gap: 12px;
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .simulador-grid-igual>.card,
+    .simulador-grid-igual>.configuracao-card,
+    .simulador-grid-igual>.resumo-card,
+    .simulador-grid-igual>.tabela-card {
+        padding: 13px;
         border-radius: 10px;
     }
 
-    .simulador-grid-igual table {
-        min-width: 600px;
+    /* TÍTULOS */
+
+    .simulador-grid-igual .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    .simulador-grid-igual .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .simulador-grid-igual .titulo-secao p {
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+    /* STATUS */
+
+    #statusMotorSipag {
+        margin-bottom: 12px;
+        padding: 9px 10px;
+        font-size: 8px;
+    }
+
+    /* CAMPOS */
+
+    .simulador-grid-igual .grid-form,
+    .simulador-grid-igual .grid-form-4 {
+        gap: 9px;
+    }
+
+    .simulador-grid-igual .campo label {
+        font-size: 9px;
+    }
+
+    .simulador-grid-igual input,
+    .simulador-grid-igual select {
+        min-height: 39px;
+        height: 39px;
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .simulador-grid-igual .input-prefixo>span,
+    .simulador-grid-igual .input-sufixo>span {
+        min-width: 37px;
+        padding: 0 6px;
+        font-size: 8px;
+    }
+
+    #taxaAntecipacaoPrecificacao+span {
+        min-width: 48px;
+    }
+
+    #durationAntecipacao+span,
+    #mesesSmartPos+span,
+    #mesesPinPad+span {
+        min-width: 40px;
+    }
+
+    /* MIX */
+
+    .simulador-grid-igual .tabela-mix {
+        min-width: 560px;
+    }
+
+    .simulador-grid-igual .tabela-mix th,
+    .simulador-grid-igual .tabela-mix td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .simulador-grid-igual .tabela-mix th {
+        font-size: 7px;
+    }
+
+    .simulador-grid-igual .tabela-mix input {
+        width: 62px;
+        min-width: 62px;
+        height: 30px;
+        min-height: 30px;
+        font-size: 9px;
+    }
+
+    /* LINHA SELECIONADA */
+
+    .simulador-grid-igual .linha-selecionada {
+        margin-top: 9px;
+        padding: 9px 10px;
+    }
+
+    .simulador-grid-igual .linha-selecionada span {
+        font-size: 7px;
+    }
+
+    .simulador-grid-igual .linha-selecionada strong {
+        font-size: 10px;
+    }
+
+    /* RESULTADO PRINCIPAL */
+
+    .simulador-grid-igual .resumo-card .resultado-destaque {
+        padding: 11px;
+    }
+
+    .simulador-grid-igual .resumo-card .resultado-destaque span {
+        font-size: 9px;
+    }
+
+    .simulador-grid-igual .resumo-card .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    /* RESULTADOS */
+
+    .simulador-grid-igual .resultados-grid-3 {
+        gap: 6px;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item {
+        min-height: 57px;
+        padding: 9px;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item span {
+        font-size: 7px;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item strong {
+        font-size: 11px;
+    }
+
+    /* TABELA RESULTADO BANDEIRA */
+
+    .simulador-grid-igual>.tabela-card table {
+        min-width: 590px;
+    }
+
+    .simulador-grid-igual>.tabela-card th,
+    .simulador-grid-igual>.tabela-card td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .simulador-grid-igual>.tabela-card th {
+        font-size: 7px;
+    }
+
+    /* TAXAS GERADAS */
+
+    #blocosTaxasSipag table {
+        min-width: 520px;
+    }
+
+    #blocosTaxasSipag th,
+    #blocosTaxasSipag td {
+        padding: 6px 7px;
+        font-size: 7px;
+    }
+
+    #blocosTaxasSipag input {
+        min-height: 36px;
+        height: 36px;
+    }
+
+    /* AÇÕES */
+
+    .simulador-grid-igual .acoes {
+        gap: 6px;
+        margin-top: 14px;
+    }
+
+    .simulador-grid-igual .acoes button {
+        min-height: 37px;
+        padding: 6px 8px;
+        font-size: 9px;
     }
 }
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - PRECIFICACAO-SIPAG.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .simulador-grid-igual>.card,
+    .simulador-grid-igual>.configuracao-card,
+    .simulador-grid-igual>.resumo-card,
+    .simulador-grid-igual>.tabela-card {
+        padding: 11px;
+    }
+
+    .simulador-grid-igual .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .simulador-grid-igual .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .simulador-grid-igual .campo label {
+        font-size: 9px;
+    }
+
+    /* RESULTADO EM UMA COLUNA */
+
+    .simulador-grid-igual .resumo-card .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .simulador-grid-igual .resumo-card .resultado-destaque span,
+    .simulador-grid-igual .resumo-card .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .simulador-grid-igual .resultados-grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .simulador-grid-igual .resultados-grid-3 .resultado-item {
+        min-height: 50px;
+    }
+
+    /* BOTÕES EM UMA COLUNA */
+
+    .simulador-grid-igual .acoes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .simulador-grid-igual .acoes button {
+        width: 100%;
+    }
+
+    /* TABELAS */
+
+    .simulador-grid-igual .tabela-mix {
+        min-width: 530px;
+    }
+
+    #blocosTaxasSipag table {
+        min-width: 500px;
+    }
+
+    .simulador-grid-igual>.tabela-card table {
+        min-width: 560px;
+    }
+}
+
+
 
 /* =========================================================
    MOBILE - ANTECIPACAO-SIPAG.HTML
    ========================================================= */
 
-@media (max-width: 700px) {
-
+@media (max-width: 900px) {
     .antecipacao-grid {
+        display: grid;
         grid-template-columns: minmax(0, 1fr);
-        gap: 14px;
-        padding-top: 10px;
-        padding-bottom: 24px;
+        gap: 18px;
+        width: 100%;
+        min-width: 0;
+        padding-top: 18px;
+        padding-bottom: 30px;
+        align-items: start;
     }
 
     .antecipacao-formulario,
@@ -5317,6 +8098,734 @@ footer p,
     .antecipacao-documentos {
         grid-column: 1;
         grid-row: auto;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .antecipacao-formulario .grid-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .antecipacao-resultado .resultados-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    /* =====================================================
+       ESTRUTURA PRINCIPAL
+       ===================================================== */
+
+    .antecipacao-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding-top: 8px;
+        padding-bottom: 24px;
+        align-items: start;
+    }
+
+    .antecipacao-formulario,
+    .antecipacao-resultado,
+    .antecipacao-tabela,
+    .antecipacao-documentos {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .antecipacao-grid .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    .antecipacao-grid .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .antecipacao-grid .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 10px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       FORMULÁRIO
+       ===================================================== */
+
+    .antecipacao-formulario .grid-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .antecipacao-formulario .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .antecipacao-formulario .campo label {
+        display: block;
+        width: 100%;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .antecipacao-formulario input,
+    .antecipacao-formulario select {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 42px;
+        height: 42px;
+        padding-right: 11px;
+        padding-left: 11px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .antecipacao-formulario select {
+        text-overflow: ellipsis;
+    }
+
+    /* =====================================================
+       PREFIXOS / SUFIXOS
+       ===================================================== */
+
+    .antecipacao-formulario .input-prefixo,
+    .antecipacao-formulario .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .antecipacao-formulario .input-prefixo>span,
+    .antecipacao-formulario .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 40px;
+        padding: 0 8px;
+        background: var(--fundo-secundario);
+        color: var(--texto-secundario);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .antecipacao-formulario .input-prefixo input,
+    .antecipacao-formulario .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    #taxaAntecipacao+span {
+        min-width: 54px;
+    }
+
+    #taxaMdr+span {
+        min-width: 38px;
+    }
+
+    /* =====================================================
+       BOTÕES
+       ===================================================== */
+
+    .antecipacao-formulario .acoes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        margin-top: 17px;
+    }
+
+    .antecipacao-formulario .acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+
+    #btnCalcularAntecipacao,
+    #btnLimparAntecipacao {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       AVISO
+       ===================================================== */
+
+    .antecipacao-formulario .aviso {
+        width: 100%;
+        min-width: 0;
+        margin-top: 15px;
+        padding: 11px 12px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 9px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    .antecipacao-resultado .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    .antecipacao-resultado .resultado-destaque span {
+        flex: 0 1 42%;
+        width: auto;
+        max-width: 42%;
+        min-width: 0;
+        margin: 0;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .antecipacao-resultado .resultado-destaque strong {
+        flex: 1 1 58%;
+        width: auto;
+        max-width: 58%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(16px, 4.8vw, 21px);
+        line-height: 1.1;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       GRID DE RESULTADOS
+       ===================================================== */
+
+    .antecipacao-resultado .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+    }
+
+    .antecipacao-resultado .resultado-item {
+        min-width: 0;
+        min-height: 62px;
+        padding: 10px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .antecipacao-resultado .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        color: var(--texto-secundario);
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .antecipacao-resultado .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        color: var(--verde-escuro);
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       TAXA FINAL DA OPERAÇÃO
+       ===================================================== */
+
+    .antecipacao-resultado .linha-selecionada {
+        width: 100%;
+        min-width: 0;
+        margin-top: 11px;
+        padding: 11px 12px;
+        border-left-width: 4px;
+        border-radius: 8px;
+    }
+
+    .antecipacao-resultado .linha-selecionada span {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 8px;
+        line-height: 1.25;
+    }
+
+    .antecipacao-resultado .linha-selecionada strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 12px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       TABELA - DETALHAMENTO DAS PARCELAS
+       ===================================================== */
+
+    .antecipacao-tabela {
+        overflow: hidden;
+    }
+
+    .antecipacao-tabela .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        overscroll-behavior-x: contain;
+    }
+
+    .antecipacao-tabela .tabela-wrapper table {
+        width: 100%;
+        min-width: 940px;
+        table-layout: auto;
+    }
+
+    .antecipacao-tabela th,
+    .antecipacao-tabela td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .antecipacao-tabela th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .antecipacao-tabela th:first-child,
+    .antecipacao-tabela td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+    }
+
+    .antecipacao-tabela th:first-child {
+        background: var(--fundo-secundario);
+    }
+
+    .antecipacao-tabela td:first-child {
+        background: var(--branco);
+    }
+
+    /* =====================================================
+       TABELA - TAXA FINAL POR PARCELAMENTO
+       ===================================================== */
+
+    .antecipacao-documentos {
+        overflow: hidden;
+    }
+
+    .antecipacao-documentos .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .antecipacao-documentos .tabela-wrapper table {
+        width: 100%;
+        min-width: 430px;
+        table-layout: auto;
+    }
+
+    .antecipacao-documentos th,
+    .antecipacao-documentos td {
+        padding: 8px 10px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .antecipacao-documentos th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .antecipacao-documentos th:first-child,
+    .antecipacao-documentos td:first-child {
+        text-align: left;
+    }
+
+    .antecipacao-documentos th:not(:first-child),
+    .antecipacao-documentos td:not(:first-child) {
+        text-align: right;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO - ANTECIPACAO-SIPAG.HTML
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .antecipacao-grid {
+        gap: 12px;
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .antecipacao-formulario,
+    .antecipacao-resultado,
+    .antecipacao-tabela,
+    .antecipacao-documentos {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    /* TÍTULOS */
+
+    .antecipacao-grid .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    .antecipacao-grid .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .antecipacao-grid .titulo-secao p {
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+    /* FORMULÁRIO */
+
+    .antecipacao-formulario .grid-form {
+        gap: 10px;
+    }
+
+    .antecipacao-formulario .campo label {
+        font-size: 10px;
+    }
+
+    .antecipacao-formulario input,
+    .antecipacao-formulario select {
+        min-height: 40px;
+        height: 40px;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .antecipacao-formulario .input-prefixo>span,
+    .antecipacao-formulario .input-sufixo>span {
+        min-width: 38px;
+        padding: 0 7px;
+        font-size: 9px;
+    }
+
+    #taxaAntecipacao+span {
+        min-width: 50px;
+    }
+
+    #taxaMdr+span {
+        min-width: 36px;
+    }
+
+    /* BOTÕES */
+
+    .antecipacao-formulario .acoes {
+        gap: 7px;
+        margin-top: 14px;
+    }
+
+    .antecipacao-formulario .acoes button {
+        min-height: 38px;
+        height: 38px;
+        padding: 0 8px;
+        font-size: 10px;
+    }
+
+    /* AVISO */
+
+    .antecipacao-formulario .aviso {
+        margin-top: 13px;
+        padding: 10px;
+        font-size: 8px;
+    }
+
+    /* RESULTADO */
+
+    .antecipacao-resultado .resultado-destaque {
+        padding: 11px;
+    }
+
+    .antecipacao-resultado .resultado-destaque span {
+        font-size: 9px;
+    }
+
+    .antecipacao-resultado .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    .antecipacao-resultado .resultados-grid {
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    .antecipacao-resultado .resultado-item {
+        min-height: 57px;
+        padding: 9px;
+    }
+
+    .antecipacao-resultado .resultado-item span {
+        font-size: 7px;
+    }
+
+    .antecipacao-resultado .resultado-item strong {
+        font-size: 11px;
+    }
+
+    .antecipacao-resultado .linha-selecionada {
+        margin-top: 9px;
+        padding: 10px;
+    }
+
+    .antecipacao-resultado .linha-selecionada span {
+        font-size: 7px;
+    }
+
+    .antecipacao-resultado .linha-selecionada strong {
+        font-size: 11px;
+    }
+
+    /* TABELA PARCELAS */
+
+    .antecipacao-tabela .tabela-wrapper table {
+        min-width: 860px;
+    }
+
+    .antecipacao-tabela th,
+    .antecipacao-tabela td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .antecipacao-tabela th {
+        font-size: 7px;
+    }
+
+    /* TABELA TAXA FLEX */
+
+    .antecipacao-documentos .tabela-wrapper table {
+        min-width: 390px;
+    }
+
+    .antecipacao-documentos th,
+    .antecipacao-documentos td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .antecipacao-documentos th {
+        font-size: 7px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - ANTECIPACAO-SIPAG.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .antecipacao-formulario,
+    .antecipacao-resultado,
+    .antecipacao-tabela,
+    .antecipacao-documentos {
+        padding: 11px;
+    }
+
+    .antecipacao-grid .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .antecipacao-grid .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .antecipacao-formulario .campo label {
+        font-size: 9px;
+    }
+
+    /* BOTÕES EM UMA COLUNA */
+
+    .antecipacao-formulario .acoes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .antecipacao-formulario .acoes button {
+        width: 100%;
+    }
+
+    /* RESULTADO PRINCIPAL */
+
+    .antecipacao-resultado .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .antecipacao-resultado .resultado-destaque span,
+    .antecipacao-resultado .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    /* RESULTADOS EM UMA COLUNA */
+
+    .antecipacao-resultado .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .antecipacao-resultado .resultado-item {
+        min-height: 50px;
+    }
+
+    /* TABELAS */
+
+    .antecipacao-tabela .tabela-wrapper table {
+        min-width: 820px;
+    }
+
+    .antecipacao-documentos .tabela-wrapper table {
+        min-width: 360px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE - COBRANCA.HTML
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .cobranca-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+        width: 100%;
+        min-width: 0;
+        padding-top: 18px;
+        padding-bottom: 30px;
+        align-items: start;
+    }
+
+    .cobranca-card,
+    .cobranca-card-principal,
+    .cobranca-card-largura-total,
+    .cobranca-acoes {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cobranca-grid .grid-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cobranca-grid .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cobranca-grid .resultados-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -5326,22 +8835,885 @@ footer p,
 
 @media (max-width: 700px) {
 
+    /* =====================================================
+       ESTRUTURA PRINCIPAL
+       ===================================================== */
+
     .cobranca-grid {
+        display: grid;
         grid-template-columns: minmax(0, 1fr);
         gap: 14px;
-        padding-top: 10px;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding-top: 8px;
         padding-bottom: 24px;
+        align-items: start;
     }
 
-    .cobranca-card,
-    .cobranca-card-principal,
-    .cobranca-card-largura-total {
+    .cobranca-grid>.cobranca-card,
+    .cobranca-grid>.cobranca-card-principal,
+    .cobranca-grid>.cobranca-card-largura-total {
         grid-column: 1;
         grid-row: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
     }
 
+    /* =====================================================
+       TÍTULOS PRINCIPAIS
+       ===================================================== */
+
+    .cobranca-grid .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    .cobranca-grid .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .cobranca-grid .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 10px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       SUBTÍTULOS
+       ===================================================== */
+
+    .cobranca-grid .titulo-subsecao {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 12px;
+    }
+
+    .cobranca-grid .titulo-subsecao h3 {
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .cobranca-grid .titulo-subsecao p {
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 9px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       SEPARADORES
+       ===================================================== */
+
+    .cobranca-grid .separador {
+        width: 100%;
+        height: 1px;
+        margin: 17px 0;
+    }
+
+    /* =====================================================
+       FORMULÁRIOS
+       ===================================================== */
+
+    .cobranca-grid .grid-form,
+    .cobranca-grid .grid-form-3,
+    .cobranca-grid .grid-form-4 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 11px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cobranca-grid .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cobranca-grid .campo label {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .cobranca-grid input,
+    .cobranca-grid select,
+    .cobranca-grid textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 41px;
+        height: 41px;
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    /* =====================================================
+       PREFIXOS / SUFIXOS
+       ===================================================== */
+
+    .cobranca-grid .input-prefixo,
+    .cobranca-grid .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cobranca-grid .input-prefixo>span,
+    .cobranca-grid .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 38px;
+        padding: 0 7px;
+        background: var(--fundo-secundario);
+        color: var(--texto-secundario);
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .cobranca-grid .input-prefixo input,
+    .cobranca-grid .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    #taxaCdiAno+span {
+        min-width: 51px;
+    }
+
+    #diasFloat+span {
+        min-width: 39px;
+    }
+
+    /* =====================================================
+       DADOS DA CARTEIRA
+       ===================================================== */
+
+    .cobranca-card-principal .grid-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cobranca-card-principal .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .cobranca-card-principal .grid-form-4 .campo label {
+        min-height: 26px;
+        font-size: 9px;
+        line-height: 1.25;
+    }
+
+    .cobranca-card-principal .grid-form-4 input {
+        min-height: 39px;
+        height: 39px;
+        font-size: 15px;
+    }
+
+    /* =====================================================
+       TOTAL DA DISTRIBUIÇÃO
+       ===================================================== */
+
+    .cobranca-grid .indicador-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 11px;
+        padding: 10px 11px;
+        border-radius: 8px;
+        font-size: 9px;
+        line-height: 1.3;
+    }
+
+    .cobranca-grid .indicador-total span {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .cobranca-grid .indicador-total strong {
+        flex: 0 0 auto;
+        min-width: 0;
+        font-size: 11px;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    /* =====================================================
+       FUNDING
+       ===================================================== */
+
+    .cobranca-grid #centralizacaoFinanceira,
+    .cobranca-grid #percentualSaldoMedio,
+    .cobranca-grid #taxaCdiAno,
+    .cobranca-grid #diasFloat {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       CUSTOS GERAIS
+       ===================================================== */
+
+    .cobranca-grid #custoRedeBancaria,
+    .cobranca-grid #custoRedeSicoob,
+    .cobranca-grid #custoLiqPropria,
+    .cobranca-grid #custoCorrespondente,
+    .cobranca-grid #custoProcessamento,
+    .cobranca-grid #custoTarifaNova {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cobranca-grid .aviso-info {
+        width: 100%;
+        min-width: 0;
+        margin-top: 13px;
+        padding: 10px 11px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       TARIFAS PRATICADAS
+       ===================================================== */
+
+    .cobranca-card-largura-total .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .cobranca-card-largura-total .grid-form-4 .campo label {
+        min-height: 27px;
+        font-size: 9px;
+        line-height: 1.25;
+    }
+
+    .cobranca-card-largura-total .grid-form-4 input {
+        min-height: 39px;
+        height: 39px;
+        font-size: 15px;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    .cobranca-grid .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    .cobranca-grid .resultado-destaque span {
+        flex: 0 1 42%;
+        width: auto;
+        max-width: 42%;
+        min-width: 0;
+        margin: 0;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .cobranca-grid .resultado-destaque strong {
+        flex: 1 1 58%;
+        width: auto;
+        max-width: 58%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(16px, 4.8vw, 21px);
+        line-height: 1.1;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       RESULTADOS RESUMIDOS
+       ===================================================== */
+
+    .cobranca-grid .resultados-grid-4 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+    }
+
+    .cobranca-grid .resultado-item {
+        min-width: 0;
+        min-height: 61px;
+        padding: 10px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .cobranca-grid .resultado-item span {
+        display: block;
+        min-height: 0;
+        margin-bottom: 4px;
+        color: var(--texto-secundario);
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .cobranca-grid .resultado-item strong {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        color: var(--verde-escuro);
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    .cobranca-grid .resultado-item-neutro strong {
+        color: var(--verde-escuro);
+    }
+
+    /* =====================================================
+       RECEITAS FINANCEIRAS
+       ===================================================== */
+
+    .cobranca-grid .titulo-subsecao+.resultados-grid-4 {
+        margin-top: 0;
+    }
+
+    /* =====================================================
+       TABELAS
+       ===================================================== */
+
+    .cobranca-grid .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        overscroll-behavior-x: contain;
+    }
+
+    .cobranca-grid .tabela-cobranca {
+        width: 100%;
+        min-width: 610px;
+        table-layout: auto;
+    }
+
+    .cobranca-grid .tabela-cobranca th,
+    .cobranca-grid .tabela-cobranca td {
+        padding: 8px 9px;
+        font-size: 9px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .cobranca-grid .tabela-cobranca th {
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .cobranca-grid .tabela-cobranca th:first-child,
+    .cobranca-grid .tabela-cobranca td:first-child {
+        width: auto;
+        min-width: 190px;
+        text-align: left;
+    }
+
+    .cobranca-grid .tabela-cobranca th:not(:first-child),
+    .cobranca-grid .tabela-cobranca td:not(:first-child) {
+        min-width: 115px;
+        text-align: right;
+    }
+
+    /* =====================================================
+       PRIMEIRA COLUNA FIXA NAS TABELAS
+       ===================================================== */
+
+    .cobranca-grid .tabela-cobranca th:first-child,
+    .cobranca-grid .tabela-cobranca td:first-child {
+        position: sticky;
+        left: 0;
+    }
+
+    .cobranca-grid .tabela-cobranca th:first-child {
+        z-index: 3;
+        background: var(--fundo-secundario);
+    }
+
+    .cobranca-grid .tabela-cobranca tbody td:first-child {
+        z-index: 2;
+        background: var(--branco);
+    }
+
+    .cobranca-grid .tabela-cobranca tfoot td:first-child {
+        z-index: 2;
+        background: var(--fundo-secundario);
+    }
+
+    /* =====================================================
+       RODAPÉ DAS TABELAS
+       ===================================================== */
+
+    .cobranca-grid .tabela-cobranca tfoot td {
+        color: var(--verde-escuro);
+        background: var(--fundo-secundario);
+        font-weight: 800;
+    }
+
+    .cobranca-grid .tabela-cobranca tfoot td[colspan] {
+        text-align: right;
+    }
+
+    /* =====================================================
+       AÇÕES DA PÁGINA
+       ===================================================== */
+
     .cobranca-acoes {
-        grid-column: 1;
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-end;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+    .cobranca-acoes button,
+    .cobranca-acoes .botao-secundario {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO - COBRANCA.HTML
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .cobranca-grid {
+        gap: 12px;
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .cobranca-grid>.cobranca-card,
+    .cobranca-grid>.cobranca-card-principal,
+    .cobranca-grid>.cobranca-card-largura-total {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .cobranca-grid .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    .cobranca-grid .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .cobranca-grid .titulo-secao p {
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+    .cobranca-grid .titulo-subsecao {
+        margin-bottom: 10px;
+    }
+
+    .cobranca-grid .titulo-subsecao h3 {
+        font-size: 12px;
+    }
+
+    .cobranca-grid .titulo-subsecao p {
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       FORMULÁRIOS
+       ===================================================== */
+
+    .cobranca-grid .grid-form,
+    .cobranca-grid .grid-form-3,
+    .cobranca-grid .grid-form-4 {
+        gap: 9px;
+    }
+
+    .cobranca-grid .campo label {
+        font-size: 9px;
+    }
+
+    .cobranca-grid input,
+    .cobranca-grid select,
+    .cobranca-grid textarea {
+        min-height: 39px;
+        height: 39px;
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .cobranca-grid .input-prefixo>span,
+    .cobranca-grid .input-sufixo>span {
+        min-width: 36px;
+        padding: 0 6px;
+        font-size: 8px;
+    }
+
+    #taxaCdiAno+span {
+        min-width: 47px;
+    }
+
+    #diasFloat+span {
+        min-width: 36px;
+    }
+
+    /* =====================================================
+       DISTRIBUIÇÃO DOS TÍTULOS
+       ===================================================== */
+
+    .cobranca-card-principal .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .cobranca-card-principal .grid-form-4 .campo label {
+        min-height: 24px;
+        font-size: 8px;
+    }
+
+    .cobranca-card-principal .grid-form-4 input {
+        min-height: 37px;
+        height: 37px;
+    }
+
+    /* =====================================================
+       TOTAL DISTRIBUIÇÃO
+       ===================================================== */
+
+    .cobranca-grid .indicador-total {
+        margin-top: 9px;
+        padding: 9px 10px;
+        font-size: 8px;
+    }
+
+    .cobranca-grid .indicador-total strong {
+        font-size: 10px;
+    }
+
+    /* =====================================================
+       TARIFAS PRATICADAS
+       ===================================================== */
+
+    .cobranca-card-largura-total .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .cobranca-card-largura-total .grid-form-4 .campo label {
+        min-height: 25px;
+        font-size: 8px;
+    }
+
+    .cobranca-card-largura-total .grid-form-4 input {
+        min-height: 37px;
+        height: 37px;
+    }
+
+    /* =====================================================
+       AVISO
+       ===================================================== */
+
+    .cobranca-grid .aviso-info {
+        margin-top: 11px;
+        padding: 9px 10px;
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       RESULTADO PRINCIPAL
+       ===================================================== */
+
+    .cobranca-grid .resultado-destaque {
+        padding: 11px;
+    }
+
+    .cobranca-grid .resultado-destaque span {
+        font-size: 9px;
+    }
+
+    .cobranca-grid .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    /* =====================================================
+       RESULTADOS
+       ===================================================== */
+
+    .cobranca-grid .resultados-grid-4 {
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    .cobranca-grid .resultado-item {
+        min-height: 56px;
+        padding: 9px;
+    }
+
+    .cobranca-grid .resultado-item span {
+        font-size: 7px;
+    }
+
+    .cobranca-grid .resultado-item strong {
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       TABELAS
+       ===================================================== */
+
+    .cobranca-grid .tabela-cobranca {
+        min-width: 560px;
+    }
+
+    .cobranca-grid .tabela-cobranca th,
+    .cobranca-grid .tabela-cobranca td {
+        padding: 7px 8px;
+        font-size: 8px;
+    }
+
+    .cobranca-grid .tabela-cobranca th {
+        font-size: 7px;
+    }
+
+    .cobranca-grid .tabela-cobranca th:first-child,
+    .cobranca-grid .tabela-cobranca td:first-child {
+        min-width: 175px;
+    }
+
+    .cobranca-grid .tabela-cobranca th:not(:first-child),
+    .cobranca-grid .tabela-cobranca td:not(:first-child) {
+        min-width: 105px;
+    }
+
+    /* =====================================================
+       BOTÃO LIMPAR
+       ===================================================== */
+
+    .cobranca-acoes button,
+    .cobranca-acoes .botao-secundario {
+        min-height: 38px;
+        height: 38px;
+        font-size: 10px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - COBRANCA.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .cobranca-grid>.cobranca-card,
+    .cobranca-grid>.cobranca-card-principal,
+    .cobranca-grid>.cobranca-card-largura-total {
+        padding: 11px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .cobranca-grid .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .cobranca-grid .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .cobranca-grid .titulo-subsecao h3 {
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       CAMPOS
+       ===================================================== */
+
+    .cobranca-grid .campo label {
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       DISTRIBUIÇÃO EM UMA COLUNA
+       ===================================================== */
+
+    .cobranca-card-principal .grid-form-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cobranca-card-principal .grid-form-4 .campo label {
+        min-height: 0;
+    }
+
+    /* =====================================================
+       TARIFAS EM UMA COLUNA
+       ===================================================== */
+
+    .cobranca-card-largura-total .grid-form-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cobranca-card-largura-total .grid-form-4 .campo label {
+        min-height: 0;
+    }
+
+    /* =====================================================
+       RESULTADO DESTAQUE
+       ===================================================== */
+
+    .cobranca-grid .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .cobranca-grid .resultado-destaque span,
+    .cobranca-grid .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    /* =====================================================
+       RESULTADOS EM UMA COLUNA
+       ===================================================== */
+
+    .cobranca-grid .resultados-grid-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cobranca-grid .resultado-item {
+        min-height: 50px;
+    }
+
+    /* =====================================================
+       INDICADOR
+       ===================================================== */
+
+    .cobranca-grid .indicador-total {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    /* =====================================================
+       TABELAS
+       ===================================================== */
+
+    .cobranca-grid .tabela-cobranca {
+        min-width: 530px;
+    }
+
+    .cobranca-grid .tabela-cobranca th:first-child,
+    .cobranca-grid .tabela-cobranca td:first-child {
+        min-width: 165px;
+    }
+
+    .cobranca-grid .tabela-cobranca th:not(:first-child),
+    .cobranca-grid .tabela-cobranca td:not(:first-child) {
+        min-width: 98px;
     }
 }
 
