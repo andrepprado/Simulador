@@ -341,10 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const container = document.createElement("div");
         container.className = "container menu-mobile-topo-conteudo";
 
-        const titulo = document.createElement("span");
-        titulo.className = "menu-mobile-titulo";
-        titulo.textContent = "Menu";
-
         const botao = document.createElement("button");
         botao.type = "button";
         botao.className = "menu-mobile-botao";
@@ -368,18 +364,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const abrir =
-                !nav.classList.contains("menu-mobile-aberto");
+            const abrir = !nav.classList.contains("menu-mobile-aberto");
 
-            nav.classList.toggle(
-                "menu-mobile-aberto",
-                abrir
-            );
-
-            botao.classList.toggle(
-                "ativo",
-                abrir
-            );
+            nav.classList.toggle("menu-mobile-aberto", abrir);
+            botao.classList.toggle("ativo", abrir);
 
             botao.setAttribute(
                 "aria-expanded",
@@ -396,7 +384,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        container.appendChild(titulo);
         container.appendChild(botao);
         topo.appendChild(container);
 
