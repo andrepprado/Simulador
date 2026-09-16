@@ -87,7 +87,7 @@ button {
 input,
 select,
 textarea {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .container {
@@ -114,7 +114,8 @@ header,
 .cabecalho,
 .topo {
     width: 100%;
-    background: linear-gradient(115deg,
+    background:
+        linear-gradient(115deg,
             var(--turquesa) 0%,
             var(--turquesa-claro) 35%,
             var(--verde-escuro) 100%);
@@ -124,11 +125,11 @@ header,
 .header-conteudo,
 .cabecalho-conteudo,
 .topo-conteudo {
-    min-height: 190px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 40px;
+    min-height: 190px;
     padding-top: 30px;
     padding-bottom: 30px;
 }
@@ -136,8 +137,8 @@ header,
 .header-texto,
 .cabecalho-texto,
 .topo-textos {
-    min-width: 0;
     flex: 1 1 auto;
+    min-width: 0;
 }
 
 .header-tag,
@@ -154,11 +155,14 @@ header,
 header h1,
 .cabecalho h1,
 .topo h1 {
+    max-width: 100%;
     margin: 0 0 8px;
     color: var(--branco);
     font-size: clamp(30px, 4vw, 44px);
+    font-weight: 700;
     line-height: 1.1;
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 header p,
@@ -166,8 +170,11 @@ header p,
 .topo p {
     max-width: 720px;
     margin: 0;
-    color: rgba(255, 255, 255, .88);
+    color: rgba(255, 255, 255, .9);
     font-size: 16px;
+    line-height: 1.5;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .header-logo,
@@ -205,8 +212,8 @@ header p,
 .menu-conteudo {
     display: flex;
     align-items: stretch;
-    min-height: 52px;
     gap: 4px;
+    min-height: 52px;
     overflow: visible;
 }
 
@@ -310,7 +317,7 @@ a.menu-item:hover,
 }
 
 /* =========================================================
-   AGRUPADORES
+   AGRUPADORES DO MENU
    ========================================================= */
 
 .menu-grupo {
@@ -372,8 +379,9 @@ a.menu-item:hover,
     font-weight: 700;
     line-height: 1.35;
     white-space: normal;
-    overflow-wrap: break-word;
     border-left: 3px solid transparent;
+    overflow-wrap: normal;
+    word-break: normal;
     transition: .2s ease;
 }
 
@@ -424,7 +432,8 @@ main {
     width: 5px;
     height: 42px;
     border-radius: 10px;
-    background: linear-gradient(180deg,
+    background:
+        linear-gradient(180deg,
             var(--verde-claro),
             var(--turquesa));
 }
@@ -435,7 +444,8 @@ main {
     color: var(--verde-escuro);
     font-size: 22px;
     line-height: 1.25;
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .secao-titulo p,
@@ -444,7 +454,8 @@ main {
     color: var(--texto-secundario);
     font-size: 13px;
     line-height: 1.5;
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .titulo-subsecao {
@@ -457,18 +468,17 @@ main {
     color: var(--verde-escuro);
     font-size: 16px;
     line-height: 1.3;
-    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .titulo-subsecao p {
     color: var(--texto-secundario);
     font-size: 12px;
     line-height: 1.5;
-    overflow-wrap: break-word;
 }
 
 /* =========================================================
-   HOME
+   HOME / CAIXA DE FERRAMENTAS
    ========================================================= */
 
 .home,
@@ -497,6 +507,7 @@ main {
     color: var(--turquesa);
     font-size: 11px;
     font-weight: 700;
+    line-height: 1.2;
     text-transform: uppercase;
 }
 
@@ -506,7 +517,7 @@ main {
     color: var(--verde-escuro);
     font-size: 30px;
     line-height: 1.2;
-    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .home-apresentacao p,
@@ -514,11 +525,11 @@ main {
     color: var(--texto-secundario);
     font-size: 15px;
     line-height: 1.6;
-    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .categoria-ferramentas {
-    width: 100%;
+    width: calc(100% - 40px);
     max-width: 1180px;
     min-width: 0;
     margin: 0 auto 42px;
@@ -559,7 +570,8 @@ main {
     width: 5px;
     height: 31px;
     border-radius: 8px;
-    background: linear-gradient(180deg,
+    background:
+        linear-gradient(180deg,
             var(--verde-claro),
             var(--turquesa));
 }
@@ -577,12 +589,13 @@ main {
 }
 
 /* =========================================================
-   GRID HOME
+   GRID DOS CARDS DA HOME
    ========================================================= */
 
 .ferramentas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit,
+    grid-template-columns:
+        repeat(auto-fit,
             minmax(min(300px, 100%), 360px));
     justify-content: center;
     align-items: stretch;
@@ -717,8 +730,8 @@ a.ferramenta-card:hover,
 }
 
 .ferramenta-conteudo {
-    min-width: 0;
     flex: 1 1 auto;
+    min-width: 0;
 }
 
 .ferramenta-status {
@@ -732,6 +745,7 @@ a.ferramenta-card:hover,
     color: var(--sucesso);
     font-size: 10px;
     font-weight: 800;
+    line-height: 1.2;
     letter-spacing: .04em;
     text-transform: uppercase;
 }
@@ -741,7 +755,8 @@ a.ferramenta-card:hover,
     color: var(--verde-escuro);
     font-size: 17px;
     line-height: 1.25;
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .ferramenta-card p {
@@ -749,14 +764,14 @@ a.ferramenta-card:hover,
     color: var(--texto-secundario);
     font-size: 12px;
     line-height: 1.5;
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .ferramenta-link {
     color: var(--turquesa);
     font-size: 12px;
     font-weight: 800;
-    overflow-wrap: break-word;
 }
 
 /* =========================================================
@@ -789,16 +804,17 @@ a.ferramenta-card:hover,
 .resultado-card h2 {
     margin-top: 0;
     color: var(--verde-escuro);
-    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 /* =========================================================
-   GRIDS
+   GRIDS GERAIS
    ========================================================= */
 
 .simulador-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.65fr) minmax(340px, .85fr);
+    grid-template-columns:
+        minmax(0, 1.65fr) minmax(340px, .85fr);
     gap: 24px;
     width: 100%;
     min-width: 0;
@@ -831,7 +847,8 @@ a.ferramenta-card:hover,
 
 .antecipacao-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(360px, .75fr);
+    grid-template-columns:
+        minmax(0, 1.25fr) minmax(360px, .75fr);
     gap: 24px;
     width: 100%;
     min-width: 0;
@@ -880,7 +897,8 @@ a.ferramenta-card:hover,
 
 .cobranca-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 24px;
     width: 100%;
     min-width: 0;
@@ -907,7 +925,8 @@ a.ferramenta-card:hover,
 .form-grid,
 .grid-form {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 18px;
     width: 100%;
     min-width: 0;
@@ -915,7 +934,8 @@ a.ferramenta-card:hover,
 
 .grid-form-3 {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
     gap: 18px;
     width: 100%;
     min-width: 0;
@@ -923,7 +943,8 @@ a.ferramenta-card:hover,
 
 .grid-form-4 {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
     gap: 14px;
     width: 100%;
     min-width: 0;
@@ -950,7 +971,7 @@ a.ferramenta-card:hover,
     font-size: 13px;
     font-weight: 700;
     line-height: 1.4;
-    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .campo-grupo small,
@@ -961,7 +982,7 @@ a.ferramenta-card:hover,
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.45;
-    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 input,
@@ -1003,7 +1024,8 @@ input:focus,
 select:focus,
 textarea:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .10);
 }
 
 input[readonly],
@@ -1050,12 +1072,14 @@ input.bloqueado {
 
 .input-prefixo input {
     flex: 1 1 auto;
+    width: 1%;
     min-width: 0;
     border-radius: 0 9px 9px 0;
 }
 
 .input-sufixo input {
     flex: 1 1 auto;
+    width: 1%;
     min-width: 0;
     border-radius: 9px 0 0 9px;
 }
@@ -1089,13 +1113,14 @@ input.bloqueado {
 .btn-secundario,
 .btn-principal {
     min-width: 115px;
-    min-height: 46px;
-    height: 46px;
-    padding: 0 20px;
+    min-height: 44px;
+    height: auto;
+    padding: 10px 20px;
     border-radius: 9px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 800;
+    line-height: 1.2;
     transition: .2s ease;
 }
 
@@ -1127,7 +1152,7 @@ input.bloqueado {
 }
 
 /* =========================================================
-   BLOCOS
+   BLOCOS INFORMATIVOS
    ========================================================= */
 
 .separador {
@@ -1148,7 +1173,6 @@ input.bloqueado {
     border-radius: 8px;
     font-size: 13px;
     line-height: 1.5;
-    overflow-wrap: break-word;
 }
 
 .aviso-info {
@@ -1162,7 +1186,6 @@ input.bloqueado {
     border-radius: 8px;
     font-size: 12px;
     line-height: 1.5;
-    overflow-wrap: break-word;
 }
 
 .indicador-total {
@@ -1174,9 +1197,9 @@ input.bloqueado {
     min-width: 0;
     margin-top: 16px;
     padding: 12px 14px;
-    border-radius: 9px;
     background: var(--fundo-secundario);
     color: var(--texto-secundario);
+    border-radius: 9px;
     font-size: 13px;
 }
 
@@ -1184,7 +1207,6 @@ input.bloqueado {
     min-width: 0;
     color: var(--verde-escuro);
     font-size: 14px;
-    overflow-wrap: break-word;
 }
 
 .indicador-total strong.indicador-ok {
@@ -1209,7 +1231,8 @@ input.bloqueado {
     padding: 22px 24px;
     overflow: hidden;
     color: var(--branco);
-    background: linear-gradient(115deg,
+    background:
+        linear-gradient(115deg,
             var(--turquesa),
             var(--verde-escuro));
     border-radius: 13px;
@@ -1233,14 +1256,15 @@ input.bloqueado {
     line-height: 1.1;
     text-align: right;
     white-space: normal;
-    overflow-wrap: break-word;
     word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .resultado-grid,
 .resultados-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
     min-width: 0;
@@ -1249,7 +1273,8 @@ input.bloqueado {
 
 .resultados-grid-3 {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
     min-width: 0;
@@ -1257,7 +1282,8 @@ input.bloqueado {
 
 .resultados-grid-4 {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
     min-width: 0;
@@ -1278,7 +1304,6 @@ input.bloqueado {
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.35;
-    overflow-wrap: break-word;
 }
 
 .resultado-item strong {
@@ -1289,8 +1314,8 @@ input.bloqueado {
     font-size: clamp(12px, .9vw, 16px);
     line-height: 1.3;
     white-space: normal;
-    overflow-wrap: break-word;
     word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .resultado-item-neutro strong {
@@ -1329,6 +1354,7 @@ input.bloqueado {
     color: var(--branco);
     font-size: 14px;
     line-height: 1.35;
+    word-break: normal;
     overflow-wrap: break-word;
 }
 
@@ -1455,7 +1481,6 @@ td {
     color: var(--branco);
     font-size: 12px;
     font-weight: 700;
-    overflow-wrap: break-word;
 }
 
 .documento-lista {
@@ -1469,7 +1494,6 @@ td {
     border-bottom: 1px solid var(--borda);
     font-size: 12px;
     line-height: 1.45;
-    overflow-wrap: break-word;
 }
 
 .documento-item:last-child {
@@ -1497,7 +1521,6 @@ td {
     border-radius: 8px;
     font-size: 11px;
     line-height: 1.5;
-    overflow-wrap: break-word;
 }
 
 /* =========================================================
@@ -1557,7 +1580,8 @@ td {
 .barra-progresso-valor {
     width: 25%;
     height: 100%;
-    background: linear-gradient(90deg,
+    background:
+        linear-gradient(90deg,
             var(--turquesa) 0%,
             var(--turquesa-claro) 55%,
             var(--verde-claro) 100%);
@@ -1567,7 +1591,8 @@ td {
 
 .previdencia-etapas {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
     gap: 10px;
     width: 100%;
     min-width: 0;
@@ -1661,7 +1686,8 @@ td {
 
 .previdencia-escolhas {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 16px;
     width: 100%;
     min-width: 0;
@@ -1702,7 +1728,6 @@ td {
     color: var(--verde-escuro);
     font-size: 15px;
     line-height: 1.4;
-    overflow-wrap: break-word;
 }
 
 .opcao-simulacao-conteudo small {
@@ -1710,23 +1735,25 @@ td {
     color: var(--texto-secundario);
     font-size: 12px;
     line-height: 1.55;
-    overflow-wrap: break-word;
 }
 
 .opcao-simulacao:hover .opcao-simulacao-conteudo {
     border-color: var(--turquesa-claro);
-    box-shadow: 0 4px 16px rgba(0, 160, 145, .06);
+    box-shadow:
+        0 4px 16px rgba(0, 160, 145, .06);
 }
 
 .opcao-simulacao.ativo .opcao-simulacao-conteudo {
     background: rgba(0, 160, 145, .055);
     border-color: var(--turquesa);
-    box-shadow: inset 0 0 0 1px var(--turquesa);
+    box-shadow:
+        inset 0 0 0 1px var(--turquesa);
 }
 
 .previdencia-painel .grid-form {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 18px;
     min-width: 0;
 }
@@ -1770,7 +1797,8 @@ td {
 
 .previdencia-resultado-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 24px;
     width: 100%;
     min-width: 0;
@@ -1793,7 +1821,8 @@ td {
 
 .previdencia-resumo-dados {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
     gap: 10px;
     width: 100%;
     min-width: 0;
@@ -1820,7 +1849,6 @@ td {
     color: var(--verde-escuro);
     font-size: 14px;
     line-height: 1.35;
-    overflow-wrap: break-word;
 }
 
 .previdencia-status {
@@ -1886,9 +1914,14 @@ td {
     margin-bottom: 20px;
 }
 
+/* =========================================================
+   SICOOBCARD - SELETOR
+   ========================================================= */
+
 .sicoobcard-seletor {
     display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(8, minmax(0, 1fr));
     gap: 10px;
     width: 100%;
     min-width: 0;
@@ -1899,7 +1932,7 @@ td {
     min-width: 0;
     min-height: 48px;
     height: auto;
-    padding: 10px 8px;
+    padding: 10px;
     background: #F7F9F9;
     color: var(--texto-secundario);
     border: 1px solid var(--borda);
@@ -1907,10 +1940,11 @@ td {
     font-size: 12px;
     font-weight: 700;
     line-height: 1.2;
+    text-align: center;
     cursor: pointer;
     white-space: normal;
-    overflow-wrap: normal;
     word-break: normal;
+    overflow-wrap: normal;
     transition: .2s ease;
 }
 
@@ -1922,17 +1956,24 @@ td {
 }
 
 .sicoobcard-opcao.ativo {
-    background: linear-gradient(135deg,
+    background:
+        linear-gradient(135deg,
             var(--turquesa),
             var(--verde-escuro));
     color: var(--branco);
     border-color: var(--turquesa);
-    box-shadow: 0 5px 15px rgba(0, 54, 64, .14);
+    box-shadow:
+        0 5px 15px rgba(0, 54, 64, .14);
 }
+
+/* =========================================================
+   SICOOBCARD - GRID PRINCIPAL
+   ========================================================= */
 
 .sicoobcard-detalhes-grid {
     display: grid;
-    grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
+    grid-template-columns:
+        minmax(320px, .72fr) minmax(0, 1.28fr);
     gap: 24px;
     width: 100%;
     min-width: 0;
@@ -1944,6 +1985,10 @@ td {
 .sicoobcard-informacoes-card {
     min-width: 0;
 }
+
+/* =========================================================
+   SICOOBCARD - CARTÃO
+   ========================================================= */
 
 .sicoobcard-cartao-card {
     display: flex;
@@ -1967,8 +2012,8 @@ td {
     color: var(--verde-escuro);
     font-size: 27px;
     line-height: 1.2;
-    overflow-wrap: normal;
     word-break: normal;
+    overflow-wrap: normal;
 }
 
 .sicoobcard-cartao-topo p {
@@ -1977,6 +2022,7 @@ td {
     color: var(--texto-secundario);
     font-size: 13px;
     line-height: 1.5;
+    word-break: normal;
 }
 
 .sicoobcard-bandeiras {
@@ -2025,7 +2071,8 @@ td {
     max-width: 92%;
     max-height: 365px;
     object-fit: contain;
-    filter: drop-shadow(0 14px 18px rgba(0, 54, 64, .18));
+    filter:
+        drop-shadow(0 14px 18px rgba(0, 54, 64, .18));
     transition:
         opacity .2s ease,
         transform .2s ease;
@@ -2049,7 +2096,6 @@ td {
     min-width: 0;
     color: var(--verde-escuro);
     font-size: 14px;
-    overflow-wrap: normal;
     word-break: normal;
 }
 
@@ -2057,9 +2103,12 @@ td {
     min-width: 0;
     color: var(--texto-secundario);
     font-size: 11px;
-    overflow-wrap: normal;
     word-break: normal;
 }
+
+/* =========================================================
+   SICOOBCARD - INFORMAÇÕES
+   ========================================================= */
 
 .sicoobcard-informacoes-card {
     display: flex;
@@ -2068,7 +2117,8 @@ td {
 
 .sicoobcard-informacoes-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 14px;
     width: 100%;
     min-width: 0;
@@ -2104,6 +2154,7 @@ td {
     color: var(--texto-secundario);
     font-size: 11px;
     font-weight: 700;
+    line-height: 1.3;
     text-transform: uppercase;
 }
 
@@ -2112,12 +2163,13 @@ td {
     color: var(--verde-escuro);
     font-size: 19px;
     line-height: 1.25;
-    overflow-wrap: normal;
     word-break: normal;
+    overflow-wrap: normal;
 }
 
 .sicoobcard-info-destaque {
-    background: linear-gradient(135deg,
+    background:
+        linear-gradient(135deg,
             rgba(0, 160, 145, .08),
             rgba(201, 210, 0, .09));
     border-color: rgba(0, 160, 145, .25);
@@ -2132,6 +2184,10 @@ td {
     font-size: 24px;
 }
 
+/* =========================================================
+   SICOOBCARD - FAIXA DE RENDA
+   ========================================================= */
+
 .sicoobcard-faixa-renda {
     position: relative;
     grid-column: 1 / -1;
@@ -2141,7 +2197,8 @@ td {
     min-width: 0;
     padding: 18px 20px;
     overflow: hidden;
-    background: linear-gradient(135deg,
+    background:
+        linear-gradient(135deg,
             rgba(0, 160, 145, .08),
             rgba(201, 210, 0, .08));
     border: 1px solid rgba(0, 160, 145, .22);
@@ -2155,7 +2212,8 @@ td {
     left: 0;
     width: 5px;
     height: 100%;
-    background: linear-gradient(180deg,
+    background:
+        linear-gradient(180deg,
             var(--verde-claro),
             var(--turquesa));
 }
@@ -2169,18 +2227,20 @@ td {
     height: 46px;
     margin-left: 3px;
     border-radius: 12px;
-    background: linear-gradient(135deg,
+    background:
+        linear-gradient(135deg,
             var(--turquesa),
             var(--verde-escuro));
     color: var(--branco);
     font-size: 14px;
     font-weight: 800;
-    box-shadow: 0 5px 13px rgba(0, 54, 64, .14);
+    box-shadow:
+        0 5px 13px rgba(0, 54, 64, .14);
 }
 
 .sicoobcard-faixa-renda-conteudo {
-    min-width: 0;
     flex: 1;
+    min-width: 0;
 }
 
 .sicoobcard-faixa-renda-conteudo>span {
@@ -2199,7 +2259,6 @@ td {
     color: var(--verde-escuro);
     font-size: 18px;
     line-height: 1.3;
-    overflow-wrap: normal;
     word-break: normal;
 }
 
@@ -2208,9 +2267,11 @@ td {
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.45;
-    overflow-wrap: normal;
-    word-break: normal;
 }
+
+/* =========================================================
+   SICOOBCARD - BENEFÍCIOS
+   ========================================================= */
 
 .sicoobcard-beneficios-cabecalho {
     display: flex;
@@ -2270,7 +2331,8 @@ td {
 
 .sicoobcard-beneficios-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
     gap: 14px;
     min-width: 0;
 }
@@ -2291,7 +2353,8 @@ td {
 .sicoobcard-beneficio:hover {
     transform: translateY(-1px);
     border-color: var(--turquesa-claro);
-    box-shadow: 0 5px 16px rgba(0, 54, 64, .07);
+    box-shadow:
+        0 5px 16px rgba(0, 54, 64, .07);
 }
 
 .sicoobcard-beneficio-icone {
@@ -2309,8 +2372,8 @@ td {
 }
 
 .sicoobcard-beneficio-conteudo {
-    min-width: 0;
     flex: 1;
+    min-width: 0;
 }
 
 .sicoobcard-beneficio-conteudo strong {
@@ -2319,7 +2382,6 @@ td {
     color: var(--verde-escuro);
     font-size: 12px;
     line-height: 1.35;
-    overflow-wrap: normal;
     word-break: normal;
 }
 
@@ -2328,8 +2390,6 @@ td {
     color: var(--texto-secundario);
     font-size: 10px;
     line-height: 1.35;
-    overflow-wrap: normal;
-    word-break: normal;
 }
 
 .sicoobcard-sem-beneficios {
@@ -2352,6 +2412,10 @@ td {
     font-size: 11px;
     line-height: 1.5;
 }
+
+/* =========================================================
+   SICOOBCARD - COMPARATIVO
+   ========================================================= */
 
 .sicoobcard-comparativo-card {
     min-width: 0;
@@ -2394,7 +2458,7 @@ td {
 }
 
 /* =========================================================
-   COMPROMETIMENTO
+   COMPROMETIMENTO DE RENDA
    ========================================================= */
 
 .comprometimento-container {
@@ -2405,7 +2469,8 @@ td {
 
 .comprometimento-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 24px;
     width: 100%;
     min-width: 0;
@@ -2458,7 +2523,8 @@ td {
     width: 5px;
     height: 32px;
     border-radius: 10px;
-    background: linear-gradient(180deg,
+    background:
+        linear-gradient(180deg,
             var(--verde-claro),
             var(--turquesa));
 }
@@ -2468,19 +2534,18 @@ td {
     color: var(--verde-escuro);
     font-size: 21px;
     line-height: 1.25;
-    overflow-wrap: break-word;
 }
 
 .comprometimento-titulo p {
     margin: 0;
     color: var(--texto-secundario);
     font-size: 13px;
-    overflow-wrap: break-word;
 }
 
 .comprometimento-form-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
     gap: 17px 18px;
     width: 100%;
     min-width: 0;
@@ -2500,7 +2565,6 @@ td {
     color: var(--verde-escuro);
     font-size: 13px;
     font-weight: 700;
-    overflow-wrap: break-word;
 }
 
 .comprometimento-campo small {
@@ -2509,7 +2573,6 @@ td {
     color: var(--texto-secundario);
     font-size: 11px;
     line-height: 1.4;
-    overflow-wrap: break-word;
 }
 
 .comprometimento-campo input,
@@ -2531,7 +2594,8 @@ td {
 .comprometimento-campo input:focus,
 .comprometimento-campo select:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .10);
 }
 
 .comprometimento-input-prefixo,
@@ -2568,11 +2632,15 @@ td {
 }
 
 .comprometimento-input-prefixo input {
+    width: 1%;
+    flex: 1 1 auto;
     min-width: 0;
     border-radius: 0 9px 9px 0;
 }
 
 .comprometimento-input-sufixo input {
+    width: 1%;
+    flex: 1 1 auto;
     min-width: 0;
     border-radius: 9px 0 0 9px;
 }
@@ -2669,7 +2737,8 @@ td {
     min-width: 0;
     margin-bottom: 24px;
     padding: 22px 24px;
-    background: linear-gradient(115deg,
+    background:
+        linear-gradient(115deg,
             var(--turquesa),
             var(--verde-escuro));
     color: var(--branco);
@@ -2692,7 +2761,8 @@ td {
 
 .comprometimento-resultado-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
     min-width: 0;
@@ -2719,7 +2789,6 @@ td {
     display: block;
     color: var(--verde-escuro);
     font-size: 15px;
-    overflow-wrap: break-word;
 }
 
 .comprometimento-tabela {
@@ -2770,12 +2839,13 @@ td {
 .comprometimento-btn {
     min-width: 115px;
     min-height: 43px;
-    height: 43px;
-    padding: 0 20px;
+    height: auto;
+    padding: 9px 20px;
     border-radius: 9px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 800;
+    line-height: 1.2;
     transition: .2s ease;
 }
 
@@ -2801,7 +2871,7 @@ td {
 }
 
 /* =========================================================
-   BOTÃO IMPRESSÃO
+   BOTÃO IMPRIMIR
    ========================================================= */
 
 .botao-impressao-pdf {
@@ -2819,10 +2889,12 @@ td {
     color: var(--branco);
     border: 0;
     border-radius: 10px;
-    box-shadow: 0 8px 22px rgba(0, 54, 64, .22);
+    box-shadow:
+        0 8px 22px rgba(0, 54, 64, .22);
     font-size: 14px;
     font-weight: 700;
     line-height: 1;
+    white-space: nowrap;
     cursor: pointer;
     transition:
         background .2s ease,
@@ -2833,7 +2905,8 @@ td {
 .botao-impressao-pdf:hover {
     transform: translateY(-2px);
     background: var(--turquesa);
-    box-shadow: 0 10px 26px rgba(0, 54, 64, .28);
+    box-shadow:
+        0 10px 26px rgba(0, 54, 64, .28);
 }
 
 .botao-impressao-pdf:active {
@@ -2859,12 +2932,27 @@ footer,
     text-align: center;
 }
 
+footer .container,
+.rodape .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 footer p,
 .rodape p {
+    width: 100%;
+    max-width: 100%;
     margin: 0;
     color: rgba(255, 255, 255, .82);
     font-size: 12px;
+    font-weight: 400;
     line-height: 1.5;
+    text-align: center;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
 }
 
 /* =========================================================
@@ -2916,7 +3004,8 @@ footer p,
 
 .simulador-grid-igual .grid-form-4 {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
     gap: 18px;
     width: 100%;
     min-width: 0;
@@ -2931,10 +3020,10 @@ footer p,
 }
 
 .simulador-grid-igual .campo {
-    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 7px;
+    min-width: 0;
 }
 
 .simulador-grid-igual .campo>label:not(.opcao-simulacao) {
@@ -3006,7 +3095,8 @@ footer p,
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg,
+    background:
+        linear-gradient(90deg,
             var(--verde-claro),
             var(--turquesa),
             var(--verde-escuro));
@@ -3014,7 +3104,8 @@ footer p,
 
 #cardTaxasCredito .resultados-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
     gap: 12px;
     min-width: 0;
     margin-top: 0;
@@ -3054,7 +3145,6 @@ footer p,
     color: var(--turquesa);
     font-size: 17px;
     line-height: 1.3;
-    overflow-wrap: break-word;
 }
 
 #cardTaxasCredito .resultado-destaque,
@@ -3151,7 +3241,8 @@ footer p,
     width: 6px;
     height: 11px;
     opacity: 0;
-    transform: translateY(-62%) rotate(45deg);
+    transform:
+        translateY(-62%) rotate(45deg);
     border-right: 2px solid var(--branco);
     border-bottom: 2px solid var(--branco);
 }
@@ -3162,7 +3253,6 @@ footer p,
     color: var(--verde-escuro);
     font-size: 13px;
     line-height: 1.35;
-    overflow-wrap: break-word;
 }
 
 #cardGarantiasCredito .opcao-simulacao-conteudo small {
@@ -3171,19 +3261,20 @@ footer p,
     color: var(--texto-secundario);
     font-size: 10px;
     line-height: 1.4;
-    overflow-wrap: break-word;
 }
 
 #cardGarantiasCredito .opcao-simulacao:hover .opcao-simulacao-conteudo {
     transform: translateY(-1px);
     border-color: var(--turquesa-claro);
-    box-shadow: 0 5px 14px rgba(0, 54, 64, .08);
+    box-shadow:
+        0 5px 14px rgba(0, 54, 64, .08);
 }
 
 #cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo {
     background: rgba(0, 160, 145, .07);
     border-color: var(--turquesa);
-    box-shadow: inset 0 0 0 1px rgba(0, 160, 145, .12);
+    box-shadow:
+        inset 0 0 0 1px rgba(0, 160, 145, .12);
 }
 
 #cardGarantiasCredito .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::before {
@@ -3255,7 +3346,6 @@ footer p,
     border-radius: 9px;
     font-size: 12px;
     line-height: 1.55;
-    overflow-wrap: break-word;
 }
 
 #regrasGarantiasCredito .documentos-observacao::before,
@@ -3279,7 +3369,8 @@ footer p,
 
 .simulador-grid-igual .resultados-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
     gap: 12px;
     min-width: 0;
 }
@@ -3305,7 +3396,6 @@ footer p,
     color: var(--verde-escuro);
     font-size: 14px;
     line-height: 1.35;
-    overflow-wrap: break-word;
 }
 
 .simulador-grid-igual .linha-selecionada {
@@ -3355,6 +3445,15 @@ footer p,
 }
 
 /* =========================================================
+   MENU MOBILE HAMBÚRGUER
+   ========================================================= */
+
+.menu-mobile-topo,
+.menu-mobile-botao {
+    display: none;
+}
+
+/* =========================================================
    TABLET
    ========================================================= */
 
@@ -3362,11 +3461,13 @@ footer p,
 
     .grid-form-4,
     .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     .ferramentas-grid {
-        grid-template-columns: repeat(auto-fit,
+        grid-template-columns:
+            repeat(auto-fit,
                 minmax(min(280px, 100%), 340px));
         gap: 20px;
     }
@@ -3376,21 +3477,25 @@ footer p,
     }
 
     .sicoobcard-seletor {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
     }
 
     .sicoobcard-beneficios-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     .comprometimento-resultado-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
     }
 
     .simulador-grid-igual .grid-form-4,
     .simulador-grid-igual .resultados-grid,
     #cardTaxasCredito .resultados-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -3406,8 +3511,16 @@ footer p,
     .header-conteudo,
     .cabecalho-conteudo,
     .topo-conteudo {
-        min-height: 150px;
+        min-height: 145px;
         gap: 24px;
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    header h1,
+    .cabecalho h1,
+    .topo h1 {
+        font-size: 32px;
     }
 
     .header-logo img,
@@ -3421,7 +3534,8 @@ footer p,
     }
 
     .ferramentas-grid {
-        grid-template-columns: repeat(auto-fit,
+        grid-template-columns:
+            repeat(auto-fit,
                 minmax(min(260px, 100%), 320px));
     }
 
@@ -3460,7 +3574,8 @@ footer p,
     }
 
     .previdencia-etapas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     .previdencia-escolhas {
@@ -3472,11 +3587,8 @@ footer p,
     }
 
     .previdencia-resumo-dados {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     .sicoobcard-beneficios-cabecalho {
@@ -3494,31 +3606,116 @@ footer p,
 }
 
 /* =========================================================
-   MENU MOBILE HAMBÚRGUER
+   MOBILE - UNIVERSAL
+   TOPO / MENU / CARDS / FORMULÁRIOS / FOOTER
    ========================================================= */
 
-.menu-mobile-topo,
-.menu-mobile-botao {
-    display: none;
-}
-
 @media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        font-size: 13px;
+    }
+
+    .container {
+        width: calc(100% - 24px);
+        max-width: none;
+        min-width: 0;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    /* =====================================================
+       TOPO UNIVERSAL MOBILE
+       ===================================================== */
+
+    .header-conteudo,
+    .cabecalho-conteudo,
+    .topo-conteudo {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        min-height: 0;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .header-texto,
+    .cabecalho-texto,
+    .topo-textos {
+        min-width: 0;
+    }
+
+    header h1,
+    .cabecalho h1,
+    .topo h1 {
+        margin-bottom: 6px;
+        font-size: clamp(23px, 6.3vw, 28px);
+        line-height: 1.08;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    header p,
+    .cabecalho p,
+    .topo p {
+        max-width: 100%;
+        font-size: 12px;
+        line-height: 1.45;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .header-logo,
+    .cabecalho-logo,
+    .topo-logo {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .header-logo img,
+    .cabecalho-logo img,
+    .topo-logo img {
+        width: clamp(72px, 21vw, 100px);
+        max-width: none;
+    }
+
+    /* =====================================================
+       MENU HAMBÚRGUER UNIVERSAL
+       ===================================================== */
+
     .menu-principal {
         position: relative;
         z-index: 1000;
         width: 100%;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
         background: var(--branco);
         border-bottom: 1px solid var(--borda);
-        box-shadow: 0 3px 12px rgba(0, 54, 64, .05);
+        box-shadow:
+            0 3px 12px rgba(0, 54, 64, .05);
     }
 
     .menu-mobile-topo {
+        display: block;
+        width: 100%;
+        background: var(--branco);
+    }
+
+    .menu-mobile-topo-conteudo {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         width: calc(100% - 24px);
-        min-height: 52px;
+        min-height: 54px;
         margin: 0 auto;
     }
 
@@ -3566,7 +3763,8 @@ footer p,
     }
 
     .menu-mobile-botao.ativo>span:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
+        transform:
+            translateY(7px) rotate(45deg);
     }
 
     .menu-mobile-botao.ativo>span:nth-child(2) {
@@ -3574,7 +3772,8 @@ footer p,
     }
 
     .menu-mobile-botao.ativo>span:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
+        transform:
+            translateY(-7px) rotate(-45deg);
     }
 
     .menu-conteudo {
@@ -3616,16 +3815,9 @@ footer p,
         border-radius: 0;
         font-size: 12px;
         font-weight: 700;
-        line-height: 1.35;
+        line-height: 1.3;
         text-align: left;
         white-space: normal;
-    }
-
-    .menu-item.ativo,
-    .menu-grupo.ativo>.menu-grupo-botao {
-        background: rgba(0, 160, 145, .04);
-        color: var(--turquesa);
-        border-bottom-color: var(--borda);
     }
 
     .menu-grupo {
@@ -3646,7 +3838,6 @@ footer p,
 
     .menu-item-texto {
         min-width: 0;
-        overflow-wrap: break-word;
     }
 
     .menu-grupo-seta {
@@ -3681,17 +3872,18 @@ footer p,
         width: 100%;
         min-width: 0;
         min-height: 42px;
-        padding: 9px 13px 9px 26px;
+        padding: 9px 12px 9px 25px;
         color: var(--texto-secundario);
         background: transparent;
         border: 0;
-        border-bottom: 1px solid rgba(203, 216, 217, .75);
+        border-bottom:
+            1px solid rgba(203, 216, 217, .75);
         border-left: 3px solid transparent;
         font-size: 11px;
         font-weight: 700;
-        line-height: 1.4;
+        line-height: 1.35;
         white-space: normal;
-        overflow-wrap: break-word;
+        word-break: normal;
     }
 
     .menu-subitem:last-child {
@@ -3711,91 +3903,253 @@ footer p,
         gap: 8px;
         color: var(--indisponivel) !important;
         opacity: .7;
-        cursor: default !important;
     }
 
     .menu-status-em-breve {
         display: inline-flex;
-        align-items: center;
-        justify-content: center;
         flex: 0 0 auto;
         min-height: 17px;
         padding: 2px 5px;
-        background: var(--indisponivel-fundo);
-        color: var(--indisponivel);
-        border: 1px solid var(--indisponivel-borda);
-        border-radius: 999px;
         font-size: 7px;
-        font-weight: 800;
-        line-height: 1;
+    }
+
+    /* =====================================================
+       CONTEÚDO UNIVERSAL MOBILE
+       ===================================================== */
+
+    .simulador-grid,
+    .simulador-grid-igual,
+    .antecipacao-grid,
+    .cobranca-grid,
+    .comprometimento-grid,
+    .previdencia-resultado-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding-top: 10px;
+        padding-bottom: 24px;
+    }
+
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card,
+    .configuracao-card,
+    .resumo-card,
+    .cobranca-card,
+    .card,
+    .simulador-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .secao-titulo,
+    .titulo-secao {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .secao-titulo h2,
+    .titulo-secao h2 {
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .secao-titulo p,
+    .titulo-secao p {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .grid-form,
+    .grid-form-3,
+    .grid-form-4,
+    .form-grid,
+    .resultados-grid,
+    .resultados-grid-3,
+    .resultados-grid-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    input,
+    select,
+    textarea {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    textarea {
+        min-height: 84px;
+    }
+
+    .input-prefixo>span,
+    .input-sufixo>span {
+        min-width: 42px;
+        padding: 0 8px;
+        font-size: 10px;
+    }
+
+    .acoes,
+    .acoes-simulador,
+    .acoes-comprometimento {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+    }
+
+    .acoes button,
+    .acoes-simulador button,
+    .acoes-comprometimento button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .btn,
+    .btn-primario,
+    .btn-secundario,
+    .btn-principal {
+        min-height: 42px;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
+        padding: 15px;
+    }
+
+    .resultado-destaque span,
+    .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .resultado-destaque span {
+        font-size: 12px;
+    }
+
+    .resultado-destaque strong {
+        font-size: clamp(20px, 6vw, 25px);
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    .resultado-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .resultado-item {
+        padding: 12px;
+    }
+
+    .indicador-total {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    /* =====================================================
+       TABELAS UNIVERSAIS MOBILE
+       ===================================================== */
+
+    .tabela-responsiva,
+    .tabela-wrapper,
+    .comprometimento-tabela-container {
+        width: 100%;
+        max-width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        overflow-x: auto;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th,
+    td {
+        padding: 9px 10px;
+        font-size: 10px;
         white-space: nowrap;
+    }
+
+    .tabela-mix {
+        min-width: 590px;
+    }
+
+    .tabela-cobranca {
+        min-width: 580px;
+    }
+
+    .tabela-previdencia {
+        min-width: 680px;
+    }
+
+    /* =====================================================
+       PDF UNIVERSAL MOBILE
+       ===================================================== */
+
+    .botao-impressao-pdf {
+        right: 10px;
+        bottom: 10px;
+        width: auto !important;
+        max-width: calc(100vw - 20px);
+        min-width: 0;
+        min-height: 38px;
+        padding: 0 11px;
+        border-radius: 8px;
+        font-size: 10px;
+    }
+
+    /* =====================================================
+       FOOTER UNIVERSAL MOBILE
+       ===================================================== */
+
+    footer,
+    .rodape {
+        margin-top: 6px;
+        padding: 16px 0;
+    }
+
+    footer .container,
+    .rodape .container {
+        display: block;
+        width: calc(100% - 28px);
+    }
+
+    footer p,
+    .rodape p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        color: rgba(255, 255, 255, .84);
+        font-size: 9px;
+        font-weight: 400;
+        line-height: 1.45;
+        letter-spacing: 0;
+        text-align: center;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+        hyphens: none;
     }
 }
 
 /* =========================================================
-   MOBILE
+   MOBILE - HOME / INDEX.HTML
    ========================================================= */
 
 @media (max-width: 700px) {
 
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-    }
-
-    body {
-        font-size: 13px;
-    }
-
-    .container {
-        width: calc(100% - 24px);
-        max-width: none;
-        min-width: 0;
-        margin-right: auto;
-        margin-left: auto;
-    }
-
-    /* CABEÇALHO */
-
-    .header-conteudo,
-    .cabecalho-conteudo,
-    .topo-conteudo {
-        min-height: 0;
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-
-    .header-logo,
-    .cabecalho-logo,
-    .topo-logo {
-        display: none;
-    }
-
-    header h1,
-    .cabecalho h1,
-    .topo h1 {
-        margin-bottom: 7px;
-        font-size: clamp(24px, 7vw, 30px);
-        line-height: 1.08;
-    }
-
-    header p,
-    .cabecalho p,
-    .topo p {
-        max-width: 100%;
-        font-size: 13px;
-        line-height: 1.45;
-    }
-
-    /* HOME */
-
     .home,
-    .caixa-ferramentas,
-    .comprometimento-container,
-    .previdencia-container,
-    .sicoobcard-container {
+    .caixa-ferramentas {
         width: 100%;
         min-width: 0;
         padding-top: 10px;
@@ -3829,36 +4183,36 @@ footer p,
     }
 
     .categoria-ferramentas {
-        width: 100%;
+        width: calc(100% - 24px);
         max-width: none;
         margin-bottom: 28px;
     }
 
     .categoria-titulo {
         margin-bottom: 16px;
-        padding-bottom: 12px;
+        padding-bottom: 13px;
     }
 
     .ferramentas-grid {
         grid-template-columns: minmax(0, 1fr);
         justify-content: stretch;
-        gap: 12px;
+        gap: 13px;
     }
 
     .ferramenta-card {
         width: 100%;
         max-width: none;
         min-height: 0;
-        padding: 15px;
-        gap: 12px;
+        padding: 16px;
+        gap: 13px;
         border-radius: 12px;
     }
 
     .ferramenta-icone {
-        flex: 0 0 56px;
-        width: 56px;
-        height: 56px;
-        border-radius: 11px;
+        flex: 0 0 58px;
+        width: 58px;
+        height: 58px;
+        border-radius: 12px;
     }
 
     .ferramenta-card h3 {
@@ -3866,228 +4220,110 @@ footer p,
         line-height: 1.25;
     }
 
-    .ferramenta-card p {
-        font-size: 11px;
-        line-height: 1.45;
-    }
-
+    .ferramenta-card p,
     .ferramenta-link {
         font-size: 11px;
     }
 
     .ferramenta-status {
-        margin-bottom: 6px;
         padding: 3px 7px;
-        font-size: 9px;
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .categoria-ferramentas {
+        width: calc(100% - 20px);
     }
 
-    /* CARDS */
-
-    .formulario-card,
-    .resultado-card,
-    .tabela-card,
-    .documentos-card,
-    .configuracao-card,
-    .resumo-card,
-    .cobranca-card,
-    .previdencia-painel>.card,
-    .comprometimento-card,
-    .sicoobcard-selecao-card,
-    .sicoobcard-cartao-card,
-    .sicoobcard-informacoes-card,
-    .sicoobcard-beneficios-card,
-    .sicoobcard-comparativo-card,
-    .card,
-    .simulador-card,
-    .simulador-grid-igual>.card {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        padding: 16px;
-        border-radius: 12px;
+    .home,
+    .caixa-ferramentas {
+        padding-top: 7px;
     }
 
-    .simulador-grid,
-    .simulador-grid-igual,
-    .antecipacao-grid,
-    .cobranca-grid,
-    .comprometimento-grid,
-    .previdencia-resultado-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 14px;
-        padding-top: 10px;
-        padding-bottom: 24px;
+    .home-apresentacao h2,
+    .categoria-titulo h2 {
+        font-size: 19px;
     }
 
-    /* TÍTULOS GERAIS */
-
-    .secao-titulo,
-    .titulo-secao,
-    .comprometimento-titulo {
-        gap: 8px;
-        margin-bottom: 16px;
-    }
-
-    .secao-titulo h2,
-    .titulo-secao h2,
-    .simulador-grid-igual .titulo-secao h2,
-    .comprometimento-titulo h2 {
-        font-size: 18px;
-        line-height: 1.25;
-    }
-
-    .secao-titulo p,
-    .titulo-secao p,
-    .simulador-grid-igual .titulo-secao p,
-    .comprometimento-titulo p {
+    .categoria-titulo p {
         font-size: 11px;
-        line-height: 1.45;
     }
 
-    /* GRIDS */
-
-    .grid-form,
-    .grid-form-3,
-    .grid-form-4,
-    .form-grid,
-    .resultados-grid,
-    .resultados-grid-3,
-    .resultados-grid-4,
-    .previdencia-resumo-dados,
-    .previdencia-painel .grid-form,
-    .comprometimento-form-grid,
-    .comprometimento-resultado-grid,
-    .sicoobcard-informacoes-grid,
-    .sicoobcard-beneficios-grid,
-    .simulador-grid-igual .grid-form-4,
-    .simulador-grid-igual .resultados-grid,
-    #cardTaxasCredito .resultados-grid {
-        grid-template-columns: minmax(0, 1fr);
+    .ferramenta-card {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 11px;
+        padding: 14px;
     }
 
-    .comprometimento-campo-largo {
-        grid-column: auto;
+    .ferramenta-icone {
+        flex: 0 0 52px;
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
     }
 
-    /* FORM */
-
-    input,
-    select,
-    textarea,
-    .comprometimento-campo input,
-    .comprometimento-campo select {
-        min-height: 44px;
-        font-size: 16px;
+    .ferramenta-conteudo {
+        flex: 1 1 auto;
+        min-width: 0;
     }
 
-    textarea {
-        min-height: 84px;
+    .ferramenta-card h3 {
+        font-size: 14px;
     }
 
-    .campo-grupo label,
-    .form-grupo label,
-    .campo label,
-    .comprometimento-campo label {
-        font-size: 12px;
-    }
-
-    .campo-grupo small,
-    .form-grupo small,
-    .campo small,
-    .campo-ajuda,
-    .comprometimento-campo small {
+    .ferramenta-card p,
+    .ferramenta-link {
         font-size: 10px;
     }
 
-    .input-prefixo>span,
-    .input-sufixo>span,
-    .comprometimento-input-prefixo>span,
-    .comprometimento-input-sufixo>span {
-        min-width: 42px;
-        padding: 0 8px;
+    .ferramenta-status {
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 360px) {
+
+    .categoria-ferramentas {
+        width: calc(100% - 16px);
+    }
+
+    .ferramenta-card {
+        padding: 12px;
+        gap: 9px;
+    }
+
+    .ferramenta-icone {
+        flex: 0 0 46px;
+        width: 46px;
+        height: 46px;
+        border-radius: 9px;
+    }
+
+    .ferramenta-card h3 {
+        font-size: 13px;
+    }
+
+    .ferramenta-card p,
+    .ferramenta-link {
         font-size: 10px;
     }
+}
 
-    /* BOTÕES */
+/* =========================================================
+   MOBILE - PREVIDENCIA.HTML
+   ========================================================= */
 
-    .acoes,
-    .acoes-simulador,
-    .acoes-comprometimento,
-    .previdencia-acoes,
-    .comprometimento-acoes,
-    .simulador-grid-igual .acoes {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 7px;
-        margin-top: 18px;
-    }
+@media (max-width: 700px) {
 
-    .acoes button,
-    .acoes-simulador button,
-    .acoes-comprometimento button,
-    .previdencia-acoes button,
-    .comprometimento-acoes button,
-    .simulador-grid-igual .acoes button,
-    .btn,
-    .btn-primario,
-    .btn-secundario,
-    .btn-principal {
+    .previdencia-container {
         width: 100%;
         min-width: 0;
-        min-height: 42px;
-        height: 42px;
-        padding: 0 14px;
-        font-size: 12px;
+        padding-top: 10px;
     }
-
-    /* RESULTADOS */
-
-    .resultado-destaque,
-    .comprometimento-resultado-destaque,
-    .simulador-grid-igual .resultado-destaque {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 7px;
-        padding: 15px;
-    }
-
-    .resultado-destaque span,
-    .resultado-destaque strong,
-    .simulador-grid-igual .resultado-destaque span,
-    .simulador-grid-igual .resultado-destaque strong {
-        width: 100%;
-        max-width: 100%;
-        text-align: left;
-    }
-
-    .resultado-destaque span,
-    .comprometimento-resultado-destaque span {
-        font-size: 12px;
-    }
-
-    .resultado-destaque strong,
-    .comprometimento-resultado-destaque strong {
-        font-size: 22px;
-        white-space: normal;
-        overflow-wrap: break-word;
-    }
-
-    .resultado-grid,
-    .comprometimento-resultado-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .resultado-item {
-        padding: 12px;
-    }
-
-    .indicador-total {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    /* PREVIDÊNCIA */
 
     .previdencia-progresso {
         padding: 15px;
@@ -4106,16 +4342,8 @@ footer p,
     }
 
     .previdencia-etapa {
-        min-height: 43px;
-        padding: 8px 10px;
+        min-height: 44px;
         font-size: 11px;
-    }
-
-    .previdencia-etapa span {
-        flex-basis: 25px;
-        width: 25px;
-        height: 25px;
-        font-size: 10px;
     }
 
     .previdencia-escolhas {
@@ -4124,22 +4352,58 @@ footer p,
 
     .opcao-simulacao-conteudo {
         min-height: auto;
+        padding: 14px;
+    }
+
+    .previdencia-painel>.card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .previdencia-painel .grid-form,
+    .previdencia-resumo-dados {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-acoes {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+    }
+
+    .previdencia-acoes button {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .previdencia-container {
+        padding-top: 7px;
+    }
+
+    .previdencia-painel>.card {
+        padding: 14px;
+    }
+
+    .opcao-simulacao-conteudo {
         padding: 13px;
     }
+}
 
-    .opcao-simulacao-conteudo strong {
-        font-size: 13px;
-    }
+/* =========================================================
+   MOBILE - INFORMACOES-BENEFICIOS-SICOOBCARD.HTML
+   ========================================================= */
 
-    .opcao-simulacao-conteudo small {
-        font-size: 10px;
-    }
-
-    /* =====================================================
-       SICOOBCARD MOBILE
-       ===================================================== */
+@media (max-width: 700px) {
 
     .sicoobcard-container {
+        width: 100%;
+        min-width: 0;
         padding-top: 10px;
         padding-bottom: 30px;
     }
@@ -4149,6 +4413,9 @@ footer p,
     .sicoobcard-informacoes-card,
     .sicoobcard-beneficios-card,
     .sicoobcard-comparativo-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
         padding: 15px;
         border-radius: 12px;
     }
@@ -4158,19 +4425,17 @@ footer p,
         margin-bottom: 14px;
     }
 
-    .sicoobcard-detalhes-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 14px;
-        margin-bottom: 14px;
-    }
-
-    /* Títulos internos deixam de ficar lado a lado */
+    /* =====================================================
+       TÍTULOS SICOOBCARD MOBILE
+       ===================================================== */
 
     .sicoobcard-selecao-card .titulo-secao,
     .sicoobcard-informacoes-card .titulo-secao,
     .sicoobcard-beneficios-card .titulo-secao,
     .sicoobcard-comparativo-card .titulo-secao {
         display: block;
+        width: 100%;
+        min-width: 0;
         margin-bottom: 14px;
     }
 
@@ -4179,6 +4444,7 @@ footer p,
     .sicoobcard-beneficios-card .titulo-secao .categoria-etiqueta,
     .sicoobcard-comparativo-card .titulo-secao .categoria-etiqueta {
         display: inline-flex;
+        max-width: 100%;
         margin-bottom: 8px;
     }
 
@@ -4188,9 +4454,13 @@ footer p,
     .sicoobcard-comparativo-card .titulo-secao h2 {
         display: block;
         width: 100%;
+        max-width: 100%;
         margin: 0 0 5px;
-        font-size: 17px;
-        line-height: 1.25;
+        color: var(--verde-escuro);
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
@@ -4201,39 +4471,94 @@ footer p,
     .sicoobcard-comparativo-card .titulo-secao p {
         display: block;
         width: 100%;
+        max-width: 100%;
         margin: 0;
-        font-size: 10px;
+        color: var(--texto-secundario);
+        font-size: 11px;
         line-height: 1.45;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    /* seletor */
-
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 7px;
-    }
-
-    .sicoobcard-opcao {
-        min-height: 40px;
-        padding: 7px 5px;
-        border-radius: 8px;
-        font-size: 10px;
-        line-height: 1.15;
         white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
 
-    /* cartão */
+    /* =====================================================
+       SELETOR DE CARTÕES MOBILE
+       ===================================================== */
+
+    .sicoobcard-seletor {
+        display: flex;
+        grid-template-columns: none;
+        gap: 7px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 1px 0 7px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        scroll-behavior: smooth;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .sicoobcard-seletor::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .sicoobcard-seletor::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sicoobcard-seletor::-webkit-scrollbar-thumb {
+        background: var(--borda-forte);
+        border-radius: 999px;
+    }
+
+    .sicoobcard-opcao {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 94px;
+        max-width: 130px;
+        min-height: 40px;
+        height: auto;
+        padding: 7px 11px;
+        border-radius: 9px;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
+        word-break: normal;
+        overflow-wrap: normal;
+        scroll-snap-align: start;
+    }
+
+    /* =====================================================
+       GRID PRINCIPAL MOBILE
+       ===================================================== */
+
+    .sicoobcard-detalhes-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
+    }
+
+    /* =====================================================
+       CARTÃO MOBILE
+       ===================================================== */
 
     .sicoobcard-cartao-topo {
         flex-direction: column;
+        align-items: flex-start;
         gap: 8px;
     }
 
     .sicoobcard-cartao-topo h2 {
+        width: 100%;
         margin-bottom: 4px;
         font-size: 20px;
         line-height: 1.2;
@@ -4242,12 +4567,16 @@ footer p,
     }
 
     .sicoobcard-cartao-topo p {
+        width: 100%;
         max-width: 100%;
-        font-size: 10px;
+        font-size: 11px;
         line-height: 1.45;
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
     .sicoobcard-bandeiras {
+        width: 100%;
         justify-content: flex-start;
         gap: 5px;
     }
@@ -4259,44 +4588,59 @@ footer p,
     }
 
     .sicoobcard-imagem-area {
-        min-height: 190px;
-        margin-top: 12px;
+        width: 100%;
+        min-width: 0;
+        min-height: 200px;
+        margin-top: 14px;
         padding: 12px;
         border-radius: 11px;
     }
 
     .sicoobcard-imagem {
         width: auto;
-        max-width: 100%;
-        max-height: 165px;
+        max-width: 88%;
+        max-height: 175px;
     }
 
     .sicoobcard-nome-imagem {
         flex-direction: column;
         align-items: flex-start;
-        gap: 2px;
-        margin-top: 9px;
+        gap: 3px;
+        width: 100%;
+        margin-top: 10px;
     }
 
     .sicoobcard-nome-imagem strong {
         font-size: 12px;
-        line-height: 1.35;
+        line-height: 1.3;
     }
 
     .sicoobcard-nome-imagem span {
-        font-size: 9px;
+        font-size: 10px;
+        line-height: 1.35;
     }
 
-    /* Informações */
+    /* =====================================================
+       INFORMAÇÕES DO CARTÃO MOBILE
+       ===================================================== */
+
+    .sicoobcard-informacoes-card {
+        display: block;
+    }
 
     .sicoobcard-informacoes-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
         gap: 8px;
+        width: 100%;
+        min-width: 0;
     }
 
     .sicoobcard-info-item {
-        min-height: 76px;
-        padding: 11px 12px;
+        min-width: 0;
+        min-height: 72px;
+        padding: 11px 12px 11px 14px;
         border-radius: 9px;
     }
 
@@ -4305,49 +4649,68 @@ footer p,
     }
 
     .sicoobcard-info-item>span {
-        margin-bottom: 5px;
+        margin-bottom: 4px;
         font-size: 8px;
         line-height: 1.25;
+        letter-spacing: .02em;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
     .sicoobcard-info-item>strong {
         font-size: 14px;
-        line-height: 1.2;
+        line-height: 1.25;
+        white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
 
     .sicoobcard-info-destaque>strong {
-        font-size: 17px;
+        font-size: 16px;
     }
 
-    /* faixa de renda */
+    /* =====================================================
+       FAIXA DE RENDA MOBILE
+       ===================================================== */
 
     .sicoobcard-faixa-renda {
         grid-column: 1 / -1;
-        gap: 11px;
-        padding: 12px 13px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
         border-radius: 9px;
     }
 
     .sicoobcard-faixa-renda-icone {
-        flex: 0 0 38px;
-        width: 38px;
-        height: 38px;
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
         margin-left: 0;
         border-radius: 9px;
         font-size: 11px;
     }
 
+    .sicoobcard-faixa-renda-conteudo {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
     .sicoobcard-faixa-renda-conteudo>span {
         margin-bottom: 2px;
         font-size: 8px;
+        line-height: 1.2;
     }
 
     .sicoobcard-faixa-renda-conteudo>strong {
         margin-bottom: 2px;
-        font-size: 14px;
-        line-height: 1.25;
+        font-size: 13px;
+        line-height: 1.3;
+        white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
@@ -4355,15 +4718,20 @@ footer p,
     .sicoobcard-faixa-renda-conteudo>small {
         font-size: 9px;
         line-height: 1.35;
+        white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
 
-    /* benefícios */
+    /* =====================================================
+       BENEFÍCIOS MOBILE
+       ===================================================== */
 
     .sicoobcard-beneficios-cabecalho {
         display: block;
-        margin-bottom: 12px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
     }
 
     .sicoobcard-beneficios-cabecalho .titulo-secao {
@@ -4371,8 +4739,12 @@ footer p,
     }
 
     .sicoobcard-legenda {
+        display: flex;
+        align-items: center;
         justify-content: flex-start;
-        gap: 7px;
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 100%;
         padding-top: 0;
     }
 
@@ -4384,271 +4756,100 @@ footer p,
     .beneficio-bandeira {
         min-width: 25px;
         height: 20px;
-        padding: 0 4px;
-        border-radius: 5px;
-        font-size: 7px;
+        padding: 0 5px;
+        font-size: 8px;
     }
 
     .sicoobcard-beneficios-grid {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
         gap: 8px;
+        width: 100%;
+        min-width: 0;
     }
 
     .sicoobcard-beneficio {
-        gap: 10px;
-        min-height: 58px;
-        padding: 10px 11px;
+        align-items: flex-start;
+        gap: 9px;
+        min-width: 0;
+        min-height: 62px;
+        padding: 10px;
         border-radius: 9px;
     }
 
     .sicoobcard-beneficio-icone {
-        flex: 0 0 34px;
-        width: 34px;
-        height: 34px;
+        flex: 0 0 31px;
+        width: 31px;
+        height: 31px;
         border-radius: 8px;
-        font-size: 14px;
+        font-size: 12px;
+    }
+
+    .sicoobcard-beneficio-conteudo {
+        flex: 1 1 auto;
+        min-width: 0;
     }
 
     .sicoobcard-beneficio-conteudo strong {
         margin-bottom: 3px;
-        font-size: 11px;
-        line-height: 1.3;
+        font-size: 10px;
+        line-height: 1.25;
+        white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
 
     .sicoobcard-beneficio-conteudo small {
-        font-size: 9px;
+        font-size: 8px;
         line-height: 1.3;
+        white-space: normal;
         word-break: normal;
         overflow-wrap: normal;
     }
 
-    /* Comparativo */
+    .sicoobcard-sem-beneficios {
+        padding: 14px;
+        border-radius: 9px;
+    }
+
+    .sicoobcard-sem-beneficios strong {
+        font-size: 11px;
+    }
+
+    .sicoobcard-sem-beneficios span {
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       COMPARATIVO MOBILE
+       ===================================================== */
 
     .sicoobcard-comparativo-card .tabela-wrapper,
     .sicoobcard-comparativo-card .tabela-responsiva {
-        border: 1px solid var(--borda);
-        border-radius: 8px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .tabela-sicoobcard {
-        min-width: 650px;
+        min-width: 620px;
     }
 
     .tabela-sicoobcard th,
     .tabela-sicoobcard td {
-        padding: 9px 10px;
-        font-size: 10px;
-        white-space: nowrap;
-    }
-
-    /* COMPROMETIMENTO */
-
-    .comprometimento-formula {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .comprometimento-formula strong {
-        white-space: normal;
-        overflow-wrap: break-word;
-    }
-
-    .comprometimento-resultado-destaque strong {
-        text-align: left;
-    }
-
-    /* SIMULADOR */
-
-    #cardGarantiasCredito .opcao-simulacao-conteudo {
-        min-height: 72px;
-    }
-
-    #blocoContratoMae {
-        padding: 13px;
-    }
-
-    #regrasGarantiasCredito .documentos-observacao,
-    #listaRegrasLinhaCredito .documentos-observacao,
-    #listaAlertasCredito .documentos-observacao {
-        padding: 11px 11px 11px 30px;
-        font-size: 10px;
-    }
-
-    #regrasGarantiasCredito .documentos-observacao::before,
-    #listaRegrasLinhaCredito .documentos-observacao::before,
-    #listaAlertasCredito .documentos-observacao::before {
-        left: 11px;
-    }
-
-    /* TABELAS */
-
-    .tabela-responsiva,
-    .tabela-wrapper,
-    .comprometimento-tabela-container,
-    .simulador-grid-igual .tabela-wrapper {
-        width: 100%;
-        max-width: 100%;
-        margin-right: 0;
-        margin-left: 0;
-        overflow-x: auto;
-        border: 1px solid var(--borda);
-        border-radius: 8px;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    th,
-    td,
-    .comprometimento-tabela th,
-    .comprometimento-tabela td {
-        padding: 9px 10px;
-        font-size: 10px;
-        white-space: nowrap;
-    }
-
-    .simulador-grid-igual table {
-        min-width: 650px;
-    }
-
-    .tabela-mix {
-        min-width: 600px;
-    }
-
-    .tabela-cobranca {
-        min-width: 600px;
-    }
-
-    .tabela-previdencia {
-        min-width: 680px;
-    }
-
-    /* PDF */
-
-    .botao-impressao-pdf {
-        right: 10px;
-        bottom: 10px;
-        width: auto !important;
-        max-width: calc(100vw - 20px);
-        min-width: 0;
-        min-height: 38px;
-        padding: 0 12px;
-        border-radius: 8px;
-        font-size: 10px;
-    }
-
-    /* RODAPÉ */
-
-    footer,
-    .rodape {
-        padding: 18px 0;
-    }
-
-    footer p,
-    .rodape p {
-        font-size: 10px;
-        line-height: 1.45;
+        padding: 8px 9px;
+        font-size: 9px;
     }
 }
 
-/* =========================================================
-   MOBILE ATÉ 480PX
-   ========================================================= */
-
 @media (max-width: 480px) {
 
-    .container,
-    .menu-mobile-topo {
-        width: calc(100% - 20px);
-    }
-
-    header h1,
-    .cabecalho h1,
-    .topo h1 {
-        font-size: 25px;
-    }
-
-    .home,
-    .caixa-ferramentas,
-    .comprometimento-container,
-    .previdencia-container,
     .sicoobcard-container {
         padding-top: 7px;
+        padding-bottom: 24px;
     }
-
-    .home-apresentacao h2,
-    .categoria-titulo h2 {
-        font-size: 20px;
-    }
-
-    .categoria-titulo p {
-        font-size: 11px;
-    }
-
-    .ferramenta-card {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 13px;
-    }
-
-    .ferramenta-icone {
-        flex: 0 0 50px;
-        width: 50px;
-        height: 50px;
-    }
-
-    .ferramenta-card h3 {
-        font-size: 14px;
-    }
-
-    .ferramenta-status {
-        font-size: 8px;
-    }
-
-    .formulario-card,
-    .resultado-card,
-    .tabela-card,
-    .documentos-card,
-    .configuracao-card,
-    .resumo-card,
-    .cobranca-card,
-    .previdencia-painel>.card,
-    .comprometimento-card,
-    .sicoobcard-selecao-card,
-    .sicoobcard-cartao-card,
-    .sicoobcard-informacoes-card,
-    .sicoobcard-beneficios-card,
-    .sicoobcard-comparativo-card,
-    .card,
-    .simulador-card,
-    .simulador-grid-igual>.card {
-        padding: 13px;
-        border-radius: 10px;
-    }
-
-    .secao-titulo h2,
-    .titulo-secao h2,
-    .simulador-grid-igual .titulo-secao h2,
-    .comprometimento-titulo h2 {
-        font-size: 17px;
-    }
-
-    .resultado-destaque,
-    .comprometimento-resultado-destaque,
-    .simulador-grid-igual .resultado-destaque {
-        padding: 13px;
-        border-radius: 9px;
-    }
-
-    .resultado-destaque strong,
-    .comprometimento-resultado-destaque strong {
-        font-size: 20px;
-    }
-
-    /* Sicoobcard 400px */
 
     .sicoobcard-selecao-card,
     .sicoobcard-cartao-card,
@@ -4656,6 +4857,7 @@ footer p,
     .sicoobcard-beneficios-card,
     .sicoobcard-comparativo-card {
         padding: 13px;
+        border-radius: 10px;
     }
 
     .sicoobcard-selecao-card .titulo-secao h2,
@@ -4672,16 +4874,12 @@ footer p,
         font-size: 9px;
     }
 
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 6px;
-    }
-
     .sicoobcard-opcao {
-        min-height: 38px;
-        padding: 6px 4px;
+        min-width: 84px;
+        max-width: 115px;
+        min-height: 36px;
+        padding: 6px 9px;
         font-size: 9px;
-        border-radius: 7px;
     }
 
     .sicoobcard-cartao-topo h2 {
@@ -4689,7 +4887,7 @@ footer p,
     }
 
     .sicoobcard-cartao-topo p {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .sicoobcard-imagem-area {
@@ -4698,21 +4896,22 @@ footer p,
     }
 
     .sicoobcard-imagem {
+        max-width: 90%;
         max-height: 150px;
     }
 
     .sicoobcard-informacoes-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         gap: 7px;
     }
 
     .sicoobcard-info-item {
-        min-height: 69px;
-        padding: 10px;
+        min-height: 58px;
+        padding: 10px 11px 10px 13px;
     }
 
     .sicoobcard-info-item>span {
-        font-size: 7px;
+        font-size: 8px;
     }
 
     .sicoobcard-info-item>strong {
@@ -4720,7 +4919,7 @@ footer p,
     }
 
     .sicoobcard-info-destaque>strong {
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .sicoobcard-faixa-renda {
@@ -4731,30 +4930,35 @@ footer p,
     }
 
     .sicoobcard-faixa-renda-icone {
-        flex-basis: 34px;
+        flex: 0 0 34px;
         width: 34px;
         height: 34px;
         font-size: 10px;
     }
 
     .sicoobcard-faixa-renda-conteudo>strong {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .sicoobcard-faixa-renda-conteudo>small {
         font-size: 8px;
     }
 
+    .sicoobcard-beneficios-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+    }
+
     .sicoobcard-beneficio {
-        min-height: 54px;
+        align-items: center;
+        min-height: 56px;
         padding: 9px;
     }
 
     .sicoobcard-beneficio-icone {
-        flex-basis: 31px;
-        width: 31px;
-        height: 31px;
-        font-size: 13px;
+        flex: 0 0 30px;
+        width: 30px;
+        height: 30px;
     }
 
     .sicoobcard-beneficio-conteudo strong {
@@ -4766,69 +4970,423 @@ footer p,
     }
 
     .tabela-sicoobcard {
-        min-width: 610px;
+        min-width: 560px;
+    }
+}
+
+@media (max-width: 360px) {
+
+    .sicoobcard-selecao-card,
+    .sicoobcard-cartao-card,
+    .sicoobcard-informacoes-card,
+    .sicoobcard-beneficios-card,
+    .sicoobcard-comparativo-card {
+        padding: 11px;
     }
 
-    .tabela-sicoobcard th,
-    .tabela-sicoobcard td {
-        padding: 8px 9px;
-        font-size: 9px;
+    .sicoobcard-selecao-card .titulo-secao h2,
+    .sicoobcard-informacoes-card .titulo-secao h2,
+    .sicoobcard-beneficios-card .titulo-secao h2,
+    .sicoobcard-comparativo-card .titulo-secao h2 {
+        font-size: 15px;
     }
 
-    .previdencia-painel>.card {
+    .sicoobcard-opcao {
+        min-width: 80px;
+        max-width: 105px;
+        min-height: 35px;
+        font-size: 8px;
+    }
+
+    .sicoobcard-cartao-topo h2 {
+        font-size: 17px;
+    }
+
+    .sicoobcard-imagem-area {
+        min-height: 160px;
+    }
+
+    .sicoobcard-imagem {
+        max-height: 135px;
+    }
+
+    .sicoobcard-info-item {
+        min-height: 55px;
+        padding: 9px 10px 9px 12px;
+    }
+
+    .sicoobcard-info-item>strong {
+        font-size: 12px;
+    }
+
+    .sicoobcard-info-destaque>strong {
+        font-size: 14px;
+    }
+
+    .sicoobcard-faixa-renda {
+        padding: 10px;
+    }
+
+    .sicoobcard-beneficio {
+        padding: 8px;
+    }
+
+    .tabela-sicoobcard {
+        min-width: 520px;
+    }
+}
+
+/* =========================================================
+   MOBILE - COMPROMETIMENTO-RENDA.HTML
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .comprometimento-container {
+        width: 100%;
+        min-width: 0;
+        padding-top: 10px;
+    }
+
+    .comprometimento-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .comprometimento-titulo {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .comprometimento-titulo h2 {
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .comprometimento-titulo p {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .comprometimento-form-grid,
+    .comprometimento-resultado-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .comprometimento-campo-largo {
+        grid-column: auto;
+    }
+
+    .comprometimento-campo input,
+    .comprometimento-campo select {
+        min-height: 44px;
+        height: 44px;
+        font-size: 16px;
+    }
+
+    .comprometimento-input-prefixo>span,
+    .comprometimento-input-sufixo>span {
+        min-width: 42px;
+        padding: 0 8px;
+        font-size: 10px;
+    }
+
+    .comprometimento-formula {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .comprometimento-formula strong {
+        font-size: 15px;
+        white-space: normal;
+    }
+
+    .comprometimento-status {
+        padding: 13px 14px;
+    }
+
+    .comprometimento-status strong {
+        font-size: 12px;
+    }
+
+    .comprometimento-status span {
+        font-size: 10px;
+    }
+
+    .comprometimento-resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
+        padding: 15px;
+    }
+
+    .comprometimento-resultado-destaque span {
+        font-size: 12px;
+    }
+
+    .comprometimento-resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        font-size: clamp(20px, 6vw, 25px);
+        white-space: normal;
+        text-align: left;
+    }
+
+    .comprometimento-acoes {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+    }
+
+    .comprometimento-acoes button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .comprometimento-btn {
+        min-height: 42px;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .comprometimento-tabela th,
+    .comprometimento-tabela td {
+        padding: 9px 10px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .comprometimento-container {
+        padding-top: 7px;
+    }
+
+    .comprometimento-card {
+        padding: 14px;
+        border-radius: 10px;
+    }
+}
+
+/* =========================================================
+   MOBILE - CONDICOES-CREDITO.HTML
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .simulador-grid-igual {
+        width: 100%;
+        min-width: 0;
+        gap: 14px;
+        padding-top: 10px;
+        padding-bottom: 24px;
+    }
+
+    .simulador-grid-igual>.card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .simulador-grid-igual .titulo-secao {
+        margin-bottom: 16px;
+    }
+
+    .simulador-grid-igual .titulo-secao h2 {
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .simulador-grid-igual .titulo-secao p {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .simulador-grid-igual .grid-form-4,
+    .simulador-grid-igual .resultados-grid,
+    #cardTaxasCredito .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .simulador-grid-igual .acoes {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+    }
+
+    .simulador-grid-igual .acoes button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .simulador-grid-igual .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
+        padding: 15px;
+    }
+
+    .simulador-grid-igual .resultado-destaque span,
+    .simulador-grid-igual .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao-conteudo {
+        min-height: 70px;
+        padding:
+            12px 12px 12px 44px;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao-conteudo::before {
+        left: 14px;
+        width: 18px;
+        height: 18px;
+    }
+
+    #cardGarantiasCredito .opcao-simulacao-conteudo::after {
+        left: 20px;
+    }
+
+    #blocoContratoMae {
         padding: 13px;
     }
 
-    .opcao-simulacao-conteudo {
-        padding: 12px;
+    #regrasGarantiasCredito .documentos-observacao,
+    #listaRegrasLinhaCredito .documentos-observacao,
+    #listaAlertasCredito .documentos-observacao {
+        padding:
+            11px 11px 11px 30px;
+        font-size: 10px;
+    }
+
+    #regrasGarantiasCredito .documentos-observacao::before,
+    #listaRegrasLinhaCredito .documentos-observacao::before,
+    #listaAlertasCredito .documentos-observacao::before {
+        left: 11px;
+    }
+
+    .simulador-grid-igual .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .simulador-grid-igual table {
+        min-width: 640px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .simulador-grid-igual>.card {
+        padding: 14px;
+        border-radius: 10px;
     }
 
     .simulador-grid-igual table {
         min-width: 600px;
     }
+}
 
-    .menu-status-em-breve {
-        font-size: 6px;
-        padding: 2px 4px;
+/* =========================================================
+   MOBILE - ANTECIPACAO-SIPAG.HTML
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .antecipacao-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding-top: 10px;
+        padding-bottom: 24px;
+    }
+
+    .antecipacao-formulario,
+    .antecipacao-resultado,
+    .antecipacao-tabela,
+    .antecipacao-documentos {
+        grid-column: 1;
+        grid-row: auto;
     }
 }
 
 /* =========================================================
-   MOBILE MUITO PEQUENO
+   MOBILE - COBRANCA.HTML
    ========================================================= */
 
-@media (max-width: 360px) {
+@media (max-width: 700px) {
 
-    .container,
-    .menu-mobile-topo {
-        width: calc(100% - 16px);
+    .cobranca-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding-top: 10px;
+        padding-bottom: 24px;
+    }
+
+    .cobranca-card,
+    .cobranca-card-principal,
+    .cobranca-card-largura-total {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .cobranca-acoes {
+        grid-column: 1;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO - UNIVERSAL
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .container {
+        width: calc(100% - 20px);
+    }
+
+    .menu-mobile-topo-conteudo {
+        width: calc(100% - 20px);
+    }
+
+    .header-conteudo,
+    .cabecalho-conteudo,
+    .topo-conteudo {
+        grid-template-columns:
+            minmax(0, 1fr) 74px;
+        gap: 10px;
+        padding-top: 17px;
+        padding-bottom: 17px;
     }
 
     header h1,
     .cabecalho h1,
     .topo h1 {
-        font-size: 23px;
+        font-size: clamp(21px, 6vw, 25px);
+        line-height: 1.08;
     }
 
-    .ferramenta-card {
-        padding: 12px;
-        gap: 9px;
+    header p,
+    .cabecalho p,
+    .topo p {
+        font-size: 11px;
+        line-height: 1.4;
     }
 
-    .ferramenta-icone {
-        flex-basis: 46px;
-        width: 46px;
-        height: 46px;
-        border-radius: 9px;
-    }
-
-    .ferramenta-card h3 {
-        font-size: 13px;
-    }
-
-    .ferramenta-card p,
-    .ferramenta-link {
-        font-size: 10px;
+    .header-logo img,
+    .cabecalho-logo img,
+    .topo-logo img {
+        width: 74px;
     }
 
     .formulario-card,
@@ -4838,16 +5396,92 @@ footer p,
     .configuracao-card,
     .resumo-card,
     .cobranca-card,
-    .previdencia-painel>.card,
-    .comprometimento-card,
-    .sicoobcard-selecao-card,
-    .sicoobcard-cartao-card,
-    .sicoobcard-informacoes-card,
-    .sicoobcard-beneficios-card,
-    .sicoobcard-comparativo-card,
     .card,
-    .simulador-card,
-    .simulador-grid-igual>.card {
+    .simulador-card {
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    .secao-titulo h2,
+    .titulo-secao h2 {
+        font-size: 17px;
+    }
+
+    .resultado-destaque {
+        padding: 14px;
+        border-radius: 9px;
+    }
+
+    .resultado-destaque strong {
+        font-size: 21px;
+    }
+
+    footer,
+    .rodape {
+        padding: 14px 0;
+    }
+
+    footer .container,
+    .rodape .container {
+        width: calc(100% - 24px);
+    }
+
+    footer p,
+    .rodape p {
+        font-size: 8px;
+        line-height: 1.4;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - UNIVERSAL
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .container {
+        width: calc(100% - 16px);
+    }
+
+    .menu-mobile-topo-conteudo {
+        width: calc(100% - 16px);
+    }
+
+    .header-conteudo,
+    .cabecalho-conteudo,
+    .topo-conteudo {
+        grid-template-columns:
+            minmax(0, 1fr) 62px;
+        gap: 8px;
+    }
+
+    header h1,
+    .cabecalho h1,
+    .topo h1 {
+        font-size: 20px;
+    }
+
+    header p,
+    .cabecalho p,
+    .topo p {
+        font-size: 10px;
+    }
+
+    .header-logo img,
+    .cabecalho-logo img,
+    .topo-logo img {
+        width: 62px;
+    }
+
+    .formulario-card,
+    .resultado-card,
+    .tabela-card,
+    .documentos-card,
+    .configuracao-card,
+    .resumo-card,
+    .cobranca-card,
+    .card,
+    .simulador-card {
         padding: 12px;
     }
 
@@ -4859,41 +5493,26 @@ footer p,
         padding: 0 6px;
     }
 
-    .resultado-destaque strong,
-    .comprometimento-resultado-destaque strong {
+    .resultado-destaque strong {
         font-size: 19px;
     }
 
-    .sicoobcard-seletor {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .sicoobcard-opcao {
-        min-height: 37px;
+    .botao-impressao-pdf {
+        right: 7px;
+        bottom: 7px;
+        max-width: calc(100% - 14px);
+        min-height: 36px;
         font-size: 9px;
     }
 
-    .sicoobcard-informacoes-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .sicoobcard-info-item {
-        min-height: 62px;
-    }
-
-    .sicoobcard-faixa-renda {
-        flex-direction: row;
-    }
-
-    .botao-impressao-pdf {
-        right: 8px;
-        bottom: 8px;
-        max-width: calc(100% - 16px);
+    footer p,
+    .rodape p {
+        font-size: 8px;
     }
 }
 
 /* =========================================================
-   TOUCH
+   DISPOSITIVOS TOUCH
    ========================================================= */
 
 @media (hover: none) and (pointer: coarse) {
@@ -4915,7 +5534,8 @@ footer p,
     .btn-principal,
     .comprometimento-btn,
     .previdencia-etapa,
-    .sicoobcard-opcao {
+    .sicoobcard-opcao,
+    .menu-mobile-botao {
         touch-action: manipulation;
     }
 }
@@ -4925,6 +5545,7 @@ footer p,
    ========================================================= */
 
 @media print {
+
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -4981,21 +5602,29 @@ footer p,
     }
 
     .sicoobcard-seletor {
-        grid-template-columns: repeat(8, minmax(0, 1fr));
+        display: grid;
+        grid-template-columns:
+            repeat(8, minmax(0, 1fr));
+        overflow: visible;
     }
 
     .sicoobcard-opcao {
+        width: 100%;
+        min-width: 0;
         min-height: 35px;
         font-size: 9px;
+        white-space: normal;
     }
 
     .sicoobcard-detalhes-grid {
-        grid-template-columns: .72fr 1.28fr;
+        grid-template-columns:
+            .72fr 1.28fr;
         gap: 12px;
     }
 
     .sicoobcard-beneficios-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
     }
 
     .simulador-grid-igual {
