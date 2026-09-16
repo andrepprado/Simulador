@@ -4316,1023 +4316,6 @@ footer p,
 
 
 /* =========================================================
-   MOBILE - PREVIDENCIA.HTML
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .previdencia-container {
-        width: 100%;
-        min-width: 0;
-        padding-top: 16px;
-        padding-bottom: 30px;
-    }
-
-    .previdencia-etapas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .previdencia-painel .grid-form {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .previdencia-escolhas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .previdencia-resultado-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 16px;
-    }
-
-    .previdencia-resultado-grid>.card,
-    .previdencia-resultado-grid .card-largura-total {
-        grid-column: 1;
-        grid-row: auto;
-    }
-
-    .previdencia-resumo-dados {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-/* =========================================================
-   MOBILE - PREVIDENCIA.HTML
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-    /* =====================================================
-       ESTRUTURA
-       ===================================================== */
-
-    .previdencia-container {
-        width: 100%;
-        max-width: none;
-        min-width: 0;
-        padding-top: 7px;
-        padding-bottom: 22px;
-    }
-
-    .previdencia-painel {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-painel.ativo {
-        display: block;
-    }
-
-    .previdencia-painel>.card,
-    .previdencia-resultado-grid>.card {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        padding: 14px;
-        border-radius: 10px;
-    }
-
-    /* =====================================================
-       PROGRESSO
-       ===================================================== */
-
-    .previdencia-progresso {
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 12px;
-        padding: 12px;
-        border-radius: 10px;
-    }
-
-    .previdencia-progresso-topo {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 9px;
-    }
-
-    .previdencia-progresso-topo>div {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        min-width: 0;
-    }
-
-    .previdencia-progresso-topo span {
-        font-size: 8px;
-        line-height: 1.2;
-    }
-
-    .previdencia-progresso-topo strong {
-        font-size: 10px;
-        line-height: 1.2;
-        white-space: nowrap;
-    }
-
-    .barra-progresso {
-        height: 5px;
-        border-radius: 999px;
-    }
-
-    /* =====================================================
-       ETAPAS
-       ===================================================== */
-
-    .previdencia-etapas {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 4px;
-        width: 100%;
-        min-width: 0;
-        margin-top: 10px;
-    }
-
-    .previdencia-etapa {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        width: 100%;
-        min-width: 0;
-        min-height: 48px;
-        padding: 5px 2px;
-        border-radius: 7px;
-        font-size: 7px;
-        font-weight: 700;
-        line-height: 1.15;
-        text-align: center;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .previdencia-etapa span {
-        flex: 0 0 20px;
-        width: 20px;
-        height: 20px;
-        font-size: 8px;
-    }
-
-    /* =====================================================
-       TÍTULOS
-       ===================================================== */
-
-    .previdencia-painel .titulo-secao,
-    .previdencia-resultado-grid .titulo-secao {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 13px;
-    }
-
-    .previdencia-painel .titulo-secao .categoria-etiqueta {
-        display: inline-flex;
-        margin-bottom: 6px;
-        padding: 4px 7px;
-        font-size: 7px;
-        line-height: 1.1;
-    }
-
-    .previdencia-painel .titulo-secao h2,
-    .previdencia-resultado-grid .titulo-secao h2 {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        margin: 0 0 4px;
-        color: var(--verde-escuro);
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 1.2;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .previdencia-painel .titulo-secao p,
-    .previdencia-resultado-grid .titulo-secao p {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        color: var(--texto-secundario);
-        font-size: 9px;
-        line-height: 1.4;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .previdencia-painel .titulo-subsecao {
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 10px;
-    }
-
-    .previdencia-painel .titulo-subsecao h3 {
-        margin: 0 0 3px;
-        font-size: 12px;
-        line-height: 1.25;
-    }
-
-    .previdencia-painel .titulo-subsecao p {
-        margin: 0;
-        font-size: 8px;
-        line-height: 1.35;
-    }
-
-    /* =====================================================
-       ESCOLHAS
-       ===================================================== */
-
-    .previdencia-escolhas {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 0;
-    }
-
-    .previdencia-escolhas .opcao-simulacao {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        width: 100%;
-        min-width: 0;
-        min-height: 88px;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo strong {
-        display: block;
-        margin: 0 0 4px;
-        font-size: 10px;
-        line-height: 1.25;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo small {
-        display: block;
-        margin: 0;
-        font-size: 7px;
-        line-height: 1.35;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    /* =====================================================
-       FORMULÁRIO
-       ===================================================== */
-
-    .previdencia-painel .grid-form {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 9px;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-painel .campo {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-painel .campo label {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        min-height: 0;
-        margin: 0;
-        color: var(--verde-escuro);
-        font-size: 9px;
-        font-weight: 700;
-        line-height: 1.25;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .previdencia-painel .campo small,
-    .previdencia-painel .campo-ajuda {
-        display: block;
-        margin: 0;
-        color: var(--texto-secundario);
-        font-size: 7px;
-        line-height: 1.35;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .previdencia-painel input,
-    .previdencia-painel select,
-    .previdencia-painel textarea {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        min-height: 38px;
-        padding-right: 9px;
-        padding-left: 9px;
-        border-radius: 7px;
-        font-size: 13px;
-        line-height: 1.2;
-    }
-
-    .previdencia-painel input,
-    .previdencia-painel select {
-        height: 38px;
-    }
-
-    .previdencia-painel textarea {
-        min-height: 72px;
-        height: auto;
-        padding-top: 8px;
-        padding-bottom: 8px;
-    }
-
-    .previdencia-painel select {
-        text-overflow: ellipsis;
-    }
-
-    /* =====================================================
-       PREFIXO / SUFIXO
-       ===================================================== */
-
-    .previdencia-painel .input-prefixo,
-    .previdencia-painel .input-sufixo {
-        display: flex;
-        align-items: stretch;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-painel .input-prefixo>span,
-    .previdencia-painel .input-sufixo>span {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 0 0 auto;
-        min-width: 34px;
-        padding: 0 6px;
-        background: var(--fundo-secundario);
-        color: var(--texto-secundario);
-        font-size: 8px;
-        font-weight: 700;
-        line-height: 1;
-        white-space: nowrap;
-    }
-
-    .previdencia-painel .input-prefixo input,
-    .previdencia-painel .input-sufixo input {
-        flex: 1 1 auto;
-        width: 1%;
-        min-width: 0;
-    }
-
-    /* =====================================================
-       SEPARADOR
-       ===================================================== */
-
-    .previdencia-painel .separador {
-        width: 100%;
-        height: 1px;
-        margin: 14px 0;
-    }
-
-    /* =====================================================
-       AVISOS
-       ===================================================== */
-
-    .previdencia-painel .aviso,
-    .previdencia-painel .aviso-info,
-    .previdencia-resultado-grid .aviso-info {
-        width: 100%;
-        min-width: 0;
-        margin-top: 11px;
-        padding: 9px 10px;
-        border-left-width: 3px;
-        border-radius: 7px;
-        font-size: 7px;
-        line-height: 1.4;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    /* =====================================================
-       BOTÕES
-       ===================================================== */
-
-    .previdencia-acoes {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 6px;
-        width: 100%;
-        min-width: 0;
-        margin-top: 14px;
-    }
-
-    .previdencia-acoes button {
-        width: 100%;
-        min-width: 0;
-        min-height: 37px;
-        height: 37px;
-        padding: 0 8px;
-        border-radius: 7px;
-        font-size: 9px;
-        font-weight: 800;
-        line-height: 1.1;
-    }
-
-    .previdencia-acoes button:only-child {
-        grid-column: 1 / -1;
-    }
-
-    /* =====================================================
-       RESULTADOS ETAPA 3
-       ===================================================== */
-
-    #etapa3 .resultados-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 6px;
-        width: 100%;
-        min-width: 0;
-        margin-top: 0;
-    }
-
-    #etapa3 .resultado-item {
-        min-width: 0;
-        min-height: 54px;
-        padding: 9px;
-        border-radius: 7px;
-    }
-
-    #etapa3 .resultado-item span {
-        display: block;
-        margin-bottom: 3px;
-        font-size: 7px;
-        line-height: 1.2;
-    }
-
-    #etapa3 .resultado-item strong {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        font-size: 10px;
-        line-height: 1.2;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: break-word;
-    }
-
-    /* =====================================================
-       RESULTADOS ETAPA 4
-       ===================================================== */
-
-    .previdencia-resultado-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-        width: 100%;
-        min-width: 0;
-        padding: 0;
-    }
-
-    .previdencia-resultado-grid>.card,
-    .previdencia-resultado-grid .card-largura-total,
-    .previdencia-card-resultado {
-        grid-column: 1;
-        grid-row: auto;
-        width: 100%;
-        min-width: 0;
-    }
-
-    /* =====================================================
-       RESUMO
-       ===================================================== */
-
-    .previdencia-resumo-dados {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 5px;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-resumo-dados>div {
-        min-width: 0;
-        padding: 8px;
-        border-radius: 7px;
-    }
-
-    .previdencia-resumo-dados span {
-        display: block;
-        min-height: 18px;
-        margin-bottom: 3px;
-        font-size: 6px;
-        line-height: 1.2;
-    }
-
-    .previdencia-resumo-dados strong {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        font-size: 9px;
-        line-height: 1.2;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: break-word;
-    }
-
-    /* =====================================================
-       DESTAQUE RESULTADO
-       ===================================================== */
-
-    .previdencia-card-resultado .resultado-destaque {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        width: 100%;
-        min-width: 0;
-        padding: 11px;
-        border-radius: 8px;
-    }
-
-    .previdencia-card-resultado .resultado-destaque span {
-        flex: 0 1 44%;
-        width: auto;
-        max-width: 44%;
-        min-width: 0;
-        margin: 0;
-        font-size: 8px;
-        font-weight: 700;
-        line-height: 1.2;
-        text-align: left;
-        white-space: normal;
-    }
-
-    .previdencia-card-resultado .resultado-destaque strong {
-        flex: 1 1 56%;
-        width: auto;
-        max-width: 56%;
-        min-width: 0;
-        margin: 0;
-        color: var(--verde-claro);
-        font-size: clamp(14px, 4.2vw, 18px);
-        line-height: 1.05;
-        text-align: right;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: break-word;
-    }
-
-    /* =====================================================
-       GRID RESULTADOS
-       ===================================================== */
-
-    .previdencia-card-resultado .resultados-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 6px;
-        width: 100%;
-        min-width: 0;
-        margin-top: 10px;
-    }
-
-    .previdencia-card-resultado .resultado-item {
-        min-width: 0;
-        min-height: 54px;
-        padding: 9px;
-        border-radius: 7px;
-    }
-
-    .previdencia-card-resultado .resultado-item span {
-        display: block;
-        margin-bottom: 3px;
-        font-size: 7px;
-        line-height: 1.2;
-    }
-
-    .previdencia-card-resultado .resultado-item strong {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        font-size: 10px;
-        line-height: 1.2;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: break-word;
-    }
-
-    /* =====================================================
-       STATUS
-       ===================================================== */
-
-    .previdencia-status {
-        width: 100%;
-        min-width: 0;
-        margin-top: 10px;
-        padding: 9px 10px;
-        border-left-width: 3px;
-        border-radius: 7px;
-    }
-
-    .previdencia-status strong {
-        margin-bottom: 2px;
-        font-size: 9px;
-        line-height: 1.25;
-    }
-
-    .previdencia-status span {
-        font-size: 7px;
-        line-height: 1.35;
-    }
-
-    /* =====================================================
-       TABELA
-       ===================================================== */
-
-    .previdencia-resultado-grid .tabela-wrapper {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        border: 1px solid var(--borda);
-        border-radius: 7px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia {
-        width: 100%;
-        min-width: 620px;
-        table-layout: auto;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia th,
-    .previdencia-resultado-grid .tabela-previdencia td {
-        padding: 7px 8px;
-        font-size: 8px;
-        line-height: 1.2;
-        white-space: nowrap;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia th {
-        font-size: 7px;
-        font-weight: 800;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia th:first-child,
-    .previdencia-resultado-grid .tabela-previdencia td:first-child {
-        position: sticky;
-        left: 0;
-        z-index: 2;
-        min-width: 52px;
-        text-align: center;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia th:first-child {
-        background: var(--fundo-secundario);
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia td:first-child {
-        background: var(--branco);
-    }
-
-    /* =====================================================
-       RENDA PRAZO INDETERMINADO
-       ===================================================== */
-
-    .previdencia-resultado-grid .resultados-grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 5px;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
-        min-width: 0;
-        min-height: 52px;
-        padding: 8px;
-        border-radius: 7px;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
-        display: block;
-        min-height: 17px;
-        margin-bottom: 3px;
-        font-size: 6px;
-        line-height: 1.2;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        font-size: 9px;
-        line-height: 1.2;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: break-word;
-    }
-}
-
-/* =========================================================
-   MOBILE PEQUENO - PREVIDENCIA.HTML
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .previdencia-container {
-        padding-top: 5px;
-        padding-bottom: 18px;
-    }
-
-    .previdencia-painel>.card,
-    .previdencia-resultado-grid>.card {
-        padding: 12px;
-    }
-
-    .previdencia-painel .titulo-secao h2,
-    .previdencia-resultado-grid .titulo-secao h2 {
-        font-size: 15px;
-    }
-
-    .previdencia-painel .titulo-secao p,
-    .previdencia-resultado-grid .titulo-secao p {
-        font-size: 8px;
-    }
-
-    .previdencia-escolhas {
-        gap: 5px;
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo {
-        min-height: 82px;
-        padding: 9px;
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo strong {
-        font-size: 9px;
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo small {
-        font-size: 6px;
-    }
-
-    .previdencia-painel .grid-form {
-        gap: 8px;
-    }
-
-    .previdencia-painel .campo label {
-        font-size: 8px;
-    }
-
-    .previdencia-painel .campo small,
-    .previdencia-painel .campo-ajuda {
-        font-size: 6px;
-    }
-
-    .previdencia-painel input,
-    .previdencia-painel select,
-    .previdencia-painel textarea {
-        min-height: 36px;
-        font-size: 12px;
-    }
-
-    .previdencia-painel input,
-    .previdencia-painel select {
-        height: 36px;
-    }
-
-    .previdencia-painel .input-prefixo>span,
-    .previdencia-painel .input-sufixo>span {
-        min-width: 32px;
-        padding: 0 5px;
-        font-size: 7px;
-    }
-
-    .previdencia-acoes button {
-        min-height: 35px;
-        height: 35px;
-        font-size: 8px;
-    }
-
-    .previdencia-resumo-dados {
-        gap: 4px;
-    }
-
-    .previdencia-resumo-dados>div {
-        padding: 7px;
-    }
-
-    .previdencia-resumo-dados span {
-        min-height: 16px;
-        font-size: 5px;
-    }
-
-    .previdencia-resumo-dados strong {
-        font-size: 8px;
-    }
-
-    .previdencia-card-resultado .resultado-destaque {
-        padding: 10px;
-    }
-
-    .previdencia-card-resultado .resultado-destaque span {
-        font-size: 7px;
-    }
-
-    .previdencia-card-resultado .resultado-destaque strong {
-        font-size: 15px;
-    }
-
-    .previdencia-card-resultado .resultado-item,
-    #etapa3 .resultado-item {
-        min-height: 50px;
-        padding: 8px;
-    }
-
-    .previdencia-card-resultado .resultado-item span,
-    #etapa3 .resultado-item span {
-        font-size: 6px;
-    }
-
-    .previdencia-card-resultado .resultado-item strong,
-    #etapa3 .resultado-item strong {
-        font-size: 9px;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
-        min-height: 49px;
-        padding: 7px;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
-        font-size: 5px;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
-        font-size: 8px;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia {
-        min-width: 590px;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia th,
-    .previdencia-resultado-grid .tabela-previdencia td {
-        padding: 6px 7px;
-        font-size: 7px;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia th {
-        font-size: 6px;
-    }
-}
-
-/* =========================================================
-   MOBILE MUITO PEQUENO - PREVIDENCIA.HTML
-   ========================================================= */
-
-@media (max-width: 360px) {
-
-    .previdencia-progresso {
-        padding: 9px;
-    }
-
-    .previdencia-etapas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 4px;
-    }
-
-    .previdencia-etapa {
-        flex-direction: row;
-        justify-content: flex-start;
-        min-height: 38px;
-        padding: 5px 7px;
-        font-size: 7px;
-        text-align: left;
-    }
-
-    .previdencia-etapa span {
-        flex: 0 0 18px;
-        width: 18px;
-        height: 18px;
-        font-size: 7px;
-    }
-
-    .previdencia-painel>.card,
-    .previdencia-resultado-grid>.card {
-        padding: 10px;
-    }
-
-    .previdencia-painel .titulo-secao h2,
-    .previdencia-resultado-grid .titulo-secao h2 {
-        font-size: 14px;
-    }
-
-    .previdencia-painel .titulo-secao p,
-    .previdencia-resultado-grid .titulo-secao p {
-        font-size: 7px;
-    }
-
-    .previdencia-escolhas {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .previdencia-escolhas .opcao-simulacao-conteudo {
-        min-height: auto;
-    }
-
-    .previdencia-painel input,
-    .previdencia-painel select,
-    .previdencia-painel textarea {
-        font-size: 11px;
-    }
-
-    .previdencia-acoes {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .previdencia-acoes button,
-    .previdencia-acoes button:only-child {
-        grid-column: 1;
-        width: 100%;
-    }
-
-    .previdencia-resumo-dados {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .previdencia-resumo-dados span {
-        min-height: 0;
-        font-size: 6px;
-    }
-
-    .previdencia-resumo-dados strong {
-        font-size: 9px;
-    }
-
-    .previdencia-card-resultado .resultado-destaque {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 3px;
-    }
-
-    .previdencia-card-resultado .resultado-destaque span,
-    .previdencia-card-resultado .resultado-destaque strong {
-        width: 100%;
-        max-width: 100%;
-        text-align: left;
-    }
-
-    .previdencia-card-resultado .resultados-grid,
-    #etapa3 .resultados-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
-        min-height: 0;
-        font-size: 6px;
-    }
-
-    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
-        font-size: 9px;
-    }
-
-    .previdencia-resultado-grid .tabela-previdencia {
-        min-width: 560px;
-    }
-}
-
-/* =========================================================
    MOBILE - INFORMACOES-BENEFICIOS-SICOOBCARD.HTML
    ========================================================= */
 
@@ -10538,5 +9521,1023 @@ footer p,
 
     .ferramenta-indisponivel {
         opacity: .65;
+    }
+}
+
+
+/* =========================================================
+   MOBILE - PREVIDENCIA.HTML
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .previdencia-container {
+        width: 100%;
+        min-width: 0;
+        padding-top: 16px;
+        padding-bottom: 30px;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-painel .grid-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-escolhas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .previdencia-resultado-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .previdencia-resultado-grid>.card,
+    .previdencia-resultado-grid .card-largura-total {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .previdencia-resumo-dados {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   MOBILE - PREVIDENCIA.HTML
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    /* =====================================================
+       ESTRUTURA
+       ===================================================== */
+
+    .previdencia-container {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding-top: 7px;
+        padding-bottom: 22px;
+    }
+
+    .previdencia-painel {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel.ativo {
+        display: block;
+    }
+
+    .previdencia-painel>.card,
+    .previdencia-resultado-grid>.card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    /* =====================================================
+       PROGRESSO
+       ===================================================== */
+
+    .previdencia-progresso {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .previdencia-progresso-topo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 9px;
+    }
+
+    .previdencia-progresso-topo>div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .previdencia-progresso-topo span {
+        font-size: 8px;
+        line-height: 1.2;
+    }
+
+    .previdencia-progresso-topo strong {
+        font-size: 10px;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .barra-progresso {
+        height: 5px;
+        border-radius: 999px;
+    }
+
+    /* =====================================================
+       ETAPAS
+       ===================================================== */
+
+    .previdencia-etapas {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 10px;
+    }
+
+    .previdencia-etapa {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+        padding: 5px 2px;
+        border-radius: 7px;
+        font-size: 7px;
+        font-weight: 700;
+        line-height: 1.15;
+        text-align: center;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-etapa span {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        font-size: 8px;
+    }
+
+    /* =====================================================
+       TÍTULOS
+       ===================================================== */
+
+    .previdencia-painel .titulo-secao,
+    .previdencia-resultado-grid .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 13px;
+    }
+
+    .previdencia-painel .titulo-secao .categoria-etiqueta {
+        display: inline-flex;
+        margin-bottom: 6px;
+        padding: 4px 7px;
+        font-size: 7px;
+        line-height: 1.1;
+    }
+
+    .previdencia-painel .titulo-secao h2,
+    .previdencia-resultado-grid .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel .titulo-secao p,
+    .previdencia-resultado-grid .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 9px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel .titulo-subsecao {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 10px;
+    }
+
+    .previdencia-painel .titulo-subsecao h3 {
+        margin: 0 0 3px;
+        font-size: 12px;
+        line-height: 1.25;
+    }
+
+    .previdencia-painel .titulo-subsecao p {
+        margin: 0;
+        font-size: 8px;
+        line-height: 1.35;
+    }
+
+    /* =====================================================
+       ESCOLHAS
+       ===================================================== */
+
+    .previdencia-escolhas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 0;
+    }
+
+    .previdencia-escolhas .opcao-simulacao {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        min-width: 0;
+        min-height: 88px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo strong {
+        display: block;
+        margin: 0 0 4px;
+        font-size: 10px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo small {
+        display: block;
+        margin: 0;
+        font-size: 7px;
+        line-height: 1.35;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       FORMULÁRIO
+       ===================================================== */
+
+    .previdencia-painel .grid-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel .campo label {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        margin: 0;
+        color: var(--verde-escuro);
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel .campo small,
+    .previdencia-painel .campo-ajuda {
+        display: block;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 7px;
+        line-height: 1.35;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select,
+    .previdencia-painel textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        padding-right: 9px;
+        padding-left: 9px;
+        border-radius: 7px;
+        font-size: 13px;
+        line-height: 1.2;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select {
+        height: 38px;
+    }
+
+    .previdencia-painel textarea {
+        min-height: 72px;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .previdencia-painel select {
+        text-overflow: ellipsis;
+    }
+
+    /* =====================================================
+       PREFIXO / SUFIXO
+       ===================================================== */
+
+    .previdencia-painel .input-prefixo,
+    .previdencia-painel .input-sufixo {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-painel .input-prefixo>span,
+    .previdencia-painel .input-sufixo>span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 34px;
+        padding: 0 6px;
+        background: var(--fundo-secundario);
+        color: var(--texto-secundario);
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .previdencia-painel .input-prefixo input,
+    .previdencia-painel .input-sufixo input {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       SEPARADOR
+       ===================================================== */
+
+    .previdencia-painel .separador {
+        width: 100%;
+        height: 1px;
+        margin: 14px 0;
+    }
+
+    /* =====================================================
+       AVISOS
+       ===================================================== */
+
+    .previdencia-painel .aviso,
+    .previdencia-painel .aviso-info,
+    .previdencia-resultado-grid .aviso-info {
+        width: 100%;
+        min-width: 0;
+        margin-top: 11px;
+        padding: 9px 10px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 7px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    /* =====================================================
+       BOTÕES
+       ===================================================== */
+
+    .previdencia-acoes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 14px;
+    }
+
+    .previdencia-acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 37px;
+        height: 37px;
+        padding: 0 8px;
+        border-radius: 7px;
+        font-size: 9px;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+
+    .previdencia-acoes button:only-child {
+        grid-column: 1 / -1;
+    }
+
+    /* =====================================================
+       RESULTADOS ETAPA 3
+       ===================================================== */
+
+    #etapa3 .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+    #etapa3 .resultado-item {
+        min-width: 0;
+        min-height: 54px;
+        padding: 9px;
+        border-radius: 7px;
+    }
+
+    #etapa3 .resultado-item span {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 7px;
+        line-height: 1.2;
+    }
+
+    #etapa3 .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 10px;
+        line-height: 1.2;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       RESULTADOS ETAPA 4
+       ===================================================== */
+
+    .previdencia-resultado-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
+        padding: 0;
+    }
+
+    .previdencia-resultado-grid>.card,
+    .previdencia-resultado-grid .card-largura-total,
+    .previdencia-card-resultado {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* =====================================================
+       RESUMO
+       ===================================================== */
+
+    .previdencia-resumo-dados {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-resumo-dados>div {
+        min-width: 0;
+        padding: 8px;
+        border-radius: 7px;
+    }
+
+    .previdencia-resumo-dados span {
+        display: block;
+        min-height: 18px;
+        margin-bottom: 3px;
+        font-size: 6px;
+        line-height: 1.2;
+    }
+
+    .previdencia-resumo-dados strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 9px;
+        line-height: 1.2;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       DESTAQUE RESULTADO
+       ===================================================== */
+
+    .previdencia-card-resultado .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        padding: 11px;
+        border-radius: 8px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque span {
+        flex: 0 1 44%;
+        width: auto;
+        max-width: 44%;
+        min-width: 0;
+        margin: 0;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1.2;
+        text-align: left;
+        white-space: normal;
+    }
+
+    .previdencia-card-resultado .resultado-destaque strong {
+        flex: 1 1 56%;
+        width: auto;
+        max-width: 56%;
+        min-width: 0;
+        margin: 0;
+        color: var(--verde-claro);
+        font-size: clamp(14px, 4.2vw, 18px);
+        line-height: 1.05;
+        text-align: right;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       GRID RESULTADOS
+       ===================================================== */
+
+    .previdencia-card-resultado .resultados-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 10px;
+    }
+
+    .previdencia-card-resultado .resultado-item {
+        min-width: 0;
+        min-height: 54px;
+        padding: 9px;
+        border-radius: 7px;
+    }
+
+    .previdencia-card-resultado .resultado-item span {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 7px;
+        line-height: 1.2;
+    }
+
+    .previdencia-card-resultado .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 10px;
+        line-height: 1.2;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* =====================================================
+       STATUS
+       ===================================================== */
+
+    .previdencia-status {
+        width: 100%;
+        min-width: 0;
+        margin-top: 10px;
+        padding: 9px 10px;
+        border-left-width: 3px;
+        border-radius: 7px;
+    }
+
+    .previdencia-status strong {
+        margin-bottom: 2px;
+        font-size: 9px;
+        line-height: 1.25;
+    }
+
+    .previdencia-status span {
+        font-size: 7px;
+        line-height: 1.35;
+    }
+
+    /* =====================================================
+       TABELA
+       ===================================================== */
+
+    .previdencia-resultado-grid .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--borda);
+        border-radius: 7px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia {
+        width: 100%;
+        min-width: 620px;
+        table-layout: auto;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th,
+    .previdencia-resultado-grid .tabela-previdencia td {
+        padding: 7px 8px;
+        font-size: 8px;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th {
+        font-size: 7px;
+        font-weight: 800;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th:first-child,
+    .previdencia-resultado-grid .tabela-previdencia td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        min-width: 52px;
+        text-align: center;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th:first-child {
+        background: var(--fundo-secundario);
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia td:first-child {
+        background: var(--branco);
+    }
+
+    /* =====================================================
+       RENDA PRAZO INDETERMINADO
+       ===================================================== */
+
+    .previdencia-resultado-grid .resultados-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
+        min-width: 0;
+        min-height: 52px;
+        padding: 8px;
+        border-radius: 7px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
+        display: block;
+        min-height: 17px;
+        margin-bottom: 3px;
+        font-size: 6px;
+        line-height: 1.2;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        font-size: 9px;
+        line-height: 1.2;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO - PREVIDENCIA.HTML
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .previdencia-container {
+        padding-top: 5px;
+        padding-bottom: 18px;
+    }
+
+    .previdencia-painel>.card,
+    .previdencia-resultado-grid>.card {
+        padding: 12px;
+    }
+
+    .previdencia-painel .titulo-secao h2,
+    .previdencia-resultado-grid .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .previdencia-painel .titulo-secao p,
+    .previdencia-resultado-grid .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .previdencia-escolhas {
+        gap: 5px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo {
+        min-height: 82px;
+        padding: 9px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo strong {
+        font-size: 9px;
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo small {
+        font-size: 6px;
+    }
+
+    .previdencia-painel .grid-form {
+        gap: 8px;
+    }
+
+    .previdencia-painel .campo label {
+        font-size: 8px;
+    }
+
+    .previdencia-painel .campo small,
+    .previdencia-painel .campo-ajuda {
+        font-size: 6px;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select,
+    .previdencia-painel textarea {
+        min-height: 36px;
+        font-size: 12px;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select {
+        height: 36px;
+    }
+
+    .previdencia-painel .input-prefixo>span,
+    .previdencia-painel .input-sufixo>span {
+        min-width: 32px;
+        padding: 0 5px;
+        font-size: 7px;
+    }
+
+    .previdencia-acoes button {
+        min-height: 35px;
+        height: 35px;
+        font-size: 8px;
+    }
+
+    .previdencia-resumo-dados {
+        gap: 4px;
+    }
+
+    .previdencia-resumo-dados>div {
+        padding: 7px;
+    }
+
+    .previdencia-resumo-dados span {
+        min-height: 16px;
+        font-size: 5px;
+    }
+
+    .previdencia-resumo-dados strong {
+        font-size: 8px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque {
+        padding: 10px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque span {
+        font-size: 7px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque strong {
+        font-size: 15px;
+    }
+
+    .previdencia-card-resultado .resultado-item,
+    #etapa3 .resultado-item {
+        min-height: 50px;
+        padding: 8px;
+    }
+
+    .previdencia-card-resultado .resultado-item span,
+    #etapa3 .resultado-item span {
+        font-size: 6px;
+    }
+
+    .previdencia-card-resultado .resultado-item strong,
+    #etapa3 .resultado-item strong {
+        font-size: 9px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item {
+        min-height: 49px;
+        padding: 7px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
+        font-size: 5px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
+        font-size: 8px;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia {
+        min-width: 590px;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th,
+    .previdencia-resultado-grid .tabela-previdencia td {
+        padding: 6px 7px;
+        font-size: 7px;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia th {
+        font-size: 6px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO - PREVIDENCIA.HTML
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .previdencia-progresso {
+        padding: 9px;
+    }
+
+    .previdencia-etapas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+    }
+
+    .previdencia-etapa {
+        flex-direction: row;
+        justify-content: flex-start;
+        min-height: 38px;
+        padding: 5px 7px;
+        font-size: 7px;
+        text-align: left;
+    }
+
+    .previdencia-etapa span {
+        flex: 0 0 18px;
+        width: 18px;
+        height: 18px;
+        font-size: 7px;
+    }
+
+    .previdencia-painel>.card,
+    .previdencia-resultado-grid>.card {
+        padding: 10px;
+    }
+
+    .previdencia-painel .titulo-secao h2,
+    .previdencia-resultado-grid .titulo-secao h2 {
+        font-size: 14px;
+    }
+
+    .previdencia-painel .titulo-secao p,
+    .previdencia-resultado-grid .titulo-secao p {
+        font-size: 7px;
+    }
+
+    .previdencia-escolhas {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-escolhas .opcao-simulacao-conteudo {
+        min-height: auto;
+    }
+
+    .previdencia-painel input,
+    .previdencia-painel select,
+    .previdencia-painel textarea {
+        font-size: 11px;
+    }
+
+    .previdencia-acoes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-acoes button,
+    .previdencia-acoes button:only-child {
+        grid-column: 1;
+        width: 100%;
+    }
+
+    .previdencia-resumo-dados {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-resumo-dados span {
+        min-height: 0;
+        font-size: 6px;
+    }
+
+    .previdencia-resumo-dados strong {
+        font-size: 9px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .previdencia-card-resultado .resultado-destaque span,
+    .previdencia-card-resultado .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .previdencia-card-resultado .resultados-grid,
+    #etapa3 .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item span {
+        min-height: 0;
+        font-size: 6px;
+    }
+
+    .previdencia-resultado-grid .resultados-grid-3 .resultado-item strong {
+        font-size: 9px;
+    }
+
+    .previdencia-resultado-grid .tabela-previdencia {
+        min-width: 560px;
     }
 }
