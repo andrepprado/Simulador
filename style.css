@@ -5201,3 +5201,1271 @@ footer p,
         font-size: 7px;
     }
 }
+
+
+
+/* =========================================================
+   PÁGINAS EXPERIMENTAIS - CRÉDITO RURAL
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML
+   PORTE-PRODUTOR-RURAL.HTML
+
+   BLOCO ISOLADO PARA TESTES
+   PODE SER REMOVIDO INTEIRAMENTE CASO AS PÁGINAS
+   EXPERIMENTAIS NÃO SEJAM UTILIZADAS.
+   ========================================================= */
+
+
+/* =========================================================
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML - DESKTOP
+   ========================================================= */
+
+.calculo-notas-container {
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    min-width: 0;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+.calculo-notas-container>.card {
+    width: 100%;
+    min-width: 0;
+}
+
+.calculo-notas-orientacoes {
+    margin-top: 0;
+}
+
+.calculo-notas-orientacoes ul {
+    margin: 10px 0 0 18px;
+    padding: 0;
+}
+
+.calculo-notas-orientacoes li {
+    margin-bottom: 5px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.calculo-notas-orientacoes li:last-child {
+    margin-bottom: 0;
+}
+
+#listaPeriodosNotas {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    min-width: 0;
+}
+
+.calculo-notas-periodo {
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+    background: #FBFCFC;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+}
+
+.calculo-notas-periodo-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 18px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--borda);
+}
+
+.calculo-notas-periodo-cabecalho>div {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.calculo-notas-periodo-cabecalho strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--verde-escuro);
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+.calculo-notas-periodo-cabecalho small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.calculo-notas-remover-periodo {
+    flex: 0 0 auto;
+    min-width: 86px;
+    min-height: 36px;
+    padding: 7px 12px;
+    font-size: 10px;
+}
+
+.calculo-notas-identificacao {
+    margin-bottom: 20px;
+}
+
+.calculo-notas-titulo-valores {
+    margin-top: 4px;
+    margin-bottom: 13px;
+}
+
+.calculo-notas-meses-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
+.calculo-notas-campo-mes {
+    min-width: 0;
+}
+
+.calculo-notas-campo-mes label {
+    font-size: 11px;
+}
+
+.calculo-notas-campo-mes .input-prefixo {
+    width: 100%;
+    min-width: 0;
+}
+
+.calculo-notas-campo-mes .input-prefixo>span {
+    min-width: 39px;
+    padding: 0 8px;
+    font-size: 10px;
+}
+
+.calculo-notas-campo-mes input {
+    min-width: 0;
+    font-size: 13px;
+}
+
+.calculo-notas-periodo-rodape {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--borda);
+}
+
+.calculo-notas-periodo-rodape input[readonly] {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-weight: 700;
+}
+
+.calculo-notas-observacao-periodo {
+    margin-top: 16px;
+}
+
+.calculo-notas-observacao-periodo textarea {
+    min-height: 82px;
+}
+
+.calculo-notas-acoes-periodo {
+    justify-content: flex-start;
+    margin-top: 18px;
+}
+
+.calculo-notas-acoes-periodo .btn {
+    min-width: 150px;
+}
+
+#listaNotasAuxiliares {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+}
+
+.calculo-notas-auxiliar-linha {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr) minmax(220px, .65fr) auto;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    align-items: end;
+    padding: 12px;
+    background: #FBFCFC;
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+}
+
+.calculo-notas-auxiliar-linha .campo {
+    min-width: 0;
+}
+
+.calculo-notas-auxiliar-remover {
+    min-width: 88px;
+}
+
+.calculo-notas-auxiliar-remover .btn {
+    width: 100%;
+    min-width: 88px;
+    min-height: 42px;
+    padding: 8px 11px;
+    font-size: 10px;
+}
+
+.calculo-notas-container .linha-selecionada {
+    margin-top: 14px;
+}
+
+.calculo-notas-container .linha-selecionada strong {
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .calculo-notas-container {
+        width: calc(100% - 32px);
+        padding-top: 18px;
+        padding-bottom: 30px;
+    }
+
+    .calculo-notas-meses-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .calculo-notas-auxiliar-linha {
+        grid-template-columns:
+            minmax(0, 1fr) minmax(190px, .7fr) auto;
+    }
+}
+
+
+/* =========================================================
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .calculo-notas-container {
+        width: calc(100% - 24px);
+        max-width: none;
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .calculo-notas-container>.card {
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .calculo-notas-container .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
+    }
+
+    .calculo-notas-container .titulo-secao h2 {
+        margin: 0 0 4px;
+        font-size: 17px;
+        line-height: 1.22;
+    }
+
+    .calculo-notas-container .titulo-secao p {
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.42;
+    }
+
+    .calculo-notas-container .categoria-etiqueta {
+        margin-bottom: 7px;
+        padding: 5px 8px;
+        font-size: 8px;
+    }
+
+    .calculo-notas-orientacoes {
+        padding: 10px 11px;
+        font-size: 8px;
+        line-height: 1.4;
+    }
+
+    .calculo-notas-orientacoes ul {
+        margin: 8px 0 0 15px;
+    }
+
+    .calculo-notas-orientacoes li {
+        margin-bottom: 4px;
+        font-size: 8px;
+        line-height: 1.4;
+    }
+
+    #listaPeriodosNotas {
+        gap: 10px;
+    }
+
+    .calculo-notas-periodo {
+        padding: 12px;
+        border-radius: 9px;
+    }
+
+    .calculo-notas-periodo-cabecalho {
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 13px;
+        padding-bottom: 10px;
+    }
+
+    .calculo-notas-periodo-cabecalho strong {
+        margin-bottom: 2px;
+        font-size: 11px;
+    }
+
+    .calculo-notas-periodo-cabecalho small {
+        font-size: 7px;
+        line-height: 1.35;
+    }
+
+    .calculo-notas-remover-periodo {
+        min-width: 65px;
+        min-height: 32px;
+        padding: 5px 8px;
+        border-radius: 7px;
+        font-size: 8px;
+    }
+
+    .calculo-notas-identificacao {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+        margin-bottom: 14px;
+    }
+
+    .calculo-notas-titulo-valores {
+        margin-bottom: 9px;
+    }
+
+    .calculo-notas-titulo-valores h3 {
+        font-size: 11px;
+    }
+
+    .calculo-notas-titulo-valores p {
+        font-size: 8px;
+    }
+
+    .calculo-notas-meses-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .calculo-notas-campo-mes {
+        gap: 4px;
+    }
+
+    .calculo-notas-campo-mes label {
+        font-size: 8px;
+    }
+
+    .calculo-notas-campo-mes .input-prefixo>span {
+        min-width: 31px;
+        padding: 0 5px;
+        font-size: 7px;
+    }
+
+    .calculo-notas-campo-mes input {
+        min-height: 37px;
+        height: 37px;
+        padding-right: 7px;
+        padding-left: 7px;
+        font-size: 11px;
+    }
+
+    .calculo-notas-periodo-rodape {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        margin-top: 13px;
+        padding-top: 13px;
+    }
+
+    .calculo-notas-periodo-rodape .campo label {
+        font-size: 8px;
+    }
+
+    .calculo-notas-periodo-rodape input {
+        min-height: 37px;
+        height: 37px;
+        font-size: 11px;
+    }
+
+    .calculo-notas-observacao-periodo {
+        margin-top: 11px;
+    }
+
+    .calculo-notas-observacao-periodo label {
+        font-size: 8px;
+    }
+
+    .calculo-notas-observacao-periodo textarea {
+        min-height: 62px;
+        font-size: 11px;
+    }
+
+    .calculo-notas-acoes-periodo {
+        margin-top: 12px;
+    }
+
+    .calculo-notas-acoes-periodo .btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 36px;
+        font-size: 9px;
+    }
+
+    .calculo-notas-container .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .calculo-notas-container .resultado-destaque span {
+        flex: 0 1 42%;
+        max-width: 42%;
+        font-size: 9px;
+        text-align: left;
+    }
+
+    .calculo-notas-container .resultado-destaque strong {
+        flex: 1 1 58%;
+        max-width: 58%;
+        font-size: 17px;
+        text-align: right;
+    }
+
+    .calculo-notas-container .resultados-grid-3 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 10px;
+    }
+
+    .calculo-notas-container .resultado-item {
+        min-height: 57px;
+        padding: 9px;
+    }
+
+    .calculo-notas-container .resultado-item span {
+        margin-bottom: 3px;
+        font-size: 7px;
+    }
+
+    .calculo-notas-container .resultado-item strong {
+        font-size: 11px;
+    }
+
+    .calculo-notas-auxiliar-linha {
+        grid-template-columns:
+            minmax(0, 1fr) minmax(0, 1fr);
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .calculo-notas-auxiliar-linha .campo label {
+        font-size: 8px;
+    }
+
+    .calculo-notas-auxiliar-linha input {
+        min-height: 37px;
+        height: 37px;
+        font-size: 11px;
+    }
+
+    .calculo-notas-auxiliar-linha .input-prefixo>span {
+        min-width: 31px;
+        padding: 0 5px;
+        font-size: 7px;
+    }
+
+    .calculo-notas-auxiliar-remover {
+        grid-column: 1 / -1;
+        min-width: 0;
+    }
+
+    .calculo-notas-auxiliar-remover label {
+        display: none;
+    }
+
+    .calculo-notas-auxiliar-remover .btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 34px;
+        font-size: 8px;
+    }
+
+    .calculo-notas-container .linha-selecionada {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .calculo-notas-container .linha-selecionada span {
+        font-size: 7px;
+    }
+
+    .calculo-notas-container .linha-selecionada strong {
+        font-size: 10px;
+    }
+
+    .calculo-notas-container>.acoes {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .calculo-notas-container>.acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 36px;
+        font-size: 9px;
+    }
+}
+
+
+/* =========================================================
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML - MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .calculo-notas-container {
+        width: calc(100% - 20px);
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .calculo-notas-container>.card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .calculo-notas-container .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .calculo-notas-container .titulo-secao p {
+        font-size: 9px;
+    }
+
+    .calculo-notas-periodo {
+        padding: 10px;
+    }
+
+    .calculo-notas-periodo-cabecalho strong {
+        font-size: 10px;
+    }
+
+    .calculo-notas-periodo-cabecalho small {
+        font-size: 6px;
+    }
+
+    .calculo-notas-meses-grid {
+        gap: 6px;
+    }
+
+    .calculo-notas-campo-mes label {
+        font-size: 7px;
+    }
+
+    .calculo-notas-campo-mes input,
+    .calculo-notas-periodo-rodape input,
+    .calculo-notas-auxiliar-linha input {
+        min-height: 35px;
+        height: 35px;
+        font-size: 10px;
+    }
+
+    .calculo-notas-container .resultado-destaque span {
+        font-size: 8px;
+    }
+
+    .calculo-notas-container .resultado-destaque strong {
+        font-size: 15px;
+    }
+
+    .calculo-notas-container .resultado-item span {
+        font-size: 6px;
+    }
+
+    .calculo-notas-container .resultado-item strong {
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML - MOBILE MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .calculo-notas-container {
+        width: calc(100% - 16px);
+    }
+
+    .calculo-notas-container>.card {
+        padding: 11px;
+    }
+
+    .calculo-notas-container .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .calculo-notas-container .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .calculo-notas-meses-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calculo-notas-container .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .calculo-notas-container .resultado-destaque span,
+    .calculo-notas-container .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .calculo-notas-container .resultados-grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calculo-notas-auxiliar-linha {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calculo-notas-auxiliar-remover {
+        grid-column: 1;
+    }
+}
+
+
+/* =========================================================
+   PORTE-PRODUTOR-RURAL.HTML - DESKTOP
+   ========================================================= */
+
+.porte-produtor-container {
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    min-width: 0;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+.porte-produtor-container>.card {
+    width: 100%;
+    min-width: 0;
+}
+
+.porte-produtor-tabela {
+    width: 100%;
+    min-width: 760px;
+}
+
+.porte-produtor-tabela th:nth-child(1),
+.porte-produtor-tabela td:nth-child(1) {
+    width: 44%;
+    text-align: left;
+}
+
+.porte-produtor-tabela th:nth-child(2),
+.porte-produtor-tabela td:nth-child(2) {
+    width: 28%;
+    text-align: left;
+}
+
+.porte-produtor-tabela th:nth-child(3),
+.porte-produtor-tabela td:nth-child(3) {
+    width: 28%;
+    text-align: right;
+}
+
+.porte-produtor-tabela td {
+    vertical-align: middle;
+}
+
+.porte-produtor-input-renda {
+    width: 100%;
+    min-width: 150px;
+}
+
+.porte-produtor-input-renda>span {
+    min-width: 40px;
+    padding: 0 8px;
+    font-size: 10px;
+}
+
+.porte-produtor-input-renda input {
+    width: 1%;
+    min-width: 0;
+    height: 38px;
+    min-height: 38px;
+    padding-right: 9px;
+    padding-left: 9px;
+    font-size: 12px;
+    text-align: right;
+}
+
+.porte-produtor-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    min-height: 24px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+}
+
+.porte-produtor-tag-rural {
+    background: rgba(125, 182, 28, .12);
+    color: var(--sucesso);
+    border: 1px solid rgba(125, 182, 28, .24);
+}
+
+.porte-produtor-tag-nao-rural {
+    background: rgba(73, 71, 157, .09);
+    color: var(--roxo);
+    border: 1px solid rgba(73, 71, 157, .18);
+}
+
+.porte-produtor-justificativa {
+    width: 100%;
+    min-width: 0;
+    padding: 16px 18px;
+    background: #FBFCFC;
+    color: var(--texto-secundario);
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 9px;
+}
+
+.porte-produtor-justificativa p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+#resultadoPorteFinal {
+    transition:
+        color .2s ease,
+        opacity .2s ease;
+}
+
+#resultadoPorteFinal.porte-pequeno {
+    color: var(--verde-claro);
+}
+
+#resultadoPorteFinal.porte-medio {
+    color: #F2D24B;
+}
+
+#resultadoPorteFinal.porte-grande {
+    color: #FFB1B1;
+}
+
+#resultadoPorteFinal.porte-pendente {
+    color: var(--branco);
+    opacity: .9;
+}
+
+.porte-produtor-container .resultados-grid-4 {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+.porte-produtor-container .resultados-grid-3 {
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+}
+
+.porte-produtor-container>.acoes {
+    justify-content: flex-end;
+    margin-top: 0;
+}
+
+
+/* =========================================================
+   PORTE-PRODUTOR-RURAL.HTML - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .porte-produtor-container {
+        width: calc(100% - 32px);
+        padding-top: 18px;
+        padding-bottom: 30px;
+    }
+
+    .porte-produtor-container .grid-form-4 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .porte-produtor-container .resultados-grid-4 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .porte-produtor-container .resultados-grid-3 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   PORTE-PRODUTOR-RURAL.HTML - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .porte-produtor-container {
+        width: calc(100% - 24px);
+        max-width: none;
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .porte-produtor-container>.card {
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .porte-produtor-container .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
+    }
+
+    .porte-produtor-container .titulo-secao h2 {
+        margin: 0 0 4px;
+        font-size: 17px;
+        line-height: 1.22;
+    }
+
+    .porte-produtor-container .titulo-secao p {
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.42;
+    }
+
+    .porte-produtor-container .categoria-etiqueta {
+        margin-bottom: 7px;
+        padding: 5px 8px;
+        font-size: 8px;
+    }
+
+    .porte-produtor-container .grid-form-4 {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .porte-produtor-container .campo {
+        gap: 4px;
+    }
+
+    .porte-produtor-container .campo label {
+        font-size: 8px;
+        line-height: 1.3;
+    }
+
+    .porte-produtor-container input,
+    .porte-produtor-container select {
+        min-height: 38px;
+        height: 38px;
+        padding-right: 9px;
+        padding-left: 9px;
+        font-size: 11px;
+        border-radius: 7px;
+    }
+
+    .porte-produtor-container .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .porte-produtor-tabela {
+        min-width: 620px;
+    }
+
+    .porte-produtor-tabela th,
+    .porte-produtor-tabela td {
+        padding: 8px 9px;
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .porte-produtor-tabela th {
+        font-size: 7px;
+    }
+
+    .porte-produtor-tabela th:first-child,
+    .porte-produtor-tabela td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        min-width: 210px;
+    }
+
+    .porte-produtor-tabela th:first-child {
+        background: var(--fundo-secundario);
+    }
+
+    .porte-produtor-tabela tbody td:first-child {
+        background: var(--branco);
+    }
+
+    .porte-produtor-tag {
+        min-height: 19px;
+        padding: 3px 6px;
+        font-size: 6px;
+    }
+
+    .porte-produtor-input-renda {
+        min-width: 135px;
+    }
+
+    .porte-produtor-input-renda>span {
+        min-width: 31px;
+        padding: 0 5px;
+        font-size: 7px;
+    }
+
+    .porte-produtor-input-renda input {
+        min-height: 33px;
+        height: 33px;
+        padding-right: 6px;
+        padding-left: 6px;
+        font-size: 10px;
+    }
+
+    .porte-produtor-container .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .porte-produtor-container .resultado-destaque span {
+        flex: 0 1 42%;
+        width: auto;
+        max-width: 42%;
+        font-size: 9px;
+        text-align: left;
+    }
+
+    .porte-produtor-container .resultado-destaque strong {
+        flex: 1 1 58%;
+        width: auto;
+        max-width: 58%;
+        font-size: 16px;
+        text-align: right;
+    }
+
+    .porte-produtor-container .resultados-grid-4,
+    .porte-produtor-container .resultados-grid-3 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .porte-produtor-container .resultado-item {
+        min-height: 58px;
+        padding: 9px;
+        border-radius: 8px;
+    }
+
+    .porte-produtor-container .resultado-item span {
+        margin-bottom: 3px;
+        font-size: 7px;
+        line-height: 1.25;
+    }
+
+    .porte-produtor-container .resultado-item strong {
+        font-size: 10px;
+        line-height: 1.25;
+    }
+
+    .porte-produtor-justificativa {
+        padding: 10px 11px;
+        border-left-width: 3px;
+        border-radius: 7px;
+    }
+
+    .porte-produtor-justificativa p {
+        font-size: 8px;
+        line-height: 1.45;
+    }
+
+    .porte-produtor-container .linha-selecionada {
+        margin-top: 10px;
+        padding: 10px;
+        border-left-width: 3px;
+        border-radius: 7px;
+    }
+
+    .porte-produtor-container .linha-selecionada span {
+        font-size: 7px;
+    }
+
+    .porte-produtor-container .linha-selecionada strong {
+        font-size: 10px;
+    }
+
+    .porte-produtor-container>.acoes {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .porte-produtor-container>.acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 36px;
+        font-size: 9px;
+    }
+}
+
+
+/* =========================================================
+   PORTE-PRODUTOR-RURAL.HTML - MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .porte-produtor-container {
+        width: calc(100% - 20px);
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .porte-produtor-container>.card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .porte-produtor-container .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .porte-produtor-container .titulo-secao p {
+        font-size: 9px;
+    }
+
+    .porte-produtor-container input,
+    .porte-produtor-container select {
+        min-height: 36px;
+        height: 36px;
+        font-size: 10px;
+    }
+
+    .porte-produtor-tabela {
+        min-width: 580px;
+    }
+
+    .porte-produtor-tabela th,
+    .porte-produtor-tabela td {
+        padding: 7px 8px;
+        font-size: 7px;
+    }
+
+    .porte-produtor-tabela th {
+        font-size: 6px;
+    }
+
+    .porte-produtor-tabela th:first-child,
+    .porte-produtor-tabela td:first-child {
+        min-width: 195px;
+    }
+
+    .porte-produtor-input-renda {
+        min-width: 125px;
+    }
+
+    .porte-produtor-input-renda input {
+        font-size: 9px;
+    }
+
+    .porte-produtor-container .resultado-destaque span {
+        font-size: 8px;
+    }
+
+    .porte-produtor-container .resultado-destaque strong {
+        font-size: 15px;
+    }
+
+    .porte-produtor-container .resultado-item {
+        min-height: 54px;
+        padding: 8px;
+    }
+
+    .porte-produtor-container .resultado-item span {
+        font-size: 6px;
+    }
+
+    .porte-produtor-container .resultado-item strong {
+        font-size: 9px;
+    }
+
+    .porte-produtor-justificativa p {
+        font-size: 7px;
+    }
+}
+
+
+/* =========================================================
+   PORTE-PRODUTOR-RURAL.HTML - MOBILE MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .porte-produtor-container {
+        width: calc(100% - 16px);
+    }
+
+    .porte-produtor-container>.card {
+        padding: 11px;
+    }
+
+    .porte-produtor-container .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .porte-produtor-container .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .porte-produtor-container .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .porte-produtor-container .resultado-destaque span,
+    .porte-produtor-container .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .porte-produtor-container .resultados-grid-4,
+    .porte-produtor-container .resultados-grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .porte-produtor-tabela {
+        min-width: 550px;
+    }
+
+    .porte-produtor-tabela th:first-child,
+    .porte-produtor-tabela td:first-child {
+        min-width: 185px;
+    }
+}
+
+
+/* =========================================================
+   PÁGINAS EXPERIMENTAIS - TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .calculo-notas-container .btn:hover,
+    .porte-produtor-container .btn:hover {
+        transform: none;
+    }
+}
+
+
+/* =========================================================
+   PÁGINAS EXPERIMENTAIS - IMPRESSÃO
+   ========================================================= */
+
+@media print {
+
+    .calculo-notas-container,
+    .porte-produtor-container {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+    }
+
+    .calculo-notas-container>.card,
+    .porte-produtor-container>.card,
+    .calculo-notas-periodo {
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+
+    .calculo-notas-container>.acoes,
+    .calculo-notas-remover-periodo,
+    .calculo-notas-acoes-periodo,
+    .calculo-notas-auxiliar-remover,
+    .porte-produtor-container>.acoes {
+        display: none !important;
+    }
+
+    .calculo-notas-meses-grid {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+    .porte-produtor-container .resultados-grid-4 {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+    .porte-produtor-container .resultados-grid-3 {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
