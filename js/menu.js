@@ -19,11 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
             disponivel: true
         },
         {
-            nome: "Crédito",
+            nome: "Crédito Rural",
             disponivel: true,
             itens: [
                 {
-                    nome: "Crédito Rural",
+                    nome: "Simulador de Crédito Rural",
                     arquivo: "credito-rural.html",
                     disponivel: true
                 },
@@ -36,7 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Porte do Produtor Rural",
                     arquivo: "porte-produtor-rural.html",
                     disponivel: true
-                },
+                }
+            ]
+        },
+        {
+            nome: "Crédito",
+            disponivel: true,
+            itens: [
                 {
                     nome: "Comprometimento de Renda",
                     arquivo: "comprometimento-renda.html",
