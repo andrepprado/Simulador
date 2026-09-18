@@ -75,7 +75,7 @@
                     <h2>Período de Apuração</h2>
                     <p>
                         A quantidade de meses é identificada automaticamente
-                        pelos blocos de extrato encontrados.
+                        pelas movimentações encontradas no extrato.
                     </p>
                 </div>
             </div>
@@ -104,7 +104,7 @@
 
             <div class="aviso-info">
                 Preferencialmente, mantenha a quantidade de meses correspondente
-                ao número de extratos efetivamente analisados.
+                ao período efetivamente analisado no extrato.
             </div>
         </section>
 
@@ -121,6 +121,7 @@
 
             <div class="resultado-destaque">
                 <span>Média mensal</span>
+
                 <strong id="resultadoMediaMovimentacao">
                     R$ 0,00
                 </strong>
@@ -129,6 +130,7 @@
             <div class="resultados-grid">
                 <div class="resultado-item">
                     <span>Total considerado</span>
+
                     <strong id="resultadoTotalMovimentacao">
                         R$ 0,00
                     </strong>
@@ -136,6 +138,7 @@
 
                 <div class="resultado-item">
                     <span>Meses considerados</span>
+
                     <strong id="resultadoMesesMovimentacao">
                         0
                     </strong>
@@ -143,6 +146,7 @@
 
                 <div class="resultado-item">
                     <span>Créditos considerados</span>
+
                     <strong id="resultadoQtdConsiderados">
                         0
                     </strong>
@@ -150,48 +154,13 @@
 
                 <div class="resultado-item">
                     <span>Movimentos removidos</span>
+
                     <strong id="resultadoQtdExcluidos">
                         0
                     </strong>
                 </div>
             </div>
         </aside>
-
-        <section class="card card-largura-total">
-            <div class="titulo-secao">
-                <div>
-                    <span class="categoria-etiqueta">Regras</span>
-                    <h2>Regras de Exclusão</h2>
-                    <p>
-                        Históricos que não devem compor o cálculo da média.
-                    </p>
-                </div>
-            </div>
-
-            <div id="listaRegrasMovimentacao"></div>
-
-            <div class="separador"></div>
-
-            <div class="campo">
-                <label for="regrasAdicionaisMovimentacao">
-                    Regras adicionais
-                </label>
-
-                <textarea id="regrasAdicionaisMovimentacao" rows="5"
-                    placeholder="Informe um histórico ou trecho por linha..."></textarea>
-
-                <small>
-                    Cada linha informada será tratada como uma regra adicional
-                    de exclusão por correspondência de texto.
-                </small>
-            </div>
-
-            <div class="acoes">
-                <button type="button" id="btnRecalcularMovimentacao" class="btn btn-secundario">
-                    Recalcular
-                </button>
-            </div>
-        </section>
 
         <section class="card card-largura-total">
             <div class="titulo-secao">
@@ -265,7 +234,7 @@
                     <h2>Movimentações Desconsideradas</h2>
                     <p>
                         Créditos identificados no extrato que foram removidos
-                        pelas regras de cálculo.
+                        automaticamente pelas regras do cálculo.
                     </p>
                 </div>
             </div>
