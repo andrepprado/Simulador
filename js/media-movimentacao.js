@@ -7,6 +7,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
+    /* =========================================================
+       ELEMENTOS DA PÁGINA
+       ========================================================= */
+
     const textoExtrato =
         document.getElementById("textoExtratoMovimentacao");
 
@@ -16,17 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const mesesConsiderados =
         document.getElementById("mesesConsideradosMovimentacao");
 
-    const regrasAdicionais =
-        document.getElementById("regrasAdicionaisMovimentacao");
-
     const btnProcessar =
         document.getElementById("btnProcessarMovimentacao");
 
     const btnLimpar =
         document.getElementById("btnLimparMovimentacao");
-
-    const btnRecalcular =
-        document.getElementById("btnRecalcularMovimentacao");
 
     const resultadoMedia =
         document.getElementById("resultadoMediaMovimentacao");
@@ -43,9 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultadoQtdExcluidos =
         document.getElementById("resultadoQtdExcluidos");
 
-    const listaRegras =
-        document.getElementById("listaRegrasMovimentacao");
-
     const tabelaResumo =
         document.querySelector(
             "#tabelaResumoMensalMovimentacao tbody"
@@ -61,7 +56,88 @@ document.addEventListener("DOMContentLoaded", () => {
             "#tabelaMovimentacoesExcluidas tbody"
         );
 
+    /* =========================================================
+       VALIDAÇÃO DA ESTRUTURA DO HTML
+       ========================================================= */
+
+    const elementosObrigatorios = [
+        {
+            nome: "#textoExtratoMovimentacao",
+            elemento: textoExtrato
+        },
+        {
+            nome: "#mesesDetectadosMovimentacao",
+            elemento: mesesDetectados
+        },
+        {
+            nome: "#mesesConsideradosMovimentacao",
+            elemento: mesesConsiderados
+        },
+        {
+            nome: "#btnProcessarMovimentacao",
+            elemento: btnProcessar
+        },
+        {
+            nome: "#btnLimparMovimentacao",
+            elemento: btnLimpar
+        },
+        {
+            nome: "#resultadoMediaMovimentacao",
+            elemento: resultadoMedia
+        },
+        {
+            nome: "#resultadoTotalMovimentacao",
+            elemento: resultadoTotal
+        },
+        {
+            nome: "#resultadoMesesMovimentacao",
+            elemento: resultadoMeses
+        },
+        {
+            nome: "#resultadoQtdConsiderados",
+            elemento: resultadoQtdConsiderados
+        },
+        {
+            nome: "#resultadoQtdExcluidos",
+            elemento: resultadoQtdExcluidos
+        },
+        {
+            nome: "#tabelaResumoMensalMovimentacao tbody",
+            elemento: tabelaResumo
+        },
+        {
+            nome: "#tabelaMovimentacoesConsideradas tbody",
+            elemento: tabelaConsideradas
+        },
+        {
+            nome: "#tabelaMovimentacoesExcluidas tbody",
+            elemento: tabelaExcluidas
+        }
+    ];
+
+    const elementosAusentes =
+        elementosObrigatorios.filter(
+            item => !item.elemento
+        );
+
+    if (elementosAusentes.length > 0) {
+        console.error(
+            "Média de Movimentação: elementos obrigatórios não encontrados:",
+            elementosAusentes.map(item => item.nome)
+        );
+
+        return;
+    }
+
+    /* =========================================================
+       ESTADO
+       ========================================================= */
+
     let movimentacoesExtraidas = [];
+
+    /* =========================================================
+       REGRAS INTERNAS DE EXCLUSÃO
+       ========================================================= */
 
     const REGRAS_EXCLUSAO_PADRAO = [
         {
@@ -69,32 +145,29 @@ document.addEventListener("DOMContentLoaded", () => {
             descricao: "Saldo anterior",
             termos: [
                 "SALDO ANTERIOR"
-            ],
-            ativa: true
+            ]
         },
         {
             id: "saldo_bloqueado",
             descricao: "Saldo bloqueado",
             termos: [
-                "SALDO BLOQUEADO"
-            ],
-            ativa: true
+                "SALDO BLOQUEADO",
+                "SALDO BLOQUEADO ANTERIOR"
+            ]
         },
         {
             id: "saldo_dia",
             descricao: "Saldo do dia",
             termos: [
                 "SALDO DO DIA"
-            ],
-            ativa: true
+            ]
         },
         {
             id: "estorno",
-            descricao: "Estornos",
+            descricao: "Estorno",
             termos: [
                 "ESTORNO"
-            ],
-            ativa: true
+            ]
         },
         {
             id: "credito_emprestimo",
@@ -106,11 +179,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 "CRED. EMPRESTIMO",
                 "CRÉDITO EMPRÉSTIMO",
                 "CREDITO EMPRESTIMO"
-            ],
-            ativa: true
+            ]
         }
     ];
 
+    /*
+     * Históricos que caracterizam entrada de recursos
+     * mesmo quando o indicador C não estiver disponível.
+     */
     const PADROES_CREDITO_SEM_INDICADOR = [
         "PIX RECEBIDO",
         "TRANSF.RECEBIDA",
@@ -128,6 +204,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "TED RECEBIDA",
         "TED RECEBIDO"
     ];
+
+    /* =========================================================
+       UTILITÁRIOS
+       ========================================================= */
 
     function normalizarTexto(valor) {
         return String(valor || "")
@@ -148,19 +228,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (typeof valor === "number") {
-            return Number.isFinite(valor) ? valor : 0;
+            return Number.isFinite(valor)
+                ? valor
+                : 0;
         }
 
         let texto = String(valor)
             .trim()
             .replace(/\s+/g, "");
 
+        /*
+         * Remove indicador de crédito, débito ou
+         * valor informativo do SISBR.
+         */
         texto = texto.replace(/[CD*]$/i, "");
 
         if (!texto) {
             return 0;
         }
 
+        /*
+         * Formato brasileiro:
+         * 18.295,47 -> 18295.47
+         */
         if (
             texto.includes(",") &&
             texto.includes(".")
@@ -205,6 +295,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const ano = Number(partes[0]);
         const mes = Number(partes[1]);
+
+        if (
+            !Number.isInteger(ano) ||
+            !Number.isInteger(mes) ||
+            mes < 1 ||
+            mes > 12
+        ) {
+            return chaveMes;
+        }
 
         const data = new Date(
             ano,
@@ -257,8 +356,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return "";
     }
 
+    /* =========================================================
+       LOCALIZAÇÃO DO VALOR NO FINAL DA LINHA
+       ========================================================= */
+
     function localizarValorFinal(linha) {
-        const match = linha.match(
+        const match = String(linha || "").match(
             /(\d{1,3}(?:\.\d{3})*,\d{2}|\d+,\d{2})([CD*])?\s*$/
         );
 
@@ -276,19 +379,22 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    /* =========================================================
+       COLUNAS DO EXTRATO
+       ========================================================= */
+
     function extrairColunasComTabulacao(linha) {
-        const colunas = linha
-            .split(/\t+/)
+        /*
+         * split("\t") é intencional.
+         *
+         * Não utilizamos /\t+/ porque isso eliminaria
+         * colunas vazias, como ocorre em:
+         *
+         * DATA    [documento vazio]    SALDO ANTERIOR    VALOR
+         */
+        return String(linha || "")
+            .split("\t")
             .map(item => item.trim());
-
-        while (
-            colunas.length > 0 &&
-            !colunas[colunas.length - 1]
-        ) {
-            colunas.pop();
-        }
-
-        return colunas;
     }
 
     function extrairDocumentoHistorico(
@@ -299,21 +405,44 @@ document.addEventListener("DOMContentLoaded", () => {
         const colunas =
             extrairColunasComTabulacao(linha);
 
+        /*
+         * Formato SISBR esperado:
+         *
+         * DATA | DOCUMENTO | HISTÓRICO | VALOR
+         */
         if (colunas.length >= 4) {
-            return {
-                documento:
-                    colunas[1] || "",
-                historico:
+            const primeiraColuna =
+                colunas[0] || "";
+
+            if (
+                primeiraColuna.startsWith(
+                    dataTexto
+                )
+            ) {
+                const documento =
+                    colunas[1] || "";
+
+                const historico =
                     colunas
                         .slice(
                             2,
                             colunas.length - 1
                         )
+                        .filter(Boolean)
                         .join(" ")
-                        .trim()
-            };
+                        .trim();
+
+                return {
+                    documento,
+                    historico
+                };
+            }
         }
 
+        /*
+         * Fallback para texto copiado sem manutenção
+         * adequada das tabulações.
+         */
         let meio = linha
             .substring(
                 dataTexto.length,
@@ -321,12 +450,12 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .trim();
 
-        meio = meio
-            .replace(/\s{2,}/g, "\t")
-            .trim();
-
+        /*
+         * Em texto simples, sequências grandes de
+         * espaços são tratadas como separadores.
+         */
         const partes = meio
-            .split(/\t+/)
+            .split(/\s{2,}|\t+/)
             .map(item => item.trim())
             .filter(Boolean);
 
@@ -337,17 +466,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     partes
                         .slice(1)
                         .join(" ")
+                        .trim()
             };
         }
 
         /*
-         * Quando o texto foi colado sem tabulação,
-         * não é seguro determinar onde termina o
-         * documento e começa o histórico.
-         *
-         * Nesse caso o conteúdo completo é mantido
-         * como histórico para que as regras consigam
-         * identificar os termos relevantes.
+         * Se não for possível separar documento e
+         * histórico com segurança, mantém tudo como
+         * histórico.
          */
         return {
             documento: "",
@@ -355,10 +481,20 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    /* =========================================================
+       IDENTIFICAÇÃO DAS LINHAS DE MOVIMENTAÇÃO
+       ========================================================= */
+
     function linhaEhMovimentacao(linha) {
         return /^\d{2}\/\d{2}\/\d{4}/
-            .test(linha.trim());
+            .test(
+                String(linha || "").trim()
+            );
     }
+
+    /* =========================================================
+       EXTRAÇÃO DAS MOVIMENTAÇÕES
+       ========================================================= */
 
     function extrairMovimentacoes(texto) {
         const linhas = String(texto || "")
@@ -367,84 +503,123 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const movimentos = [];
 
-        linhas.forEach((linhaOriginal, indice) => {
-            const linha =
-                linhaOriginal
-                    .replace(/\u00A0/g, " ")
-                    .trim();
+        linhas.forEach(
+            (linhaOriginal, indice) => {
+                const linha =
+                    String(linhaOriginal || "")
+                        .replace(/\u00A0/g, " ")
+                        .trim();
 
-            if (!linha) {
-                return;
-            }
+                if (!linha) {
+                    return;
+                }
 
-            if (!linhaEhMovimentacao(linha)) {
-                return;
-            }
+                /*
+                 * Ignora cabeçalhos, rodapés, resumo,
+                 * informações complementares,
+                 * destinatários de PIX etc.
+                 */
+                if (!linhaEhMovimentacao(linha)) {
+                    return;
+                }
 
-            const dataMatch = linha.match(
-                /^(\d{2}\/\d{2}\/\d{4})/
-            );
+                const dataMatch = linha.match(
+                    /^(\d{2}\/\d{2}\/\d{4})/
+                );
 
-            if (!dataMatch) {
-                return;
-            }
+                if (!dataMatch) {
+                    return;
+                }
 
-            const data = dataMatch[1];
+                const data =
+                    dataMatch[1];
 
-            const valorInfo =
-                localizarValorFinal(linha);
+                const valorInfo =
+                    localizarValorFinal(linha);
 
-            if (!valorInfo) {
-                return;
-            }
+                /*
+                 * Linhas com data mas sem valor monetário
+                 * no final não são movimentações válidas.
+                 */
+                if (!valorInfo) {
+                    return;
+                }
 
-            const dados =
-                extrairDocumentoHistorico(
-                    linha,
+                const dados =
+                    extrairDocumentoHistorico(
+                        linha,
+                        data,
+                        valorInfo
+                    );
+
+                const indicador =
+                    valorInfo.indicador ||
+                    identificarIndicador(
+                        valorInfo.texto
+                    );
+
+                const historico =
+                    dados.historico || "";
+
+                movimentos.push({
+                    indiceLinha:
+                        indice + 1,
+
                     data,
-                    valorInfo
-                );
 
-            const indicador =
-                valorInfo.indicador ||
-                identificarIndicador(
-                    valorInfo.texto
-                );
+                    mes:
+                        obterChaveMes(data),
 
-            movimentos.push({
-                indiceLinha: indice + 1,
-                data,
-                mes: obterChaveMes(data),
-                documento:
-                    dados.documento || "",
-                historico:
-                    dados.historico || "",
-                historicoNormalizado:
-                    normalizarTexto(
-                        dados.historico
-                    ),
-                valor: valorInfo.numero,
-                valorOriginal:
-                    valorInfo.texto,
-                indicador,
-                considerado: false,
-                excluido: false,
-                motivoExclusao: ""
-            });
-        });
+                    documento:
+                        dados.documento || "",
+
+                    historico,
+
+                    historicoNormalizado:
+                        normalizarTexto(
+                            historico
+                        ),
+
+                    valor:
+                        valorInfo.numero,
+
+                    valorOriginal:
+                        valorInfo.texto,
+
+                    indicador,
+
+                    considerado: false,
+
+                    excluido: false,
+
+                    motivoExclusao: ""
+                });
+            }
+        );
 
         return movimentos;
     }
 
+    /* =========================================================
+       IDENTIFICAÇÃO DE CRÉDITOS
+       ========================================================= */
+
     function historicoPareceCredito(
         movimentacao
     ) {
+        /*
+         * O indicador C do SISBR tem prioridade.
+         */
         if (
             movimentacao.indicador === "C"
         ) {
             return true;
         }
 
+        /*
+         * D = débito
+         * * = valor informativo/bloqueado
+         */
         if (
             movimentacao.indicador === "D" ||
             movimentacao.indicador === "*"
@@ -452,43 +627,27 @@ document.addEventListener("DOMContentLoaded", () => {
             return false;
         }
 
+        /*
+         * Fallback para cópias em que o C não tenha
+         * sido preservado.
+         */
         const historico =
             movimentacao.historicoNormalizado;
 
         return PADROES_CREDITO_SEM_INDICADOR
-            .some(termo =>
-                historico.includes(
-                    normalizarTexto(termo)
-                )
-            );
-    }
+            .some(termo => {
+                const termoNormalizado =
+                    normalizarTexto(termo);
 
-    function obterRegrasAtivas() {
-        return REGRAS_EXCLUSAO_PADRAO
-            .filter(regra => {
-                const checkbox =
-                    document.getElementById(
-                        `regraMovimentacao_${regra.id}`
-                    );
-
-                if (!checkbox) {
-                    return regra.ativa;
-                }
-
-                return checkbox.checked;
+                return historico.includes(
+                    termoNormalizado
+                );
             });
     }
 
-    function obterRegrasAdicionais() {
-        return String(
-            regrasAdicionais.value || ""
-        )
-            .split("\n")
-            .map(item =>
-                normalizarTexto(item)
-            )
-            .filter(Boolean);
-    }
+    /* =========================================================
+       MOTOR DE EXCLUSÃO
+       ========================================================= */
 
     function verificarExclusao(
         movimentacao
@@ -496,10 +655,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const historico =
             movimentacao.historicoNormalizado;
 
-        const regrasAtivas =
-            obterRegrasAtivas();
-
-        for (const regra of regrasAtivas) {
+        for (
+            const regra
+            of REGRAS_EXCLUSAO_PADRAO
+        ) {
             for (
                 const termoOriginal
                 of regra.termos
@@ -522,29 +681,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        const adicionais =
-            obterRegrasAdicionais();
-
-        for (
-            const termo
-            of adicionais
-        ) {
-            if (
-                historico.includes(termo)
-            ) {
-                return {
-                    excluido: true,
-                    motivo:
-                        "Regra adicional"
-                };
-            }
-        }
-
         return {
             excluido: false,
             motivo: ""
         };
     }
+
+    /* =========================================================
+       CLASSIFICAÇÃO DAS MOVIMENTAÇÕES
+       ========================================================= */
 
     function classificarMovimentacoes() {
         movimentacoesExtraidas =
@@ -558,8 +703,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     };
 
                     /*
-                     * Débitos nunca entram no cálculo
-                     * da média de créditos.
+                     * Primeiro verifica se a movimentação
+                     * representa crédito.
+                     *
+                     * Débitos não compõem a média.
                      */
                     if (
                         !historicoPareceCredito(
@@ -569,31 +716,51 @@ document.addEventListener("DOMContentLoaded", () => {
                         return atualizada;
                     }
 
+                    /*
+                     * Depois aplica as regras de exclusão
+                     * somente sobre os créditos.
+                     */
                     const exclusao =
                         verificarExclusao(
                             atualizada
                         );
 
                     if (exclusao.excluido) {
-                        atualizada.excluido = true;
+                        atualizada.excluido =
+                            true;
+
                         atualizada.motivoExclusao =
                             exclusao.motivo;
 
                         return atualizada;
                     }
 
-                    if (atualizada.valor <= 0) {
+                    if (
+                        !Number.isFinite(
+                            atualizada.valor
+                        ) ||
+                        atualizada.valor <= 0
+                    ) {
                         return atualizada;
                     }
 
-                    atualizada.considerado = true;
+                    atualizada.considerado =
+                        true;
 
                     return atualizada;
                 }
             );
     }
 
+    /* =========================================================
+       DETECÇÃO DO PERÍODO
+       ========================================================= */
+
     function detectarQuantidadeExtratos() {
+        /*
+         * Cada extrato mensal do SISBR possui,
+         * normalmente, uma linha SALDO ANTERIOR.
+         */
         const saldosAnteriores =
             movimentacoesExtraidas.filter(
                 movimentacao =>
@@ -601,25 +768,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         .historicoNormalizado
                         .includes(
                             "SALDO ANTERIOR"
+                        ) &&
+                    !movimentacao
+                        .historicoNormalizado
+                        .includes(
+                            "SALDO BLOQUEADO ANTERIOR"
                         )
             );
 
-        /*
-         * O extrato do SISBR normalmente inicia
-         * cada período com a linha SALDO ANTERIOR.
-         *
-         * Por isso essa é a primeira referência
-         * para determinar quantos extratos foram
-         * colados.
-         */
-        if (saldosAnteriores.length > 0) {
+        if (
+            saldosAnteriores.length > 0
+        ) {
             return saldosAnteriores.length;
         }
 
         /*
          * Fallback:
-         * caso o usuário cole somente as movimentações,
-         * considera a quantidade de meses distintos.
+         * utiliza os meses distintos encontrados
+         * nas movimentações.
          */
         const meses = new Set(
             movimentacoesExtraidas
@@ -652,11 +818,17 @@ document.addEventListener("DOMContentLoaded", () => {
             Number.isFinite(detectados) &&
             detectados > 0
         ) {
-            return detectados;
+            return Math.floor(
+                detectados
+            );
         }
 
         return 0;
     }
+
+    /* =========================================================
+       FILTROS
+       ========================================================= */
 
     function obterConsideradas() {
         return movimentacoesExtraidas
@@ -673,6 +845,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     item.excluido
             );
     }
+
+    /* =========================================================
+       RESUMO MENSAL
+       ========================================================= */
 
     function calcularResumoMensal(
         consideradas
@@ -703,63 +879,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         return Array
-            .from(resumo.values())
-            .sort((a, b) =>
-                a.mes.localeCompare(b.mes)
-            );
-    }
-
-    function atualizarResultados() {
-        const consideradas =
-            obterConsideradas();
-
-        const excluidas =
-            obterExcluidas();
-
-        const total =
-            consideradas.reduce(
-                (soma, item) =>
-                    soma + item.valor,
-                0
-            );
-
-        const meses =
-            obterQuantidadeMesesCalculo();
-
-        const media =
-            meses > 0
-                ? total / meses
-                : 0;
-
-        resultadoTotal.textContent =
-            formatarMoeda(total);
-
-        resultadoMedia.textContent =
-            formatarMoeda(media);
-
-        resultadoMeses.textContent =
-            String(meses);
-
-        resultadoQtdConsiderados.textContent =
-            String(consideradas.length);
-
-        resultadoQtdExcluidos.textContent =
-            String(excluidas.length);
-
-        preencherTabelaConsideradas(
-            consideradas
-        );
-
-        preencherTabelaExcluidas(
-            excluidas
-        );
-
-        preencherResumoMensal(
-            calcularResumoMensal(
-                consideradas
+            .from(
+                resumo.values()
             )
-        );
+            .sort(
+                (a, b) =>
+                    a.mes.localeCompare(
+                        b.mes
+                    )
+            );
     }
+
+    /* =========================================================
+       CRIAÇÃO DE CÉLULAS
+       ========================================================= */
 
     function criarCelula(
         texto,
@@ -768,7 +901,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const td =
             document.createElement("td");
 
-        td.textContent = texto;
+        td.textContent =
+            texto;
 
         if (alinhamento) {
             td.style.textAlign =
@@ -777,6 +911,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return td;
     }
+
+    /* =========================================================
+       TABELA - CONSIDERADAS
+       ========================================================= */
 
     function preencherTabelaConsideradas(
         registros
@@ -800,7 +938,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.createElement("tr");
 
             tr.appendChild(
-                criarCelula(item.data)
+                criarCelula(
+                    item.data
+                )
             );
 
             tr.appendChild(
@@ -829,6 +969,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    /* =========================================================
+       TABELA - EXCLUÍDAS
+       ========================================================= */
+
     function preencherTabelaExcluidas(
         registros
     ) {
@@ -851,7 +995,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.createElement("tr");
 
             tr.appendChild(
-                criarCelula(item.data)
+                criarCelula(
+                    item.data
+                )
             );
 
             tr.appendChild(
@@ -877,8 +1023,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             tr.appendChild(
                 criarCelula(
-                    item.motivoExclusao
-                    || "Regra de exclusão"
+                    item.motivoExclusao ||
+                    "Regra de exclusão"
                 )
             );
 
@@ -886,6 +1032,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 .appendChild(tr);
         });
     }
+
+    /* =========================================================
+       TABELA - RESUMO MENSAL
+       ========================================================= */
 
     function preencherResumoMensal(
         registros
@@ -934,94 +1084,74 @@ document.addEventListener("DOMContentLoaded", () => {
                 )
             );
 
-            tabelaResumo.appendChild(tr);
+            tabelaResumo
+                .appendChild(tr);
         });
     }
 
-    function montarListaRegras() {
-        listaRegras.innerHTML = "";
+    /* =========================================================
+       RESULTADOS
+       ========================================================= */
 
-        REGRAS_EXCLUSAO_PADRAO
-            .forEach(regra => {
-                const label =
-                    document.createElement(
-                        "label"
-                    );
+    function atualizarResultados() {
+        const consideradas =
+            obterConsideradas();
 
-                label.className =
-                    "opcao-simulacao";
+        const excluidas =
+            obterExcluidas();
 
-                const checkbox =
-                    document.createElement(
-                        "input"
-                    );
+        const total =
+            consideradas.reduce(
+                (soma, item) =>
+                    soma + item.valor,
+                0
+            );
 
-                checkbox.type =
-                    "checkbox";
+        const meses =
+            obterQuantidadeMesesCalculo();
 
-                checkbox.id =
-                    `regraMovimentacao_${regra.id}`;
+        const media =
+            meses > 0
+                ? total / meses
+                : 0;
 
-                checkbox.checked =
-                    regra.ativa;
+        resultadoTotal.textContent =
+            formatarMoeda(total);
 
-                const conteudo =
-                    document.createElement(
-                        "div"
-                    );
+        resultadoMedia.textContent =
+            formatarMoeda(media);
 
-                conteudo.className =
-                    "opcao-simulacao-conteudo";
+        resultadoMeses.textContent =
+            String(meses);
 
-                const titulo =
-                    document.createElement(
-                        "strong"
-                    );
+        resultadoQtdConsiderados.textContent =
+            String(
+                consideradas.length
+            );
 
-                titulo.textContent =
-                    regra.descricao;
+        resultadoQtdExcluidos.textContent =
+            String(
+                excluidas.length
+            );
 
-                const detalhes =
-                    document.createElement(
-                        "small"
-                    );
+        preencherTabelaConsideradas(
+            consideradas
+        );
 
-                detalhes.textContent =
-                    regra.termos.join(" / ");
+        preencherTabelaExcluidas(
+            excluidas
+        );
 
-                conteudo.appendChild(
-                    titulo
-                );
-
-                conteudo.appendChild(
-                    detalhes
-                );
-
-                label.appendChild(
-                    checkbox
-                );
-
-                label.appendChild(
-                    conteudo
-                );
-
-                checkbox.addEventListener(
-                    "change",
-                    () => {
-                        if (
-                            movimentacoesExtraidas
-                                .length
-                        ) {
-                            recalcular();
-                        }
-                    }
-                );
-
-                listaRegras.appendChild(
-                    label
-                );
-            });
+        preencherResumoMensal(
+            calcularResumoMensal(
+                consideradas
+            )
+        );
     }
+
+    /* =========================================================
+       PROCESSAMENTO DO EXTRATO
+       ========================================================= */
 
     function processarExtrato() {
         const texto =
@@ -1030,16 +1160,27 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!texto) {
             movimentacoesExtraidas = [];
 
-            mesesDetectados.value = "0";
-            mesesConsiderados.value = "";
+            mesesDetectados.value =
+                "0";
+
+            mesesConsiderados.value =
+                "";
 
             atualizarResultados();
 
             return;
         }
 
+        /*
+         * Extrai apenas linhas no padrão de
+         * movimentação:
+         *
+         * DD/MM/AAAA ... VALOR C/D/*
+         */
         movimentacoesExtraidas =
-            extrairMovimentacoes(texto);
+            extrairMovimentacoes(
+                texto
+            );
 
         const quantidadeExtratos =
             detectarQuantidadeExtratos();
@@ -1050,33 +1191,50 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
         /*
-         * Preenche automaticamente apenas
-         * quando o usuário ainda não informou
-         * um valor manual.
+         * Sempre que um novo extrato for processado,
+         * utiliza inicialmente a quantidade detectada.
+         *
+         * Depois o usuário ainda pode alterar
+         * manualmente o campo.
          */
-        if (
-            !mesesConsiderados.value ||
-            Number(
-                mesesConsiderados.value
-            ) <= 0
-        ) {
-            mesesConsiderados.value =
-                quantidadeExtratos > 0
-                    ? String(
-                        quantidadeExtratos
-                    )
-                    : "";
-        }
+        mesesConsiderados.value =
+            quantidadeExtratos > 0
+                ? String(
+                    quantidadeExtratos
+                )
+                : "";
 
         classificarMovimentacoes();
+
         atualizarResultados();
+
+        console.info(
+            "Média de Movimentação - processamento concluído:",
+            {
+                movimentacoesExtraidas:
+                    movimentacoesExtraidas.length,
+
+                mesesDetectados:
+                    quantidadeExtratos,
+
+                creditosConsiderados:
+                    obterConsideradas().length,
+
+                creditosExcluidos:
+                    obterExcluidas().length
+            }
+        );
     }
+
+    /* =========================================================
+       RECÁLCULO
+       ========================================================= */
 
     function recalcular() {
         if (
             !movimentacoesExtraidas.length
         ) {
-            processarExtrato();
+            atualizarResultados();
             return;
         }
 
@@ -1084,32 +1242,29 @@ document.addEventListener("DOMContentLoaded", () => {
         atualizarResultados();
     }
 
+    /* =========================================================
+       LIMPEZA
+       ========================================================= */
+
     function limparTudo() {
         textoExtrato.value = "";
-        regrasAdicionais.value = "";
 
         movimentacoesExtraidas = [];
 
-        mesesDetectados.value = "0";
-        mesesConsiderados.value = "";
+        mesesDetectados.value =
+            "0";
 
-        REGRAS_EXCLUSAO_PADRAO
-            .forEach(regra => {
-                const checkbox =
-                    document.getElementById(
-                        `regraMovimentacao_${regra.id}`
-                    );
-
-                if (checkbox) {
-                    checkbox.checked =
-                        regra.ativa;
-                }
-            });
+        mesesConsiderados.value =
+            "";
 
         atualizarResultados();
 
         textoExtrato.focus();
     }
+
+    /* =========================================================
+       EVENTOS
+       ========================================================= */
 
     btnProcessar.addEventListener(
         "click",
@@ -1121,21 +1276,36 @@ document.addEventListener("DOMContentLoaded", () => {
         limparTudo
     );
 
-    btnRecalcular.addEventListener(
-        "click",
-        recalcular
-    );
-
+    /*
+     * Quando o usuário alterar manualmente a
+     * quantidade de meses, somente a média é
+     * recalculada.
+     */
     mesesConsiderados.addEventListener(
         "input",
         atualizarResultados
     );
 
-    regrasAdicionais.addEventListener(
-        "change",
-        recalcular
+    /*
+     * Ctrl + Enter dentro do extrato também
+     * executa o processamento.
+     */
+    textoExtrato.addEventListener(
+        "keydown",
+        event => {
+            if (
+                event.ctrlKey &&
+                event.key === "Enter"
+            ) {
+                event.preventDefault();
+                processarExtrato();
+            }
+        }
     );
 
-    montarListaRegras();
+    /* =========================================================
+       INICIALIZAÇÃO
+       ========================================================= */
+
     atualizarResultados();
 });
