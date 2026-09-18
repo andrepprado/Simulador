@@ -52,6 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     nome: "Simulador de Condições de Crédito",
                     arquivo: "condicoes-credito.html",
                     disponivel: true
+                },
+                {
+                    nome: "Média de Movimentação",
+                    arquivo: "media-movimentacao.html",
+                    disponivel: true
                 }
             ]
         },

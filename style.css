@@ -6937,3 +6937,1159 @@ footer p,
         print-color-adjust: exact !important;
     }
 }
+
+
+/* =========================================================
+   MEDIA-MOVIMENTACAO.HTML
+   CÁLCULO DE MÉDIA DE MOVIMENTAÇÃO
+   ========================================================= */
+
+/* =========================================================
+   MEDIA-MOVIMENTACAO.HTML - DESKTOP
+   ========================================================= */
+
+.media-movimentacao-container {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    min-width: 0;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    align-items: start;
+}
+
+.media-movimentacao-container>.card {
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+}
+
+.media-movimentacao-container>.card-largura-total {
+    grid-column: 1 / -1;
+}
+
+.media-movimentacao-container>.configuracao-card {
+    grid-column: 1;
+}
+
+.media-movimentacao-container>.resultado-card {
+    grid-column: 2;
+    grid-row: auto;
+}
+
+/* =========================================================
+   CAMPO DE EXTRATO
+   ========================================================= */
+
+#textoExtratoMovimentacao {
+    width: 100%;
+    min-width: 0;
+    min-height: 360px;
+    padding: 16px;
+    background: #FBFCFC;
+    color: var(--texto);
+    border: 1px solid var(--borda-forte);
+    border-radius: 10px;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: normal;
+    resize: vertical;
+}
+
+#textoExtratoMovimentacao:hover {
+    border-color: var(--turquesa-claro);
+}
+
+#textoExtratoMovimentacao:focus {
+    background: var(--branco);
+    border-color: var(--turquesa);
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .10);
+}
+
+#textoExtratoMovimentacao::placeholder {
+    color: #8A9A9D;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================================================
+   PERÍODO
+   ========================================================= */
+
+.media-movimentacao-container .configuracao-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.media-movimentacao-container .configuracao-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+.media-movimentacao-container .configuracao-card .grid-form {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+#mesesDetectadosMovimentacao {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-weight: 700;
+}
+
+#mesesConsideradosMovimentacao {
+    font-weight: 700;
+}
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
+.media-movimentacao-container>.resultado-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.media-movimentacao-container>.resultado-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+.media-movimentacao-container .resultado-destaque {
+    min-height: 92px;
+}
+
+.media-movimentacao-container .resultado-destaque strong {
+    color: var(--verde-claro);
+    font-size: clamp(22px, 2vw, 31px);
+}
+
+.media-movimentacao-container .resultados-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.media-movimentacao-container .resultado-item {
+    min-height: 82px;
+}
+
+#resultadoTotalMovimentacao,
+#resultadoQtdConsiderados {
+    color: var(--sucesso);
+}
+
+#resultadoQtdExcluidos {
+    color: var(--erro);
+}
+
+/* =========================================================
+   REGRAS DE EXCLUSÃO
+   ========================================================= */
+
+#listaRegrasMovimentacao {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 84px;
+    height: 100%;
+    padding: 14px 15px 14px 48px;
+    background: #FBFCFC;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background: var(--branco);
+    border: 2px solid var(--borda-forte);
+    border-radius: 6px;
+    transition: .2s ease;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 22px;
+    width: 6px;
+    height: 11px;
+    opacity: 0;
+    transform:
+        translateY(-62%) rotate(45deg);
+    border-right: 2px solid var(--branco);
+    border-bottom: 2px solid var(--branco);
+    transition: opacity .2s ease;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo strong {
+    display: block;
+    margin: 0 0 4px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    line-height: 1.35;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo small {
+    display: block;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    line-height: 1.4;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao:hover .opcao-simulacao-conteudo {
+    transform: translateY(-1px);
+    border-color: var(--turquesa-claro);
+    box-shadow:
+        0 5px 14px rgba(0, 54, 64, .07);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo {
+    background: rgba(199, 58, 58, .045);
+    border-color: rgba(199, 58, 58, .35);
+    box-shadow:
+        inset 0 0 0 1px rgba(199, 58, 58, .05);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::before {
+    background: var(--erro);
+    border-color: var(--erro);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::after {
+    opacity: 1;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo strong {
+    color: var(--erro);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:focus-visible+.opcao-simulacao-conteudo {
+    outline: 3px solid rgba(0, 160, 145, .18);
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   REGRAS ADICIONAIS
+   ========================================================= */
+
+#regrasAdicionaisMovimentacao {
+    min-height: 110px;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   TABELAS
+   ========================================================= */
+
+.media-movimentacao-container .tabela-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    -webkit-overflow-scrolling: touch;
+}
+
+#tabelaResumoMensalMovimentacao,
+#tabelaMovimentacoesConsideradas,
+#tabelaMovimentacoesExcluidas {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tabelaResumoMensalMovimentacao {
+    min-width: 560px;
+}
+
+#tabelaMovimentacoesConsideradas {
+    min-width: 820px;
+}
+
+#tabelaMovimentacoesExcluidas {
+    min-width: 980px;
+}
+
+#tabelaResumoMensalMovimentacao th,
+#tabelaResumoMensalMovimentacao td,
+#tabelaMovimentacoesConsideradas th,
+#tabelaMovimentacoesConsideradas td,
+#tabelaMovimentacoesExcluidas th,
+#tabelaMovimentacoesExcluidas td {
+    vertical-align: middle;
+}
+
+#tabelaResumoMensalMovimentacao th:nth-child(2),
+#tabelaResumoMensalMovimentacao td:nth-child(2),
+#tabelaResumoMensalMovimentacao th:nth-child(3),
+#tabelaResumoMensalMovimentacao td:nth-child(3) {
+    text-align: right;
+}
+
+#tabelaMovimentacoesConsideradas th:nth-child(1),
+#tabelaMovimentacoesConsideradas td:nth-child(1) {
+    width: 13%;
+    white-space: nowrap;
+}
+
+#tabelaMovimentacoesConsideradas th:nth-child(2),
+#tabelaMovimentacoesConsideradas td:nth-child(2) {
+    width: 17%;
+}
+
+#tabelaMovimentacoesConsideradas th:nth-child(3),
+#tabelaMovimentacoesConsideradas td:nth-child(3) {
+    width: 50%;
+}
+
+#tabelaMovimentacoesConsideradas th:nth-child(4),
+#tabelaMovimentacoesConsideradas td:nth-child(4) {
+    width: 20%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#tabelaMovimentacoesExcluidas th:nth-child(1),
+#tabelaMovimentacoesExcluidas td:nth-child(1) {
+    width: 11%;
+    white-space: nowrap;
+}
+
+#tabelaMovimentacoesExcluidas th:nth-child(2),
+#tabelaMovimentacoesExcluidas td:nth-child(2) {
+    width: 14%;
+}
+
+#tabelaMovimentacoesExcluidas th:nth-child(3),
+#tabelaMovimentacoesExcluidas td:nth-child(3) {
+    width: 37%;
+}
+
+#tabelaMovimentacoesExcluidas th:nth-child(4),
+#tabelaMovimentacoesExcluidas td:nth-child(4) {
+    width: 16%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#tabelaMovimentacoesExcluidas th:nth-child(5),
+#tabelaMovimentacoesExcluidas td:nth-child(5) {
+    width: 22%;
+}
+
+#tabelaMovimentacoesConsideradas tbody tr:hover,
+#tabelaResumoMensalMovimentacao tbody tr:hover {
+    background: rgba(0, 160, 145, .045);
+}
+
+#tabelaMovimentacoesExcluidas tbody tr:hover {
+    background: rgba(199, 58, 58, .035);
+}
+
+#tabelaMovimentacoesConsideradas tbody td:last-child {
+    color: var(--sucesso);
+    font-weight: 700;
+}
+
+#tabelaMovimentacoesExcluidas tbody td:nth-child(4) {
+    color: var(--erro);
+    font-weight: 700;
+}
+
+#tabelaMovimentacoesExcluidas tbody td:last-child {
+    color: var(--erro);
+    font-size: 11px;
+}
+
+/* =========================================================
+   ESTADO SEM DADOS
+   ========================================================= */
+
+.media-movimentacao-container .sem-dados {
+    padding: 30px 15px;
+    color: var(--texto-secundario);
+    background: #FBFCFC;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center !important;
+}
+
+/* =========================================================
+   AVISO
+   ========================================================= */
+
+.media-movimentacao-container .aviso-info {
+    margin-top: 18px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .media-movimentacao-container {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        width: calc(100% - 32px);
+        gap: 18px;
+        padding-top: 18px;
+        padding-bottom: 30px;
+    }
+
+    .media-movimentacao-container>.card-largura-total {
+        grid-column: 1 / -1;
+    }
+
+    #listaRegrasMovimentacao {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    #textoExtratoMovimentacao {
+        min-height: 320px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .media-movimentacao-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: calc(100% - 24px);
+        max-width: none;
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.card-largura-total,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .media-movimentacao-container .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 14px;
+    }
+
+    .media-movimentacao-container .titulo-secao h2 {
+        margin: 0 0 4px;
+        font-size: 17px;
+        line-height: 1.22;
+    }
+
+    .media-movimentacao-container .titulo-secao p {
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.42;
+    }
+
+    .media-movimentacao-container .categoria-etiqueta {
+        margin-bottom: 7px;
+        padding: 5px 8px;
+        font-size: 8px;
+    }
+
+    #textoExtratoMovimentacao {
+        min-height: 280px;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 10px;
+        line-height: 1.45;
+    }
+
+    .media-movimentacao-container .campo label {
+        font-size: 8px;
+    }
+
+    .media-movimentacao-container .campo small {
+        font-size: 7px;
+    }
+
+    .media-movimentacao-container .configuracao-card .grid-form {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .media-movimentacao-container input,
+    .media-movimentacao-container select {
+        min-height: 38px;
+        height: 38px;
+        font-size: 11px;
+    }
+
+    .media-movimentacao-container .resultado-destaque {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 9px;
+        min-height: 0;
+        padding: 12px;
+    }
+
+    .media-movimentacao-container .resultado-destaque span {
+        flex: 0 1 42%;
+        width: auto;
+        max-width: 42%;
+        font-size: 9px;
+        text-align: left;
+    }
+
+    .media-movimentacao-container .resultado-destaque strong {
+        flex: 1 1 58%;
+        width: auto;
+        max-width: 58%;
+        font-size: 17px;
+        text-align: right;
+    }
+
+    .media-movimentacao-container .resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 10px;
+    }
+
+    .media-movimentacao-container .resultado-item {
+        min-height: 58px;
+        padding: 9px;
+        border-radius: 8px;
+    }
+
+    .media-movimentacao-container .resultado-item span {
+        margin-bottom: 3px;
+        font-size: 7px;
+    }
+
+    .media-movimentacao-container .resultado-item strong {
+        font-size: 10px;
+    }
+
+    #listaRegrasMovimentacao {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo {
+        min-height: 64px;
+        padding: 10px 10px 10px 41px;
+        border-radius: 8px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo::before {
+        left: 12px;
+        width: 17px;
+        height: 17px;
+        border-radius: 5px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo::after {
+        left: 17px;
+        width: 5px;
+        height: 9px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo strong {
+        margin-bottom: 2px;
+        font-size: 9px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo small {
+        font-size: 7px;
+    }
+
+    #regrasAdicionaisMovimentacao {
+        min-height: 85px;
+        font-size: 10px;
+    }
+
+    .media-movimentacao-container .acoes {
+        margin-top: 14px;
+    }
+
+    .media-movimentacao-container .acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 36px;
+        font-size: 9px;
+    }
+
+    .media-movimentacao-container .tabela-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        border-radius: 8px;
+    }
+
+    #tabelaResumoMensalMovimentacao {
+        min-width: 480px;
+    }
+
+    #tabelaMovimentacoesConsideradas {
+        min-width: 720px;
+    }
+
+    #tabelaMovimentacoesExcluidas {
+        min-width: 850px;
+    }
+
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaResumoMensalMovimentacao td,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesConsideradas td,
+    #tabelaMovimentacoesExcluidas th,
+    #tabelaMovimentacoesExcluidas td {
+        padding: 8px 9px;
+        font-size: 8px;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesExcluidas th {
+        font-size: 7px;
+    }
+
+    #tabelaMovimentacoesConsideradas td:nth-child(3),
+    #tabelaMovimentacoesExcluidas td:nth-child(3),
+    #tabelaMovimentacoesExcluidas td:nth-child(5) {
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .media-movimentacao-container .sem-dados {
+        padding: 20px 10px;
+        font-size: 8px;
+    }
+
+    .media-movimentacao-container .aviso-info {
+        margin-top: 12px;
+        padding: 9px 10px;
+        font-size: 8px;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .media-movimentacao-container {
+        width: calc(100% - 20px);
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.card-largura-total,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .media-movimentacao-container .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .media-movimentacao-container .titulo-secao p {
+        font-size: 9px;
+    }
+
+    #textoExtratoMovimentacao {
+        min-height: 250px;
+        padding: 9px;
+        font-size: 9px;
+    }
+
+    .media-movimentacao-container input,
+    .media-movimentacao-container select {
+        min-height: 36px;
+        height: 36px;
+        font-size: 10px;
+    }
+
+    .media-movimentacao-container .resultado-destaque span {
+        font-size: 8px;
+    }
+
+    .media-movimentacao-container .resultado-destaque strong {
+        font-size: 15px;
+    }
+
+    .media-movimentacao-container .resultado-item {
+        min-height: 54px;
+        padding: 8px;
+    }
+
+    .media-movimentacao-container .resultado-item span {
+        font-size: 6px;
+    }
+
+    .media-movimentacao-container .resultado-item strong {
+        font-size: 9px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo {
+        min-height: 59px;
+        padding:
+            9px 9px 9px 38px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo::before {
+        left: 11px;
+        width: 16px;
+        height: 16px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo::after {
+        left: 16px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo strong {
+        font-size: 8px;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo small {
+        font-size: 6px;
+    }
+
+    #regrasAdicionaisMovimentacao {
+        min-height: 76px;
+        font-size: 9px;
+    }
+
+    #tabelaResumoMensalMovimentacao {
+        min-width: 440px;
+    }
+
+    #tabelaMovimentacoesConsideradas {
+        min-width: 680px;
+    }
+
+    #tabelaMovimentacoesExcluidas {
+        min-width: 800px;
+    }
+
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaResumoMensalMovimentacao td,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesConsideradas td,
+    #tabelaMovimentacoesExcluidas th,
+    #tabelaMovimentacoesExcluidas td {
+        padding: 7px 8px;
+        font-size: 7px;
+    }
+
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesExcluidas th {
+        font-size: 6px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .media-movimentacao-container {
+        width: calc(100% - 16px);
+    }
+
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.card-largura-total,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card {
+        padding: 11px;
+    }
+
+    .media-movimentacao-container .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .media-movimentacao-container .titulo-secao p {
+        font-size: 8px;
+    }
+
+    #textoExtratoMovimentacao {
+        min-height: 220px;
+        font-size: 8px;
+    }
+
+    .media-movimentacao-container .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .media-movimentacao-container .resultado-destaque span,
+    .media-movimentacao-container .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .media-movimentacao-container .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo {
+        padding-left: 36px;
+    }
+
+    #tabelaResumoMensalMovimentacao {
+        min-width: 420px;
+    }
+
+    #tabelaMovimentacoesConsideradas {
+        min-width: 650px;
+    }
+
+    #tabelaMovimentacoesExcluidas {
+        min-width: 760px;
+    }
+}
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    #listaRegrasMovimentacao .opcao-simulacao:hover .opcao-simulacao-conteudo {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* =========================================================
+   MEDIA-MOVIMENTACAO.HTML - IMPRESSÃO
+   ========================================================= */
+
+@media print {
+
+    .media-movimentacao-container {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 20px !important;
+        width: 100% !important;
+        max-width: 1180px !important;
+        min-width: 0 !important;
+        margin-right: auto !important;
+        margin-left: auto !important;
+        padding: 0 12px !important;
+        align-items: start !important;
+        overflow: visible !important;
+    }
+
+    .media-movimentacao-container>.card {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 18px !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+    }
+
+    .media-movimentacao-container>.card-largura-total {
+        grid-column: 1 / -1 !important;
+    }
+
+    .media-movimentacao-container>.configuracao-card {
+        grid-column: 1 !important;
+    }
+
+    .media-movimentacao-container>.resultado-card {
+        grid-column: 2 !important;
+    }
+
+    /*
+     * O extrato bruto não precisa ser impresso.
+     * O resultado e as movimentações tratadas são
+     * as informações relevantes para o relatório.
+     */
+    .media-movimentacao-container>.card:first-child {
+        display: none !important;
+    }
+
+    /*
+     * Regras adicionais são de edição.
+     */
+    #regrasAdicionaisMovimentacao,
+    #regrasAdicionaisMovimentacao+small,
+    #btnRecalcularMovimentacao {
+        display: none !important;
+    }
+
+    #listaRegrasMovimentacao {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao {
+        pointer-events: none !important;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo {
+        min-height: 58px !important;
+        padding: 9px 10px 9px 38px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo::before {
+        left: 11px !important;
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo::after {
+        left: 16px !important;
+        width: 5px !important;
+        height: 9px !important;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo strong {
+        font-size: 8px !important;
+    }
+
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo small {
+        font-size: 7px !important;
+    }
+
+    .media-movimentacao-container .resultado-destaque {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+        min-height: 72px !important;
+        padding: 14px 16px !important;
+        margin-bottom: 12px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .media-movimentacao-container .resultado-destaque span {
+        flex: 0 1 40% !important;
+        width: auto !important;
+        max-width: 40% !important;
+        font-size: 10px !important;
+        text-align: left !important;
+    }
+
+    .media-movimentacao-container .resultado-destaque strong {
+        flex: 1 1 60% !important;
+        width: auto !important;
+        max-width: 60% !important;
+        font-size: 21px !important;
+        text-align: right !important;
+    }
+
+    .media-movimentacao-container .resultados-grid {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin-top: 10px !important;
+    }
+
+    .media-movimentacao-container .resultado-item {
+        min-height: 60px !important;
+        padding: 9px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .media-movimentacao-container .resultado-item span {
+        margin-bottom: 4px !important;
+        font-size: 8px !important;
+    }
+
+    .media-movimentacao-container .resultado-item strong {
+        font-size: 11px !important;
+    }
+
+    .media-movimentacao-container .tabela-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border-radius: 0 !important;
+    }
+
+    #tabelaResumoMensalMovimentacao,
+    #tabelaMovimentacoesConsideradas,
+    #tabelaMovimentacoesExcluidas {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+    }
+
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaResumoMensalMovimentacao td,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesConsideradas td,
+    #tabelaMovimentacoesExcluidas th,
+    #tabelaMovimentacoesExcluidas td {
+        padding: 6px 7px !important;
+        font-size: 8px !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+    }
+
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesExcluidas th {
+        font-size: 7px !important;
+    }
+
+    #tabelaResumoMensalMovimentacao tr,
+    #tabelaMovimentacoesConsideradas tr,
+    #tabelaMovimentacoesExcluidas tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    #tabelaResumoMensalMovimentacao thead,
+    #tabelaMovimentacoesConsideradas thead,
+    #tabelaMovimentacoesExcluidas thead {
+        display: table-header-group !important;
+    }
+
+    .media-movimentacao-container,
+    .media-movimentacao-container .card,
+    .media-movimentacao-container .resultado-destaque,
+    .media-movimentacao-container .resultado-item,
+    #listaRegrasMovimentacao .opcao-simulacao-conteudo,
+    #tabelaResumoMensalMovimentacao,
+    #tabelaMovimentacoesConsideradas,
+    #tabelaMovimentacoesExcluidas,
+    #tabelaResumoMensalMovimentacao th,
+    #tabelaResumoMensalMovimentacao td,
+    #tabelaMovimentacoesConsideradas th,
+    #tabelaMovimentacoesConsideradas td,
+    #tabelaMovimentacoesExcluidas th,
+    #tabelaMovimentacoesExcluidas td {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
