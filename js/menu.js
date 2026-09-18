@@ -28,6 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     disponivel: true
                 },
                 {
+                    nome: "Cálculo de Renda por Notas Fiscais",
+                    arquivo: "calculo-renda-notas-fiscais.html",
+                    disponivel: true
+                },
+                {
+                    nome: "Porte do Produtor Rural",
+                    arquivo: "porte-produtor-rural.html",
+                    disponivel: true
+                },
+                {
                     nome: "Comprometimento de Renda",
                     arquivo: "comprometimento-renda.html",
                     disponivel: true
