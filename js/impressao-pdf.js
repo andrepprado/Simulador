@@ -95,11 +95,12 @@
 
                 /*
                  * CRÉDITO RURAL
-                 * Mantém exatamente a estrutura visual de duas colunas.
                  */
                 .simulador-grid {
                     display: grid !important;
-                    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr) !important;
+                    grid-template-columns:
+                        minmax(0, 2fr)
+                        minmax(320px, 1fr) !important;
                     gap: 20px !important;
                     align-items: start !important;
                 }
@@ -125,11 +126,13 @@
                 }
 
                 /*
-                 * ANTECIPAÇÃO
+                 * ANTECIPAÇÃO SIPAG
                  */
                 .antecipacao-grid {
                     display: grid !important;
-                    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr) !important;
+                    grid-template-columns:
+                        minmax(0, 2fr)
+                        minmax(320px, 1fr) !important;
                     gap: 20px !important;
                     align-items: start !important;
                 }
@@ -155,11 +158,13 @@
                 }
 
                 /*
-                 * PRECIFICAÇÃO
+                 * GRIDS DE DUAS COLUNAS
+                 * PRECIFICAÇÃO / CONDIÇÕES / PÁGINAS EXPERIMENTAIS
                  */
                 .simulador-grid-igual {
                     display: grid !important;
-                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    grid-template-columns:
+                        repeat(2, minmax(0, 1fr)) !important;
                     gap: 20px !important;
                     align-items: start !important;
                 }
@@ -173,7 +178,8 @@
                  */
                 .cobranca-grid {
                     display: grid !important;
-                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    grid-template-columns:
+                        repeat(2, minmax(0, 1fr)) !important;
                     gap: 20px !important;
                     align-items: start !important;
                 }
@@ -197,12 +203,191 @@
                 }
 
                 /*
+                 * CÁLCULO DE RENDA POR NOTAS FISCAIS
+                 */
+                .calculo-notas-container {
+                    width: 100% !important;
+                    max-width: 1180px !important;
+                    min-width: 0 !important;
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+
+                .calculo-notas-container .card-largura-total {
+                    grid-column: 1 / -1 !important;
+                }
+
+                .calculo-notas-periodo {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    height: auto !important;
+                    min-height: 0 !important;
+                    max-height: none !important;
+                    overflow: visible !important;
+                    padding: 16px !important;
+                    border-radius: 10px !important;
+                    break-inside: avoid !important;
+                    page-break-inside: avoid !important;
+                }
+
+                .calculo-notas-periodo-cabecalho {
+                    margin-bottom: 12px !important;
+                    padding-bottom: 10px !important;
+                }
+
+                .calculo-notas-periodo-cabecalho strong {
+                    font-size: 13px !important;
+                }
+
+                .calculo-notas-periodo-cabecalho small {
+                    font-size: 9px !important;
+                }
+
+                .calculo-notas-identificacao {
+                    margin-bottom: 14px !important;
+                }
+
+                .calculo-notas-titulo-valores {
+                    margin-bottom: 10px !important;
+                }
+
+                .calculo-notas-meses-grid {
+                    display: grid !important;
+                    grid-template-columns:
+                        repeat(4, minmax(0, 1fr)) !important;
+                    gap: 10px !important;
+                    width: 100% !important;
+                    min-width: 0 !important;
+                }
+
+                .calculo-notas-campo-mes {
+                    min-width: 0 !important;
+                }
+
+                .calculo-notas-periodo-rodape {
+                    display: grid !important;
+                    grid-template-columns:
+                        repeat(3, minmax(0, 1fr)) !important;
+                    gap: 10px !important;
+                    margin-top: 14px !important;
+                    padding-top: 14px !important;
+                }
+
+                .calculo-notas-observacao-periodo {
+                    margin-top: 12px !important;
+                }
+
+                .calculo-notas-observacao-periodo textarea {
+                    height: auto !important;
+                    min-height: 56px !important;
+                }
+
+                .calculo-notas-auxiliar-linha {
+                    display: grid !important;
+                    grid-template-columns:
+                        minmax(0, 1fr)
+                        minmax(180px, .65fr)
+                        auto !important;
+                    gap: 10px !important;
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    align-items: end !important;
+                    padding: 10px !important;
+                    break-inside: avoid !important;
+                    page-break-inside: avoid !important;
+                }
+
+                .calculo-notas-remover-periodo,
+                .calculo-notas-acoes-periodo,
+                .calculo-notas-auxiliar-remover,
+                .calculo-notas-container > .acoes {
+                    display: none !important;
+                }
+
+                /*
+                 * PORTE DO PRODUTOR RURAL
+                 */
+                .porte-produtor-container {
+                    width: 100% !important;
+                    max-width: 1180px !important;
+                    min-width: 0 !important;
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+
+                .porte-produtor-container .card-largura-total {
+                    grid-column: 1 / -1 !important;
+                }
+
+                .porte-produtor-container .grid-form-4 {
+                    display: grid !important;
+                    grid-template-columns:
+                        repeat(4, minmax(0, 1fr)) !important;
+                    gap: 12px !important;
+                }
+
+                .porte-produtor-container .resultados-grid-4 {
+                    display: grid !important;
+                    grid-template-columns:
+                        repeat(4, minmax(0, 1fr)) !important;
+                    gap: 10px !important;
+                }
+
+                .porte-produtor-container .resultados-grid-3 {
+                    display: grid !important;
+                    grid-template-columns:
+                        repeat(3, minmax(0, 1fr)) !important;
+                    gap: 10px !important;
+                }
+
+                .porte-produtor-tabela {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    max-width: none !important;
+                    table-layout: auto !important;
+                }
+
+                .porte-produtor-tabela th,
+                .porte-produtor-tabela td {
+                    white-space: normal !important;
+                }
+
+                .porte-produtor-input-renda {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                }
+
+                .porte-produtor-justificativa {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    padding: 12px !important;
+                    break-inside: avoid !important;
+                    page-break-inside: avoid !important;
+                }
+
+                .porte-produtor-justificativa p {
+                    font-size: 10px !important;
+                    line-height: 1.45 !important;
+                }
+
+                .porte-produtor-tag {
+                    white-space: normal !important;
+                    font-size: 7px !important;
+                    padding: 3px 6px !important;
+                }
+
+                .porte-produtor-container > .acoes {
+                    display: none !important;
+                }
+
+                /*
                  * CARDS
                  */
                 .card {
                     padding: 20px !important;
                     border-radius: 12px !important;
-                    box-shadow: 0 5px 18px rgba(0, 54, 64, 0.08) !important;
+                    box-shadow:
+                        0 5px 18px rgba(0, 54, 64, 0.08) !important;
                     overflow: visible !important;
                 }
 
@@ -228,13 +413,22 @@
                  */
                 .grid-form {
                     display: grid !important;
-                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    grid-template-columns:
+                        repeat(2, minmax(0, 1fr)) !important;
                     gap: 14px !important;
+                }
+
+                .grid-form-3 {
+                    display: grid !important;
+                    grid-template-columns:
+                        repeat(3, minmax(0, 1fr)) !important;
+                    gap: 12px !important;
                 }
 
                 .grid-form-4 {
                     display: grid !important;
-                    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+                    grid-template-columns:
+                        repeat(4, minmax(0, 1fr)) !important;
                     gap: 12px !important;
                 }
 
@@ -253,6 +447,10 @@
                     opacity: 1 !important;
                     -webkit-print-color-adjust: exact !important;
                     print-color-adjust: exact !important;
+                }
+
+                textarea {
+                    height: auto !important;
                 }
 
                 .input-prefixo,
@@ -371,7 +569,7 @@
                 }
 
                 /*
-                 * Evita cortes ruins dentro dos componentes.
+                 * EVITA CORTES RUINS
                  */
                 tr,
                 .resultado-item,
@@ -381,14 +579,15 @@
                 .titulo-subsecao,
                 .aviso,
                 .aviso-info,
-                .indicador-total {
+                .indicador-total,
+                .porte-produtor-justificativa,
+                .calculo-notas-auxiliar-linha {
                     break-inside: avoid !important;
                     page-break-inside: avoid !important;
                 }
 
                 /*
-                 * O card pode continuar na página seguinte.
-                 * Isso é necessário para tabelas e documentos longos.
+                 * CARDS PODEM CONTINUAR NA PÁGINA SEGUINTE
                  */
                 section,
                 aside,
@@ -398,7 +597,7 @@
                 }
 
                 /*
-                 * Remove limitações de altura e barras de rolagem.
+                 * REMOVE LIMITES DE ALTURA E SCROLL
                  */
                 main,
                 section,
@@ -406,7 +605,10 @@
                 .card,
                 .tabela-wrapper,
                 .bloco-bandeira,
-                .bloco-bandeira-conteudo {
+                .bloco-bandeira-conteudo,
+                .calculo-notas-container,
+                .calculo-notas-periodo,
+                .porte-produtor-container {
                     height: auto !important;
                     min-height: 0 !important;
                     max-height: none !important;
@@ -414,7 +616,7 @@
                 }
 
                 /*
-                 * Preserva cores.
+                 * PRESERVA CORES
                  */
                 .topo,
                 .menu-principal,
@@ -425,6 +627,9 @@
                 .linha-selecionada,
                 .aviso,
                 .aviso-info,
+                .calculo-notas-periodo,
+                .porte-produtor-justificativa,
+                .porte-produtor-tag,
                 table,
                 thead,
                 tbody,
@@ -437,7 +642,7 @@
                 }
 
                 /*
-                 * Links não mostram URL no PDF.
+                 * LINKS NÃO MOSTRAM URL NO PDF
                  */
                 a {
                     color: inherit !important;
@@ -449,7 +654,7 @@
                 }
 
                 /*
-                 * Rodapé.
+                 * RODAPÉ
                  */
                 footer {
                     width: 100% !important;
@@ -460,7 +665,7 @@
                 }
 
                 /*
-                 * Desliga efeitos que não fazem sentido na impressão.
+                 * DESLIGA EFEITOS
                  */
                 * {
                     animation: none !important;
@@ -503,14 +708,22 @@
         }
 
         elemento.dataset.impressaoPreparada = "1";
+
         elemento.dataset.overflowAnterior =
             elemento.style.overflow || "";
+
         elemento.dataset.overflowXAnterior =
             elemento.style.overflowX || "";
+
         elemento.dataset.overflowYAnterior =
             elemento.style.overflowY || "";
+
         elemento.dataset.heightAnterior =
             elemento.style.height || "";
+
+        elemento.dataset.minHeightAnterior =
+            elemento.style.minHeight || "";
+
         elemento.dataset.maxHeightAnterior =
             elemento.style.maxHeight || "";
     }
@@ -518,7 +731,11 @@
     function expandirElementosParaImpressao() {
         const seletores = [
             ".tabela-wrapper",
-            ".bloco-bandeira-conteudo"
+            ".bloco-bandeira-conteudo",
+            ".calculo-notas-container",
+            ".calculo-notas-periodo",
+            ".porte-produtor-container",
+            ".porte-produtor-justificativa"
         ];
 
         document
@@ -530,6 +747,7 @@
                 elemento.style.overflowX = "visible";
                 elemento.style.overflowY = "visible";
                 elemento.style.height = "auto";
+                elemento.style.minHeight = "0";
                 elemento.style.maxHeight = "none";
             });
     }
@@ -552,6 +770,9 @@
                 elemento.style.height =
                     elemento.dataset.heightAnterior || "";
 
+                elemento.style.minHeight =
+                    elemento.dataset.minHeightAnterior || "";
+
                 elemento.style.maxHeight =
                     elemento.dataset.maxHeightAnterior || "";
 
@@ -560,6 +781,7 @@
                 delete elemento.dataset.overflowXAnterior;
                 delete elemento.dataset.overflowYAnterior;
                 delete elemento.dataset.heightAnterior;
+                delete elemento.dataset.minHeightAnterior;
                 delete elemento.dataset.maxHeightAnterior;
             });
     }

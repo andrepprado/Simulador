@@ -6425,47 +6425,515 @@ footer p,
     }
 }
 
-
 /* =========================================================
    PÁGINAS EXPERIMENTAIS - IMPRESSÃO
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML
+   PORTE-PRODUTOR-RURAL.HTML
    ========================================================= */
 
 @media print {
 
+    /* =====================================================
+       CONTAINERS DAS PÁGINAS
+       ===================================================== */
+
     .calculo-notas-container,
     .porte-produtor-container {
         width: 100% !important;
-        max-width: none !important;
-        padding: 0 !important;
+        max-width: 1180px !important;
+        min-width: 0 !important;
+        margin-right: auto !important;
+        margin-left: auto !important;
+        padding-top: 0 !important;
+        padding-right: 12px !important;
+        padding-bottom: 0 !important;
+        padding-left: 12px !important;
+        overflow: visible !important;
     }
 
+    /*
+     * Os cards principais podem continuar
+     * na página seguinte quando necessário.
+     */
     .calculo-notas-container>.card,
-    .porte-produtor-container>.card,
-    .calculo-notas-periodo {
+    .porte-produtor-container>.card {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
         box-shadow: none !important;
-        break-inside: avoid;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
     }
 
-    .calculo-notas-container>.acoes,
+    .calculo-notas-container .card-largura-total,
+    .porte-produtor-container .card-largura-total {
+        grid-column: 1 / -1 !important;
+    }
+
+
+    /* =====================================================
+       CÁLCULO DE RENDA POR NOTAS FISCAIS
+       ===================================================== */
+
+    .calculo-notas-container {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 20px !important;
+        align-items: start !important;
+    }
+
+    .calculo-notas-container .card-largura-total {
+        grid-column: 1 / -1 !important;
+    }
+
+    /*
+     * Cada período deve permanecer inteiro,
+     * desde que caiba naturalmente na página.
+     */
+    .calculo-notas-periodo {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 16px !important;
+        overflow: visible !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .calculo-notas-periodo-cabecalho {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        gap: 14px !important;
+        margin-bottom: 12px !important;
+        padding-bottom: 10px !important;
+    }
+
+    .calculo-notas-periodo-cabecalho strong {
+        font-size: 13px !important;
+    }
+
+    .calculo-notas-periodo-cabecalho small {
+        font-size: 9px !important;
+    }
+
+    .calculo-notas-identificacao {
+        display: grid !important;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .calculo-notas-titulo-valores {
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .calculo-notas-meses-grid {
+        display: grid !important;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .calculo-notas-campo-mes {
+        min-width: 0 !important;
+    }
+
+    .calculo-notas-campo-mes .input-prefixo {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .calculo-notas-campo-mes .input-prefixo>span {
+        min-width: 38px !important;
+        padding-right: 7px !important;
+        padding-left: 7px !important;
+        font-size: 9px !important;
+    }
+
+    .calculo-notas-campo-mes input {
+        min-width: 0 !important;
+        font-size: 11px !important;
+    }
+
+    .calculo-notas-periodo-rodape {
+        display: grid !important;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin-top: 14px !important;
+        padding-top: 14px !important;
+    }
+
+    .calculo-notas-periodo-rodape input[readonly] {
+        background: var(--fundo-secundario) !important;
+        color: var(--verde-escuro) !important;
+        font-weight: 700 !important;
+    }
+
+    .calculo-notas-observacao-periodo {
+        margin-top: 12px !important;
+    }
+
+    .calculo-notas-observacao-periodo textarea {
+        height: auto !important;
+        min-height: 56px !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /*
+     * Linhas da calculadora auxiliar.
+     */
+    .calculo-notas-auxiliar-linha {
+        display: grid !important;
+        grid-template-columns:
+            minmax(0, 1fr) minmax(180px, .65fr) auto !important;
+        gap: 10px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 10px !important;
+        overflow: visible !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    /*
+     * Elementos de edição que não devem aparecer no PDF.
+     */
     .calculo-notas-remover-periodo,
     .calculo-notas-acoes-periodo,
     .calculo-notas-auxiliar-remover,
+    .calculo-notas-container>.acoes {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       PORTE DO PRODUTOR RURAL
+       ===================================================== */
+
+    .porte-produtor-container {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 20px !important;
+        align-items: start !important;
+    }
+
+    .porte-produtor-container .card-largura-total {
+        grid-column: 1 / -1 !important;
+    }
+
+    .porte-produtor-container .grid-form-4 {
+        display: grid !important;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    .porte-produtor-container .resultados-grid-4 {
+        display: grid !important;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .porte-produtor-container .resultados-grid-3 {
+        display: grid !important;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    /*
+     * Tabela de rendas.
+     * Remove o min-width utilizado no navegador para
+     * evitar estouro horizontal no PDF.
+     */
+    .porte-produtor-container .tabela-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .porte-produtor-tabela {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        border-collapse: collapse !important;
+        table-layout: auto !important;
+    }
+
+    .porte-produtor-tabela th,
+    .porte-produtor-tabela td {
+        padding: 7px 8px !important;
+        font-size: 9px !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+    }
+
+    .porte-produtor-tabela th:nth-child(1),
+    .porte-produtor-tabela td:nth-child(1) {
+        width: 42% !important;
+        text-align: left !important;
+    }
+
+    .porte-produtor-tabela th:nth-child(2),
+    .porte-produtor-tabela td:nth-child(2) {
+        width: 28% !important;
+        text-align: left !important;
+    }
+
+    .porte-produtor-tabela th:nth-child(3),
+    .porte-produtor-tabela td:nth-child(3) {
+        width: 30% !important;
+        text-align: right !important;
+    }
+
+    /*
+     * Remove o sticky usado em telas pequenas.
+     */
+    .porte-produtor-tabela th:first-child,
+    .porte-produtor-tabela td:first-child {
+        position: static !important;
+        left: auto !important;
+        z-index: auto !important;
+        min-width: 0 !important;
+    }
+
+    .porte-produtor-input-renda {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .porte-produtor-input-renda>span {
+        min-width: 36px !important;
+        padding-right: 6px !important;
+        padding-left: 6px !important;
+        font-size: 9px !important;
+    }
+
+    .porte-produtor-input-renda input {
+        width: 1% !important;
+        min-width: 0 !important;
+        height: 34px !important;
+        min-height: 34px !important;
+        padding-right: 7px !important;
+        padding-left: 7px !important;
+        font-size: 10px !important;
+        text-align: right !important;
+    }
+
+    .porte-produtor-tag {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        max-width: 100% !important;
+        min-height: 20px !important;
+        padding: 3px 6px !important;
+        font-size: 7px !important;
+        line-height: 1.15 !important;
+        white-space: normal !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .porte-produtor-tag-rural {
+        background: rgba(125, 182, 28, .12) !important;
+        color: var(--sucesso) !important;
+        border-color: rgba(125, 182, 28, .24) !important;
+    }
+
+    .porte-produtor-tag-nao-rural {
+        background: rgba(73, 71, 157, .09) !important;
+        color: var(--roxo) !important;
+        border-color: rgba(73, 71, 157, .18) !important;
+    }
+
+    .porte-produtor-justificativa {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 12px !important;
+        overflow: visible !important;
+        border-left-width: 4px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .porte-produtor-justificativa p {
+        margin: 0 !important;
+        font-size: 10px !important;
+        line-height: 1.45 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+    }
+
+    /*
+     * Botão Limpar não deve aparecer no PDF.
+     */
     .porte-produtor-container>.acoes {
         display: none !important;
     }
 
-    .calculo-notas-meses-grid {
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+
+    /* =====================================================
+       RESULTADOS DAS DUAS PÁGINAS
+       ===================================================== */
+
+    .calculo-notas-container .resultado-destaque,
+    .porte-produtor-container .resultado-destaque {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 14px !important;
+        padding: 16px 18px !important;
+        margin-bottom: 14px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
     }
 
-    .porte-produtor-container .resultados-grid-4 {
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+    .calculo-notas-container .resultado-destaque span,
+    .porte-produtor-container .resultado-destaque span {
+        flex: 0 1 40% !important;
+        width: auto !important;
+        max-width: 40% !important;
+        font-size: 10px !important;
+        text-align: left !important;
     }
 
-    .porte-produtor-container .resultados-grid-3 {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+    .calculo-notas-container .resultado-destaque strong,
+    .porte-produtor-container .resultado-destaque strong {
+        flex: 1 1 60% !important;
+        width: auto !important;
+        max-width: 60% !important;
+        font-size: 21px !important;
+        text-align: right !important;
+    }
+
+    .calculo-notas-container .resultado-item,
+    .porte-produtor-container .resultado-item {
+        min-height: 62px !important;
+        padding: 10px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .calculo-notas-container .resultado-item span,
+    .porte-produtor-container .resultado-item span {
+        margin-bottom: 5px !important;
+        font-size: 9px !important;
+    }
+
+    .calculo-notas-container .resultado-item strong,
+    .porte-produtor-container .resultado-item strong {
+        font-size: 11px !important;
+    }
+
+    .calculo-notas-container .linha-selecionada,
+    .porte-produtor-container .linha-selecionada {
+        padding: 11px 12px !important;
+        margin-top: 11px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .calculo-notas-container .linha-selecionada span,
+    .porte-produtor-container .linha-selecionada span {
+        font-size: 9px !important;
+    }
+
+    .calculo-notas-container .linha-selecionada strong,
+    .porte-produtor-container .linha-selecionada strong {
+        font-size: 11px !important;
+    }
+
+
+    /* =====================================================
+       FORMULÁRIOS DAS DUAS PÁGINAS
+       ===================================================== */
+
+    .calculo-notas-container input,
+    .calculo-notas-container select,
+    .calculo-notas-container textarea,
+    .porte-produtor-container input,
+    .porte-produtor-container select,
+    .porte-produtor-container textarea {
+        color: var(--texto) !important;
+        opacity: 1 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .calculo-notas-container input,
+    .calculo-notas-container select,
+    .porte-produtor-container input,
+    .porte-produtor-container select {
+        min-height: 34px !important;
+        height: 34px !important;
+        font-size: 10px !important;
+    }
+
+    .calculo-notas-container textarea,
+    .porte-produtor-container textarea {
+        height: auto !important;
+        min-height: 52px !important;
+        max-height: none !important;
+        font-size: 10px !important;
+        overflow: visible !important;
+    }
+
+    .calculo-notas-container .campo label,
+    .porte-produtor-container .campo label {
+        margin-bottom: 4px !important;
+        font-size: 9px !important;
+    }
+
+
+    /* =====================================================
+       PRESERVAÇÃO DE CORES
+       ===================================================== */
+
+    .calculo-notas-container,
+    .calculo-notas-container .card,
+    .calculo-notas-periodo,
+    .calculo-notas-auxiliar-linha,
+    .porte-produtor-container,
+    .porte-produtor-container .card,
+    .porte-produtor-justificativa,
+    .porte-produtor-tag,
+    .porte-produtor-tabela,
+    .porte-produtor-tabela thead,
+    .porte-produtor-tabela tbody,
+    .porte-produtor-tabela tr,
+    .porte-produtor-tabela th,
+    .porte-produtor-tabela td {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
