@@ -4835,3 +4835,369 @@ footer p,
         font-size: 11px;
     }
 }
+
+
+/* =========================================================
+   CREDITO-RURAL.HTML - MATERIAL DE APOIO
+   ========================================================= */
+
+.material-apoio-card {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+}
+
+.material-apoio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+}
+
+.material-apoio-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    min-height: 138px;
+    padding: 18px;
+    background: #FBFCFC;
+    color: inherit;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    text-decoration: none;
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.material-apoio-item:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 160, 145, .035);
+    border-color: var(--turquesa-claro);
+    box-shadow: 0 8px 22px rgba(0, 54, 64, .08);
+}
+
+.material-apoio-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 58px;
+    width: 58px;
+    height: 58px;
+    background:
+        linear-gradient(135deg,
+            var(--turquesa),
+            var(--verde-escuro));
+    color: var(--branco);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .03em;
+    box-shadow: 0 5px 13px rgba(0, 54, 64, .14);
+}
+
+.material-apoio-conteudo {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.material-apoio-tipo {
+    display: inline-block;
+    margin-bottom: 4px;
+    color: var(--turquesa);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.material-apoio-conteudo strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--verde-escuro);
+    font-size: 15px;
+    line-height: 1.3;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+.material-apoio-conteudo p {
+    margin: 0 0 8px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.45;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+.material-apoio-download {
+    display: inline-flex;
+    align-items: center;
+    color: var(--turquesa);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.material-apoio-observacao {
+    width: 100%;
+    min-width: 0;
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(0, 160, 145, .07);
+    color: var(--texto-secundario);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 8px;
+    font-size: 10px;
+    line-height: 1.45;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+.material-apoio-observacao strong {
+    color: var(--verde-escuro);
+}
+
+/* =========================================================
+   CREDITO-RURAL.HTML - MATERIAL DE APOIO - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .simulador-grid .material-apoio-card {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .material-apoio-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   CREDITO-RURAL.HTML - MATERIAL DE APOIO - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .simulador-grid .material-apoio-card {
+        grid-column: 1;
+        grid-row: auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .material-apoio-card .titulo-secao {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 15px;
+    }
+
+    .material-apoio-card .titulo-secao h2 {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 4px;
+        color: var(--verde-escuro);
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .material-apoio-card .titulo-secao p {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        color: var(--texto-secundario);
+        font-size: 10px;
+        line-height: 1.42;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+
+    .material-apoio-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .material-apoio-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        padding: 11px;
+        border-radius: 8px;
+    }
+
+    .material-apoio-item:hover {
+        transform: none;
+    }
+
+    .material-apoio-icone {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        font-size: 8px;
+    }
+
+    .material-apoio-conteudo {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .material-apoio-tipo {
+        margin-bottom: 2px;
+        font-size: 7px;
+        line-height: 1.2;
+    }
+
+    .material-apoio-conteudo strong {
+        margin-bottom: 3px;
+        font-size: 10px;
+        line-height: 1.25;
+    }
+
+    .material-apoio-conteudo p {
+        margin: 0 0 5px;
+        font-size: 8px;
+        line-height: 1.35;
+    }
+
+    .material-apoio-download {
+        font-size: 8px;
+        line-height: 1.2;
+    }
+
+    .material-apoio-observacao {
+        margin-top: 10px;
+        padding: 9px 10px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.4;
+    }
+}
+
+/* =========================================================
+   CREDITO-RURAL.HTML - MATERIAL DE APOIO - MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+    .simulador-grid .material-apoio-card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .material-apoio-card .titulo-secao {
+        margin-bottom: 13px;
+    }
+
+    .material-apoio-card .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .material-apoio-card .titulo-secao p {
+        font-size: 9px;
+    }
+
+    .material-apoio-item {
+        gap: 9px;
+        padding: 10px;
+    }
+
+    .material-apoio-icone {
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        font-size: 7px;
+    }
+
+    .material-apoio-tipo {
+        font-size: 6px;
+    }
+
+    .material-apoio-conteudo strong {
+        font-size: 9px;
+    }
+
+    .material-apoio-conteudo p {
+        font-size: 7px;
+    }
+
+    .material-apoio-download {
+        font-size: 7px;
+    }
+
+    .material-apoio-observacao {
+        font-size: 7px;
+    }
+}
+
+/* =========================================================
+   CREDITO-RURAL.HTML - MATERIAL DE APOIO - MOBILE MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width: 360px) {
+    .simulador-grid .material-apoio-card {
+        padding: 11px;
+    }
+
+    .material-apoio-card .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .material-apoio-card .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .material-apoio-item {
+        align-items: flex-start;
+        gap: 8px;
+        padding: 9px;
+    }
+
+    .material-apoio-icone {
+        flex: 0 0 35px;
+        width: 35px;
+        height: 35px;
+        font-size: 6px;
+    }
+
+    .material-apoio-conteudo strong {
+        font-size: 9px;
+    }
+
+    .material-apoio-conteudo p,
+    .material-apoio-download,
+    .material-apoio-observacao {
+        font-size: 7px;
+    }
+}
