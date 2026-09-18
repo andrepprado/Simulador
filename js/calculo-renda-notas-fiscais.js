@@ -8,14 +8,17 @@
  * Recursos:
  * - inclusão manual de períodos;
  * - upload de PDF, JPG, JPEG, PNG e WEBP;
+ * - múltiplos arquivos;
+ * - múltiplas páginas por PDF;
  * - extração de texto nativo de PDF;
  * - OCR para imagens e PDFs sem camada textual;
  * - identificação de data;
  * - identificação de número da nota;
  * - identificação do emitente;
- * - identificação do valor total;
+ * - identificação estrita do valor total da nota;
  * - agrupamento automático por competência;
- * - cálculo da renda mensal e anual.
+ * - cálculo da renda mensal e anual;
+ * - limpeza completa do formulário.
  */
 
 document.addEventListener("DOMContentLoaded", iniciarCalculoRendaNotas);
@@ -55,7 +58,16 @@ function configurarEventosNotas() {
 
     if (inputArquivos) {
         inputArquivos.addEventListener("change", function () {
-            arquivosSelecionados = Array.from(this.files || []);
+            const novosArquivos = Array.from(this.files || []);
+
+            adicionarArquivosSelecionados(novosArquivos);
+
+            /*
+             * Limpa o input para permitir selecionar posteriormente
+             * o mesmo arquivo novamente caso tenha sido removido.
+             */
+            this.value = "";
+
             renderizarArquivosSelecionados();
             limparMensagemOcr();
         });
@@ -130,7 +142,11 @@ function adicionarPeriodoManual() {
     }
 
     const periodo = String(inputPeriodo.value || "").trim();
-    const valor = converterMoedaParaNumero(inputValor.value);
+
+    const valor = converterMoedaParaNumero(
+        inputValor.value
+    );
+
     const quantidade = Math.max(
         0,
         parseInt(inputQuantidade.value, 10) || 0
@@ -138,19 +154,23 @@ function adicionarPeriodoManual() {
 
     if (!periodo) {
         inputPeriodo.focus();
+
         exibirMensagemOcr(
             "Informe o período antes de adicionar.",
             "atencao"
         );
+
         return;
     }
 
     if (valor <= 0) {
         inputValor.focus();
+
         exibirMensagemOcr(
             "Informe um valor maior que zero para o período.",
             "atencao"
         );
+
         return;
     }
 
@@ -176,7 +196,9 @@ function adicionarPeriodoManual() {
    ========================================================= */
 
 function adicionarOuSomarPeriodo(dados) {
-    const chave = normalizarPeriodoChave(dados.periodo);
+    const chave = normalizarPeriodoChave(
+        dados.periodo
+    );
 
     const existente = periodosNotas.find(function (item) {
         return normalizarPeriodoChave(item.periodo) === chave;
@@ -213,7 +235,9 @@ function adicionarOuSomarPeriodo(dados) {
    ========================================================= */
 
 function renderizarPeriodosNotas() {
-    const tbody = document.getElementById("calculo-notas-periodo");
+    const tbody = document.getElementById(
+        "calculo-notas-periodo"
+    );
 
     if (!tbody) {
         return;
@@ -223,6 +247,7 @@ function renderizarPeriodosNotas() {
 
     if (periodosNotas.length === 0) {
         const tr = document.createElement("tr");
+
         tr.className = "notas-linha-vazia";
 
         tr.innerHTML = `
@@ -252,6 +277,7 @@ function renderizarPeriodosNotas() {
                     aria-label="Período"
                 >
             </td>
+
             <td>
                 <input
                     type="text"
@@ -261,6 +287,7 @@ function renderizarPeriodosNotas() {
                     aria-label="Valor das notas"
                 >
             </td>
+
             <td>
                 <input
                     type="number"
@@ -271,6 +298,7 @@ function renderizarPeriodosNotas() {
                     aria-label="Quantidade de notas"
                 >
             </td>
+
             <td class="notas-coluna-acoes">
                 <button
                     type="button"
@@ -284,51 +312,79 @@ function renderizarPeriodosNotas() {
 
         tbody.appendChild(tr);
 
-        const inputPeriodo = tr.querySelector(".notas-periodo-editar");
-        const inputValor = tr.querySelector(".notas-valor-editar");
-        const inputQuantidade = tr.querySelector(".notas-quantidade-editar");
-        const btnRemover = tr.querySelector(".notas-btn-remover");
+        const inputPeriodo =
+            tr.querySelector(".notas-periodo-editar");
+
+        const inputValor =
+            tr.querySelector(".notas-valor-editar");
+
+        const inputQuantidade =
+            tr.querySelector(".notas-quantidade-editar");
+
+        const btnRemover =
+            tr.querySelector(".notas-btn-remover");
 
         if (inputPeriodo) {
-            inputPeriodo.addEventListener("change", function () {
-                item.periodo = String(this.value || "").trim();
+            inputPeriodo.addEventListener(
+                "change",
+                function () {
+                    item.periodo =
+                        String(this.value || "").trim();
 
-                ordenarPeriodos();
-                renderizarPeriodosNotas();
-                atualizarResultadosNotas();
-            });
+                    ordenarPeriodos();
+                    renderizarPeriodosNotas();
+                    atualizarResultadosNotas();
+                }
+            );
         }
 
         if (inputValor) {
-            inputValor.addEventListener("input", function () {
-                aplicarMascaraMoeda(this);
-            });
+            inputValor.addEventListener(
+                "input",
+                function () {
+                    aplicarMascaraMoeda(this);
+                }
+            );
 
-            inputValor.addEventListener("change", function () {
-                item.valor = converterMoedaParaNumero(this.value);
-                this.value = formatarMoeda(item.valor);
+            inputValor.addEventListener(
+                "change",
+                function () {
+                    item.valor =
+                        converterMoedaParaNumero(
+                            this.value
+                        );
 
-                atualizarResultadosNotas();
-                atualizarTotalizadoresPeriodos();
-            });
+                    this.value =
+                        formatarMoeda(item.valor);
+
+                    atualizarResultadosNotas();
+                    atualizarTotalizadoresPeriodos();
+                }
+            );
         }
 
         if (inputQuantidade) {
-            inputQuantidade.addEventListener("input", function () {
-                item.quantidade = Math.max(
-                    0,
-                    parseInt(this.value, 10) || 0
-                );
+            inputQuantidade.addEventListener(
+                "input",
+                function () {
+                    item.quantidade = Math.max(
+                        0,
+                        parseInt(this.value, 10) || 0
+                    );
 
-                atualizarResultadosNotas();
-                atualizarTotalizadoresPeriodos();
-            });
+                    atualizarResultadosNotas();
+                    atualizarTotalizadoresPeriodos();
+                }
+            );
         }
 
         if (btnRemover) {
-            btnRemover.addEventListener("click", function () {
-                removerPeriodo(item.id);
-            });
+            btnRemover.addEventListener(
+                "click",
+                function () {
+                    removerPeriodo(item.id);
+                }
+            );
         }
     });
 
@@ -340,9 +396,11 @@ function renderizarPeriodosNotas() {
    ========================================================= */
 
 function removerPeriodo(id) {
-    periodosNotas = periodosNotas.filter(function (item) {
-        return item.id !== id;
-    });
+    periodosNotas = periodosNotas.filter(
+        function (item) {
+            return item.id !== id;
+        }
+    );
 
     renderizarPeriodosNotas();
     atualizarResultadosNotas();
@@ -353,13 +411,19 @@ function removerPeriodo(id) {
    ========================================================= */
 
 function atualizarTotalizadoresPeriodos() {
-    const totalNotas = periodosNotas.reduce(function (total, item) {
-        return total + (Number(item.valor) || 0);
-    }, 0);
+    const totalNotas = periodosNotas.reduce(
+        function (total, item) {
+            return total + (Number(item.valor) || 0);
+        },
+        0
+    );
 
-    const quantidadeNotas = periodosNotas.reduce(function (total, item) {
-        return total + (Number(item.quantidade) || 0);
-    }, 0);
+    const quantidadeNotas = periodosNotas.reduce(
+        function (total, item) {
+            return total + (Number(item.quantidade) || 0);
+        },
+        0
+    );
 
     definirTexto(
         "totalNotasPeriodos",
@@ -382,26 +446,37 @@ function atualizarTotalizadoresPeriodos() {
    ========================================================= */
 
 function atualizarResultadosNotas() {
-    const totalNotas = periodosNotas.reduce(function (total, item) {
-        return total + (Number(item.valor) || 0);
-    }, 0);
+    const totalNotas = periodosNotas.reduce(
+        function (total, item) {
+            return total + (Number(item.valor) || 0);
+        },
+        0
+    );
 
-    const quantidadeNotas = periodosNotas.reduce(function (total, item) {
-        return total + (Number(item.quantidade) || 0);
-    }, 0);
+    const quantidadeNotas = periodosNotas.reduce(
+        function (total, item) {
+            return total + (Number(item.quantidade) || 0);
+        },
+        0
+    );
 
-    const quantidadePeriodos = periodosNotas.length;
+    const quantidadePeriodos =
+        periodosNotas.length;
 
     /*
-     * Regra:
-     * renda mensal = total das notas / quantidade de períodos.
+     * REGRA:
+     *
+     * Renda mensal =
+     * total das notas /
+     * quantidade de períodos considerados.
      */
     const rendaMensal =
         quantidadePeriodos > 0
             ? totalNotas / quantidadePeriodos
             : 0;
 
-    const rendaAnual = rendaMensal * 12;
+    const rendaAnual =
+        rendaMensal * 12;
 
     definirTexto(
         "resultadoRendaMensal",
@@ -436,39 +511,62 @@ function atualizarResultadosNotas() {
    ========================================================= */
 
 function limparCalculoNotas() {
-    periodosNotas = [];
-    notasProcessadas = [];
-
-    const inputPeriodo = document.getElementById("novoPeriodoNota");
-    const inputValor = document.getElementById("novoValorNota");
-    const inputQuantidade = document.getElementById("novaQuantidadeNotas");
-
-    if (inputPeriodo) {
-        inputPeriodo.value = "";
-    }
-
-    if (inputValor) {
-        inputValor.value = "";
-    }
-
-    if (inputQuantidade) {
-        inputQuantidade.value = "0";
-    }
-
+    /*
+     * O botão "Limpar Cálculo" utiliza a mesma
+     * limpeza completa do botão "Limpar Arquivos".
+     */
     limparArquivosNotas();
-
-    renderizarPeriodosNotas();
-    renderizarNotasProcessadas();
-    atualizarResultadosNotas();
-    limparMensagemOcr();
 }
 
 /* =========================================================
    ARQUIVOS SELECIONADOS
    ========================================================= */
 
+function adicionarArquivosSelecionados(
+    novosArquivos
+) {
+    const chavesExistentes = new Set(
+        arquivosSelecionados.map(
+            function (arquivo) {
+                return gerarChaveArquivo(
+                    arquivo
+                );
+            }
+        )
+    );
+
+    novosArquivos.forEach(
+        function (arquivo) {
+            const chave =
+                gerarChaveArquivo(arquivo);
+
+            /*
+             * Evita adicionar exatamente
+             * o mesmo arquivo duas vezes.
+             */
+            if (!chavesExistentes.has(chave)) {
+                arquivosSelecionados.push(
+                    arquivo
+                );
+
+                chavesExistentes.add(chave);
+            }
+        }
+    );
+}
+
+function gerarChaveArquivo(arquivo) {
+    return [
+        arquivo.name || "",
+        arquivo.size || 0,
+        arquivo.lastModified || 0
+    ].join("|");
+}
+
 function renderizarArquivosSelecionados() {
-    const lista = document.getElementById("listaArquivosNotasFiscais");
+    const lista = document.getElementById(
+        "listaArquivosNotasFiscais"
+    );
 
     if (!lista) {
         return;
@@ -486,40 +584,54 @@ function renderizarArquivosSelecionados() {
         return;
     }
 
-    arquivosSelecionados.forEach(function (arquivo, indice) {
-        const item = document.createElement("div");
+    arquivosSelecionados.forEach(
+        function (arquivo, indice) {
+            const item =
+                document.createElement("div");
 
-        item.className = "notas-arquivo-item";
+            item.className =
+                "notas-arquivo-item";
 
-        item.innerHTML = `
-            <div class="notas-arquivo-info">
-                <strong>
-                    ${escaparHtml(arquivo.name)}
-                </strong>
-                <span>
-                    ${formatarTamanhoArquivo(arquivo.size)}
-                </span>
-            </div>
-            <button
-                type="button"
-                class="notas-arquivo-remover"
-                data-indice="${indice}"
-                aria-label="Remover arquivo"
-            >
-                Remover
-            </button>
-        `;
+            item.innerHTML = `
+                <div class="notas-arquivo-info">
+                    <strong>
+                        ${escaparHtml(arquivo.name)}
+                    </strong>
 
-        const botao = item.querySelector(".notas-arquivo-remover");
+                    <span>
+                        ${formatarTamanhoArquivo(arquivo.size)}
+                    </span>
+                </div>
 
-        if (botao) {
-            botao.addEventListener("click", function () {
-                removerArquivoSelecionado(indice);
-            });
+                <button
+                    type="button"
+                    class="notas-arquivo-remover"
+                    data-indice="${indice}"
+                    aria-label="Remover arquivo"
+                >
+                    Remover
+                </button>
+            `;
+
+            const botao =
+                item.querySelector(
+                    ".notas-arquivo-remover"
+                );
+
+            if (botao) {
+                botao.addEventListener(
+                    "click",
+                    function () {
+                        removerArquivoSelecionado(
+                            indice
+                        );
+                    }
+                );
+            }
+
+            lista.appendChild(item);
         }
-
-        lista.appendChild(item);
-    });
+    );
 }
 
 /* =========================================================
@@ -527,10 +639,12 @@ function renderizarArquivosSelecionados() {
    ========================================================= */
 
 function removerArquivoSelecionado(indice) {
-    arquivosSelecionados.splice(indice, 1);
+    arquivosSelecionados.splice(
+        indice,
+        1
+    );
 
     atualizarInputArquivos();
-
     renderizarArquivosSelecionados();
 }
 
@@ -539,20 +653,28 @@ function removerArquivoSelecionado(indice) {
    ========================================================= */
 
 function atualizarInputArquivos() {
-    const input = document.getElementById("arquivosNotasFiscais");
+    const input = document.getElementById(
+        "arquivosNotasFiscais"
+    );
 
     if (!input) {
         return;
     }
 
     try {
-        const transfer = new DataTransfer();
+        const transfer =
+            new DataTransfer();
 
-        arquivosSelecionados.forEach(function (arquivo) {
-            transfer.items.add(arquivo);
-        });
+        arquivosSelecionados.forEach(
+            function (arquivo) {
+                transfer.items.add(
+                    arquivo
+                );
+            }
+        );
 
-        input.files = transfer.files;
+        input.files =
+            transfer.files;
     } catch (erro) {
         console.warn(
             "Não foi possível reconstruir a lista de arquivos.",
@@ -566,16 +688,77 @@ function atualizarInputArquivos() {
    ========================================================= */
 
 function limparArquivosNotas() {
-    const input = document.getElementById("arquivosNotasFiscais");
+    const inputArquivos =
+        document.getElementById(
+            "arquivosNotasFiscais"
+        );
+
+    const inputPeriodo =
+        document.getElementById(
+            "novoPeriodoNota"
+        );
+
+    const inputValor =
+        document.getElementById(
+            "novoValorNota"
+        );
+
+    const inputQuantidade =
+        document.getElementById(
+            "novaQuantidadeNotas"
+        );
+
+    /*
+     * LIMPEZA COMPLETA.
+     *
+     * O botão btnLimparArquivosNotas limpa:
+     *
+     * - arquivos selecionados;
+     * - notas processadas;
+     * - todas as páginas processadas;
+     * - períodos automáticos;
+     * - períodos manuais;
+     * - campos do formulário;
+     * - totalizadores;
+     * - resultado mensal;
+     * - resultado anual;
+     * - quantidade de notas;
+     * - quantidade de períodos;
+     * - mensagens;
+     * - status OCR;
+     * - cardDetalhamentoNotas / tabela de documentos.
+     */
 
     arquivosSelecionados = [];
+    notasProcessadas = [];
+    periodosNotas = [];
 
-    if (input) {
-        input.value = "";
+    if (inputArquivos) {
+        inputArquivos.value = "";
     }
 
-    renderizarArquivosSelecionados();
+    if (inputPeriodo) {
+        inputPeriodo.value = "";
+    }
+
+    if (inputValor) {
+        inputValor.value = "";
+    }
+
+    if (inputQuantidade) {
+        inputQuantidade.value = "0";
+    }
+
+    mostrarStatusProcessamento(
+        false
+    );
+
     limparMensagemOcr();
+
+    renderizarArquivosSelecionados();
+    renderizarPeriodosNotas();
+    renderizarNotasProcessadas();
+    atualizarResultadosNotas();
 }
 
 /* =========================================================
@@ -583,7 +766,9 @@ function limparArquivosNotas() {
    ========================================================= */
 
 async function processarArquivosNotas() {
-    if (arquivosSelecionados.length === 0) {
+    if (
+        arquivosSelecionados.length === 0
+    ) {
         exibirMensagemOcr(
             "Selecione pelo menos um arquivo antes de processar.",
             "atencao"
@@ -592,12 +777,19 @@ async function processarArquivosNotas() {
         return;
     }
 
-    const btnProcessar = document.getElementById("btnProcessarArquivosNotas");
+    const btnProcessar =
+        document.getElementById(
+            "btnProcessarArquivosNotas"
+        );
 
     if (btnProcessar) {
         btnProcessar.disabled = true;
     }
 
+    /*
+     * Ao iniciar novo processamento,
+     * substitui o processamento anterior.
+     */
     notasProcessadas = [];
 
     mostrarStatusProcessamento(
@@ -607,12 +799,19 @@ async function processarArquivosNotas() {
     );
 
     try {
+        /*
+         * Processamento SEQUENCIAL.
+         *
+         * Isso evita tentar abrir dezenas ou centenas
+         * de PDFs/imagens simultaneamente na memória.
+         */
         for (
             let indice = 0;
             indice < arquivosSelecionados.length;
             indice++
         ) {
-            const arquivo = arquivosSelecionados[indice];
+            const arquivo =
+                arquivosSelecionados[indice];
 
             atualizarStatusProcessamentoArquivo(
                 indice,
@@ -621,13 +820,16 @@ async function processarArquivosNotas() {
             );
 
             try {
-                const resultados = await processarArquivoNotaFiscal(
-                    arquivo,
-                    indice,
-                    arquivosSelecionados.length
-                );
+                const resultados =
+                    await processarArquivoNotaFiscal(
+                        arquivo,
+                        indice,
+                        arquivosSelecionados.length
+                    );
 
-                notasProcessadas.push(...resultados);
+                notasProcessadas.push(
+                    ...resultados
+                );
             } catch (erro) {
                 console.error(
                     "Erro ao processar arquivo:",
@@ -646,18 +848,32 @@ async function processarArquivosNotas() {
                     texto: ""
                 });
             }
+
+            /*
+             * Permite ao navegador atualizar
+             * interface entre arquivos.
+             */
+            await liberarInterface();
         }
 
         consolidarNotasNosPeriodos();
         renderizarNotasProcessadas();
 
-        const identificadas = notasProcessadas.filter(function (nota) {
-            return nota.data && nota.valor > 0;
-        }).length;
+        const identificadas =
+            notasProcessadas.filter(
+                function (nota) {
+                    return (
+                        nota.data &&
+                        nota.valor > 0
+                    );
+                }
+            ).length;
 
         exibirMensagemOcr(
             `${notasProcessadas.length} documento(s) ou página(s) analisado(s). ${identificadas} com data e valor identificados.`,
-            identificadas > 0 ? "sucesso" : "atencao"
+            identificadas > 0
+                ? "sucesso"
+                : "atencao"
         );
     } catch (erro) {
         console.error(erro);
@@ -667,7 +883,9 @@ async function processarArquivosNotas() {
             "erro"
         );
     } finally {
-        mostrarStatusProcessamento(false);
+        mostrarStatusProcessamento(
+            false
+        );
 
         if (btnProcessar) {
             btnProcessar.disabled = false;
@@ -684,7 +902,10 @@ async function processarArquivoNotaFiscal(
     indiceArquivo,
     totalArquivos
 ) {
-    const nome = String(arquivo.name || "").toLowerCase();
+    const nome =
+        String(
+            arquivo.name || ""
+        ).toLowerCase();
 
     if (nome.endsWith(".pdf")) {
         return processarPdfNotaFiscal(
@@ -700,17 +921,18 @@ async function processarArquivoNotaFiscal(
         nome.endsWith(".png") ||
         nome.endsWith(".webp")
     ) {
-        const texto = await executarOcrImagem(
-            arquivo,
-            function (progresso) {
-                atualizarProgressoArquivo(
-                    indiceArquivo,
-                    totalArquivos,
-                    progresso,
-                    arquivo.name
-                );
-            }
-        );
+        const texto =
+            await executarOcrImagem(
+                arquivo,
+                function (progresso) {
+                    atualizarProgressoArquivo(
+                        indiceArquivo,
+                        totalArquivos,
+                        progresso,
+                        arquivo.name
+                    );
+                }
+            );
 
         return [
             interpretarTextoNotaFiscal(
@@ -720,7 +942,9 @@ async function processarArquivoNotaFiscal(
         ];
     }
 
-    throw new Error("Formato de arquivo não suportado.");
+    throw new Error(
+        "Formato de arquivo não suportado."
+    );
 }
 
 /* =========================================================
@@ -732,16 +956,23 @@ async function processarPdfNotaFiscal(
     indiceArquivo,
     totalArquivos
 ) {
-    const pdfjsLib = await carregarPdfJs();
+    const pdfjsLib =
+        await carregarPdfJs();
 
-    const arrayBuffer = await arquivo.arrayBuffer();
+    const arrayBuffer =
+        await arquivo.arrayBuffer();
 
-    const pdf = await pdfjsLib.getDocument({
-        data: arrayBuffer
-    }).promise;
+    const pdf =
+        await pdfjsLib.getDocument({
+            data: arrayBuffer
+        }).promise;
 
     const resultados = [];
 
+    /*
+     * Cada página é tratada como uma
+     * nota fiscal independente.
+     */
     for (
         let paginaNumero = 1;
         paginaNumero <= pdf.numPages;
@@ -753,36 +984,63 @@ async function processarPdfNotaFiscal(
             `Página ${paginaNumero} de ${pdf.numPages}`
         );
 
-        const pagina = await pdf.getPage(paginaNumero);
-
-        let texto = await extrairTextoPaginaPdf(pagina);
+        const pagina =
+            await pdf.getPage(
+                paginaNumero
+            );
 
         /*
-         * Quando há texto nativo suficiente, não utilizamos OCR.
-         * OCR é reservado para páginas sem camada textual adequada.
+         * Primeiro tenta texto nativo.
          */
-        if (texto.replace(/\s+/g, " ").trim().length < 80) {
-            const canvas = await renderizarPaginaPdf(pagina);
-
-            texto = await executarOcrImagem(
-                canvas,
-                function (progresso) {
-                    const progressoPagina =
-                        (
-                            paginaNumero -
-                            1 +
-                            progresso
-                        ) /
-                        pdf.numPages;
-
-                    atualizarProgressoArquivo(
-                        indiceArquivo,
-                        totalArquivos,
-                        progressoPagina,
-                        `${arquivo.name} - página ${paginaNumero}`
-                    );
-                }
+        let texto =
+            await extrairTextoPaginaPdf(
+                pagina
             );
+
+        /*
+         * Só executa OCR se a camada textual
+         * for insuficiente.
+         *
+         * PDFs nativos com centenas de páginas
+         * ficam muito mais leves desta forma.
+         */
+        if (
+            texto
+                .replace(/\s+/g, " ")
+                .trim()
+                .length < 80
+        ) {
+            const canvas =
+                await renderizarPaginaPdf(
+                    pagina
+                );
+
+            texto =
+                await executarOcrImagem(
+                    canvas,
+                    function (progresso) {
+                        const progressoPagina =
+                            (
+                                paginaNumero -
+                                1 +
+                                progresso
+                            ) /
+                            pdf.numPages;
+
+                        atualizarProgressoArquivo(
+                            indiceArquivo,
+                            totalArquivos,
+                            progressoPagina,
+                            `${arquivo.name} - página ${paginaNumero}`
+                        );
+                    }
+                );
+
+            /*
+             * Libera bitmap do canvas após OCR.
+             */
+            canvas.width = 1;
+            canvas.height = 1;
         }
 
         resultados.push(
@@ -793,6 +1051,29 @@ async function processarPdfNotaFiscal(
                     : arquivo.name
             )
         );
+
+        /*
+         * Libera recursos internos da página.
+         */
+        if (
+            typeof pagina.cleanup ===
+            "function"
+        ) {
+            pagina.cleanup();
+        }
+
+        /*
+         * Dá oportunidade para o navegador
+         * atualizar a interface.
+         */
+        await liberarInterface();
+    }
+
+    if (
+        typeof pdf.cleanup ===
+        "function"
+    ) {
+        pdf.cleanup();
     }
 
     return resultados;
@@ -807,14 +1088,16 @@ async function carregarPdfJs() {
         return window.pdfjsLib;
     }
 
-    const pdfjsLib = await import(
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
-    );
+    const pdfjsLib =
+        await import(
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
+        );
 
     pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
 
-    window.pdfjsLib = pdfjsLib;
+    window.pdfjsLib =
+        pdfjsLib;
 
     return pdfjsLib;
 }
@@ -823,10 +1106,17 @@ async function carregarPdfJs() {
    TEXTO NATIVO DO PDF
    ========================================================= */
 
-async function extrairTextoPaginaPdf(pagina) {
+async function extrairTextoPaginaPdf(
+    pagina
+) {
     try {
-        const conteudo = await pagina.getTextContent();
+        const conteudo =
+            await pagina.getTextContent();
 
+        /*
+         * Mantém cada item separado por quebra
+         * de linha para permitir análise por proximidade.
+         */
         return conteudo.items
             .map(function (item) {
                 return item.str;
@@ -846,24 +1136,38 @@ async function extrairTextoPaginaPdf(pagina) {
    RENDERIZA PDF PARA OCR
    ========================================================= */
 
-async function renderizarPaginaPdf(pagina) {
+async function renderizarPaginaPdf(
+    pagina
+) {
     const escala = 2.2;
 
-    const viewport = pagina.getViewport({
-        scale: escala
-    });
+    const viewport =
+        pagina.getViewport({
+            scale: escala
+        });
 
-    const canvas = document.createElement("canvas");
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-    const contexto = canvas.getContext(
-        "2d",
-        {
-            willReadFrequently: true
-        }
-    );
+    const contexto =
+        canvas.getContext(
+            "2d",
+            {
+                willReadFrequently: true
+            }
+        );
 
-    canvas.width = Math.ceil(viewport.width);
-    canvas.height = Math.ceil(viewport.height);
+    canvas.width =
+        Math.ceil(
+            viewport.width
+        );
+
+    canvas.height =
+        Math.ceil(
+            viewport.height
+        );
 
     await pagina.render({
         canvasContext: contexto,
@@ -882,32 +1186,42 @@ async function executarOcrImagem(
     callbackProgresso
 ) {
     if (
-        typeof window.Tesseract === "undefined" ||
-        typeof window.Tesseract.recognize !== "function"
+        typeof window.Tesseract ===
+        "undefined" ||
+        typeof window.Tesseract.recognize !==
+        "function"
     ) {
         throw new Error(
             "Tesseract.js não foi carregado."
         );
     }
 
-    const resultado = await window.Tesseract.recognize(
-        imagem,
-        "por",
-        {
-            logger: function (mensagem) {
-                if (
-                    mensagem.status === "recognizing text" &&
-                    typeof callbackProgresso === "function"
+    const resultado =
+        await window.Tesseract.recognize(
+            imagem,
+            "por",
+            {
+                logger: function (
+                    mensagem
                 ) {
-                    callbackProgresso(
-                        mensagem.progress || 0
-                    );
+                    if (
+                        mensagem.status ===
+                        "recognizing text" &&
+                        typeof callbackProgresso ===
+                        "function"
+                    ) {
+                        callbackProgresso(
+                            mensagem.progress || 0
+                        );
+                    }
                 }
             }
-        }
-    );
+        );
 
-    return resultado?.data?.text || "";
+    return (
+        resultado?.data?.text ||
+        ""
+    );
 }
 
 /* =========================================================
@@ -918,38 +1232,77 @@ function interpretarTextoNotaFiscal(
     textoOriginal,
     nomeArquivo
 ) {
-    const texto = normalizarTextoOcr(textoOriginal);
+    const texto =
+        normalizarTextoOcr(
+            textoOriginal
+        );
 
-    const data = extrairDataEmissao(texto);
-    const numero = extrairNumeroNota(texto);
-    const emitente = extrairEmitente(texto);
-    const valor = extrairValorTotal(texto);
+    const data =
+        extrairDataEmissao(
+            texto
+        );
 
-    const competencia = data
-        ? formatarCompetenciaData(data)
-        : "";
+    const numero =
+        extrairNumeroNota(
+            texto
+        );
+
+    const emitente =
+        extrairEmitente(
+            texto
+        );
+
+    /*
+     * IMPORTANTE:
+     *
+     * O valor é SEMPRE o VALOR TOTAL DA NOTA.
+     *
+     * Descrição, produtos, serviços, subtotal,
+     * impostos, base de cálculo e outros valores
+     * NÃO são utilizados.
+     */
+    const valor =
+        extrairValorTotal(
+            texto
+        );
+
+    const competencia =
+        data
+            ? formatarCompetenciaData(data)
+            : "";
 
     const pendencias = [];
 
     if (!data) {
-        pendencias.push("data");
+        pendencias.push(
+            "data"
+        );
     }
 
     if (!numero) {
-        pendencias.push("número");
+        pendencias.push(
+            "número"
+        );
     }
 
     if (!emitente) {
-        pendencias.push("emitente");
+        pendencias.push(
+            "emitente"
+        );
     }
 
     if (valor <= 0) {
-        pendencias.push("valor");
+        pendencias.push(
+            "valor"
+        );
     }
 
-    let status = "Identificada";
+    let status =
+        "Identificada";
 
-    if (pendencias.length > 0) {
+    if (
+        pendencias.length > 0
+    ) {
         status =
             "Não identificado: " +
             pendencias.join(", ");
@@ -971,7 +1324,9 @@ function interpretarTextoNotaFiscal(
    NORMALIZAÇÃO OCR
    ========================================================= */
 
-function normalizarTextoOcr(texto) {
+function normalizarTextoOcr(
+    texto
+) {
     return String(texto || "")
         .replace(/\r/g, "\n")
         .replace(/[|]/g, " ")
@@ -981,10 +1336,15 @@ function normalizarTextoOcr(texto) {
         .trim();
 }
 
-function normalizarComparacao(texto) {
+function normalizarComparacao(
+    texto
+) {
     return String(texto || "")
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
         .toUpperCase()
         .replace(/\s+/g, " ")
         .trim();
@@ -994,13 +1354,16 @@ function normalizarComparacao(texto) {
    EXTRAÇÃO DA DATA DE EMISSÃO
    ========================================================= */
 
-function extrairDataEmissao(texto) {
-    const linhas = String(texto || "")
-        .split(/\n/)
-        .map(function (linha) {
-            return linha.trim();
-        })
-        .filter(Boolean);
+function extrairDataEmissao(
+    texto
+) {
+    const linhas =
+        String(texto || "")
+            .split(/\n/)
+            .map(function (linha) {
+                return linha.trim();
+            })
+            .filter(Boolean);
 
     const padroes = [
         /DATA\s*(?:DE\s*)?EMISS[AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i,
@@ -1011,24 +1374,46 @@ function extrairDataEmissao(texto) {
         /DATA\s+DE\s+GERA[CÇ][AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i
     ];
 
-    for (const padrao of padroes) {
-        const match = texto.match(padrao);
+    for (
+        const padrao of padroes
+    ) {
+        const match =
+            texto.match(padrao);
 
-        if (match && validarDataBrasileira(match[1])) {
+        if (
+            match &&
+            validarDataBrasileira(
+                match[1]
+            )
+        ) {
             return match[1];
         }
     }
 
     /*
-     * Procura datas próximas de palavras relacionadas à emissão.
+     * Procura datas próximas de
+     * palavras relacionadas à emissão.
      */
-    for (let i = 0; i < linhas.length; i++) {
-        const normalizada = normalizarComparacao(linhas[i]);
+    for (
+        let i = 0;
+        i < linhas.length;
+        i++
+    ) {
+        const normalizada =
+            normalizarComparacao(
+                linhas[i]
+            );
 
         if (
-            normalizada.includes("EMISSAO") ||
-            normalizada.includes("EMITIDA") ||
-            normalizada.includes("DATA DE GERACAO")
+            normalizada.includes(
+                "EMISSAO"
+            ) ||
+            normalizada.includes(
+                "EMITIDA"
+            ) ||
+            normalizada.includes(
+                "DATA DE GERACAO"
+            )
         ) {
             const trecho = [
                 linhas[i],
@@ -1036,12 +1421,19 @@ function extrairDataEmissao(texto) {
                 linhas[i + 2] || ""
             ].join(" ");
 
-            const datas = trecho.match(
-                /\b\d{2}\/\d{2}\/\d{4}\b/g
-            ) || [];
+            const datas =
+                trecho.match(
+                    /\b\d{2}\/\d{2}\/\d{4}\b/g
+                ) || [];
 
-            for (const data of datas) {
-                if (validarDataBrasileira(data)) {
+            for (
+                const data of datas
+            ) {
+                if (
+                    validarDataBrasileira(
+                        data
+                    )
+                ) {
                     return data;
                 }
             }
@@ -1049,14 +1441,22 @@ function extrairDataEmissao(texto) {
     }
 
     /*
-     * Último fallback: primeira data válida.
+     * Último fallback:
+     * primeira data válida do documento.
      */
-    const todasDatas = texto.match(
-        /\b\d{2}\/\d{2}\/\d{4}\b/g
-    ) || [];
+    const todasDatas =
+        texto.match(
+            /\b\d{2}\/\d{2}\/\d{4}\b/g
+        ) || [];
 
-    for (const data of todasDatas) {
-        if (validarDataBrasileira(data)) {
+    for (
+        const data of todasDatas
+    ) {
+        if (
+            validarDataBrasileira(
+                data
+            )
+        ) {
             return data;
         }
     }
@@ -1068,18 +1468,26 @@ function extrairDataEmissao(texto) {
    VALIDAÇÃO DA DATA
    ========================================================= */
 
-function validarDataBrasileira(valor) {
-    const match = String(valor || "").match(
-        /^(\d{2})\/(\d{2})\/(\d{4})$/
-    );
+function validarDataBrasileira(
+    valor
+) {
+    const match =
+        String(valor || "").match(
+            /^(\d{2})\/(\d{2})\/(\d{4})$/
+        );
 
     if (!match) {
         return false;
     }
 
-    const dia = Number(match[1]);
-    const mes = Number(match[2]);
-    const ano = Number(match[3]);
+    const dia =
+        Number(match[1]);
+
+    const mes =
+        Number(match[2]);
+
+    const ano =
+        Number(match[3]);
 
     if (
         ano < 1900 ||
@@ -1092,11 +1500,12 @@ function validarDataBrasileira(valor) {
         return false;
     }
 
-    const data = new Date(
-        ano,
-        mes - 1,
-        dia
-    );
+    const data =
+        new Date(
+            ano,
+            mes - 1,
+            dia
+        );
 
     return (
         data.getFullYear() === ano &&
@@ -1109,7 +1518,9 @@ function validarDataBrasileira(valor) {
    EXTRAÇÃO DO NÚMERO DA NOTA
    ========================================================= */
 
-function extrairNumeroNota(texto) {
+function extrairNumeroNota(
+    texto
+) {
     const padroes = [
         /N[ÚU]MERO\s+(?:DA\s+)?(?:NFS[- ]?E|NF[- ]?E|NOTA)[^0-9]{0,20}(\d{1,20})/i,
         /N[ÚU]MERO[^0-9]{0,15}(\d{1,20})/i,
@@ -1119,13 +1530,20 @@ function extrairNumeroNota(texto) {
         /\bN[º°]\s*(\d{1,20})\b/i
     ];
 
-    for (const padrao of padroes) {
-        const match = texto.match(padrao);
+    for (
+        const padrao of padroes
+    ) {
+        const match =
+            texto.match(padrao);
 
-        if (match && match[1]) {
-            const numero = String(match[1])
-                .replace(/\D/g, "")
-                .trim();
+        if (
+            match &&
+            match[1]
+        ) {
+            const numero =
+                String(match[1])
+                    .replace(/\D/g, "")
+                    .trim();
 
             if (numero) {
                 return numero;
@@ -1140,13 +1558,46 @@ function extrairNumeroNota(texto) {
    EXTRAÇÃO DO EMITENTE
    ========================================================= */
 
-function extrairEmitente(texto) {
-    const linhas = String(texto || "")
-        .split(/\n/)
-        .map(function (linha) {
-            return linha.trim();
-        })
-        .filter(Boolean);
+function extrairEmitente(
+    texto
+) {
+    const conteudo =
+        String(texto || "");
+
+    const linhas =
+        conteudo
+            .split(/\n/)
+            .map(function (linha) {
+                return linha.trim();
+            })
+            .filter(Boolean);
+
+    /*
+     * DANFE de produtor rural:
+     *
+     * "Recebemos de NOME os produtos da Nota Fiscal..."
+     *
+     * O nome após "Recebemos de" é o emitente
+     * e tem prioridade.
+     */
+    const matchRecebemos =
+        conteudo.match(
+            /RECEBEMOS\s+DE\s+(.+?)\s+OS\s+PRODUTOS\s+DA\s+NOTA\s+FISCAL/i
+        );
+
+    if (
+        matchRecebemos &&
+        matchRecebemos[1]
+    ) {
+        const candidato =
+            limparNomeEmitente(
+                matchRecebemos[1]
+            );
+
+        if (candidato) {
+            return candidato;
+        }
+    }
 
     const padroes = [
         /RAZ[AÃ]O\s+SOCIAL[\s:.-]+([^\n]+)/i,
@@ -1156,11 +1607,22 @@ function extrairEmitente(texto) {
         /FORNECEDOR[\s:.-]+([^\n]+)/i
     ];
 
-    for (const padrao of padroes) {
-        const match = texto.match(padrao);
+    for (
+        const padrao of padroes
+    ) {
+        const match =
+            conteudo.match(
+                padrao
+            );
 
-        if (match && match[1]) {
-            const candidato = limparNomeEmitente(match[1]);
+        if (
+            match &&
+            match[1]
+        ) {
+            const candidato =
+                limparNomeEmitente(
+                    match[1]
+                );
 
             if (candidato) {
                 return candidato;
@@ -1169,21 +1631,84 @@ function extrairEmitente(texto) {
     }
 
     /*
-     * Procura a linha seguinte ao marcador de emitente.
+     * Em DANFE, antes do marcador DANFE
+     * normalmente aparece a razão social
+     * do emitente.
      */
-    for (let i = 0; i < linhas.length; i++) {
-        const normalizada = normalizarComparacao(linhas[i]);
+    for (
+        let i = 0;
+        i < linhas.length;
+        i++
+    ) {
+        const normalizada =
+            normalizarComparacao(
+                linhas[i]
+            );
+
+        if (
+            normalizada === "DANFE" ||
+            normalizada.includes(
+                "DOCUMENTO AUXILIAR DA"
+            )
+        ) {
+            for (
+                let anterior = 1;
+                anterior <= 4;
+                anterior++
+            ) {
+                const candidato =
+                    limparNomeEmitente(
+                        linhas[i - anterior] ||
+                        ""
+                    );
+
+                if (
+                    candidato &&
+                    !/^(NF-?E|SERIE|N[º°]|FAZENDA|SITIO|RODOVIA|RUA|AVENIDA)/i.test(
+                        candidato
+                    )
+                ) {
+                    return candidato;
+                }
+            }
+        }
+    }
+
+    /*
+     * Outros formatos.
+     */
+    for (
+        let i = 0;
+        i < linhas.length;
+        i++
+    ) {
+        const normalizada =
+            normalizarComparacao(
+                linhas[i]
+            );
 
         if (
             normalizada === "EMITENTE" ||
-            normalizada.includes("IDENTIFICACAO DO EMITENTE") ||
-            normalizada.includes("DADOS DO EMITENTE") ||
-            normalizada.includes("PRESTADOR DE SERVICOS")
+            normalizada.includes(
+                "IDENTIFICACAO DO EMITENTE"
+            ) ||
+            normalizada.includes(
+                "DADOS DO EMITENTE"
+            ) ||
+            normalizada.includes(
+                "PRESTADOR DE SERVICOS"
+            )
         ) {
-            for (let proxima = 1; proxima <= 4; proxima++) {
-                const candidato = limparNomeEmitente(
-                    linhas[i + proxima] || ""
-                );
+            for (
+                let proxima = 1;
+                proxima <= 4;
+                proxima++
+            ) {
+                const candidato =
+                    limparNomeEmitente(
+                        linhas[i + proxima] ||
+                        ""
+                    );
 
                 if (candidato) {
                     return candidato;
@@ -1199,10 +1724,13 @@ function extrairEmitente(texto) {
    LIMPEZA DO EMITENTE
    ========================================================= */
 
-function limparNomeEmitente(valor) {
-    let texto = String(valor || "")
-        .replace(/\s+/g, " ")
-        .trim();
+function limparNomeEmitente(
+    valor
+) {
+    let texto =
+        String(valor || "")
+            .replace(/\s+/g, " ")
+            .trim();
 
     if (!texto) {
         return "";
@@ -1213,9 +1741,16 @@ function limparNomeEmitente(valor) {
             /\b(CNPJ|CPF|INSCRI[CÇ][AÃ]O|IE|IM|ENDERE[CÇ]O|CEP|FONE|TELEFONE)\b.*$/i,
             ""
         )
-        .replace(/^[\s:.-]+/, "")
+        .replace(
+            /^[\s:.-]+/,
+            ""
+        )
         .trim();
 
+    /*
+     * Não aceita texto composto somente
+     * por números.
+     */
     if (
         texto.length < 3 ||
         /^\d+$/.test(texto)
@@ -1223,41 +1758,89 @@ function limparNomeEmitente(valor) {
         return "";
     }
 
-    if (texto.length > 120) {
-        texto = texto.substring(0, 120).trim();
+    /*
+     * Evita considerar CNPJ isolado
+     * como emitente.
+     */
+    if (
+        /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(
+            texto
+        )
+    ) {
+        return "";
+    }
+
+    if (
+        texto.length > 120
+    ) {
+        texto =
+            texto.substring(
+                0,
+                120
+            ).trim();
     }
 
     return texto;
 }
 
 /* =========================================================
-   EXTRAÇÃO DO VALOR TOTAL
+   EXTRAÇÃO DO VALOR TOTAL DA NOTA
    ========================================================= */
 
-function extrairValorTotal(texto) {
-    const linhas = String(texto || "")
-        .split(/\n/)
-        .map(function (linha) {
-            return linha.trim();
-        })
-        .filter(Boolean);
+function extrairValorTotal(
+    texto
+) {
+    const conteudo =
+        String(texto || "");
 
-    const padroesPrioritarios = [
-        /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+DA\s+NOTA[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /TOTAL\s+DA\s+NOTA[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+TOTAL\s+(?:DA\s+)?NF[- ]?E[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /TOTAL\s+NF[- ]?E[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+TOTAL\s+(?:DOS\s+)?SERVI[CÇ]OS[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+L[IÍ]QUIDO\s+DA\s+NOTA[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+L[IÍ]QUIDO[^0-9]{0,40}(?:R\$\s*)?([\d.]+,\d{2})/i
+    const linhas =
+        conteudo
+            .split(/\n/)
+            .map(function (linha) {
+                return linha.trim();
+            })
+            .filter(Boolean);
+
+    /*
+     * =====================================================
+     * PRIORIDADE 1
+     * DANFE / NF-e de produtor rural - CANHOTO
+     * =====================================================
+     *
+     * Exemplo:
+     *
+     * Emissão: 01/09/2026
+     * Destinatário: ...
+     * Valor: R$49.680,00
+     *
+     * Neste contexto o campo Valor corresponde
+     * ao TOTAL DA NOTA.
+     *
+     * A descrição dos produtos NÃO participa
+     * do cálculo.
+     */
+
+    const padroesCanhoto = [
+        /EMISS[AÃ]O\s*:\s*\d{2}\/\d{2}\/\d{4}[\s\S]{0,350}?VALOR\s*:\s*R?\$?\s*([\d.]+,\d{2})/i,
+        /DESTINAT[AÁ]RIO\s*:[\s\S]{0,300}?VALOR\s*:\s*R?\$?\s*([\d.]+,\d{2})/i
     ];
 
-    for (const padrao of padroesPrioritarios) {
-        const match = texto.match(padrao);
+    for (
+        const padrao of padroesCanhoto
+    ) {
+        const match =
+            conteudo.match(
+                padrao
+            );
 
-        if (match && match[1]) {
-            const valor = converterNumeroBrasileiro(match[1]);
+        if (
+            match &&
+            match[1]
+        ) {
+            const valor =
+                converterNumeroBrasileiro(
+                    match[1]
+                );
 
             if (valor > 0) {
                 return valor;
@@ -1266,80 +1849,213 @@ function extrairValorTotal(texto) {
     }
 
     /*
-     * Alguns layouts exibem o rótulo em uma linha
-     * e o valor na linha imediatamente seguinte.
+     * =====================================================
+     * PRIORIDADE 2
+     * RÓTULO E VALOR NO MESMO TRECHO
+     * =====================================================
      */
-    for (let i = 0; i < linhas.length; i++) {
-        const normalizada = normalizarComparacao(linhas[i]);
 
-        const ehTotalPrincipal =
-            normalizada.includes("VALOR TOTAL DA NOTA") ||
-            normalizada.includes("VALOR TOTAL NOTA") ||
-            normalizada.includes("TOTAL DA NOTA") ||
-            normalizada.includes("VALOR DA NOTA") ||
-            normalizada.includes("VALOR LIQUIDO") ||
-            normalizada.includes("VALOR TOTAL DOS SERVICOS");
+    const padroesDiretos = [
+        /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
+        /VALOR\s+DA\s+NOTA[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
+        /TOTAL\s+DA\s+NOTA[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
+        /VALOR\s+TOTAL\s+(?:DA\s+)?NF[- ]?E[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
+        /TOTAL\s+NF[- ]?E[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i
+    ];
 
-        if (!ehTotalPrincipal) {
+    for (
+        const padrao of padroesDiretos
+    ) {
+        const match =
+            conteudo.match(
+                padrao
+            );
+
+        if (
+            match &&
+            match[1]
+        ) {
+            const valor =
+                converterNumeroBrasileiro(
+                    match[1]
+                );
+
+            if (valor > 0) {
+                return valor;
+            }
+        }
+    }
+
+    /*
+     * =====================================================
+     * PRIORIDADE 3
+     * VALOR PRÓXIMO DO RÓTULO
+     * =====================================================
+     *
+     * O PDF.js pode devolver:
+     *
+     * 49.680,00
+     * Valor Total da Nota
+     *
+     * Portanto, procura primeiro ANTES do rótulo.
+     */
+
+    for (
+        let i = 0;
+        i < linhas.length;
+        i++
+    ) {
+        const normalizada =
+            normalizarComparacao(
+                linhas[i]
+            );
+
+        const ehTotalDaNota =
+            normalizada.includes(
+                "VALOR TOTAL DA NOTA"
+            ) ||
+            normalizada.includes(
+                "VALOR TOTAL NOTA"
+            ) ||
+            normalizada.includes(
+                "TOTAL DA NOTA"
+            ) ||
+            normalizada ===
+            "VALOR DA NOTA";
+
+        if (!ehTotalDaNota) {
             continue;
         }
 
+        /*
+         * Mesmo item/linha.
+         */
         const valoresMesmaLinha =
-            extrairValoresMonetarios(linhas[i]);
+            extrairValoresMonetarios(
+                linhas[i]
+            );
 
-        if (valoresMesmaLinha.length > 0) {
-            return valoresMesmaLinha[
-                valoresMesmaLinha.length - 1
-            ];
+        if (
+            valoresMesmaLinha.length > 0
+        ) {
+            const valor =
+                valoresMesmaLinha[
+                valoresMesmaLinha.length -
+                1
+                ];
+
+            if (valor > 0) {
+                return valor;
+            }
         }
 
-        for (let proxima = 1; proxima <= 3; proxima++) {
-            const linhaSeguinte = linhas[i + proxima];
+        /*
+         * Procura até 8 itens ANTES.
+         *
+         * Esse é o padrão dos PDFs
+         * de produtor rural testados.
+         */
+        for (
+            let anterior = 1;
+            anterior <= 8;
+            anterior++
+        ) {
+            const linhaAnterior =
+                linhas[
+                i - anterior
+                ];
+
+            if (!linhaAnterior) {
+                continue;
+            }
+
+            const valores =
+                extrairValoresMonetarios(
+                    linhaAnterior
+                );
+
+            if (
+                valores.length > 0
+            ) {
+                const valor =
+                    valores[
+                    valores.length -
+                    1
+                    ];
+
+                if (valor > 0) {
+                    return valor;
+                }
+            }
+        }
+
+        /*
+         * Depois procura até 8 itens DEPOIS.
+         */
+        for (
+            let proxima = 1;
+            proxima <= 8;
+            proxima++
+        ) {
+            const linhaSeguinte =
+                linhas[
+                i + proxima
+                ];
 
             if (!linhaSeguinte) {
                 continue;
             }
 
             const valores =
-                extrairValoresMonetarios(linhaSeguinte);
+                extrairValoresMonetarios(
+                    linhaSeguinte
+                );
 
-            if (valores.length > 0) {
-                return valores[
-                    valores.length - 1
-                ];
+            if (
+                valores.length > 0
+            ) {
+                const valor =
+                    valores[
+                    valores.length -
+                    1
+                    ];
+
+                if (valor > 0) {
+                    return valor;
+                }
             }
         }
     }
 
     /*
-     * Fallback:
-     * utiliza o maior valor encontrado em linhas cujo
-     * conteúdo seja associado ao total.
+     * =====================================================
+     * IMPORTANTE
+     * =====================================================
+     *
+     * NÃO existe fallback utilizando:
+     *
+     * - descrição;
+     * - valor unitário;
+     * - valor dos produtos;
+     * - valor dos serviços;
+     * - subtotal;
+     * - base de cálculo;
+     * - ICMS;
+     * - IPI;
+     * - PIS;
+     * - COFINS;
+     * - frete;
+     * - seguro;
+     * - desconto;
+     * - maior valor encontrado no documento.
+     *
+     * O sistema deve sempre trazer o
+     * VALOR TOTAL DA NOTA.
+     *
+     * Se não for possível identificar esse
+     * valor com segurança, retorna zero e
+     * deixa a nota pendente para conferência.
      */
-    const candidatos = [];
-
-    linhas.forEach(function (linha) {
-        const normalizada =
-            normalizarComparacao(linha);
-
-        if (
-            normalizada.includes("TOTAL") &&
-            !normalizada.includes("TOTAL TRIBUTOS") &&
-            !normalizada.includes("TOTAL IMPOSTOS") &&
-            !normalizada.includes("TOTAL ICMS") &&
-            !normalizada.includes("TOTAL ISS") &&
-            !normalizada.includes("TOTAL PIS") &&
-            !normalizada.includes("TOTAL COFINS")
-        ) {
-            candidatos.push(
-                ...extrairValoresMonetarios(linha)
-            );
-        }
-    });
-
-    if (candidatos.length > 0) {
-        return Math.max(...candidatos);
-    }
 
     return 0;
 }
@@ -1348,7 +2064,9 @@ function extrairValorTotal(texto) {
    VALORES MONETÁRIOS
    ========================================================= */
 
-function extrairValoresMonetarios(texto) {
+function extrairValoresMonetarios(
+    texto
+) {
     const correspondencias =
         String(texto || "").match(
             /(?:R\$\s*)?\d{1,3}(?:\.\d{3})*,\d{2}|(?:R\$\s*)?\d+,\d{2}/g
@@ -1356,18 +2074,26 @@ function extrairValoresMonetarios(texto) {
 
     return correspondencias
         .map(function (valor) {
-            return converterNumeroBrasileiro(valor);
+            return converterNumeroBrasileiro(
+                valor
+            );
         })
         .filter(function (valor) {
-            return Number.isFinite(valor) && valor >= 0;
+            return (
+                Number.isFinite(valor) &&
+                valor >= 0
+            );
         });
 }
 
-function converterNumeroBrasileiro(valor) {
-    let texto = String(valor || "")
-        .replace(/R\$/gi, "")
-        .replace(/\s/g, "")
-        .trim();
+function converterNumeroBrasileiro(
+    valor
+) {
+    let texto =
+        String(valor || "")
+            .replace(/R\$/gi, "")
+            .replace(/\s/g, "")
+            .trim();
 
     if (!texto) {
         return 0;
@@ -1379,9 +2105,14 @@ function converterNumeroBrasileiro(valor) {
             .replace(",", ".");
     }
 
-    texto = texto.replace(/[^\d.-]/g, "");
+    texto =
+        texto.replace(
+            /[^\d.-]/g,
+            ""
+        );
 
-    const numero = Number(texto);
+    const numero =
+        Number(texto);
 
     return Number.isFinite(numero)
         ? numero
@@ -1393,50 +2124,82 @@ function converterNumeroBrasileiro(valor) {
    ========================================================= */
 
 function consolidarNotasNosPeriodos() {
-    const notasValidas = notasProcessadas.filter(function (nota) {
-        return (
-            nota.competencia &&
-            Number(nota.valor) > 0
+    /*
+     * Só entra no cálculo a nota que tenha:
+     *
+     * - competência;
+     * - VALOR TOTAL DA NOTA > 0.
+     */
+
+    const notasValidas =
+        notasProcessadas.filter(
+            function (nota) {
+                return (
+                    nota.competencia &&
+                    Number(nota.valor) > 0
+                );
+            }
         );
-    });
 
     /*
-     * Remove apenas períodos que haviam sido criados
-     * por processamento automático anterior.
+     * Remove apenas períodos que foram
+     * criados automaticamente por OCR/PDF.
+     *
+     * Períodos manuais permanecem.
      */
-    periodosNotas = periodosNotas.filter(function (periodo) {
-        return periodo.origem !== "ocr";
-    });
+    periodosNotas =
+        periodosNotas.filter(
+            function (periodo) {
+                return (
+                    periodo.origem !== "ocr"
+                );
+            }
+        );
 
     const agrupamento = {};
 
-    notasValidas.forEach(function (nota) {
-        const chave = nota.competencia;
+    notasValidas.forEach(
+        function (nota) {
+            const chave =
+                nota.competencia;
 
-        if (!agrupamento[chave]) {
-            agrupamento[chave] = {
-                periodo: formatarCompetenciaExibicao(chave),
-                valor: 0,
-                quantidade: 0
-            };
+            if (!agrupamento[chave]) {
+                agrupamento[chave] = {
+                    periodo:
+                        formatarCompetenciaExibicao(
+                            chave
+                        ),
+                    valor: 0,
+                    quantidade: 0
+                };
+            }
+
+            agrupamento[chave].valor +=
+                nota.valor;
+
+            agrupamento[chave].quantidade++;
         }
-
-        agrupamento[chave].valor += nota.valor;
-        agrupamento[chave].quantidade++;
-    });
+    );
 
     Object.keys(agrupamento)
         .sort()
-        .forEach(function (chave) {
-            const grupo = agrupamento[chave];
+        .forEach(
+            function (chave) {
+                const grupo =
+                    agrupamento[chave];
 
-            adicionarOuSomarPeriodo({
-                periodo: grupo.periodo,
-                valor: grupo.valor,
-                quantidade: grupo.quantidade,
-                origem: "ocr"
-            });
-        });
+                adicionarOuSomarPeriodo({
+                    periodo:
+                        grupo.periodo,
+                    valor:
+                        grupo.valor,
+                    quantidade:
+                        grupo.quantidade,
+                    origem:
+                        "ocr"
+                });
+            }
+        );
 
     ordenarPeriodos();
     renderizarPeriodosNotas();
@@ -1448,20 +2211,30 @@ function consolidarNotasNosPeriodos() {
    ========================================================= */
 
 function renderizarNotasProcessadas() {
-    const tbody = document.getElementById(
-        "tabelaNotasFiscaisIdentificadas"
-    );
+    const tbody =
+        document.getElementById(
+            "tabelaNotasFiscaisIdentificadas"
+        );
 
     if (!tbody) {
         return;
     }
 
+    /*
+     * Limpa integralmente o detalhamento.
+     */
     tbody.innerHTML = "";
 
-    if (notasProcessadas.length === 0) {
-        const tr = document.createElement("tr");
+    if (
+        notasProcessadas.length === 0
+    ) {
+        const tr =
+            document.createElement(
+                "tr"
+            );
 
-        tr.className = "notas-linha-vazia";
+        tr.className =
+            "notas-linha-vazia";
 
         tr.innerHTML = `
             <td colspan="6">
@@ -1474,53 +2247,73 @@ function renderizarNotasProcessadas() {
         return;
     }
 
-    notasProcessadas.forEach(function (nota) {
-        const tr = document.createElement("tr");
+    notasProcessadas.forEach(
+        function (nota) {
+            const tr =
+                document.createElement(
+                    "tr"
+                );
 
-        const classeStatus =
-            nota.data && nota.valor > 0
-                ? "notas-status-sucesso"
-                : nota.data || nota.valor > 0
-                    ? "notas-status-atencao"
-                    : "notas-status-erro";
+            const classeStatus =
+                nota.data &&
+                    nota.valor > 0
+                    ? "notas-status-sucesso"
+                    : nota.data ||
+                        nota.valor > 0
+                        ? "notas-status-atencao"
+                        : "notas-status-erro";
 
-        tr.innerHTML = `
-            <td title="${escaparHtml(nota.arquivo)}">
-                ${escaparHtml(nota.arquivo)}
-            </td>
-            <td>
-                ${nota.data
-                ? escaparHtml(nota.data)
-                : "-"
-            }
-            </td>
-            <td>
-                ${nota.numero
-                ? escaparHtml(nota.numero)
-                : "-"
-            }
-            </td>
-            <td title="${escaparHtml(nota.emitente || "")}">
-                ${nota.emitente
-                ? escaparHtml(nota.emitente)
-                : "-"
-            }
-            </td>
-            <td>
-                ${nota.valor > 0
-                ? formatarMoeda(nota.valor)
-                : "-"
-            }
-            </td>
-            <td>
-                <span class="notas-status ${classeStatus}">
-                    ${escaparHtml(nota.status)}
-                </span>
-            </td>
-        `;
+            tr.innerHTML = `
+                <td title="${escaparHtml(nota.arquivo)}">
+                    ${escaparHtml(nota.arquivo)}
+                </td>
 
-        tbody.appendChild(tr);
-    });
+                <td>
+                    ${nota.data
+                    ? escaparHtml(
+                        nota.data
+                    )
+                    : "-"
+                }
+                </td>
+
+                <td>
+                    ${nota.numero
+                    ? escaparHtml(
+                        nota.numero
+                    )
+                    : "-"
+                }
+                </td>
+
+                <td title="${escaparHtml(nota.emitente || "")}">
+                    ${nota.emitente
+                    ? escaparHtml(
+                        nota.emitente
+                    )
+                    : "-"
+                }
+                </td>
+
+                <td>
+                    ${nota.valor > 0
+                    ? formatarMoeda(
+                        nota.valor
+                    )
+                    : "-"
+                }
+                </td>
+
+                <td>
+                    <span class="notas-status ${classeStatus}">
+                        ${escaparHtml(nota.status)}
+                    </span>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+        }
+    );
 }
 
 /* =========================================================
@@ -1532,30 +2325,42 @@ function mostrarStatusProcessamento(
     titulo = "",
     texto = ""
 ) {
-    const status = document.getElementById(
-        "statusOcrNotasFiscais"
-    );
+    const status =
+        document.getElementById(
+            "statusOcrNotasFiscais"
+        );
 
-    const tituloElemento = document.getElementById(
-        "tituloStatusOcrNotasFiscais"
-    );
+    const tituloElemento =
+        document.getElementById(
+            "tituloStatusOcrNotasFiscais"
+        );
 
-    const textoElemento = document.getElementById(
-        "textoStatusOcrNotasFiscais"
-    );
+    const textoElemento =
+        document.getElementById(
+            "textoStatusOcrNotasFiscais"
+        );
 
     if (!status) {
         return;
     }
 
-    status.hidden = !exibir;
+    status.hidden =
+        !exibir;
 
-    if (tituloElemento && titulo) {
-        tituloElemento.textContent = titulo;
+    if (
+        tituloElemento &&
+        titulo
+    ) {
+        tituloElemento.textContent =
+            titulo;
     }
 
-    if (textoElemento && texto) {
-        textoElemento.textContent = texto;
+    if (
+        textoElemento &&
+        texto
+    ) {
+        textoElemento.textContent =
+            texto;
     }
 }
 
@@ -1581,21 +2386,25 @@ function atualizarProgressoArquivo(
     progressoArquivo,
     descricao
 ) {
-    const progresso = Math.min(
-        100,
-        Math.max(
-            0,
-            Math.round(
-                (
+    const progresso =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                Math.round(
                     (
-                        indiceArquivo +
-                        Number(progressoArquivo || 0)
-                    ) /
-                    totalArquivos
-                ) * 100
+                        (
+                            indiceArquivo +
+                            Number(
+                                progressoArquivo ||
+                                0
+                            )
+                        ) /
+                        totalArquivos
+                    ) * 100
+                )
             )
-        )
-    );
+        );
 
     mostrarStatusProcessamento(
         true,
@@ -1612,63 +2421,92 @@ function exibirMensagemOcr(
     mensagem,
     tipo = "sucesso"
 ) {
-    const resultado = document.getElementById(
-        "resultadoOcrNotasFiscais"
-    );
+    const resultado =
+        document.getElementById(
+            "resultadoOcrNotasFiscais"
+        );
 
     if (!resultado) {
         return;
     }
 
-    resultado.hidden = false;
+    resultado.hidden =
+        false;
 
     resultado.className =
         `notas-resultado-ocr notas-resultado-ocr-${tipo}`;
 
-    resultado.textContent = mensagem;
+    resultado.textContent =
+        mensagem;
 }
 
 function limparMensagemOcr() {
-    const resultado = document.getElementById(
-        "resultadoOcrNotasFiscais"
-    );
+    const resultado =
+        document.getElementById(
+            "resultadoOcrNotasFiscais"
+        );
 
     if (!resultado) {
         return;
     }
 
-    resultado.hidden = true;
-    resultado.textContent = "";
-    resultado.className = "notas-resultado-ocr";
+    resultado.hidden =
+        true;
+
+    resultado.textContent =
+        "";
+
+    resultado.className =
+        "notas-resultado-ocr";
 }
 
 /* =========================================================
    COMPETÊNCIA
    ========================================================= */
 
-function formatarCompetenciaData(dataBrasileira) {
-    const match = String(dataBrasileira || "").match(
-        /^(\d{2})\/(\d{2})\/(\d{4})$/
-    );
+function formatarCompetenciaData(
+    dataBrasileira
+) {
+    const match =
+        String(
+            dataBrasileira ||
+            ""
+        ).match(
+            /^(\d{2})\/(\d{2})\/(\d{4})$/
+        );
 
     if (!match) {
         return "";
     }
 
-    return `${match[3]}-${match[2]}`;
+    return (
+        `${match[3]}-${match[2]}`
+    );
 }
 
-function formatarCompetenciaExibicao(competencia) {
-    const match = String(competencia || "").match(
-        /^(\d{4})-(\d{2})$/
-    );
+function formatarCompetenciaExibicao(
+    competencia
+) {
+    const match =
+        String(
+            competencia ||
+            ""
+        ).match(
+            /^(\d{4})-(\d{2})$/
+        );
 
     if (!match) {
-        return competencia || "";
+        return (
+            competencia ||
+            ""
+        );
     }
 
-    const ano = Number(match[1]);
-    const mes = Number(match[2]);
+    const ano =
+        Number(match[1]);
+
+    const mes =
+        Number(match[2]);
 
     const nomesMeses = [
         "Janeiro",
@@ -1685,7 +2523,9 @@ function formatarCompetenciaExibicao(competencia) {
         "Dezembro"
     ];
 
-    return `${nomesMeses[mes - 1]}/${ano}`;
+    return (
+        `${nomesMeses[mes - 1]}/${ano}`
+    );
 }
 
 /* =========================================================
@@ -1693,36 +2533,59 @@ function formatarCompetenciaExibicao(competencia) {
    ========================================================= */
 
 function ordenarPeriodos() {
-    periodosNotas.sort(function (a, b) {
-        const dataA = converterPeriodoParaOrdenacao(
-            a.periodo
-        );
+    periodosNotas.sort(
+        function (a, b) {
+            const dataA =
+                converterPeriodoParaOrdenacao(
+                    a.periodo
+                );
 
-        const dataB = converterPeriodoParaOrdenacao(
-            b.periodo
-        );
+            const dataB =
+                converterPeriodoParaOrdenacao(
+                    b.periodo
+                );
 
-        if (dataA !== null && dataB !== null) {
-            return dataA - dataB;
+            if (
+                dataA !== null &&
+                dataB !== null
+            ) {
+                return (
+                    dataA -
+                    dataB
+                );
+            }
+
+            if (
+                dataA !== null
+            ) {
+                return -1;
+            }
+
+            if (
+                dataB !== null
+            ) {
+                return 1;
+            }
+
+            return String(
+                a.periodo
+            ).localeCompare(
+                String(
+                    b.periodo
+                ),
+                "pt-BR"
+            );
         }
-
-        if (dataA !== null) {
-            return -1;
-        }
-
-        if (dataB !== null) {
-            return 1;
-        }
-
-        return String(a.periodo).localeCompare(
-            String(b.periodo),
-            "pt-BR"
-        );
-    });
+    );
 }
 
-function converterPeriodoParaOrdenacao(periodo) {
-    const texto = normalizarComparacao(periodo);
+function converterPeriodoParaOrdenacao(
+    periodo
+) {
+    const texto =
+        normalizarComparacao(
+            periodo
+        );
 
     const meses = {
         JANEIRO: 1,
@@ -1739,35 +2602,44 @@ function converterPeriodoParaOrdenacao(periodo) {
         DEZEMBRO: 12
     };
 
-    let match = texto.match(
-        /^([A-Z]+)\s*\/\s*(\d{4})$/
-    );
+    let match =
+        texto.match(
+            /^([A-Z]+)\s*\/\s*(\d{4})$/
+        );
 
-    if (match && meses[match[1]]) {
+    if (
+        match &&
+        meses[match[1]]
+    ) {
         return (
-            Number(match[2]) * 100 +
+            Number(match[2]) *
+            100 +
             meses[match[1]]
         );
     }
 
-    match = texto.match(
-        /^(\d{1,2})\s*\/\s*(\d{4})$/
-    );
+    match =
+        texto.match(
+            /^(\d{1,2})\s*\/\s*(\d{4})$/
+        );
 
     if (match) {
         return (
-            Number(match[2]) * 100 +
+            Number(match[2]) *
+            100 +
             Number(match[1])
         );
     }
 
-    match = texto.match(
-        /^(\d{4})-(\d{2})$/
-    );
+    match =
+        texto.match(
+            /^(\d{4})-(\d{2})$/
+        );
 
     if (match) {
         return (
-            Number(match[1]) * 100 +
+            Number(match[1]) *
+            100 +
             Number(match[2])
         );
     }
@@ -1779,26 +2651,39 @@ function converterPeriodoParaOrdenacao(periodo) {
    NORMALIZAÇÃO DE PERÍODO
    ========================================================= */
 
-function normalizarPeriodoChave(periodo) {
-    return normalizarComparacao(periodo)
-        .replace(/\s/g, "");
+function normalizarPeriodoChave(
+    periodo
+) {
+    return normalizarComparacao(
+        periodo
+    ).replace(
+        /\s/g,
+        ""
+    );
 }
 
 /* =========================================================
    MOEDA
    ========================================================= */
 
-function converterMoedaParaNumero(valor) {
-    const textoOriginal = String(valor || "").trim();
+function converterMoedaParaNumero(
+    valor
+) {
+    const textoOriginal =
+        String(
+            valor ||
+            ""
+        ).trim();
 
     if (!textoOriginal) {
         return 0;
     }
 
-    let texto = textoOriginal
-        .replace(/R\$/gi, "")
-        .replace(/\s/g, "")
-        .trim();
+    let texto =
+        textoOriginal
+            .replace(/R\$/gi, "")
+            .replace(/\s/g, "")
+            .trim();
 
     if (!texto) {
         return 0;
@@ -1807,32 +2692,45 @@ function converterMoedaParaNumero(valor) {
     /*
      * Formato brasileiro.
      */
-    if (texto.includes(",")) {
+    if (
+        texto.includes(",")
+    ) {
         texto = texto
             .replace(/\./g, "")
             .replace(",", ".");
     } else {
-        /*
-         * Caso esteja sendo digitado apenas com números
-         * e tenha vindo da máscara monetária.
-         */
-        texto = texto.replace(/[^\d.-]/g, "");
+        texto =
+            texto.replace(
+                /[^\d.-]/g,
+                ""
+            );
     }
 
-    const numero = Number(texto);
+    const numero =
+        Number(texto);
 
-    return Number.isFinite(numero)
+    return Number.isFinite(
+        numero
+    )
         ? numero
         : 0;
 }
 
-function aplicarMascaraMoeda(input) {
+function aplicarMascaraMoeda(
+    input
+) {
     if (!input) {
         return;
     }
 
-    const apenasNumeros = String(input.value || "")
-        .replace(/\D/g, "");
+    const apenasNumeros =
+        String(
+            input.value ||
+            ""
+        ).replace(
+            /\D/g,
+            ""
+        );
 
     if (!apenasNumeros) {
         input.value = "";
@@ -1840,13 +2738,21 @@ function aplicarMascaraMoeda(input) {
     }
 
     const centavos =
-        Number(apenasNumeros) / 100;
+        Number(
+            apenasNumeros
+        ) / 100;
 
-    input.value = formatarMoeda(centavos);
+    input.value =
+        formatarMoeda(
+            centavos
+        );
 }
 
-function formatarMoeda(valor) {
-    const numero = Number(valor) || 0;
+function formatarMoeda(
+    valor
+) {
+    const numero =
+        Number(valor) || 0;
 
     return numero.toLocaleString(
         "pt-BR",
@@ -1863,22 +2769,36 @@ function formatarMoeda(valor) {
    TAMANHO DO ARQUIVO
    ========================================================= */
 
-function formatarTamanhoArquivo(bytes) {
-    const tamanho = Number(bytes) || 0;
+function formatarTamanhoArquivo(
+    bytes
+) {
+    const tamanho =
+        Number(bytes) || 0;
 
-    if (tamanho < 1024) {
-        return `${tamanho} B`;
+    if (
+        tamanho < 1024
+    ) {
+        return (
+            `${tamanho} B`
+        );
     }
 
-    if (tamanho < 1024 * 1024) {
-        return `${(tamanho / 1024).toFixed(1)} KB`;
+    if (
+        tamanho <
+        1024 * 1024
+    ) {
+        return (
+            `${(tamanho / 1024).toFixed(1)} KB`
+        );
     }
 
-    return `${(
-        tamanho /
-        1024 /
-        1024
-    ).toFixed(2)} MB`;
+    return (
+        `${(
+            tamanho /
+            1024 /
+            1024
+        ).toFixed(2)} MB`
+    );
 }
 
 /* =========================================================
@@ -1888,14 +2808,34 @@ function formatarTamanhoArquivo(bytes) {
 function gerarId() {
     if (
         window.crypto &&
-        typeof window.crypto.randomUUID === "function"
+        typeof window.crypto.randomUUID ===
+        "function"
     ) {
-        return window.crypto.randomUUID();
+        return (
+            window.crypto.randomUUID()
+        );
     }
 
     return (
         Date.now().toString(36) +
-        Math.random().toString(36).substring(2)
+        Math.random()
+            .toString(36)
+            .substring(2)
+    );
+}
+
+/* =========================================================
+   LIBERA A INTERFACE ENTRE PÁGINAS
+   ========================================================= */
+
+function liberarInterface() {
+    return new Promise(
+        function (resolve) {
+            setTimeout(
+                resolve,
+                0
+            );
+        }
     );
 }
 
@@ -1903,23 +2843,49 @@ function gerarId() {
    HTML SEGURO
    ========================================================= */
 
-function escaparHtml(valor) {
-    return String(valor ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+function escaparHtml(
+    valor
+) {
+    return String(
+        valor ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 /* =========================================================
    TEXTO
    ========================================================= */
 
-function definirTexto(id, valor) {
-    const elemento = document.getElementById(id);
+function definirTexto(
+    id,
+    valor
+) {
+    const elemento =
+        document.getElementById(
+            id
+        );
 
     if (elemento) {
-        elemento.textContent = valor;
+        elemento.textContent =
+            valor;
     }
 }
