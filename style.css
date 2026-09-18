@@ -5205,6 +5205,7 @@ footer p,
 /* =========================================================
    PÁGINAS EXPERIMENTAIS - CRÉDITO RURAL
    ========================================================= */
+
 /* =========================================================
    CALCULO-RENDA-NOTAS-FISCAIS.HTML
    ESTILOS INTEGRADOS AO STYLE.CSS
@@ -5343,10 +5344,6 @@ footer p,
     border-radius: 11px;
 }
 
-/*
- * Corrige o SVG enorme que estava aparecendo
- * como um triângulo preto no centro da tela.
- */
 .calculo-notas-container svg {
     display: block;
     width: 24px !important;
@@ -6695,9 +6692,6 @@ footer p,
     }
 }
 
-
-
-
 /* =========================================================
    PORTE-PRODUTOR-RURAL.HTML
    DESKTOP
@@ -6857,7 +6851,6 @@ footer p,
    ========================================================= */
 
 @media (max-width: 900px) {
-
     .porte-produtor-container {
         width: calc(100% - 32px);
         padding-top: 18px;
@@ -6885,7 +6878,6 @@ footer p,
    ========================================================= */
 
 @media (max-width: 700px) {
-
     .porte-produtor-container {
         width: calc(100% - 24px);
         max-width: none;
@@ -7110,7 +7102,6 @@ footer p,
    ========================================================= */
 
 @media (max-width: 480px) {
-
     .porte-produtor-container {
         width: calc(100% - 20px);
         padding-top: 6px;
@@ -7195,7 +7186,6 @@ footer p,
    ========================================================= */
 
 @media (max-width: 360px) {
-
     .porte-produtor-container {
         width: calc(100% - 16px);
     }
@@ -7246,7 +7236,6 @@ footer p,
    ========================================================= */
 
 @media (hover: none) and (pointer: coarse) {
-
     .porte-produtor-container .btn:hover {
         transform: none;
     }
@@ -7257,7 +7246,6 @@ footer p,
    ========================================================= */
 
 @media print {
-
     .porte-produtor-container {
         display: grid !important;
         grid-template-columns:
