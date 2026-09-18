@@ -30,11 +30,17 @@
 
     <main class="container simulador-grid-igual media-movimentacao-container">
 
+        <!-- =====================================================
+             EXTRATO
+             ===================================================== -->
+
         <section class="card card-largura-total">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Movimentação Financeira</span>
+
                     <h2>Extrato da Conta Corrente</h2>
+
                     <p>
                         Copie o extrato do SISBR e cole no campo abaixo.
                         Podem ser utilizados textos simples ou conteúdos copiados
@@ -48,12 +54,13 @@
                     Extrato
                 </label>
 
-                <textarea id="textoExtratoMovimentacao" rows="18"
+                <textarea id="textoExtratoMovimentacao" rows="10"
                     placeholder="Cole aqui o extrato da conta corrente..."></textarea>
 
                 <small>
-                    O motor irá considerar somente linhas de movimentação que
-                    possuam data, histórico e valor identificáveis.
+                    O motor irá identificar automaticamente as movimentações,
+                    históricos, créditos, débitos e informações que não fazem
+                    parte do cálculo da média.
                 </small>
             </div>
 
@@ -68,11 +75,17 @@
             </div>
         </section>
 
+        <!-- =====================================================
+             PERÍODO
+             ===================================================== -->
+
         <section class="card configuracao-card">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Período</span>
+
                     <h2>Período de Apuração</h2>
+
                     <p>
                         A quantidade de meses é identificada automaticamente
                         pelas movimentações encontradas no extrato.
@@ -108,11 +121,17 @@
             </div>
         </section>
 
+        <!-- =====================================================
+             RESULTADO
+             ===================================================== -->
+
         <aside class="card resultado-card">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Resultado</span>
+
                     <h2>Média de Movimentação</h2>
+
                     <p>
                         Resultado calculado com base apenas nos créditos válidos.
                     </p>
@@ -153,7 +172,7 @@
                 </div>
 
                 <div class="resultado-item">
-                    <span>Movimentos removidos</span>
+                    <span>Créditos removidos</span>
 
                     <strong id="resultadoQtdExcluidos">
                         0
@@ -162,11 +181,50 @@
             </div>
         </aside>
 
+        <!-- =====================================================
+             REGRAS / HISTÓRICOS
+             ===================================================== -->
+
+        <section class="card card-largura-total">
+            <div class="titulo-secao">
+                <div>
+                    <span class="categoria-etiqueta">Regras</span>
+
+                    <h2>Históricos do Extrato</h2>
+
+                    <p>
+                        Todos os históricos identificados no extrato são
+                        apresentados abaixo. Nos históricos de crédito,
+                        marque a opção quando o movimento não deve compor
+                        o cálculo da média.
+                    </p>
+                </div>
+            </div>
+
+            <div id="resumoRegrasMovimentacao" class="aviso-info">
+                Processe um extrato para visualizar os históricos encontrados.
+            </div>
+
+            <div class="separador"></div>
+
+            <div id="listaRegrasMovimentacao">
+                <div class="sem-dados">
+                    Nenhum histórico identificado.
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             RESUMO MENSAL
+             ===================================================== -->
+
         <section class="card card-largura-total">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Resumo Mensal</span>
+
                     <h2>Movimentação por Mês</h2>
+
                     <p>
                         Total de créditos válidos identificados em cada período.
                     </p>
@@ -194,11 +252,17 @@
             </div>
         </section>
 
+        <!-- =====================================================
+             MOVIMENTAÇÕES CONSIDERADAS
+             ===================================================== -->
+
         <section class="card card-largura-total">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Movimentações</span>
+
                     <h2>Créditos Considerados</h2>
+
                     <p>
                         Movimentações que efetivamente compõem o cálculo.
                     </p>
@@ -227,14 +291,20 @@
             </div>
         </section>
 
+        <!-- =====================================================
+             MOVIMENTAÇÕES EXCLUÍDAS
+             ===================================================== -->
+
         <section class="card card-largura-total">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Exclusões</span>
+
                     <h2>Movimentações Desconsideradas</h2>
+
                     <p>
                         Créditos identificados no extrato que foram removidos
-                        automaticamente pelas regras do cálculo.
+                        automaticamente ou manualmente pelas regras do cálculo.
                     </p>
                 </div>
             </div>
