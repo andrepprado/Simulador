@@ -4,133 +4,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo de Renda por Notas Fiscais | Sicoob Mantiqueira</title>
-    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
+
+    <title>Cálculo de Renda por Notas Fiscais</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
     <header class="topo">
-        <div class="container topo-conteudo">
-            <div class="topo-textos">
-                <h1>Cálculo de Renda por Notas Fiscais</h1>
-                <p>Apuração orientativa da renda agropecuária com base no período representado pelas notas fiscais.</p>
-            </div>
-            <div class="topo-logo">
-                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
-            </div>
+        <div class="topo-conteudo">
+            <a href="index.html" class="logo-link">
+                <img src="img/logo-sicoob.png" alt="Sicoob" class="logo">
+            </a>
+
+            <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+                ☰
+            </button>
+
+            <nav id="menuPrincipal" class="menu-principal"></nav>
         </div>
     </header>
-
-    <div id="menuPrincipal"></div>
 
     <main class="container simulador-grid-igual calculo-notas-container">
 
         <section class="card configuracao-card card-largura-total">
-            <div class="titulo-secao">
-                <span class="categoria-etiqueta">Crédito Rural</span>
-                <h2>Orientações para o Cálculo</h2>
-                <p>O cálculo deve considerar o período econômico efetivamente representado pela documentação
-                    apresentada.</p>
+
+            <div class="card-cabecalho">
+                <div>
+                    <h1>Cálculo de Renda por Notas Fiscais</h1>
+
+                    <p class="texto-apoio">
+                        Informe manualmente os períodos ou envie notas fiscais
+                        para leitura automática.
+                    </p>
+                </div>
             </div>
 
-            <div class="documentos-observacao calculo-notas-orientacoes">
-                <strong>Regras utilizadas:</strong>
-                <ul>
-                    <li>Não utilizar a atividade rural como regra fixa para definição do período.</li>
-                    <li>Não utilizar a quantidade de notas fiscais como quantidade de meses.</li>
-                    <li>Informe manualmente quantos meses são efetivamente representados pelas notas.</li>
-                    <li>Quando as notas representarem uma safra ou ciclo anual, utilize 12 meses.</li>
-                    <li>Quando houver mais de um conjunto de notas, cadastre cada período separadamente.</li>
-                    <li>A renda mensal de cada período é calculada por: Valor Total das Notas ÷ Meses de Apuração.</li>
-                </ul>
-            </div>
         </section>
 
-        <section class="card configuracao-card card-largura-total">
-            <div class="titulo-secao">
-                <h2>Períodos de Apuração</h2>
-                <p>Inclua um período para cada conjunto de documentos que represente uma apuração distinta.</p>
+        <section class="card formulario-card card-largura-total">
+
+            <div class="card-cabecalho">
+                <div>
+                    <h2>Importação de Notas Fiscais</h2>
+
+                    <p class="texto-apoio">
+                        Selecione arquivos de notas fiscais brasileiras.
+                        O sistema fará a leitura dos documentos e preencherá
+                        automaticamente os períodos do cálculo.
+                    </p>
+                </div>
+            </div>
+
+            <div class="campo-formulario">
+
+                <label for="arquivosNotasFiscais">
+                    Arquivos
+                </label>
+
+                <input type="file" id="arquivosNotasFiscais"
+                    accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple>
+
+                <small class="texto-ajuda">
+                    Formatos aceitos: PDF, PNG, JPG, JPEG e WEBP.
+                </small>
+
+            </div>
+
+            <div class="acoes-formulario">
+
+                <button type="button" class="btn btn-primario" id="btnProcessarNotasFiscais">
+                    Processar Notas Fiscais
+                </button>
+
+                <button type="button" class="btn btn-secundario" id="btnLimparArquivosNotas">
+                    Limpar Arquivos
+                </button>
+
+            </div>
+
+            <div id="statusOcrNotas" class="ocr-status" hidden></div>
+
+            <div id="progressoOcrNotas" class="ocr-progresso" hidden>
+
+                <div class="ocr-progresso-barra">
+                    <div id="progressoOcrNotasBarra" class="ocr-progresso-preenchimento" style="width: 0%;"></div>
+                </div>
+
+                <div id="progressoOcrNotasTexto" class="ocr-progresso-texto">
+                    0%
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="card tabela-card card-largura-total" id="cardNotasProcessadas" hidden>
+
+            <div class="card-cabecalho">
+                <div>
+                    <h2>Notas Identificadas</h2>
+
+                    <p class="texto-apoio">
+                        Confira os dados identificados antes de utilizar o resultado.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tabela-scroll">
+
+                <table class="tabela-padrao">
+
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Data de emissão</th>
+                            <th>Período</th>
+                            <th>Valor da nota</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelaNotasProcessadas"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <section class="card formulario-card card-largura-total">
+
+            <div class="card-cabecalho">
+
+                <div>
+                    <h2>Períodos</h2>
+
+                    <p class="texto-apoio">
+                        Cada período representa uma competência utilizada no cálculo
+                        da renda.
+                    </p>
+                </div>
+
+                <button type="button" class="btn btn-secundario" id="btnAdicionarPeriodo">
+                    Adicionar Período
+                </button>
+
             </div>
 
             <div id="listaPeriodosNotas"></div>
 
-            <div class="acoes calculo-notas-acoes-periodo">
-                <button type="button" id="btnAdicionarPeriodo" class="btn btn-primario">
-                    + Adicionar Período
+        </section>
+
+        <section class="card formulario-card card-largura-total">
+
+            <div class="card-cabecalho">
+
+                <div>
+                    <h2>Calculadora Auxiliar de Notas</h2>
+
+                    <p class="texto-apoio">
+                        Utilize esta área para somar notas individualmente.
+                    </p>
+                </div>
+
+                <button type="button" class="btn btn-secundario" id="btnAdicionarNotaAuxiliar">
+                    Adicionar Nota
                 </button>
-            </div>
-        </section>
 
-        <section class="card resumo-card card-largura-total">
-            <div class="titulo-secao">
-                <h2>Resultado da Apuração</h2>
-                <p>Consolidação de todos os períodos informados.</p>
-            </div>
-
-            <div class="resultado-destaque">
-                <span>Renda Mensal Total</span>
-                <strong id="resultadoRendaMensal">R$ 0,00</strong>
-            </div>
-
-            <div class="resultados-grid-3">
-                <div class="resultado-item">
-                    <span>Renda Anual Projetada</span>
-                    <strong id="resultadoRendaAnual">R$ 0,00</strong>
-                </div>
-
-                <div class="resultado-item">
-                    <span>Total de Notas / Receitas</span>
-                    <strong id="resultadoTotalNotas">R$ 0,00</strong>
-                </div>
-
-                <div class="resultado-item">
-                    <span>Períodos Informados</span>
-                    <strong id="resultadoQtdPeriodos">0</strong>
-                </div>
-            </div>
-        </section>
-
-        <section class="card configuracao-card card-largura-total">
-            <div class="titulo-secao">
-                <h2>Calculadora Auxiliar de Notas</h2>
-                <p>Utilize quando houver várias notas dentro de um mesmo mês e você precisar obter o total mensal.</p>
             </div>
 
             <div id="listaNotasAuxiliares"></div>
 
-            <div class="acoes">
-                <button type="button" id="btnAdicionarNotaAuxiliar" class="btn btn-secundario">
-                    + Adicionar Nota
-                </button>
-            </div>
-
-            <div class="linha-selecionada">
+            <div class="resultado-linha">
                 <span>Total das notas auxiliares</span>
                 <strong id="totalNotasAuxiliares">R$ 0,00</strong>
             </div>
+
         </section>
 
-        <div class="acoes card-largura-total">
-            <button type="button" id="btnLimparCalculoNotas" class="btn btn-secundario">
-                Limpar
-            </button>
-        </div>
+        <section class="card resultado-card card-largura-total">
+
+            <div class="card-cabecalho">
+                <div>
+                    <h2>Resultado</h2>
+                </div>
+            </div>
+
+            <div class="resultado-grid">
+
+                <div class="resultado-item">
+                    <span>Renda Mensal</span>
+                    <strong id="resultadoRendaMensal">
+                        R$ 0,00
+                    </strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Renda Anual</span>
+                    <strong id="resultadoRendaAnual">
+                        R$ 0,00
+                    </strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Total das Notas</span>
+                    <strong id="resultadoTotalNotas">
+                        R$ 0,00
+                    </strong>
+                </div>
+
+                <div class="resultado-item">
+                    <span>Quantidade de Períodos</span>
+                    <strong id="resultadoQtdPeriodos">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="acoes-formulario">
+
+                <button type="button" class="btn btn-secundario" id="btnLimparCalculoNotas">
+                    Limpar Cálculo
+                </button>
+
+            </div>
+
+        </section>
 
     </main>
 
-    <footer>
-        <div class="container">
-            <p>
-                Caixa de Ferramentas | Sicoob Mantiqueira |
-                Desenvolvimento e Gestão: Área de Processos
-            </p>
-        </div>
-    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <script src="js/calculo-renda-notas-fiscais.js"></script>
+    <script src="js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
+
 </body>
 
 </html>
