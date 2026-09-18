@@ -6989,8 +6989,9 @@ footer p,
 #textoExtratoMovimentacao {
     width: 100%;
     min-width: 0;
-    min-height: 360px;
-    padding: 16px;
+    min-height: 220px;
+    height: 220px;
+    padding: 14px;
     background: #FBFCFC;
     color: var(--texto);
     border: 1px solid var(--borda-forte);
@@ -6999,11 +7000,12 @@ footer p,
         Consolas,
         "Courier New",
         monospace;
-    font-size: 12px;
-    line-height: 1.5;
+    font-size: 11px;
+    line-height: 1.45;
     white-space: pre-wrap;
     word-break: normal;
     overflow-wrap: normal;
+    overflow-y: auto;
     resize: vertical;
 }
 
