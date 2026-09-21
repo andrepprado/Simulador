@@ -24,6 +24,13 @@ const historicosIncluidosManualmente = new Set();
 
 /* =========================================================
    REGRAS AUTOMÁTICAS DE EXCLUSÃO
+
+   IMPORTANTE:
+   - todas estas regras iniciam EXCLUÍDAS;
+   - aparecem marcadas na interface;
+   - o checkbox permanece liberado;
+   - se o usuário desmarcar, a regra poderá ser incluída
+     manualmente, exceto débitos e indicador "*".
 ========================================================= */
 
 const REGRAS_EXCLUSAO_MOVIMENTACAO = [
@@ -43,7 +50,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "cred-liberacao-td",
         rotulo: "CRÉD. LIBERAÇÃO TD",
-        motivo: "Antecipação de recebíveis não é considerada renda.",
+        motivo: "Liberação de título descontado não representa renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return (
@@ -56,7 +63,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "cred-liberacao-bndes",
         rotulo: "CRÉD. LIBERAÇÃO BNDES",
-        motivo: "Liberação de empréstimo junto ao BNDES não é renda.",
+        motivo: "Liberação de recurso de financiamento BNDES não representa renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return (
@@ -68,7 +75,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "cred-liberacao-cartao",
         rotulo: "CRÉD. LIBERAÇÃO TÍTULO REC. CARTÃO",
-        motivo: "Liberação de recebível de cartão desconsiderada conforme regra.",
+        motivo: "Liberação de título de recebível de cartão deve ser desconsiderada.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return (
@@ -118,7 +125,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "estorno-compra-mastercard",
         rotulo: "ESTORNO COMPRA MASTERCARD",
-        motivo: "Estorno não representa renda.",
+        motivo: "Estorno de compra não representa renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return (
@@ -130,7 +137,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "estorno-deb-convenio",
         rotulo: "ESTORNO DÉB. CONV. DEMAIS EMPRESAS",
-        motivo: "Estorno não representa renda.",
+        motivo: "Estorno de débito não representa renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return (
@@ -163,7 +170,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "coopera-resgate-pontos",
         rotulo: "COOPERA - CRÉDITO RESGATE PONTOS C/C",
-        motivo: "Resgate de pontos Coopera não representa renda operacional.",
+        motivo: "Resgate de pontos Coopera não representa renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return (
@@ -179,16 +186,19 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "saldo-anterior",
         rotulo: "SALDO ANTERIOR",
-        motivo: "Linha informativa do extrato.",
+        motivo: "Saldo anterior é somente uma linha informativa.",
         ignorarPeriodo: true,
         testar: function (historico) {
-            return historico.includes("SALDO ANTERIOR");
+            return (
+                historico.includes("SALDO ANTERIOR") &&
+                !historico.includes("SALDO BLOQUEADO ANTERIOR")
+            );
         }
     },
     {
         id: "saldo-bloqueado-anterior",
         rotulo: "SALDO BLOQUEADO ANTERIOR",
-        motivo: "Linha informativa do extrato.",
+        motivo: "Saldo bloqueado anterior é somente uma linha informativa.",
         ignorarPeriodo: true,
         testar: function (historico) {
             return historico.includes("SALDO BLOQUEADO ANTERIOR");
@@ -197,7 +207,7 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
     {
         id: "saldo-dia",
         rotulo: "SALDO DO DIA",
-        motivo: "Linha informativa do extrato.",
+        motivo: "Saldo do dia é somente uma linha informativa.",
         ignorarPeriodo: true,
         testar: function (historico) {
             return (
@@ -210,6 +220,10 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
 
 /* =========================================================
    HISTÓRICOS QUE REPRESENTAM CRÉDITO
+
+   O indicador C continua sendo a principal identificação.
+   Esta lista cobre situações em que o texto copiado não
+   preserva corretamente o indicador.
 ========================================================= */
 
 const PADROES_CREDITO_SEM_INDICADOR = [
@@ -235,7 +249,8 @@ const PADROES_CREDITO_SEM_INDICADOR = [
     "OUTROS CREDITOS",
     "CRED DISTRIBUICAO SOBRAS VALORES",
     "CR COMPRAS",
-    "CR ANTECIPACAO"
+    "CR ANTECIPACAO",
+    "CRED LIQUIDACAO COBRANCA"
 ];
 
 /* =========================================================
@@ -250,7 +265,7 @@ function iniciarMediaMovimentacao() {
 }
 
 /* =========================================================
-   CAMPOS SEMPRE EDITÁVEIS
+   CAMPOS EDITÁVEIS
 ========================================================= */
 
 function liberarCamposEdicaoMovimentacao() {
@@ -349,8 +364,10 @@ function configurarEventosMediaMovimentacao() {
                 }
 
                 aplicarPeriodoInformadoPeloUsuario();
+
                 classificarMovimentacoes();
                 calcularResultadosMovimentacao();
+
                 renderizarHistoricosExtrato();
                 renderizarResultadosMovimentacao();
             }
@@ -369,54 +386,41 @@ function configurarEventosMediaMovimentacao() {
 
                 classificarMovimentacoes();
                 calcularResultadosMovimentacao();
+                renderizarHistoricosExtrato();
                 renderizarResultadosMovimentacao();
             }
         );
     }
 
-    [primeiraData, ultimaData].forEach(
-        function (campo) {
-            if (!campo) {
-                return;
-            }
-
-            campo.disabled = false;
-            campo.readOnly = false;
-
-            campo.removeAttribute("disabled");
-            campo.removeAttribute("readonly");
-
-            campo.addEventListener(
-                "input",
-                aplicarMascaraDataCampo
-            );
-
-            campo.addEventListener(
-                "blur",
-                function () {
-                    if (!movimentacoesExtrato.length) {
-                        return;
-                    }
-
-                    aplicarPeriodoInformadoPeloUsuario({
-                        recalcularMesesDetectados: true,
-                        preservarMesesConsiderados: true
-                    });
-
-                    calcularResultadosMovimentacao();
-                    renderizarResultadosMovimentacao();
-                }
-            );
+    [primeiraData, ultimaData].forEach(function (campo) {
+        if (!campo) {
+            return;
         }
-    );
+
+        campo.addEventListener(
+            "input",
+            aplicarMascaraDataCampo
+        );
+
+        campo.addEventListener(
+            "blur",
+            function () {
+                if (!movimentacoesExtrato.length) {
+                    return;
+                }
+
+                aplicarPeriodoInformadoPeloUsuario({
+                    recalcularMesesDetectados: true,
+                    preservarMesesConsiderados: true
+                });
+
+                calcularResultadosMovimentacao();
+                renderizarResultadosMovimentacao();
+            }
+        );
+    });
 
     if (mesesDetectados) {
-        mesesDetectados.disabled = false;
-        mesesDetectados.readOnly = false;
-
-        mesesDetectados.removeAttribute("disabled");
-        mesesDetectados.removeAttribute("readonly");
-
         mesesDetectados.addEventListener(
             "input",
             function () {
@@ -446,12 +450,6 @@ function configurarEventosMediaMovimentacao() {
     }
 
     if (mesesConsiderados) {
-        mesesConsiderados.disabled = false;
-        mesesConsiderados.readOnly = false;
-
-        mesesConsiderados.removeAttribute("disabled");
-        mesesConsiderados.removeAttribute("readonly");
-
         mesesConsiderados.addEventListener(
             "input",
             function () {
@@ -529,6 +527,7 @@ function processarMovimentacao() {
     identificarPeriodoExtrato();
     classificarMovimentacoes();
     calcularResultadosMovimentacao();
+
     renderizarHistoricosExtrato();
     renderizarResultadosMovimentacao();
 
@@ -536,7 +535,7 @@ function processarMovimentacao() {
 }
 
 /* =========================================================
-   RESET
+   RESET DO ESTADO
 ========================================================= */
 
 function resetarEstadoMovimentacao() {
@@ -551,7 +550,6 @@ function resetarEstadoMovimentacao() {
     ultimaDataExtratoAutomatica = null;
 
     mesesDetectadosAutomaticos = 0;
-
     formatoDataExtrato = "BR";
 
     historicosExcluidosManualmente.clear();
@@ -559,7 +557,7 @@ function resetarEstadoMovimentacao() {
 }
 
 /* =========================================================
-   INTERPRETAÇÃO
+   INTERPRETAÇÃO DO EXTRATO
 ========================================================= */
 
 function interpretarExtratoMovimentacao(
@@ -652,10 +650,17 @@ function interpretarExtratoMovimentacao(
 /* =========================================================
    PREPARAÇÃO DO TEXTO
 
-   IMPORTANTE:
-   - NÃO interrompe quando aparece outro SALDO ANTERIOR.
-   - permite vários meses concatenados.
-   - ignora RESUMO do SISBR.
+   CORREÇÃO IMPORTANTE:
+
+   O usuário pode colar:
+   - somente as linhas do extrato;
+   - texto copiado do Excel;
+   - um extrato SISBR completo;
+   - vários extratos SISBR completos concatenados;
+   - vários meses sem repetir o cabeçalho;
+   - blocos separados por RESUMO.
+
+   O processamento NÃO pode parar no primeiro RESUMO.
 ========================================================= */
 
 function prepararTrechoExtrato(
@@ -671,18 +676,25 @@ function prepararTrechoExtrato(
 
     const linhasValidas = [];
 
+    let processandoMovimentacoes = false;
     let dentroResumo = false;
-    let iniciouExtrato = false;
 
     for (
         let i = 0;
         i < linhas.length;
         i++
     ) {
-        const linha =
+        const linhaOriginal =
             String(
                 linhas[i] || ""
             );
+
+        const linha =
+            linhaOriginal.trim();
+
+        if (!linha) {
+            continue;
+        }
 
         const normalizada =
             normalizarTexto(
@@ -693,96 +705,103 @@ function prepararTrechoExtrato(
             continue;
         }
 
+        /* =====================================================
+           CABEÇALHO DE MOVIMENTAÇÕES
+        ===================================================== */
+
         const ehCabecalho =
             normalizada.includes("DATA") &&
             normalizada.includes("HISTORICO") &&
             normalizada.includes("VALOR");
 
         if (ehCabecalho) {
-            iniciouExtrato = true;
+            processandoMovimentacoes = true;
             dentroResumo = false;
             continue;
         }
 
+        /* =====================================================
+           LINHA COM DATA NO INÍCIO
+
+           Uma linha com data pode ser:
+           - movimentação real;
+           - SALDO ANTERIOR;
+           - início de um novo extrato SISBR.
+
+           Portanto ela também reabre o processamento depois
+           de um RESUMO.
+        ===================================================== */
+
         const possuiDataInicio =
             /^\s*\d{1,2}\/\d{1,2}\/\d{2,4}(?=\s|\t|\||$)/.test(
-                linha
+                linhaOriginal
             );
 
-        const ehSaldoAnterior =
-            normalizada.includes(
-                "SALDO ANTERIOR"
-            ) &&
-            !normalizada.includes(
-                "SALDO BLOQUEADO ANTERIOR"
-            );
-
-        const ehSaldoBloqueadoAnterior =
-            normalizada.includes(
-                "SALDO BLOQUEADO ANTERIOR"
-            );
-
-        const ehInicioNovoBloco =
-            possuiDataInicio &&
-            (
-                ehSaldoAnterior ||
-                ehSaldoBloqueadoAnterior
-            );
+        /* =====================================================
+           RESUMO
+        ===================================================== */
 
         if (
             normalizada === "RESUMO" ||
             normalizada.startsWith(
                 "RESUMO "
-            )
-        ) {
-            dentroResumo = true;
-            continue;
-        }
-
-        if (
+            ) ||
             normalizada.includes(
                 "LANCAMENTOS FUTUROS"
             )
         ) {
             dentroResumo = true;
+            processandoMovimentacoes = false;
+            continue;
+        }
+
+        /* =====================================================
+           NOVO BLOCO APÓS UM RESUMO
+
+           Esta é uma das correções principais.
+
+           Mesmo que o novo extrato não traga novamente:
+           DATA DOCUMENTO HISTÓRICO VALOR
+
+           uma nova linha iniciada por data permite retomar
+           o processamento.
+        ===================================================== */
+
+        if (
+            dentroResumo &&
+            possuiDataInicio
+        ) {
+            dentroResumo = false;
+            processandoMovimentacoes = true;
+
+            linhasValidas.push(
+                linhaOriginal
+            );
+
             continue;
         }
 
         if (dentroResumo) {
-            /*
-             * Se outro extrato foi colado logo depois
-             * de um resumo, voltamos a processar no
-             * novo cabeçalho ou SALDO ANTERIOR.
-             */
-            if (ehInicioNovoBloco) {
-                dentroResumo = false;
-                iniciouExtrato = true;
-
-                linhasValidas.push(
-                    linha
-                );
-            }
-
             continue;
         }
 
-        /*
-         * Texto sem cabeçalho, por exemplo copiado
-         * diretamente do Excel.
-         */
+        /* =====================================================
+           EXTRATO COLADO SEM CABEÇALHO
+        ===================================================== */
+
         if (
-            !iniciouExtrato &&
+            !processandoMovimentacoes &&
             possuiDataInicio
         ) {
-            iniciouExtrato = true;
+            processandoMovimentacoes = true;
         }
 
-        if (!iniciouExtrato) {
+        if (!processandoMovimentacoes) {
             continue;
         }
 
         linhasValidas.push(
-            linha
+            linhaOriginal
         );
     }
 
@@ -833,6 +852,18 @@ function deveIgnorarLinhaExtrato(
     }
 
     if (
+        normalizado === "SICOOB" ||
+        normalizado.includes(
+            "SISTEMA DE COOPERATIVAS DE CREDITO DO BRASIL"
+        ) ||
+        normalizado.includes(
+            "SISBR SISTEMA DE INFORMATICA DO SICOOB"
+        )
+    ) {
+        return true;
+    }
+
+    if (
         normalizado.startsWith(
             "COOP "
         )
@@ -851,6 +882,15 @@ function deveIgnorarLinhaExtrato(
     if (
         normalizado.includes(
             "EXTRATO CONTA CORRENTE"
+        )
+    ) {
+        return true;
+    }
+
+    if (
+        normalizado === "RESUMO" ||
+        normalizado.startsWith(
+            "RESUMO "
         )
     ) {
         return true;
@@ -966,7 +1006,6 @@ function interpretarLinhaTabelaExtrato(
         return {
             dataCorrente:
                 dataMovimentacao,
-
             movimentacao:
                 null
         };
@@ -981,7 +1020,6 @@ function interpretarLinhaTabelaExtrato(
         return {
             dataCorrente:
                 dataMovimentacao,
-
             movimentacao:
                 null
         };
@@ -1079,7 +1117,6 @@ function interpretarLinhaTextoExtrato(
         return {
             dataCorrente:
                 dataMovimentacao,
-
             movimentacao:
                 null
         };
@@ -1094,7 +1131,6 @@ function interpretarLinhaTextoExtrato(
         return {
             dataCorrente:
                 dataMovimentacao,
-
             movimentacao:
                 null
         };
@@ -1293,6 +1329,18 @@ function extrairValorIndicador(
         return null;
     }
 
+    let indicador =
+        String(
+            correspondencia[2] || ""
+        ).toUpperCase();
+
+    if (
+        !indicador &&
+        numero < 0
+    ) {
+        indicador = "D";
+    }
+
     return {
         valor:
             Math.abs(
@@ -1300,9 +1348,7 @@ function extrairValorIndicador(
             ),
 
         indicador:
-            String(
-                correspondencia[2] || ""
-            ).toUpperCase()
+            indicador
     };
 }
 
@@ -1452,18 +1498,21 @@ function pareceDocumento(
     }
 
     if (
-        /^[A-Z]{0,10}\d+[A-Z0-9./-]*$/i.test(
+        /^[A-Z]{0,15}\d+[A-Z0-9./-]*$/i.test(
             texto
         )
     ) {
         return true;
     }
 
+    const normalizado =
+        normalizarTexto(
+            texto
+        );
+
     if (
-        /^(PIX|MASTERCARD|CONSORCIOS|SICOOB)$/i.test(
-            normalizarTexto(
-                texto
-            )
+        /^(PIX|MASTERCARD|CONSORCIOS|SICOOB|RECARGA|ESTORNO)$/.test(
+            normalizado
         )
     ) {
         return true;
@@ -1634,6 +1683,10 @@ function classificarMovimentacoes() {
     );
 }
 
+/* =========================================================
+   CLASSIFICAÇÃO INDIVIDUAL
+========================================================= */
+
 function classificarMovimentacao(
     movimentacao
 ) {
@@ -1646,96 +1699,132 @@ function classificarMovimentacao(
             historico
         );
 
-    /*
-     * Quando uma regra automática foi desmarcada,
-     * permitimos excepcionalmente sua inclusão.
-     */
     const inclusaoManual =
         historicosIncluidosManualmente.has(
             historico
         );
+
+    /* =====================================================
+       EXCLUSÃO AUTOMÁTICA
+
+       Esta verificação ocorre ANTES do indicador C.
+
+       Isso é fundamental para:
+       - CRÉD. EMPRÉSTIMO
+       - CRÉD. LIBERAÇÃO TD
+       - devolução PIX
+       - cheque devolvido
+       - estornos
+       - resgates
+       - etc.
+
+       Ou seja: ter "C" não transforma uma exclusão
+       obrigatória em renda.
+    ===================================================== */
 
     if (
         regra &&
         !inclusaoManual
     ) {
         return {
-            considerado: false,
+            considerado:
+                false,
+
             motivo:
-                regra.rotulo
+                regra.rotulo +
+                " - " +
+                regra.motivo
         };
     }
 
-    /*
-     * Débito nunca entra automaticamente.
-     */
+    /* =====================================================
+       DÉBITO
+    ===================================================== */
+
     if (
         movimentacao.indicador === "D"
     ) {
         return {
-            considerado: false,
-            motivo: "Débito"
+            considerado:
+                false,
+
+            motivo:
+                "Débito"
         };
     }
 
-    /*
-     * Indicador informativo.
-     */
+    /* =====================================================
+       INFORMATIVO / BLOQUEADO
+    ===================================================== */
+
     if (
         movimentacao.indicador === "*"
     ) {
         return {
-            considerado: false,
+            considerado:
+                false,
+
             motivo:
                 "Valor bloqueado/informativo"
         };
     }
 
-    /*
-     * Exclusão escolhida pelo usuário.
-     */
+    /* =====================================================
+       EXCLUSÃO MANUAL
+    ===================================================== */
+
     if (
         historicosExcluidosManualmente.has(
             historico
         )
     ) {
         return {
-            considerado: false,
+            considerado:
+                false,
+
             motivo:
                 "Exclusão manual"
         };
     }
 
-    /*
-     * Crédito explícito.
-     */
+    /* =====================================================
+       CRÉDITO EXPLÍCITO
+    ===================================================== */
+
     if (
         movimentacao.indicador === "C"
     ) {
         return {
-            considerado: true,
+            considerado:
+                true,
+
             motivo:
                 "Crédito considerado"
         };
     }
 
-    /*
-     * Crédito identificado pelo histórico.
-     */
+    /* =====================================================
+       CRÉDITO IDENTIFICADO PELO HISTÓRICO
+    ===================================================== */
+
     if (
         identificarCreditoSemIndicador(
             historico
         )
     ) {
         return {
-            considerado: true,
+            considerado:
+                true,
+
             motivo:
                 "Crédito identificado pelo histórico"
         };
     }
 
     return {
-        considerado: false,
+        considerado:
+            false,
+
         motivo:
             "Movimentação não identificada como crédito"
     };
@@ -1808,10 +1897,7 @@ function ehCreditoPotencial(
             movimentacao.historicoNormalizado
         );
 
-    if (
-        regra &&
-        regra.ignorarPeriodo
-    ) {
+    if (regra) {
         return false;
     }
 
@@ -1879,7 +1965,7 @@ function renderizarHistoricosExtrato() {
             historicos.length +
             " histórico(s) diferente(s) identificado(s) em " +
             movimentacoesExtrato.length +
-            " lançamento(s). As exclusões automáticas já aparecem marcadas, porém todos os campos permanecem livres para alteração.";
+            " lançamento(s). As exclusões automáticas estão marcadas e desconsideradas do cálculo por padrão. As marcações permanecem disponíveis para alteração manual.";
     }
 
     historicos.forEach(
@@ -1925,24 +2011,23 @@ function renderizarHistoricosExtrato() {
 
             if (regraAutomatica) {
                 status =
-                    "Exclusão automática: " +
-                    regraAutomatica.motivo +
-                    " · marcação livre";
+                    "Exclusão automática ativa: " +
+                    regraAutomatica.motivo;
             } else if (
                 grupo.creditosPotenciais > 0
             ) {
                 status =
                     grupo.creditosPotenciais +
-                    " crédito(s) identificado(s) · marque para desconsiderar";
+                    " crédito(s) considerado(s) · marque para excluir";
             } else if (
                 grupo.debitos > 0
             ) {
                 status =
                     grupo.debitos +
-                    " débito(s) identificado(s) · marcação livre";
+                    " débito(s) desconsiderado(s)";
             } else {
                 status =
-                    "Movimentação informativa · marcação livre";
+                    "Movimentação informativa/desconsiderada";
             }
 
             label.innerHTML = `
@@ -2082,10 +2167,7 @@ function agruparHistoricosExtrato() {
                     chave
                 );
 
-            if (
-                regra &&
-                regra.ignorarPeriodo
-            ) {
+            if (regra) {
                 grupo.informativos++;
             } else if (
                 ehCreditoPotencial(
@@ -2094,8 +2176,7 @@ function agruparHistoricosExtrato() {
             ) {
                 grupo.creditosPotenciais++;
             } else if (
-                movimentacao.indicador ===
-                "D"
+                movimentacao.indicador === "D"
             ) {
                 grupo.debitos++;
             } else {
@@ -2194,8 +2275,7 @@ function calcularResultadosMovimentacao() {
 
     const media =
         mesesConsiderados > 0
-            ? total /
-            mesesConsiderados
+            ? total / mesesConsiderados
             : 0;
 
     definirTexto(
@@ -2284,6 +2364,13 @@ function renderizarResultadosMovimentacao() {
     renderizarTabelaExcluidas();
 }
 
+/* =========================================================
+   RESUMO MENSAL
+
+   HTML:
+   Mês | Quantidade | Total Considerado
+========================================================= */
+
 function renderizarTabelaResumoMensal() {
     const tbody =
         obterTbodyTabela(
@@ -2363,13 +2450,13 @@ function renderizarTabelaResumoMensal() {
                     </td>
 
                     <td>
-                        ${formatarMoeda(
-                    dados.total
-                )}
+                        ${dados.quantidade}
                     </td>
 
                     <td>
-                        ${dados.quantidade}
+                        ${formatarMoeda(
+                    dados.total
+                )}
                     </td>
                 `;
 
@@ -2533,9 +2620,11 @@ function renderizarTabelaExcluidas() {
 /* =========================================================
    DATAS - DETECÇÃO DO FORMATO
 
-   O SISBR é DD/MM/AAAA.
-   O suporte US só existe para textos anômalos como:
-   7/31/2026, 8/31/2026 etc.
+   SISBR:
+   DD/MM/AAAA
+
+   Compatibilidade adicional:
+   7/31/2026
 ========================================================= */
 
 function detectarFormatoDataExtrato(
@@ -2569,9 +2658,6 @@ function detectarFormatoDataExtrato(
                     match[2]
                 );
 
-            /*
-             * 31/08 -> evidência BR.
-             */
             if (
                 primeiro > 12 &&
                 primeiro <= 31 &&
@@ -2581,9 +2667,6 @@ function detectarFormatoDataExtrato(
                 evidenciasBR++;
             }
 
-            /*
-             * 8/31 -> evidência US.
-             */
             if (
                 segundo > 12 &&
                 segundo <= 31 &&
@@ -2595,19 +2678,12 @@ function detectarFormatoDataExtrato(
         }
     );
 
-    /*
-     * SISBR é BR por padrão.
-     * Só muda para US quando há mais evidências
-     * inequívocas de formato americano.
-     */
-    if (
+    return (
         evidenciasUS >
         evidenciasBR
-    ) {
-        return "US";
-    }
-
-    return "BR";
+    )
+        ? "US"
+        : "BR";
 }
 
 function validarFormatoDataGenerica(
@@ -2660,14 +2736,20 @@ function converterDataExtrato(
                 : 2000;
     }
 
-    let dia = primeiro;
-    let mes = segundo;
+    let dia =
+        primeiro;
+
+    let mes =
+        segundo;
 
     if (
         formatoDataExtrato === "US"
     ) {
-        mes = primeiro;
-        dia = segundo;
+        mes =
+            primeiro;
+
+        dia =
+            segundo;
     }
 
     let data =
@@ -2677,13 +2759,6 @@ function converterDataExtrato(
             ano
         );
 
-    /*
-     * Fallback isolado:
-     * se uma linha for inválida no formato detectado,
-     * tenta a inversão somente para aquela linha.
-     *
-     * Exemplo anômalo: 7/31/2026.
-     */
     if (!data) {
         data =
             criarDataValida(
@@ -2778,14 +2853,14 @@ function calcularQuantidadeMesesPeriodo(
         inicial.getTime() >
         final.getTime()
     ) {
-        const aux =
+        const auxiliar =
             inicial;
 
         inicial =
             final;
 
         final =
-            aux;
+            auxiliar;
     }
 
     return (
@@ -2886,14 +2961,14 @@ function aplicarPeriodoInformadoPeloUsuario(
         primeiraDataExtrato.getTime() >
         ultimaDataExtrato.getTime()
     ) {
-        const aux =
+        const auxiliar =
             primeiraDataExtrato;
 
         primeiraDataExtrato =
             ultimaDataExtrato;
 
         ultimaDataExtrato =
-            aux;
+            auxiliar;
 
         atualizarExibicaoPeriodo();
     }
@@ -3204,7 +3279,7 @@ function formatarCompetencia(
 }
 
 /* =========================================================
-   LIMPEZA / NORMALIZAÇÃO DE TEXTO
+   LIMPEZA / NORMALIZAÇÃO
 ========================================================= */
 
 function limparCelulaTexto(
