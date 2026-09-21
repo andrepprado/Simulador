@@ -2,61 +2,43 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
-
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
-        Cálculo de Renda por Notas Fiscais | Sicoob
+        Cálculo de Renda por Notas Fiscais | Sicoob Mantiqueira
     </title>
+
+    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =====================================================
-         CABEÇALHO
-         ===================================================== -->
-
     <header class="topo">
-
         <div class="container topo-conteudo">
 
             <div class="topo-textos">
-
                 <h1>
                     Cálculo de Renda por Notas Fiscais
                 </h1>
 
                 <p>
-                    Calcule a renda mensal e anual com base nas
-                    notas fiscais apresentadas pelo cooperado.
+                    Apuração de renda rural com identificação automática
+                    de documentos, produtos e atividades.
                 </p>
-
             </div>
 
             <div class="topo-logo">
-
-                <img src="img/logoBranco.png" alt="Sicoob">
-
+                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
 
         </div>
-
     </header>
 
-    <!-- =====================================================
-         MENU
-         ===================================================== -->
-
     <div id="menuPrincipal"></div>
-
-    <!-- =====================================================
-         CONTEÚDO
-         ===================================================== -->
 
     <main class="notas-fiscais-container">
 
@@ -65,7 +47,6 @@
              ================================================= -->
 
         <section class="notas-card notas-card-largura-total">
-
             <div class="notas-titulo-secao">
 
                 <span class="categoria-etiqueta">
@@ -77,9 +58,8 @@
                 </h2>
 
                 <p>
-                    Processe as notas fiscais para identificar
-                    automaticamente os dados fiscais e, quando
-                    possível, as atividades desenvolvidas pelo produtor.
+                    Envie os documentos fiscais para identificação
+                    automática das informações utilizadas na apuração.
                 </p>
 
             </div>
@@ -87,31 +67,32 @@
             <div class="notas-aviso-info">
 
                 <strong>
-                    Identificação automática
+                    Processamento automático
                 </strong>
 
                 <span>
-                    XML de NF-e possui prioridade por conter os dados
-                    fiscais estruturados.
+                    XML de NF-e é processado diretamente a partir
+                    dos campos estruturados do documento.
                 </span>
 
                 <span>
-                    NF-e e DANFE serão analisados por NCM,
-                    descrição dos produtos e demais dados disponíveis.
+                    NF-e e DANFE são classificados utilizando NCM,
+                    CFOP, descrição dos produtos e demais informações
+                    fiscais disponíveis.
                 </span>
 
                 <span>
-                    Notas fiscais antigas serão submetidas a OCR e
-                    validações adicionais. Quando houver incerteza,
-                    a conferência humana será obrigatória.
+                    A atividade do produtor será criada automaticamente
+                    sempre que as informações fiscais forem suficientes.
                 </span>
 
                 <span>
-                    Somente notas confirmadas entram no cálculo da renda.
+                    A intervenção humana fica reservada para documentos
+                    antigos, ilegíveis ou quando os dados do próprio
+                    documento não forem suficientes.
                 </span>
 
             </div>
-
         </section>
 
         <!-- =================================================
@@ -131,9 +112,7 @@
                 </h2>
 
                 <p>
-                    Envie XML de NF-e, PDF ou imagens das notas fiscais.
-                    O sistema utilizará o melhor método de leitura
-                    disponível para cada formato.
+                    Envie XML, PDF ou imagens das notas fiscais.
                 </p>
 
             </div>
@@ -141,55 +120,43 @@
             <div class="notas-upload-area">
 
                 <div class="notas-upload-icone">
-
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 16V4"></path>
                         <polyline points="7 9 12 4 17 9"></polyline>
                         <path d="M5 20h14"></path>
                     </svg>
-
                 </div>
 
                 <div class="notas-upload-texto">
-
                     <strong>
-                        Envie as notas fiscais
+                        Selecione os documentos
                     </strong>
 
                     <span>
-                        XML, PDF, JPG, JPEG, PNG e WEBP
+                        XML, PDF, JPG, JPEG, PNG ou WEBP
                     </span>
-
                 </div>
 
                 <button type="button" id="btnSelecionarNotas" class="notas-btn notas-btn-secundario">
                     Selecionar arquivos
                 </button>
 
-                <input type="file" id="arquivosNotasFiscais"
-                    accept=".xml,.pdf,.jpg,.jpeg,.png,.webp,application/xml,text/xml,application/pdf,image/jpeg,image/png,image/webp"
-                    multiple>
+                <input type="file" id="arquivosNotasFiscais" accept=".xml,.pdf,.jpg,.jpeg,.png,.webp" multiple>
 
             </div>
 
             <div id="listaArquivosNotas" class="notas-lista-arquivos"></div>
 
             <div id="statusOcrNotas" class="notas-status-ocr" hidden>
-
                 <div class="notas-status-spinner"></div>
 
                 <div>
-
                     <strong id="tituloStatusOcrNotas">
-                        Processando documentos
+                        Processando
                     </strong>
 
-                    <span id="textoStatusOcrNotas">
-                        Aguarde enquanto os documentos são analisados.
-                    </span>
-
+                    <span id="textoStatusOcrNotas"></span>
                 </div>
-
             </div>
 
             <div id="resultadoOcrNotas" class="notas-resultado-ocr" hidden></div>
@@ -209,7 +176,7 @@
         </section>
 
         <!-- =================================================
-             ATIVIDADES DO PRODUTOR
+             ATIVIDADES
              ================================================= -->
 
         <section class="notas-card notas-card-largura-total" id="cardAtividadesNotas">
@@ -225,61 +192,36 @@
                 </h2>
 
                 <p>
-                    As atividades identificadas automaticamente nas
-                    notas fiscais serão adicionadas abaixo. Também é
-                    possível adicionar ou ajustar atividades manualmente.
+                    Atividades identificadas automaticamente pelas
+                    informações fiscais ou incluídas manualmente.
                 </p>
 
             </div>
 
-            <div class="notas-aviso-info">
-
-                <strong>
-                    Critério de identificação
-                </strong>
-
-                <span>
-                    Para NF-e e XML, o sistema poderá utilizar NCM e
-                    descrição dos produtos como evidências.
-                </span>
-
-                <span>
-                    Quando não for possível determinar a atividade
-                    com segurança, a seleção deverá ser feita manualmente.
-                </span>
-
-            </div>
-
-            <div class="notas-periodo-novo" style="margin-top:18px;">
+            <div class="notas-periodo-novo">
 
                 <div class="notas-campo">
-
                     <label for="grupoAtividadeNotas">
-                        Grupo da Atividade
+                        Grupo
                     </label>
 
                     <select id="grupoAtividadeNotas"></select>
-
                 </div>
 
                 <div class="notas-campo">
-
                     <label for="atividadeNotas">
-                        Atividade Rural
+                        Atividade
                     </label>
 
                     <select id="atividadeNotas"></select>
-
                 </div>
 
                 <div class="notas-campo">
-
                     <label for="criterioAtividadeNotas">
                         Critério de Apuração
                     </label>
 
                     <select id="criterioAtividadeNotas">
-
                         <option value="movimentacao">
                             Meses com movimentação
                         </option>
@@ -291,37 +233,29 @@
                         <option value="informado">
                             Período econômico informado
                         </option>
-
                     </select>
-
                 </div>
 
                 <div class="notas-campo" id="campoMesesAtividadeNotas" hidden>
-
                     <label for="mesesAtividadeNotas">
-                        Meses do Período
+                        Meses
                     </label>
 
-                    <input type="number" id="mesesAtividadeNotas" min="1" max="120" value="12">
-
+                    <input id="mesesAtividadeNotas" type="number" min="1" max="120" value="12">
                 </div>
 
             </div>
 
             <div class="notas-acoes">
-
                 <button type="button" id="btnAdicionarAtividadeNotas" class="notas-btn notas-btn-primario">
                     Adicionar Atividade
                 </button>
-
             </div>
 
-            <div class="notas-tabela-wrapper" style="margin-top:18px;">
+            <div class="notas-tabela-wrapper">
 
                 <table class="notas-tabela">
-
                     <thead>
-
                         <tr>
                             <th>Grupo</th>
                             <th>Atividade</th>
@@ -331,21 +265,15 @@
                             <th>Renda Mensal</th>
                             <th>Ações</th>
                         </tr>
-
                     </thead>
 
                     <tbody id="tabelaAtividadesNotas">
-
                         <tr class="notas-linha-vazia">
-
                             <td colspan="7">
-                                Nenhuma atividade identificada ou adicionada.
+                                Nenhuma atividade identificada.
                             </td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
 
             </div>
@@ -359,7 +287,6 @@
         <section class="notas-card notas-card-periodos" id="cardPeriodosNotas">
 
             <div class="notas-titulo-secao">
-
                 <span class="categoria-etiqueta">
                     Apuração
                 </span>
@@ -369,66 +296,53 @@
                 </h2>
 
                 <p>
-                    Os valores das notas confirmadas serão agrupados
+                    Os documentos processados são consolidados
                     automaticamente por atividade e competência.
                 </p>
-
             </div>
 
             <div class="notas-periodo-novo">
 
                 <div class="notas-campo">
-
                     <label for="atividadePeriodoNota">
                         Atividade
                     </label>
 
                     <select id="atividadePeriodoNota">
-
                         <option value="">
                             Selecione
                         </option>
-
                     </select>
-
                 </div>
 
                 <div class="notas-campo">
-
                     <label for="periodoNota">
                         Período
                     </label>
 
-                    <input type="text" id="periodoNota" placeholder="Ex.: Janeiro/2026" autocomplete="off">
-
+                    <input type="text" id="periodoNota" placeholder="Janeiro/2026">
                 </div>
 
                 <div class="notas-campo">
-
                     <label for="valorPeriodoNota">
-                        Total das Notas
+                        Valor
                     </label>
 
-                    <input type="text" id="valorPeriodoNota" autocomplete="off">
-
+                    <input type="text" id="valorPeriodoNota">
                 </div>
 
                 <div class="notas-campo">
-
                     <label for="quantidadeNotasPeriodo">
                         Quantidade
                     </label>
 
                     <input type="number" id="quantidadeNotasPeriodo" min="0" value="0">
-
                 </div>
 
                 <div class="notas-campo notas-campo-botao">
-
                     <button type="button" id="btnAdicionarPeriodoNota" class="notas-btn notas-btn-primario">
                         Adicionar
                     </button>
-
                 </div>
 
             </div>
@@ -436,31 +350,23 @@
             <div class="notas-tabela-wrapper">
 
                 <table class="notas-tabela">
-
                     <thead>
-
                         <tr>
                             <th>Atividade</th>
                             <th>Período</th>
-                            <th>Valor das Notas</th>
+                            <th>Valor</th>
                             <th>Quantidade</th>
                             <th>Ações</th>
                         </tr>
-
                     </thead>
 
                     <tbody id="tabelaPeriodosNotas">
-
                         <tr class="notas-linha-vazia">
-
                             <td colspan="5">
                                 Nenhum período informado.
                             </td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
 
             </div>
@@ -468,7 +374,6 @@
             <div class="notas-totalizadores-periodo">
 
                 <div class="notas-totalizador">
-
                     <span>
                         Total das Notas
                     </span>
@@ -476,11 +381,9 @@
                     <strong id="totalNotasPeriodos">
                         R$ 0,00
                     </strong>
-
                 </div>
 
                 <div class="notas-totalizador">
-
                     <span>
                         Quantidade de Notas
                     </span>
@@ -488,19 +391,16 @@
                     <strong id="quantidadeTotalNotas">
                         0
                     </strong>
-
                 </div>
 
                 <div class="notas-totalizador">
-
                     <span>
-                        Períodos Informados
+                        Períodos
                     </span>
 
                     <strong id="quantidadePeriodosNotas">
                         0
                     </strong>
-
                 </div>
 
             </div>
@@ -514,7 +414,6 @@
         <aside class="notas-card notas-card-resultado" id="cardResultadoNotas">
 
             <div class="notas-titulo-secao">
-
                 <span class="categoria-etiqueta">
                     Resultado
                 </span>
@@ -522,15 +421,9 @@
                 <h2>
                     Resultado
                 </h2>
-
-                <p>
-                    Resultado consolidado das atividades consideradas.
-                </p>
-
             </div>
 
             <div class="notas-resultado-principal">
-
                 <span>
                     Renda Mensal
                 </span>
@@ -538,13 +431,11 @@
                 <strong id="resultadoRendaMensalNotas">
                     R$ 0,00
                 </strong>
-
             </div>
 
             <div class="notas-resultados-grid">
 
                 <div class="notas-resultado-item">
-
                     <span>
                         Renda Anual
                     </span>
@@ -552,11 +443,9 @@
                     <strong id="resultadoRendaAnualNotas">
                         R$ 0,00
                     </strong>
-
                 </div>
 
                 <div class="notas-resultado-item">
-
                     <span>
                         Total das Notas
                     </span>
@@ -564,23 +453,19 @@
                     <strong id="resultadoTotalNotas">
                         R$ 0,00
                     </strong>
-
                 </div>
 
                 <div class="notas-resultado-item">
-
                     <span>
-                        Atividades Consideradas
+                        Atividades
                     </span>
 
                     <strong id="resultadoQuantidadeAtividades">
                         0
                     </strong>
-
                 </div>
 
                 <div class="notas-resultado-item">
-
                     <span>
                         Quantidade de Notas
                     </span>
@@ -588,21 +473,18 @@
                     <strong id="resultadoQuantidadeNotas">
                         0
                     </strong>
-
                 </div>
 
             </div>
 
-            <div id="resumoCriteriosNotas" class="notas-aviso-info" style="margin-top:14px;">
-
+            <div id="resumoCriteriosNotas" class="notas-aviso-info" style="margin-top: 14px;">
                 <strong>
                     Critérios de apuração
                 </strong>
 
                 <span>
-                    Processe as notas fiscais ou informe os períodos.
+                    Processe as notas fiscais ou informe períodos manualmente.
                 </span>
-
             </div>
 
             <div class="notas-acoes notas-acoes-resultado">
@@ -620,7 +502,7 @@
         </aside>
 
         <!-- =================================================
-             NOTAS IDENTIFICADAS
+             DETALHAMENTO
              ================================================= -->
 
         <section class="notas-card notas-card-largura-total" id="cardDetalhamentoNotas">
@@ -636,32 +518,34 @@
                 </h2>
 
                 <p>
-                    Confira os dados identificados automaticamente.
-                    Documentos com incerteza devem ser revisados antes
-                    de serem incluídos no cálculo.
+                    Dados identificados e classificados pelo processamento
+                    automático dos documentos fiscais.
                 </p>
 
             </div>
 
-            <div class="notas-aviso-info">
+            <!--
+                ESTE AVISO COMEÇA OCULTO.
 
+                O JS só exibe quando realmente existe
+                documento antigo/ilegível/incompleto.
+            -->
+
+            <div id="avisoRevisaoHumanaNotas" class="notas-aviso-info" hidden>
                 <strong>
-                    Revisão humana
+                    Revisão humana necessária
                 </strong>
 
                 <span>
-                    Notas antigas ou documentos com baixa confiança
-                    não entram no cálculo até que sejam confirmados.
+                    Um ou mais documentos não puderam ser interpretados
+                    com segurança. Revise somente os documentos destacados.
                 </span>
-
             </div>
 
-            <div class="notas-tabela-wrapper" style="margin-top:16px;">
+            <div class="notas-tabela-wrapper" style="margin-top: 16px;">
 
                 <table class="notas-tabela">
-
                     <thead>
-
                         <tr>
                             <th>Arquivo / Modelo</th>
                             <th>Data</th>
@@ -671,21 +555,15 @@
                             <th>Atividade</th>
                             <th>Status</th>
                         </tr>
-
                     </thead>
 
                     <tbody id="tabelaDetalhamentoNotas">
-
                         <tr class="notas-linha-vazia">
-
                             <td colspan="7">
                                 Nenhuma nota fiscal processada.
                             </td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
 
             </div>
@@ -694,41 +572,23 @@
 
     </main>
 
-    <!-- =====================================================
-         RODAPÉ
-         ===================================================== -->
-
     <footer>
-
         <div class="container">
-
             <p>
                 Caixa de Ferramentas | Sicoob Mantiqueira |
                 Desenvolvido pela Área de Processos
             </p>
-
         </div>
-
     </footer>
-
-    <!-- =====================================================
-         SCRIPTS
-         ===================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <script src="js/credito-rural-atividades.js"></script>
-
     <script src="js/credito-rural-ncm-atividades.js"></script>
-
     <script src="js/credito-rural-notas-fiscais.js"></script>
-
     <script src="js/calculo-renda-notas-fiscais.js"></script>
-
     <script src="js/impressao-pdf.js"></script>
-
     <script src="js/menu.js"></script>
-
     <script src="js/preload.js"></script>
 
 </body>

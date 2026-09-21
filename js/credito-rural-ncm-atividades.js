@@ -1,23 +1,14 @@
 (function () {
     "use strict";
 
-    /* =====================================================
-       CONSTANTES
-       ===================================================== */
+    const LIMIAR_AUTOMATICO = 0.82;
 
-    const CONFIANCA_AUTOMATICA_ATIVIDADE = 0.90;
-    const CONFIANCA_SUGESTAO_ATIVIDADE = 0.65;
-
-    /* =====================================================
-       NORMALIZAÇÃO
-       ===================================================== */
-
-    function normalizarTextoClassificacao(valor) {
+    function normalizar(valor) {
         return String(valor || "")
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .toUpperCase()
-            .replace(/[^\p{L}\p{N}]+/gu, " ")
+            .replace(/[^A-Z0-9]+/g, " ")
             .replace(/\s+/g, " ")
             .trim();
     }
@@ -28,1290 +19,784 @@
             .slice(0, 8);
     }
 
-    function normalizarAtividade(valor) {
-        if (
-            window.CreditoRuralAtividades &&
-            typeof window.CreditoRuralAtividades
-                .normalizarIdentificadorAtividade === "function"
-        ) {
-            return window.CreditoRuralAtividades
-                .normalizarIdentificadorAtividade(valor);
-        }
-
-        return String(valor || "")
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "_")
-            .replace(/^_+|_+$/g, "");
+    function resolver(nome, grupo) {
+        return window.CreditoRuralAtividades
+            ?.localizarAtividadePorNome(
+                nome,
+                grupo
+            ) || null;
     }
 
-    /* =====================================================
-       REGRAS
-       ===================================================== */
+    const REGRAS = [
+        ["1006", "agricola", "Arroz", ["ARROZ"]],
+        ["1005", "agricola", "Milho", ["MILHO"]],
+        ["1007", "agricola", "Sorgo", ["SORGO"]],
+        ["1001", "agricola", "Trigo", ["TRIGO"]],
+        ["1004", "agricola", "Aveia", ["AVEIA"]],
+        ["1003", "agricola", "Cevada", ["CEVADA"]],
+        ["1002", "agricola", "Centeio", ["CENTEIO"]],
+        ["1205", "agricola", "Canola", ["CANOLA", "COLZA"]],
+        ["1201", "agricola", "Soja", ["SOJA"]],
+        ["1202", "agricola", "Amendoim", ["AMENDOIM"]],
+        ["5201", "agricola", "Algodão", ["ALGODAO"]],
+        ["0701", "agricola", "Batata-inglesa", ["BATATA"]],
+        ["0702", "agricola", null, ["TOMATE"]],
+        ["0703", "agricola", null, ["CEBOLA", "ALHO", "ALHO PORO"]],
+        ["0704", "agricola", null, ["BROCOLIS", "COUVE FLOR"]],
+        ["0705", "agricola", null, ["ALFACE", "CHICORIA"]],
+        ["0706", "agricola", null, ["CENOURA", "NABO"]],
+        ["0707", "agricola", "Pepino", ["PEPINO"]],
+        ["0714", "agricola", null, ["MANDIOCA", "AIPIM", "MACAXEIRA", "INHAME", "CARA", "BATATA DOCE"]],
+        ["0803", "agricola", "Banana", ["BANANA"]],
+        ["0804", "agricola", "Abacaxi", ["ABACAXI", "ANANAS"]],
+        ["0805", "agricola", null, ["LARANJA", "TANGERINA", "MEXERICA"]],
+        ["0901", "agricola", "Cafeicultura", ["CAFE"]],
+        ["1207", "agricola", "Mamona", ["MAMONA"]],
+        ["1212", "agricola", "Cana-de-açúcar", ["CANA DE ACUCAR"]],
+        ["1801", "agricola", "Cacau cultivado", ["CACAU"]],
+        ["0401", "pecuaria", null, ["LEITE"]],
+        ["0407", "pecuaria", "Avicultura Postura", ["OVO", "OVOS"]],
+        ["0409", "pecuaria", null, ["MEL"]],
+        ["0103", "pecuaria", null, ["SUINO", "PORCO", "LEITAO"]],
+        ["0104", "pecuaria", null, ["OVINO", "CORDEIRO", "OVELHA", "CAPRINO", "CABRA", "BODE", "CABRITO"]],
+        ["0105", "pecuaria", null, ["FRANGO", "GALINHA", "POEDEIRA"]],
+        ["0301", "pecuaria", "Aquicultura - Piscicultura", ["PEIXE", "TILAPIA", "TAMBAQUI", "PACU"]],
+        ["0306", "pecuaria", "Aquicultura - Carcinicultura", ["CAMARAO"]]
+    ];
 
-    const REGRAS_NCM_ATIVIDADE_RURAL = [
-        /* =================================================
-           AGRÍCOLA - CEREAIS
-           ================================================= */
-
-        {
-            grupo: "agricola",
-            atividade: "Arroz",
-            ncmsPrefixos: ["1006"],
-            termosFortes: [
-                "ARROZ",
-                "ARROZ EM CASCA",
-                "ARROZ COM CASCA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Milho",
-            ncmsPrefixos: ["1005"],
-            termosFortes: [
-                "MILHO",
-                "MILHO EM GRAOS",
-                "MILHO EM GRAO"
-            ],
-            termosExcluir: [
-                "OLEO DE MILHO",
-                "FARINHA DE MILHO"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Sorgo",
-            ncmsPrefixos: ["1007"],
-            termosFortes: [
-                "SORGO",
-                "SORGO EM GRAOS"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Trigo",
-            ncmsPrefixos: ["1001"],
-            termosFortes: [
-                "TRIGO",
-                "TRIGO EM GRAOS"
-            ],
-            termosExcluir: [
-                "FARINHA DE TRIGO"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Aveia",
-            ncmsPrefixos: ["1004"],
-            termosFortes: [
-                "AVEIA",
-                "AVEIA EM GRAOS"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Cevada",
-            ncmsPrefixos: ["1003"],
-            termosFortes: [
-                "CEVADA",
-                "CEVADA EM GRAOS"
-            ],
-            termosExcluir: [
-                "MALTE"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Centeio",
-            ncmsPrefixos: ["1002"],
-            termosFortes: [
-                "CENTEIO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Triticale",
-            ncmsPrefixos: ["1008"],
-            termosFortes: [
-                "TRITICALE"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
+    function classificarEspecial(descricao, ncm) {
+        const texto = normalizar(descricao);
 
         /* =================================================
-           AGRÍCOLA - OLEAGINOSAS
+           TOMATE
            ================================================= */
 
-        {
-            grupo: "agricola",
-            atividade: "Canola",
-            ncmsPrefixos: ["1205"],
-            termosFortes: [
-                "CANOLA",
-                "COLZA",
-                "SEMENTE DE CANOLA"
-            ],
-            termosExcluir: [
-                "OLEO DE CANOLA"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Soja",
-            ncmsPrefixos: ["1201"],
-            termosFortes: [
-                "SOJA",
-                "SOJA EM GRAOS",
-                "SOJA EM GRAO",
-                "GRAO DE SOJA",
-                "GRAOS DE SOJA"
-            ],
-            termosExcluir: [
-                "OLEO DE SOJA",
-                "FARELO DE SOJA",
-                "LECITINA DE SOJA"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Amendoim",
-            ncmsPrefixos: ["1202"],
-            termosFortes: [
-                "AMENDOIM",
-                "AMENDOIM EM CASCA"
-            ],
-            termosExcluir: [
-                "OLEO DE AMENDOIM"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Mamona",
-            ncmsPrefixos: ["1207"],
-            termosFortes: [
-                "MAMONA",
-                "SEMENTE DE MAMONA"
-            ],
-            termosExcluir: [
-                "OLEO DE MAMONA"
-            ],
-            automaticoComNcm: false
-        },
+        if (ncm.startsWith("0702")) {
+            if (texto.includes("CEREJA")) {
+                return criar("agricola", "Tomate-cereja", 0.98);
+            }
+
+            if (texto.includes("ESTAQUE")) {
+                return criar(
+                    "agricola",
+                    "Tomate mesa estaqueado",
+                    0.96
+                );
+            }
+
+            if (texto.includes("RASTEIR")) {
+                return criar(
+                    "agricola",
+                    "Tomate mesa rasteiro",
+                    0.96
+                );
+            }
+        }
 
         /* =================================================
-           ALGODÃO
+           CEBOLA / ALHO
            ================================================= */
 
-        {
-            grupo: "agricola",
-            atividade: "Algodão",
-            ncmsPrefixos: ["5201"],
-            termosFortes: [
-                "ALGODAO",
-                "ALGODAO NAO CARDADO",
-                "ALGODAO EM PLUMA"
-            ],
-            termosExcluir: [
-                "TECIDO",
-                "FIO DE ALGODAO"
-            ],
-            automaticoComNcm: true
-        },
+        if (ncm.startsWith("0703")) {
+            if (texto.includes("ALHO PORO")) {
+                return criar("agricola", "Alho-poró", 0.98);
+            }
+
+            if (texto.includes("ALHO")) {
+                return criar("agricola", "Alho", 0.98);
+            }
+
+            if (texto.includes("CEBOLA")) {
+                return criar("agricola", "Cebola", 0.98);
+            }
+        }
 
         /* =================================================
-           RAÍZES / TUBÉRCULOS
+           RAÍZES
            ================================================= */
 
-        {
-            grupo: "agricola",
-            atividade: "Batata-inglesa",
-            ncmsPrefixos: ["0701"],
-            termosFortes: [
-                "BATATA",
-                "BATATA INGLESA"
-            ],
-            termosExcluir: [
-                "BATATA DOCE"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Batata-doce",
-            ncmsPrefixos: ["0714"],
-            termosFortes: [
-                "BATATA DOCE"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Mandioca",
-            ncmsPrefixos: ["0714"],
-            termosFortes: [
-                "MANDIOCA",
-                "AIPIM",
-                "MACAXEIRA"
-            ],
-            termosExcluir: [
-                "FARINHA DE MANDIOCA"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Inhame",
-            ncmsPrefixos: ["0714"],
-            termosFortes: [
-                "INHAME"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Cará",
-            ncmsPrefixos: ["0714"],
-            termosFortes: [
-                "CARA",
-                "CARÁ"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
+        if (ncm.startsWith("0714")) {
+            if (texto.includes("BATATA DOCE")) {
+                return criar("agricola", "Batata-doce", 0.98);
+            }
+
+            if (texto.includes("MANDIOQUINHA")) {
+                return criar(
+                    "agricola",
+                    "Mandioquinha salsa (batata-baroa)",
+                    0.98
+                );
+            }
+
+            if (
+                texto.includes("MANDIOCA") ||
+                texto.includes("AIPIM") ||
+                texto.includes("MACAXEIRA")
+            ) {
+                return criar("agricola", "Mandioca", 0.98);
+            }
+
+            if (texto.includes("INHAME")) {
+                return criar("agricola", "Inhame", 0.98);
+            }
+
+            if (/\bCARA\b/.test(texto)) {
+                return criar("agricola", "Cará", 0.96);
+            }
+        }
 
         /* =================================================
-           HORTALIÇAS
+           CÍTRICOS
            ================================================= */
 
-        {
-            grupo: "agricola",
-            atividade: "Tomate-cereja",
-            ncmsPrefixos: ["0702"],
-            termosFortes: [
-                "TOMATE CEREJA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Tomate mesa estaqueado",
-            ncmsPrefixos: ["0702"],
-            termosFortes: [
-                "TOMATE ESTAQUEADO",
-                "TOMATE DE MESA ESTAQUEADO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Tomate mesa rasteiro",
-            ncmsPrefixos: ["0702"],
-            termosFortes: [
-                "TOMATE RASTEIRO",
-                "TOMATE DE MESA RASTEIRO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Cebola",
-            ncmsPrefixos: ["0703"],
-            termosFortes: [
-                "CEBOLA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Alho",
-            ncmsPrefixos: ["0703"],
-            termosFortes: [
-                "ALHO"
-            ],
-            termosExcluir: [
-                "ALHO PORO"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Alho-poró",
-            ncmsPrefixos: ["0703"],
-            termosFortes: [
-                "ALHO PORO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Cenoura",
-            ncmsPrefixos: ["0706"],
-            termosFortes: [
-                "CENOURA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Nabo",
-            ncmsPrefixos: ["0706"],
-            termosFortes: [
-                "NABO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Rabanete",
-            ncmsPrefixos: ["0706"],
-            termosFortes: [
-                "RABANETE"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Pepino",
-            ncmsPrefixos: ["0707"],
-            termosFortes: [
-                "PEPINO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Chuchu",
-            ncmsPrefixos: ["0709"],
-            termosFortes: [
-                "CHUCHU"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Berinjela",
-            ncmsPrefixos: ["0709"],
-            termosFortes: [
-                "BERINJELA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Pimentão",
-            ncmsPrefixos: ["0709"],
-            termosFortes: [
-                "PIMENTAO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Quiabo",
-            ncmsPrefixos: ["0709"],
-            termosFortes: [
-                "QUIABO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Abóbora-moranga",
-            ncmsPrefixos: ["0709"],
-            termosFortes: [
-                "ABOBORA",
-                "MORANGA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Abobrinha",
-            ncmsPrefixos: ["0709"],
-            termosFortes: [
-                "ABOBRINHA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Alface",
-            ncmsPrefixos: ["0705"],
-            termosFortes: [
-                "ALFACE"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Chicória",
-            ncmsPrefixos: ["0705"],
-            termosFortes: [
-                "CHICORIA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Brócolis",
-            ncmsPrefixos: ["0704"],
-            termosFortes: [
-                "BROCOLIS"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Couve-Flor",
-            ncmsPrefixos: ["0704"],
-            termosFortes: [
-                "COUVE FLOR"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
+        if (ncm.startsWith("0805")) {
+            if (texto.includes("LARANJA")) {
+                return criar("agricola", "Laranja", 0.98);
+            }
+
+            if (
+                texto.includes("TANGERINA") ||
+                texto.includes("MEXERICA") ||
+                texto.includes("MANDARINA")
+            ) {
+                return criar("agricola", "Tangerina", 0.98);
+            }
+        }
 
         /* =================================================
-           FRUTAS
+           LEITE
            ================================================= */
 
-        {
-            grupo: "agricola",
-            atividade: "Banana",
-            ncmsPrefixos: ["0803"],
-            termosFortes: [
-                "BANANA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Abacaxi",
-            ncmsPrefixos: ["0804"],
-            termosFortes: [
-                "ABACAXI",
-                "ANANAS"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Laranja",
-            ncmsPrefixos: ["0805"],
-            termosFortes: [
-                "LARANJA"
-            ],
-            termosExcluir: [
-                "SUCO DE LARANJA"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Tangerina",
-            ncmsPrefixos: ["0805"],
-            termosFortes: [
-                "TANGERINA",
-                "MEXERICA",
-                "MANDARINA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Açaí cultivado",
-            ncmsPrefixos: ["0811", "0810"],
-            termosFortes: [
-                "ACAI",
-                "FRUTO DE ACAI"
-            ],
-            termosExcluir: [
-                "POLPA INDUSTRIALIZADA"
-            ],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "agricola",
-            atividade: "Cacau cultivado",
-            ncmsPrefixos: ["1801"],
-            termosFortes: [
-                "CACAU",
-                "CACAU EM GRAOS",
-                "AMENDOA DE CACAU"
-            ],
-            termosExcluir: [
-                "CHOCOLATE"
-            ],
-            automaticoComNcm: true
-        },
+        if (ncm.startsWith("0401")) {
+            if (
+                texto.includes("BUFALA") ||
+                texto.includes("BUBALIN")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Bubalinocultura Leite",
+                    0.98
+                );
+            }
+
+            return criar(
+                "pecuaria",
+                "Bovinocultura Leite",
+                0.96
+            );
+        }
 
         /* =================================================
-           CAFÉ / CANA
+           MEL
            ================================================= */
 
-        {
-            grupo: "agricola",
-            atividade: "Cafeicultura",
-            ncmsPrefixos: ["0901"],
-            termosFortes: [
-                "CAFE",
-                "CAFE EM GRAO",
-                "CAFE CRU",
-                "CAFE BENEFICIADO"
-            ],
-            termosExcluir: [
-                "BEBIDA DE CAFE"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "agricola",
-            atividade: "Cana-de-açúcar",
-            ncmsPrefixos: ["1212"],
-            termosFortes: [
-                "CANA DE ACUCAR",
-                "CANA ACUCAR"
-            ],
-            termosExcluir: [
-                "ACUCAR",
-                "ETANOL"
-            ],
-            automaticoComNcm: false
-        },
+        if (ncm.startsWith("0409")) {
+            if (
+                texto.includes("JATAI") ||
+                texto.includes("URUCU") ||
+                texto.includes("SEM FERRO")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Meliponicultura",
+                    0.94
+                );
+            }
 
-        /* =================================================
-           PECUÁRIA - LEITE
-           ================================================= */
-
-        {
-            grupo: "pecuaria",
-            atividade: "Bovinocultura Leite",
-            ncmsPrefixos: ["0401"],
-            termosFortes: [
-                "LEITE CRU",
-                "LEITE IN NATURA",
-                "LEITE DE VACA"
-            ],
-            termosExcluir: [
-                "LEITE EM PO",
-                "QUEIJO",
-                "IOGURTE"
-            ],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "pecuaria",
-            atividade: "Bubalinocultura Leite",
-            ncmsPrefixos: ["0401"],
-            termosFortes: [
-                "LEITE DE BUFALA",
-                "LEITE BUBALINO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-
-        /* =================================================
-           PECUÁRIA - BOVINOS
-           ================================================= */
-
-        {
-            grupo: "pecuaria",
-            atividade: null,
-            grupoSugerido: "Bovinocultura Corte",
-            ncmsPrefixos: ["0102"],
-            termosFortes: [
-                "BOVINO",
-                "BOVINOS",
-                "BOI",
-                "NOVILHO",
-                "BEZERRO",
-                "BEZERRA",
-                "GARROTE",
-                "VACA"
-            ],
-            termosExcluir: [
-                "BUFALO",
-                "BUFALA"
-            ],
-            automaticoComNcm: false,
-            atividadesPossiveis: [
-                "Bovinocultura Corte - Cria",
-                "Bovinocultura Corte - Recria",
-                "Bovinocultura Corte - Recria/Engorda",
-                "Bovinocultura Corte - Engorda",
-                "Bovinocultura Corte - Cria/Recria/Engorda",
-                "Bovinocultura Corte - Confinamento"
-            ]
-        },
-        {
-            grupo: "pecuaria",
-            atividade: "Bubalinocultura Corte",
-            ncmsPrefixos: ["0102"],
-            termosFortes: [
-                "BUFALO",
-                "BUFALA",
-                "BUBALINO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
+            return criar(
+                "pecuaria",
+                "Apicultura",
+                0.95
+            );
+        }
 
         /* =================================================
            SUÍNOS
            ================================================= */
 
-        {
-            grupo: "pecuaria",
-            atividade: null,
-            grupoSugerido: "Suinocultura",
-            ncmsPrefixos: ["0103"],
-            termosFortes: [
-                "SUINO",
-                "SUINOS",
-                "PORCO",
-                "LEITAO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false,
-            atividadesPossiveis: [
-                "Suinocultura Integrada",
-                "Suinocultura Não Integrada"
-            ]
-        },
+        if (ncm.startsWith("0103")) {
+            if (texto.includes("INTEGRAD")) {
+                return criar(
+                    "pecuaria",
+                    "Suinocultura Integrada",
+                    0.94
+                );
+            }
+
+            if (
+                texto.includes("NAO INTEGRAD") ||
+                texto.includes("INDEPENDENTE")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Suinocultura Não Integrada",
+                    0.92
+                );
+            }
+        }
+
+        /* =================================================
+           OVINO / CAPRINO
+           ================================================= */
+
+        if (ncm.startsWith("0104")) {
+            if (
+                texto.includes("CAPRIN") ||
+                texto.includes("CABRA") ||
+                texto.includes("BODE") ||
+                texto.includes("CABRITO")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Caprinocultura",
+                    0.97
+                );
+            }
+
+            if (
+                texto.includes("OVIN") ||
+                texto.includes("OVELHA") ||
+                texto.includes("CORDEIRO") ||
+                texto.includes("CARNEIRO")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Ovinocultura",
+                    0.97
+                );
+            }
+        }
 
         /* =================================================
            AVES
            ================================================= */
 
-        {
-            grupo: "pecuaria",
-            atividade: "Avicultura Corte",
-            ncmsPrefixos: ["0105"],
-            termosFortes: [
-                "FRANGO DE CORTE",
-                "FRANGO VIVO",
-                "AVE PARA ABATE"
-            ],
-            termosExcluir: [
-                "POEDEIRA",
-                "OVOS"
-            ],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "pecuaria",
-            atividade: "Avicultura Postura",
-            ncmsPrefixos: ["0407", "0105"],
-            termosFortes: [
-                "OVOS",
-                "OVO DE GALINHA",
-                "GALINHA POEDEIRA",
-                "POEDEIRA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
+        if (ncm.startsWith("0105")) {
+            if (
+                texto.includes("POEDEIRA") ||
+                texto.includes("POSTURA")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Avicultura Postura",
+                    0.96
+                );
+            }
 
-        /* =================================================
-           OVINOS / CAPRINOS
-           ================================================= */
-
-        {
-            grupo: "pecuaria",
-            atividade: "Ovinocultura",
-            ncmsPrefixos: ["0104"],
-            termosFortes: [
-                "OVINO",
-                "OVINOS",
-                "CARNEIRO",
-                "CORDEIRO",
-                "OVELHA"
-            ],
-            termosExcluir: [
-                "CAPRINO",
-                "CABRA",
-                "BODE"
-            ],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "pecuaria",
-            atividade: "Caprinocultura",
-            ncmsPrefixos: ["0104"],
-            termosFortes: [
-                "CAPRINO",
-                "CAPRINOS",
-                "CABRA",
-                "BODE",
-                "CABRITO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-
-        /* =================================================
-           APICULTURA
-           ================================================= */
-
-        {
-            grupo: "pecuaria",
-            atividade: "Apicultura",
-            ncmsPrefixos: ["0409"],
-            termosFortes: [
-                "MEL NATURAL",
-                "MEL DE ABELHA"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: true
-        },
-        {
-            grupo: "pecuaria",
-            atividade: "Meliponicultura",
-            ncmsPrefixos: ["0409"],
-            termosFortes: [
-                "MEL DE ABELHA SEM FERrao",
-                "MEL DE JATAI",
-                "MEL DE URUCU"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-
-        /* =================================================
-           AQUICULTURA / PESCA
-           ================================================= */
-
-        {
-            grupo: "pecuaria",
-            atividade: "Aquicultura - Piscicultura",
-            ncmsPrefixos: ["0301"],
-            termosFortes: [
-                "PEIXE VIVO",
-                "TILAPIA",
-                "TAMBAQUI",
-                "PACU",
-                "PIRARUCU"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-        {
-            grupo: "pecuaria",
-            atividade: "Aquicultura - Carcinicultura",
-            ncmsPrefixos: ["0306"],
-            termosFortes: [
-                "CAMARAO",
-                "CRUSTACEO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-
-        /* =================================================
-           EXTRATIVISMO
-           ================================================= */
-
-        {
-            grupo: "extrativismo",
-            atividade: "Pirarucu de manejo",
-            ncmsPrefixos: ["0302", "0303", "0304"],
-            termosFortes: [
-                "PIRARUCU DE MANEJO",
-                "PIRARUCU MANEJO"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        },
-
-        /* =================================================
-           FLORESTAL
-           ================================================= */
-
-        {
-            grupo: "florestal_agroflorestal",
-            atividade: "Florestas comerciais",
-            ncmsPrefixos: ["4401", "4403"],
-            termosFortes: [
-                "MADEIRA EM BRUTO",
-                "TORAS",
-                "EUCALIPTO",
-                "PINUS"
-            ],
-            termosExcluir: [],
-            automaticoComNcm: false
-        }
-    ];
-
-    /* =====================================================
-       PREPARAÇÃO
-       ===================================================== */
-
-    REGRAS_NCM_ATIVIDADE_RURAL.forEach(regra => {
-        regra.atividadeId =
-            regra.atividade
-                ? normalizarAtividade(regra.atividade)
-                : null;
-
-        regra.atividadesPossiveisIds =
-            (regra.atividadesPossiveis || [])
-                .map(normalizarAtividade);
-
-        regra.termosFortesNormalizados =
-            (regra.termosFortes || [])
-                .map(normalizarTextoClassificacao);
-
-        regra.termosExcluirNormalizados =
-            (regra.termosExcluir || [])
-                .map(normalizarTextoClassificacao);
-
-        regra.ncmsPrefixos =
-            (regra.ncmsPrefixos || [])
-                .map(normalizarNcm);
-    });
-
-    /* =====================================================
-       VERIFICAÇÃO DE NCM
-       ===================================================== */
-
-    function ncmCorresponde(ncm, prefixos) {
-        const codigo =
-            normalizarNcm(ncm);
-
-        if (!codigo) {
-            return false;
+            if (
+                texto.includes("CORTE") ||
+                texto.includes("ABATE") ||
+                texto.includes("FRANGO")
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Avicultura Corte",
+                    0.93
+                );
+            }
         }
 
-        return prefixos.some(prefixo =>
-            codigo.startsWith(prefixo)
-        );
+        /* =================================================
+           BOVINOS VIVOS
+           ================================================= */
+
+        if (ncm.startsWith("0102")) {
+            return classificarBovino(texto);
+        }
+
+        return null;
     }
 
-    /* =====================================================
-       VERIFICAÇÃO DOS TERMOS
-       ===================================================== */
-
-    function descricaoPossuiTermo(
-        descricao,
-        termos
-    ) {
-        const texto =
-            normalizarTextoClassificacao(
-                descricao
-            );
-
-        return termos.some(termo =>
-            texto.includes(termo)
-        );
-    }
-
-    function descricaoPossuiExclusao(
-        descricao,
-        termos
-    ) {
-        return descricaoPossuiTermo(
-            descricao,
-            termos
-        );
-    }
-
-    /* =====================================================
-       AVALIA UMA REGRA
-       ===================================================== */
-
-    function avaliarRegra(
-        item,
-        regra
-    ) {
-        const descricao =
-            normalizarTextoClassificacao(
-                item.descricao ||
-                item.xProd ||
-                ""
-            );
-
-        const ncm =
-            normalizarNcm(
-                item.ncm ||
-                item.NCM ||
-                ""
-            );
-
+    function classificarBovino(texto) {
         if (
-            descricaoPossuiExclusao(
-                descricao,
-                regra.termosExcluirNormalizados
-            )
+            texto.includes("BUFALO") ||
+            texto.includes("BUFALA") ||
+            texto.includes("BUBALIN")
         ) {
-            return null;
-        }
-
-        const encontrouNcm =
-            ncmCorresponde(
-                ncm,
-                regra.ncmsPrefixos
-            );
-
-        const encontrouTermo =
-            descricaoPossuiTermo(
-                descricao,
-                regra.termosFortesNormalizados
-            );
-
-        if (
-            !encontrouNcm &&
-            !encontrouTermo
-        ) {
-            return null;
-        }
-
-        let confianca = 0;
-        const evidencias = [];
-
-        if (encontrouNcm) {
-            confianca += 0.55;
-            evidencias.push("NCM");
-        }
-
-        if (encontrouTermo) {
-            confianca += 0.42;
-            evidencias.push(
-                "descrição do produto"
+            return criar(
+                "pecuaria",
+                "Bubalinocultura Corte",
+                0.95,
+                "NCM + descrição bubalina"
             );
         }
 
         if (
-            encontrouNcm &&
-            encontrouTermo
+            texto.includes("CONFINAMENTO") ||
+            texto.includes("CONFINADO")
         ) {
-            confianca += 0.03;
+            return criar(
+                "pecuaria",
+                "Bovinocultura Corte - Confinamento",
+                0.98,
+                "NCM + descrição de confinamento"
+            );
         }
 
-        confianca =
-            Math.min(
-                1,
-                confianca
-            );
+        const idade = extrairFaixaEtariaBovino(texto);
 
-        let automatico = false;
+        if (idade) {
+            /*
+             * Regra produtiva interna:
+             *
+             * até 8 meses -> Cria
+             * 9 a 24 meses -> Recria
+             * acima de 24 meses -> Engorda
+             *
+             * A descrição da NF-e é usada junto com o NCM.
+             */
+
+            if (idade.max <= 8) {
+                return criar(
+                    "pecuaria",
+                    "Bovinocultura Corte - Cria",
+                    0.94,
+                    "NCM bovino + idade até 8 meses"
+                );
+            }
+
+            if (
+                idade.min >= 9 &&
+                idade.max <= 24
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Bovinocultura Corte - Recria",
+                    0.94,
+                    "NCM bovino + idade de recria"
+                );
+            }
+
+            if (idade.min > 24) {
+                return criar(
+                    "pecuaria",
+                    "Bovinocultura Corte - Engorda",
+                    0.90,
+                    "NCM bovino + idade adulta"
+                );
+            }
+
+            if (
+                idade.min <= 24 &&
+                idade.max > 24
+            ) {
+                return criar(
+                    "pecuaria",
+                    "Bovinocultura Corte - Recria/Engorda",
+                    0.90,
+                    "NCM bovino + faixa entre recria e engorda"
+                );
+            }
+        }
 
         if (
-            regra.atividadeId &&
-            regra.automaticoComNcm &&
-            encontrouNcm &&
-            encontrouTermo &&
-            confianca >=
-            CONFIANCA_AUTOMATICA_ATIVIDADE
+            texto.includes("BEZERRO") ||
+            texto.includes("BEZERRA")
         ) {
-            automatico = true;
+            return criar(
+                "pecuaria",
+                "Bovinocultura Corte - Cria",
+                0.90
+            );
         }
 
-        return {
-            grupo:
-                regra.grupo,
+        if (
+            texto.includes("GARROTE") ||
+            texto.includes("NOVILHA")
+        ) {
+            return criar(
+                "pecuaria",
+                "Bovinocultura Corte - Recria",
+                0.88
+            );
+        }
 
-            atividade:
-                regra.atividadeId,
+        if (
+            texto.includes("NOVILHO") ||
+            texto.includes("BOI GORDO") ||
+            texto.includes("VACA GORDA")
+        ) {
+            return criar(
+                "pecuaria",
+                "Bovinocultura Corte - Engorda",
+                0.88
+            );
+        }
 
-            nomeAtividade:
-                regra.atividade ||
-                "",
-
-            grupoSugerido:
-                regra.grupoSugerido ||
-                "",
-
-            atividadesPossiveis:
-                regra.atividadesPossiveisIds ||
-                [],
-
-            atividadesPossiveisNomes:
-                regra.atividadesPossiveis ||
-                [],
-
-            ncm,
-
-            descricao:
-                item.descricao ||
-                item.xProd ||
-                "",
-
-            confianca,
-
-            automatico,
-
-            evidencias
-        };
+        return null;
     }
 
-    /* =====================================================
-       CLASSIFICA UM ITEM
-       ===================================================== */
-
-    function classificarItem(item) {
-        const candidatos = [];
-
-        REGRAS_NCM_ATIVIDADE_RURAL
-            .forEach(regra => {
-                const resultado =
-                    avaliarRegra(
-                        item,
-                        regra
-                    );
-
-                if (resultado) {
-                    candidatos.push(
-                        resultado
-                    );
-                }
-            });
-
-        candidatos.sort(
-            (a, b) =>
-                b.confianca -
-                a.confianca
+    function extrairFaixaEtariaBovino(texto) {
+        let match = texto.match(
+            /(\d{1,2})\s*(?:A|ATE)\s*(\d{1,2})\s*MESES/
         );
 
-        if (!candidatos.length) {
+        if (match) {
             return {
-                identificado: false,
-                automatico: false,
-                confianca: 0,
-                candidatos: []
+                min: Number(match[1]),
+                max: Number(match[2])
             };
         }
 
-        const principal =
-            candidatos[0];
+        match = texto.match(
+            /ACIMA\s+DE\s+(\d{1,2})\s*MESES/
+        );
+
+        if (match) {
+            return {
+                min: Number(match[1]) + 1,
+                max: 120
+            };
+        }
+
+        match = texto.match(
+            /ATE\s+(\d{1,2})\s*MESES/
+        );
+
+        if (match) {
+            return {
+                min: 0,
+                max: Number(match[1])
+            };
+        }
+
+        return null;
+    }
+
+    function criar(
+        grupo,
+        nomeAtividade,
+        confianca,
+        evidencia = "NCM + descrição"
+    ) {
+        const atividade = resolver(
+            nomeAtividade,
+            grupo
+        );
+
+        if (!atividade) {
+            return null;
+        }
 
         return {
-            identificado:
-                principal.confianca >=
-                CONFIANCA_SUGESTAO_ATIVIDADE,
-
+            grupo,
+            atividade: atividade.atividade,
+            nomeAtividade: atividade.nomeAtividade,
+            confianca,
             automatico:
-                principal.automatico,
-
-            confianca:
-                principal.confianca,
-
-            grupo:
-                principal.grupo,
-
-            atividade:
-                principal.atividade,
-
-            nomeAtividade:
-                principal.nomeAtividade,
-
-            grupoSugerido:
-                principal.grupoSugerido,
-
-            atividadesPossiveis:
-                principal.atividadesPossiveis,
-
-            atividadesPossiveisNomes:
-                principal.atividadesPossiveisNomes,
-
-            evidencias:
-                principal.evidencias,
-
-            candidatos
+                confianca >= LIMIAR_AUTOMATICO,
+            evidencias: [evidencia]
         };
     }
 
-    /* =====================================================
-       CLASSIFICA TODOS OS ITENS
-       ===================================================== */
-
-    function classificarItens(itens) {
-        const resultados = [];
-
-        (itens || []).forEach(
-            (item, indice) => {
-                const classificacao =
-                    classificarItem(
-                        item
-                    );
-
-                resultados.push({
-                    indice,
-                    item,
-                    ...classificacao
-                });
-            }
+    function classificarItem(item) {
+        const ncm = normalizarNcm(
+            item.ncm
         );
 
-        return resultados;
-    }
+        const descricao = normalizar(
+            item.descricao
+        );
 
-    /* =====================================================
-       CONSOLIDA ATIVIDADES DA NOTA
-       ===================================================== */
+        if (!ncm && !descricao) {
+            return {
+                identificado: false,
+                automatico: false,
+                confianca: 0
+            };
+        }
 
-    function consolidarAtividadesNota(
-        itens
-    ) {
-        const classificacoes =
-            classificarItens(
-                itens
+        const especial =
+            classificarEspecial(
+                descricao,
+                ncm
             );
 
-        const mapa =
-            new Map();
+        if (especial) {
+            return {
+                identificado: true,
+                ...especial
+            };
+        }
 
-        classificacoes.forEach(
-            classificacao => {
-                if (
-                    !classificacao.identificado
-                ) {
-                    return;
-                }
+        for (const regra of REGRAS) {
+            const [
+                prefixo,
+                grupo,
+                nomeAtividade,
+                termos
+            ] = regra;
 
-                if (
-                    !classificacao.atividade
-                ) {
-                    return;
-                }
+            const ncmOk =
+                ncm.startsWith(prefixo);
 
-                const chave =
-                    [
-                        classificacao.grupo,
-                        classificacao.atividade
-                    ].join("|");
-
-                if (
-                    !mapa.has(chave)
-                ) {
-                    mapa.set(
-                        chave,
-                        {
-                            grupo:
-                                classificacao.grupo,
-
-                            atividade:
-                                classificacao.atividade,
-
-                            nomeAtividade:
-                                classificacao.nomeAtividade,
-
-                            confianca:
-                                classificacao.confianca,
-
-                            automatico:
-                                classificacao.automatico,
-
-                            evidencias:
-                                new Set(
-                                    classificacao.evidencias
-                                ),
-
-                            indicesItens:
-                                []
-                        }
-                    );
-                }
-
-                const existente =
-                    mapa.get(chave);
-
-                existente.confianca =
-                    Math.max(
-                        existente.confianca,
-                        classificacao.confianca
-                    );
-
-                existente.automatico =
-                    existente.automatico &&
-                    classificacao.automatico;
-
-                classificacao.evidencias
-                    .forEach(evidencia =>
-                        existente.evidencias.add(
-                            evidencia
+            const descricaoOk =
+                termos.some(
+                    termo =>
+                        descricao.includes(
+                            normalizar(termo)
                         )
+                );
+
+            if (
+                ncmOk &&
+                nomeAtividade &&
+                descricaoOk
+            ) {
+                const resultado =
+                    criar(
+                        grupo,
+                        nomeAtividade,
+                        0.97
                     );
 
-                existente.indicesItens.push(
-                    classificacao.indice
-                );
+                if (resultado) {
+                    return {
+                        identificado: true,
+                        ...resultado
+                    };
+                }
             }
+
+            if (
+                ncmOk &&
+                nomeAtividade
+            ) {
+                const resultado =
+                    criar(
+                        grupo,
+                        nomeAtividade,
+                        0.88,
+                        "NCM compatível"
+                    );
+
+                if (resultado) {
+                    return {
+                        identificado: true,
+                        ...resultado
+                    };
+                }
+            }
+        }
+
+        return {
+            identificado: false,
+            automatico: false,
+            confianca: 0
+        };
+    }
+
+    function consolidarBovinocultura(resultados) {
+        const bovinos = resultados.filter(
+            item =>
+                item.nomeAtividade?.startsWith(
+                    "Bovinocultura Corte"
+                )
         );
+
+        if (bovinos.length <= 1) {
+            return resultados;
+        }
+
+        const nomes = new Set(
+            bovinos.map(
+                item =>
+                    item.nomeAtividade
+            )
+        );
+
+        if (nomes.size === 1) {
+            return resultados;
+        }
+
+        let destino = null;
+
+        const temCria = [...nomes].some(
+            item =>
+                item.includes("Cria") &&
+                !item.includes("Recria")
+        );
+
+        const temRecria = [...nomes].some(
+            item =>
+                item.includes("Recria")
+        );
+
+        const temEngorda = [...nomes].some(
+            item =>
+                item.includes("Engorda")
+        );
+
+        if (
+            temCria &&
+            (temRecria || temEngorda)
+        ) {
+            destino =
+                "Bovinocultura Corte - Cria/Recria/Engorda";
+        } else if (
+            temRecria &&
+            temEngorda
+        ) {
+            destino =
+                "Bovinocultura Corte - Recria/Engorda";
+        }
+
+        if (!destino) {
+            return resultados;
+        }
+
+        const consolidada =
+            criar(
+                "pecuaria",
+                destino,
+                0.93,
+                "Consolidação automática das faixas bovinas da NF"
+            );
+
+        if (!consolidada) {
+            return resultados;
+        }
+
+        const outros =
+            resultados.filter(
+                item =>
+                    !item.nomeAtividade?.startsWith(
+                        "Bovinocultura Corte"
+                    )
+            );
+
+        return [
+            ...outros,
+            consolidada
+        ];
+    }
+
+    function classificarItens(itens) {
+        return (itens || []).map(
+            (item, indice) => ({
+                indice,
+                item,
+                ...classificarItem(item)
+            })
+        );
+    }
+
+    function consolidarAtividadesNota(itens) {
+        const classificacoes =
+            classificarItens(itens)
+                .filter(
+                    item =>
+                        item.identificado &&
+                        item.atividade
+                );
+
+        let atividades =
+            classificacoes.map(
+                item => ({
+                    grupo:
+                        item.grupo,
+
+                    atividade:
+                        item.atividade,
+
+                    nomeAtividade:
+                        item.nomeAtividade,
+
+                    confianca:
+                        item.confianca,
+
+                    automatico:
+                        item.automatico,
+
+                    evidencias:
+                        item.evidencias || [],
+
+                    valorProdutos:
+                        Number(
+                            item.item?.valorProduto
+                        ) || 0,
+
+                    indicesItens: [
+                        item.indice
+                    ]
+                })
+            );
+
+        atividades =
+            consolidarBovinocultura(
+                atividades
+            );
+
+        const mapa = new Map();
+
+        atividades.forEach(item => {
+            const chave =
+                `${item.grupo}|${item.atividade}`;
+
+            if (!mapa.has(chave)) {
+                mapa.set(
+                    chave,
+                    {
+                        ...item,
+                        evidencias: new Set(
+                            item.evidencias
+                        ),
+                        indicesItens: [
+                            ...item.indicesItens
+                        ]
+                    }
+                );
+
+                return;
+            }
+
+            const atual =
+                mapa.get(chave);
+
+            atual.confianca =
+                Math.max(
+                    atual.confianca,
+                    item.confianca
+                );
+
+            atual.automatico =
+                atual.automatico &&
+                item.automatico;
+
+            atual.valorProdutos +=
+                Number(
+                    item.valorProdutos
+                ) || 0;
+
+            item.evidencias.forEach(
+                evidencia =>
+                    atual.evidencias.add(
+                        evidencia
+                    )
+            );
+
+            atual.indicesItens.push(
+                ...item.indicesItens
+            );
+        });
 
         return Array.from(
             mapa.values()
-        ).map(item => ({
-            ...item,
-            evidencias:
-                Array.from(
+        ).map(
+            item => ({
+                ...item,
+                evidencias: Array.from(
                     item.evidencias
                 )
-        }));
+            })
+        );
     }
 
-    /* =====================================================
-       EXPORTAÇÃO
-       ===================================================== */
-
-    window.REGRAS_NCM_ATIVIDADE_RURAL =
-        REGRAS_NCM_ATIVIDADE_RURAL;
-
     window.CreditoRuralNcmAtividades = {
-        regras:
-            REGRAS_NCM_ATIVIDADE_RURAL,
-
         normalizarNcm,
-
-        normalizarTexto:
-            normalizarTextoClassificacao,
-
         classificarItem,
-
         classificarItens,
-
         consolidarAtividadesNota,
-
-        CONFIANCA_AUTOMATICA_ATIVIDADE,
-
-        CONFIANCA_SUGESTAO_ATIVIDADE
+        LIMIAR_AUTOMATICO
     };
 })();

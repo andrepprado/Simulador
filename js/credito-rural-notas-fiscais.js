@@ -1,260 +1,145 @@
-/**
- * credito-rural-notas-fiscais.js
- *
- * Caixa de Ferramentas - Sicoob Mantiqueira
- *
- * Interpretador centralizado das notas fiscais utilizadas
- * no cálculo de renda rural.
- *
- * Suporta:
- *
- * - XML NF-e;
- * - NF-e / DANFE;
- * - NFS-e;
- * - Nota Fiscal de Produtor antiga;
- * - documento fiscal genérico.
- *
- * Responsabilidades:
- *
- * - identificar modelo;
- * - interpretar XML;
- * - extrair itens;
- * - extrair NCM;
- * - extrair CFOP;
- * - extrair descrição;
- * - extrair quantidade;
- * - extrair valor dos itens;
- * - extrair data;
- * - extrair número;
- * - extrair emitente;
- * - extrair valor total;
- * - sugerir atividades;
- * - controlar confiança;
- * - determinar necessidade de revisão humana.
- */
-
 (function () {
     "use strict";
 
-    /* =====================================================
-       MODELOS
-       ===================================================== */
+    const MODELOS = Object.freeze({
+        XML_NFE: "xml_nfe",
+        NFE: "nfe",
+        NFSE: "nfse",
+        PRODUTOR_ANTIGA: "produtor_antiga",
+        GENERICA: "generica"
+    });
 
-    const MODELOS_NOTA_FISCAL_RURAL =
-        Object.freeze({
-            XML_NFE:
-                "xml_nfe",
-
-            NFE:
-                "nfe",
-
-            NFSE:
-                "nfse",
-
-            PRODUTOR_ANTIGA:
-                "produtor_antiga",
-
-            GENERICA:
-                "generica"
-        });
-
-    /* =====================================================
-       NORMALIZAÇÃO
-       ===================================================== */
-
-    function normalizarTextoOcr(
-        texto
-    ) {
-        return String(
-            texto ||
-            ""
-        )
-            .replace(
-                /\r/g,
-                "\n"
-            )
-            .replace(
-                /[|]/g,
-                " "
-            )
-            .replace(
-                /[ \t]+/g,
-                " "
-            )
-            .replace(
-                /\n[ \t]+/g,
-                "\n"
-            )
-            .replace(
-                /\n{3,}/g,
-                "\n\n"
-            )
+    function normalizar(texto) {
+        return String(texto || "")
+            .replace(/\r/g, "\n")
+            .replace(/[ \t]+/g, " ")
+            .replace(/\n{3,}/g, "\n\n")
             .trim();
     }
 
-    function normalizarComparacao(
-        texto
-    ) {
-        return String(
-            texto ||
-            ""
-        )
-            .normalize(
-                "NFD"
-            )
-            .replace(
-                /[\u0300-\u036f]/g,
-                ""
-            )
+    function comparacao(texto) {
+        return String(texto || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .toUpperCase()
-            .replace(
-                /\s+/g,
-                " "
-            )
+            .replace(/\s+/g, " ")
             .trim();
     }
 
-    /* =====================================================
-       MODELO
-       ===================================================== */
-
-    function identificarModelo(
-        texto
-    ) {
-        const normalizado =
-            normalizarComparacao(
-                texto
-            );
+    function identificarModelo(texto) {
+        const t = comparacao(texto);
 
         if (
-            normalizado.includes(
-                "NOTA FISCAL DE PRODUTOR"
-            )
+            t.includes("NOTA FISCAL DE PRODUTOR")
         ) {
-            return (
-                MODELOS_NOTA_FISCAL_RURAL
-                    .PRODUTOR_ANTIGA
-            );
+            return MODELOS.PRODUTOR_ANTIGA;
         }
 
         if (
-            normalizado.includes(
-                "DANFE"
-            ) ||
-            normalizado.includes(
-                "CHAVE DE ACESSO"
-            ) ||
-            normalizado.includes(
+            t.includes("DANFE") ||
+            t.includes("CHAVE DE ACESSO") ||
+            t.includes(
                 "DOCUMENTO AUXILIAR DA NOTA FISCAL ELETRONICA"
             )
         ) {
-            return (
-                MODELOS_NOTA_FISCAL_RURAL
-                    .NFE
-            );
+            return MODELOS.NFE;
         }
 
         if (
-            normalizado.includes(
-                "NFS-E"
-            ) ||
-            normalizado.includes(
+            t.includes("NFS-E") ||
+            t.includes(
                 "NOTA FISCAL DE SERVICOS ELETRONICA"
             )
         ) {
-            return (
-                MODELOS_NOTA_FISCAL_RURAL
-                    .NFSE
-            );
+            return MODELOS.NFSE;
         }
 
-        return (
-            MODELOS_NOTA_FISCAL_RURAL
-                .GENERICA
-        );
+        return MODELOS.GENERICA;
     }
 
-    /* =====================================================
-       QUALIDADE DO TEXTO
-       ===================================================== */
+    function avaliarQualidadeTexto(texto) {
+        const t = comparacao(texto);
 
-    function avaliarQualidadeTexto(
-        texto
-    ) {
-        const normalizado =
-            normalizarComparacao(
-                texto
-            );
-
-        if (!normalizado) {
+        if (!t) {
             return 0;
         }
 
-        let pontos = 0;
+        let score = 0;
 
         [
-            "NOTA FISCAL",
-            "NOTA FISCAL DE PRODUTOR",
             "DANFE",
+            "NOTA FISCAL",
+            "CHAVE DE ACESSO",
             "EMISSAO",
-            "DATA DA EMISSAO",
-            "TOTAL DA NOTA",
             "VALOR TOTAL",
             "NCM",
             "CFOP",
-            "DESCRICAO DOS PRODUTOS",
-            "DESTINATARIO"
+            "DADOS DOS PRODUTOS"
         ].forEach(
-            termo => {
-                if (
-                    normalizado.includes(
-                        termo
-                    )
-                ) {
-                    pontos += 7;
+            item => {
+                if (t.includes(item)) {
+                    score += 9;
                 }
             }
         );
 
-        if (
-            normalizado.length >=
-            100
-        ) {
-            pontos += 5;
+        if (t.length > 300) {
+            score += 8;
         }
 
-        if (
-            normalizado.length >=
-            300
-        ) {
-            pontos += 5;
+        if (t.length > 800) {
+            score += 8;
         }
 
         return Math.min(
             100,
-            pontos
+            score
         );
     }
 
     /* =====================================================
-       XML NF-e
+       XML
        ===================================================== */
 
-    function interpretarXmlNfe(
-        xmlTexto,
-        nomeArquivo = ""
-    ) {
-        const parser =
-            new DOMParser();
+    function locais(elemento, nome) {
+        return Array.from(
+            elemento?.getElementsByTagName?.("*") || []
+        ).filter(
+            item =>
+                (
+                    item.localName ||
+                    item.nodeName.split(":").pop()
+                ) === nome
+        );
+    }
 
-        const documento =
-            parser.parseFromString(
-                xmlTexto,
-                "application/xml"
-            );
+    function local(elemento, nome) {
+        return locais(
+            elemento,
+            nome
+        )[0] || null;
+    }
+
+    function xmlTexto(elemento, nome) {
+        return local(
+            elemento,
+            nome
+        )?.textContent?.trim() || "";
+    }
+
+    function interpretarXmlNfe(
+        xmlOriginal,
+        arquivo = ""
+    ) {
+        const doc =
+            new DOMParser()
+                .parseFromString(
+                    xmlOriginal,
+                    "application/xml"
+                );
 
         if (
-            documento.querySelector(
+            doc.querySelector(
                 "parsererror"
             )
         ) {
@@ -263,302 +148,205 @@
             );
         }
 
-        const obterTexto = (
-            elemento,
-            seletor
-        ) => {
-            return (
-                elemento
-                    ?.querySelector(
-                        seletor
-                    )
-                    ?.textContent
-                    ?.trim() ||
-                ""
-            );
-        };
+        const infNFe =
+            local(doc, "infNFe");
 
         const ide =
-            documento.querySelector(
-                "ide"
-            );
+            local(doc, "ide");
 
         const emit =
-            documento.querySelector(
-                "emit"
-            );
+            local(doc, "emit");
+
+        const dest =
+            local(doc, "dest");
 
         const total =
-            documento.querySelector(
-                "ICMSTot"
-            );
+            local(doc, "ICMSTot");
 
         const numero =
-            obterTexto(
+            xmlTexto(
                 ide,
                 "nNF"
             );
 
-        const dataHora =
-            obterTexto(
+        const serie =
+            xmlTexto(
                 ide,
-                "dhEmi"
-            ) ||
-            obterTexto(
-                ide,
-                "dEmi"
+                "serie"
             );
 
         const data =
-            converterDataXmlParaBrasileira(
-                dataHora
+            converterDataXml(
+                xmlTexto(
+                    ide,
+                    "dhEmi"
+                ) ||
+                xmlTexto(
+                    ide,
+                    "dEmi"
+                )
             );
 
         const emitente =
-            obterTexto(
+            xmlTexto(
                 emit,
                 "xNome"
             );
 
+        const destinatario =
+            xmlTexto(
+                dest,
+                "xNome"
+            );
+
         const valor =
-            converterNumero(
-                obterTexto(
+            numeroJs(
+                xmlTexto(
                     total,
                     "vNF"
                 )
             );
 
-        const itens = [];
+        const chave =
+            (
+                xmlTexto(
+                    local(doc, "infProt"),
+                    "chNFe"
+                ) ||
+                infNFe
+                    ?.getAttribute("Id")
+                    ?.replace(/^NFe/, "") ||
+                ""
+            ).replace(/\D/g, "");
 
-        documento
-            .querySelectorAll(
-                "det"
-            )
-            .forEach(
-                det => {
+        const itens =
+            locais(doc, "det")
+                .map(det => {
                     const prod =
-                        det.querySelector(
+                        local(
+                            det,
                             "prod"
                         );
 
-                    if (!prod) {
-                        return;
-                    }
-
-                    itens.push({
+                    return {
                         numeroItem:
                             det.getAttribute(
                                 "nItem"
-                            ) ||
-                            "",
+                            ) || "",
 
                         codigoProduto:
-                            obterTexto(
+                            xmlTexto(
                                 prod,
                                 "cProd"
                             ),
 
                         gtin:
-                            obterTexto(
+                            xmlTexto(
                                 prod,
                                 "cEAN"
                             ),
 
                         descricao:
-                            obterTexto(
+                            xmlTexto(
                                 prod,
                                 "xProd"
                             ),
 
                         ncm:
-                            obterTexto(
+                            xmlTexto(
                                 prod,
                                 "NCM"
                             ),
 
                         cfop:
-                            obterTexto(
+                            xmlTexto(
                                 prod,
                                 "CFOP"
                             ),
 
                         unidade:
-                            obterTexto(
+                            xmlTexto(
                                 prod,
                                 "uCom"
                             ),
 
                         quantidade:
-                            converterNumero(
-                                obterTexto(
+                            numeroJs(
+                                xmlTexto(
                                     prod,
                                     "qCom"
                                 )
                             ),
 
                         valorUnitario:
-                            converterNumero(
-                                obterTexto(
+                            numeroJs(
+                                xmlTexto(
                                     prod,
                                     "vUnCom"
                                 )
                             ),
 
                         valorProduto:
-                            converterNumero(
-                                obterTexto(
+                            numeroJs(
+                                xmlTexto(
                                     prod,
                                     "vProd"
                                 )
                             )
-                    });
-                }
-            );
+                    };
+                });
 
-        const atividadesSugeridas =
-            classificarAtividadesItens(
-                itens
-            );
-
-        const multiplasAtividades =
-            atividadesSugeridas.length >
-            1;
-
-        const atividadeAutomatica =
-            atividadesSugeridas.length ===
-            1 &&
-            atividadesSugeridas[0]
-                .automatico;
-
-        return {
-            arquivo:
-                nomeArquivo,
-
+        return montarResultado({
+            arquivo,
             modelo:
-                MODELOS_NOTA_FISCAL_RURAL
-                    .XML_NFE,
-
-            modeloDescricao:
-                "XML NF-e",
+                MODELOS.XML_NFE,
 
             numero,
+            serie,
+            chaveAcesso:
+                chave,
 
             data,
-
             emitente,
-
+            destinatario,
             valor,
-
-            competencia:
-                formatarCompetenciaData(
-                    data
-                ),
-
             itens,
-
-            atividadesSugeridas,
-
-            atividadeAutomatica,
-
-            multiplasAtividades,
-
-            requerConferencia:
-                !data ||
-                valor <= 0 ||
-                !atividadeAutomatica ||
-                multiplasAtividades,
-
-            confirmada:
-                Boolean(
-                    data &&
-                    valor > 0 &&
-                    atividadeAutomatica &&
-                    !multiplasAtividades
-                ),
-
-            confianca: {
-                numero:
-                    numero
-                        ? 1
-                        : 0,
-
-                data:
-                    data
-                        ? 1
-                        : 0,
-
-                emitente:
-                    emitente
-                        ? 1
-                        : 0,
-
-                valor:
-                    valor > 0
-                        ? 1
-                        : 0,
-
-                geral:
-                    1
-            },
-
-            status:
-                atividadeAutomatica
-                    ? "XML NF-e identificado"
-                    : "Revisar atividade",
+            qualidadeTexto:
+                100,
 
             texto:
-                xmlTexto
-        };
+                xmlOriginal,
+
+            origemEstruturada:
+                true
+        });
     }
 
-    /* =====================================================
-       DATA XML
-       ===================================================== */
-
-    function converterDataXmlParaBrasileira(
-        valor
-    ) {
-        if (!valor) {
-            return null;
-        }
-
+    function converterDataXml(valor) {
         const match =
-            String(valor)
+            String(valor || "")
                 .match(
                     /^(\d{4})-(\d{2})-(\d{2})/
                 );
 
-        if (!match) {
-            return null;
-        }
-
-        return (
-            `${match[3]}/${match[2]}/${match[1]}`
-        );
+        return match
+            ? `${match[3]}/${match[2]}/${match[1]}`
+            : null;
     }
 
     /* =====================================================
-       INTERPRETA TEXTO
+       TEXTO / DANFE
        ===================================================== */
 
     function interpretar(
-        textoOriginal,
-        nomeArquivo = ""
+        original,
+        arquivo = ""
     ) {
         const texto =
-            normalizarTextoOcr(
-                textoOriginal
-            );
+            normalizar(original);
 
         const modelo =
-            identificarModelo(
-                texto
-            );
-
-        const data =
-            extrairData(
-                texto
-            );
+            identificarModelo(texto);
 
         const numero =
             extrairNumero(
@@ -566,217 +354,521 @@
                 modelo
             );
 
+        const serie =
+            extrairSerie(texto);
+
+        const data =
+            extrairData(texto);
+
         const emitente =
-            extrairEmitente(
-                texto,
-                modelo
-            );
+            extrairEmitente(texto);
 
         const valor =
-            extrairValorTotal(
-                texto,
-                modelo
-            );
+            extrairValor(texto);
+
+        const chave =
+            extrairChave(texto);
 
         const itens =
-            extrairItensTexto(
+            extrairItens(
                 texto,
                 modelo
             );
 
-        const atividadesSugeridas =
-            classificarAtividadesItens(
-                itens
+        return montarResultado({
+            arquivo,
+            modelo,
+            numero,
+            serie,
+            chaveAcesso:
+                chave,
+            data,
+            emitente,
+            destinatario:
+                "",
+            valor,
+            itens,
+            qualidadeTexto:
+                avaliarQualidadeTexto(
+                    texto
+                ),
+            texto:
+                original,
+            origemEstruturada:
+                false
+        });
+    }
+
+    function montarResultado(dados) {
+        const atividades =
+            window.CreditoRuralNcmAtividades
+                ?.consolidarAtividadesNota(
+                    dados.itens
+                ) || [];
+
+        const documentoCompleto =
+            Boolean(
+                dados.numero &&
+                dados.data &&
+                Number(
+                    dados.valor
+                ) > 0
             );
 
-        const confianca =
-            calcularConfianca(
-                {
-                    numero,
-                    data,
-                    emitente,
-                    valor
-                },
-                modelo
+        const nfe =
+            dados.modelo ===
+            MODELOS.NFE ||
+            dados.modelo ===
+            MODELOS.XML_NFE;
+
+        /*
+         * XML é confiável por estrutura.
+         *
+         * DANFE:
+         * documento é considerado válido quando
+         * número, data e valor foram extraídos e
+         * a estrutura NF-e foi reconhecida.
+         */
+        const nfeLegivel =
+            nfe &&
+            documentoCompleto &&
+            (
+                dados.origemEstruturada ||
+                dados.qualidadeTexto >= 30 ||
+                String(
+                    dados.chaveAcesso
+                ).length === 44
+            );
+
+        const antiga =
+            dados.modelo ===
+            MODELOS.PRODUTOR_ANTIGA;
+
+        const requerConferenciaDocumento =
+            antiga
+                ? !documentoCompleto
+                : (
+                    nfe
+                        ? !nfeLegivel
+                        : !documentoCompleto
+                );
+
+        const atividadesAutomaticas =
+            atividades.filter(
+                item =>
+                    item.automatico
             );
 
         const atividadeAutomatica =
-            atividadesSugeridas.length ===
-            1 &&
-            atividadesSugeridas[0]
-                .automatico;
+            atividadesAutomaticas.length >
+            0;
 
-        const multiplasAtividades =
-            atividadesSugeridas.length >
-            1;
-
-        const camposCriticosOk =
-            Boolean(
-                data &&
-                valor > 0
+        const alocacoesAtividade =
+            montarAlocacoesAtividade(
+                atividades,
+                dados.itens,
+                dados.valor
             );
-
-        const confirmarAutomaticamente =
-            modelo ===
-            MODELOS_NOTA_FISCAL_RURAL
-                .NFE &&
-            camposCriticosOk &&
-            confianca.geral >=
-            0.80 &&
-            atividadeAutomatica &&
-            !multiplasAtividades;
-
-        let status =
-            "Identificada";
-
-        if (
-            !data ||
-            valor <= 0
-        ) {
-            status =
-                "Conferência necessária";
-        } else if (
-            !atividadeAutomatica
-        ) {
-            status =
-                "Revisar atividade";
-        }
-
-        if (
-            modelo ===
-            MODELOS_NOTA_FISCAL_RURAL
-                .PRODUTOR_ANTIGA
-        ) {
-            status =
-                "Nota antiga - revisar";
-
-            /*
-             * Nota antiga nunca é incluída
-             * automaticamente na renda.
-             */
-        }
 
         return {
             arquivo:
-                nomeArquivo,
+                dados.arquivo,
 
-            modelo,
+            modelo:
+                dados.modelo,
 
             modeloDescricao:
-                obterDescricaoModelo(
-                    modelo
+                descricaoModelo(
+                    dados.modelo
                 ),
 
-            numero,
+            numero:
+                dados.numero || "",
 
-            data,
+            serie:
+                dados.serie || "",
 
-            emitente,
+            chaveAcesso:
+                dados.chaveAcesso || "",
 
-            valor,
+            data:
+                dados.data || null,
 
             competencia:
-                formatarCompetenciaData(
-                    data
+                competencia(
+                    dados.data
                 ),
 
-            itens,
+            emitente:
+                dados.emitente || "",
 
-            atividadesSugeridas,
+            destinatario:
+                dados.destinatario || "",
+
+            valor:
+                Number(
+                    dados.valor
+                ) || 0,
+
+            itens:
+                dados.itens || [],
+
+            atividadesSugeridas:
+                atividades,
+
+            alocacoesAtividade,
 
             atividadeAutomatica,
 
-            multiplasAtividades,
+            documentoFiscalCompleto:
+                documentoCompleto,
 
-            confianca,
+            nfeLegivel,
 
+            requerConferenciaDocumento,
+
+            /*
+             * Compatibilidade:
+             * só representa problema documental.
+             */
             requerConferencia:
-                !confirmarAutomaticamente,
+                requerConferenciaDocumento,
+
+            confirmadaDocumento:
+                !requerConferenciaDocumento,
 
             confirmada:
-                confirmarAutomaticamente,
+                !requerConferenciaDocumento,
 
-            status,
+            status:
+                requerConferenciaDocumento
+                    ? "Revisar documento"
+                    : (
+                        nfe
+                            ? "NF-e identificada"
+                            : "Documento identificado"
+                    ),
+
+            qualidadeTexto:
+                dados.qualidadeTexto,
 
             texto:
-                textoOriginal
+                dados.texto
         };
     }
 
     /* =====================================================
-       EXTRAI ITENS DO TEXTO
+       ALOCAÇÃO AUTOMÁTICA POR ATIVIDADE
        ===================================================== */
 
-    function extrairItensTexto(
-        texto,
-        modelo
+    function montarAlocacoesAtividade(
+        atividades,
+        itens,
+        valorNota
     ) {
-        const itens = [];
+        if (!atividades.length) {
+            return [];
+        }
+
+        if (atividades.length === 1) {
+            return [{
+                grupo:
+                    atividades[0].grupo,
+
+                atividade:
+                    atividades[0].atividade,
+
+                nomeAtividade:
+                    atividades[0].nomeAtividade,
+
+                valor:
+                    Number(
+                        valorNota
+                    ) || 0,
+
+                confianca:
+                    atividades[0].confianca,
+
+                automatico:
+                    atividades[0].automatico
+            }];
+        }
 
         /*
-         * Em DANFE com camada textual, procuramos
-         * combinações NCM + CFOP e tentamos recuperar
-         * a descrição próxima.
+         * Mais de uma atividade:
+         * utiliza valor dos itens para não duplicar renda.
          */
+
+        const totalProdutos =
+            atividades.reduce(
+                (soma, item) =>
+                    soma +
+                    (
+                        Number(
+                            item.valorProdutos
+                        ) || 0
+                    ),
+                0
+            );
+
+        if (totalProdutos <= 0) {
+            return [];
+        }
+
+        return atividades.map(
+            item => ({
+                grupo:
+                    item.grupo,
+
+                atividade:
+                    item.atividade,
+
+                nomeAtividade:
+                    item.nomeAtividade,
+
+                valor:
+                    (
+                        Number(
+                            item.valorProdutos
+                        ) /
+                        totalProdutos
+                    ) *
+                    Number(
+                        valorNota
+                    ),
+
+                confianca:
+                    item.confianca,
+
+                automatico:
+                    item.automatico
+            })
+        );
+    }
+
+    /* =====================================================
+       EXTRAÇÕES
+       ===================================================== */
+
+    function extrairNumero(texto, modelo) {
+        const padroes = modelo ===
+            MODELOS.PRODUTOR_ANTIGA
+            ? [
+                /NOTA\s+FISCAL\s+DE\s+PRODUTOR[\s\S]{0,100}?N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})/i,
+                /\bN[º°]\s*[:.-]?\s*0*(\d{1,12})\b/i
+            ]
+            : [
+                /NF-?E[\s\S]{0,60}?N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})/i,
+                /N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})\s*(?:SERIE|S[ÉE]RIE)/i,
+                /\bN[º°]\s*[:.-]?\s*0*(\d{1,12})\b/i
+            ];
+
+        for (const regex of padroes) {
+            const match =
+                texto.match(regex);
+
+            if (match?.[1]) {
+                return String(
+                    Number(
+                        match[1]
+                    )
+                );
+            }
+        }
+
+        return "";
+    }
+
+    function extrairSerie(texto) {
+        const match =
+            texto.match(
+                /S[ÉE]RIE\s*[:.-]?\s*(\d{1,4})/i
+            );
+
+        return match?.[1] || "";
+    }
+
+    function extrairChave(texto) {
+        const limpo =
+            String(texto || "")
+                .replace(
+                    /[\s.-]/g,
+                    ""
+                );
+
+        const match =
+            limpo.match(
+                /\d{44}/
+            );
+
+        return match?.[0] || "";
+    }
+
+    function extrairData(texto) {
+        const padroes = [
+            /EMISS[AÃ]O\s*[:.-]\s*(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
+            /DATA\s+(?:DA|DE)\s+EMISS[AÃ]O[^0-9]{0,50}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i
+        ];
+
+        for (const regex of padroes) {
+            const match =
+                texto.match(regex);
+
+            if (match?.[1]) {
+                return normalizarData(
+                    match[1]
+                );
+            }
+        }
+
+        const match =
+            texto.match(
+                /\b\d{2}\/\d{2}\/\d{4}\b/
+            );
+
+        return match
+            ? normalizarData(
+                match[0]
+            )
+            : null;
+    }
+
+    function extrairEmitente(texto) {
+        const recebido =
+            texto.match(
+                /RECEBEMOS\s+DE\s+(.+?)\s+OS\s+PRODUTOS/i
+            );
+
+        if (recebido?.[1]) {
+            return recebido[1]
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
+        const razao =
+            texto.match(
+                /RAZ[AÃ]O\s+SOCIAL[\s:.-]+([^\n]+)/i
+            );
+
+        return razao?.[1]
+            ?.trim() || "";
+    }
+
+    function extrairValor(texto) {
+        const padroes = [
+            /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[^0-9]{0,100}(?:R\$\s*)?([\d.]+,\d{2})/i,
+            /TOTAL\s+DA\s+NOTA[^0-9]{0,100}(?:R\$\s*)?([\d.]+,\d{2})/i,
+            /EMISS[AÃ]O\s*:[\s\S]{0,250}?VALOR\s*:\s*R?\$?\s*([\d.]+,\d{2})/i
+        ];
+
+        for (const regex of padroes) {
+            const match =
+                texto.match(regex);
+
+            if (match?.[1]) {
+                return moeda(
+                    match[1]
+                );
+            }
+        }
+
+        return 0;
+    }
+
+    function extrairItens(texto, modelo) {
+        if (
+            modelo !== MODELOS.NFE &&
+            modelo !== MODELOS.PRODUTOR_ANTIGA
+        ) {
+            return [];
+        }
 
         const linhas =
             String(texto || "")
                 .split(/\n/)
                 .map(
-                    linha =>
-                        linha.trim()
+                    item =>
+                        item.trim()
                 )
                 .filter(Boolean);
 
+        const itens = [];
+
         for (
             let i = 0;
-            i <
-            linhas.length;
+            i < linhas.length;
             i++
         ) {
-            const linha =
-                linhas[i];
+            const bloco = [
+                linhas[i - 2] || "",
+                linhas[i - 1] || "",
+                linhas[i],
+                linhas[i + 1] || "",
+                linhas[i + 2] || ""
+            ].join(" ");
 
-            const ncmMatch =
-                linha.match(
+            const ncm =
+                bloco.match(
                     /\b(\d{8})\b/
-                );
+                )?.[1];
 
-            if (!ncmMatch) {
+            if (!ncm) {
                 continue;
             }
 
-            const ncm =
-                ncmMatch[1];
+            const cfop =
+                bloco.match(
+                    /\b([12567]\d{3})\b/
+                )?.[1] || "";
 
-            const janela =
-                [
-                    linhas[i - 3] || "",
-                    linhas[i - 2] || "",
-                    linhas[i - 1] || "",
-                    linhas[i],
-                    linhas[i + 1] || "",
-                    linhas[i + 2] || ""
-                ];
+            const indice =
+                bloco.indexOf(ncm);
 
-            const cfopMatch =
-                janela
-                    .join(" ")
-                    .match(
-                        /\b([12567]\d{3})\b/
+            let descricao =
+                indice > 0
+                    ? bloco
+                        .substring(
+                            0,
+                            indice
+                        )
+                        .trim()
+                    : "";
+
+            /*
+             * Mantém apenas a parte final antes do NCM.
+             */
+            descricao =
+                descricao
+                    .replace(
+                        /.*(?:DESCRI[CÇ][AÃ]O\s+DO\s+PRODUTO\s*\/?\s*SERVI[CÇ]O)/i,
+                        ""
+                    )
+                    .trim();
+
+            descricao =
+                descricao
+                    .replace(
+                        /^\S{1,20}\s+/,
+                        ""
+                    )
+                    .trim();
+
+            const valores =
+                bloco.match(
+                    /\d[\d.]*,\d{2,6}/g
+                ) || [];
+
+            const convertidos =
+                valores
+                    .map(moeda)
+                    .filter(
+                        Number.isFinite
                     );
-
-            const descricao =
-                escolherDescricaoProduto(
-                    janela,
-                    ncm
-                );
 
             itens.push({
                 numeroItem:
                     String(
-                        itens.length +
-                        1
+                        itens.length + 1
                     ),
 
                 codigoProduto:
@@ -785,14 +877,15 @@
                 gtin:
                     "",
 
-                descricao,
+                descricao:
+                    descricao.substring(
+                        0,
+                        180
+                    ),
 
                 ncm,
 
-                cfop:
-                    cfopMatch
-                        ? cfopMatch[1]
-                        : "",
+                cfop,
 
                 unidade:
                     "",
@@ -804,306 +897,36 @@
                     0,
 
                 valorProduto:
-                    0
+                    convertidos.length
+                        ? Math.max(
+                            ...convertidos
+                        )
+                        : 0
             });
         }
 
-        /*
-         * Nota antiga dificilmente terá NCM.
-         * Nesse caso utiliza a descrição da área
-         * "Descrição dos Produtos" como apoio.
-         */
+        const mapa = new Map();
 
-        if (
-            itens.length === 0 &&
-            modelo ===
-            MODELOS_NOTA_FISCAL_RURAL
-                .PRODUTOR_ANTIGA
-        ) {
-            const descricao =
-                extrairDescricaoProdutoNotaAntiga(
-                    linhas
+        itens.forEach(item => {
+            const chave =
+                `${item.ncm}|${comparacao(item.descricao)}`;
+
+            if (!mapa.has(chave)) {
+                mapa.set(
+                    chave,
+                    item
                 );
-
-            if (descricao) {
-                itens.push({
-                    numeroItem:
-                        "1",
-
-                    codigoProduto:
-                        "",
-
-                    gtin:
-                        "",
-
-                    descricao,
-
-                    ncm:
-                        "",
-
-                    cfop:
-                        "",
-
-                    unidade:
-                        "",
-
-                    quantidade:
-                        0,
-
-                    valorUnitario:
-                        0,
-
-                    valorProduto:
-                        0
-                });
             }
-        }
-
-        return removerItensDuplicados(
-            itens
-        );
-    }
-
-    /* =====================================================
-       DESCRIÇÃO PRÓXIMA AO NCM
-       ===================================================== */
-
-    function escolherDescricaoProduto(
-        linhas,
-        ncm
-    ) {
-        const ignorar = [
-            "NCM",
-            "CFOP",
-            "CST",
-            "VALOR",
-            "QUANTIDADE",
-            "UNIDADE",
-            "CODIGO",
-            ncm
-        ];
-
-        const candidatas =
-            linhas
-                .map(
-                    linha =>
-                        String(
-                            linha ||
-                            ""
-                        ).trim()
-                )
-                .filter(
-                    linha =>
-                        linha.length >=
-                        3 &&
-                        linha.length <=
-                        180
-                )
-                .filter(
-                    linha => {
-                        const normal =
-                            normalizarComparacao(
-                                linha
-                            );
-
-                        return !ignorar.some(
-                            termo =>
-                                normal ===
-                                termo
-                        );
-                    }
-                );
-
-        return (
-            candidatas[0] ||
-            ""
-        );
-    }
-
-    /* =====================================================
-       DESCRIÇÃO NOTA ANTIGA
-       ===================================================== */
-
-    function extrairDescricaoProdutoNotaAntiga(
-        linhas
-    ) {
-        for (
-            let i = 0;
-            i <
-            linhas.length;
-            i++
-        ) {
-            const normal =
-                normalizarComparacao(
-                    linhas[i]
-                );
-
-            if (
-                normal.includes(
-                    "DESCRICAO DOS PRODUTOS"
-                )
-            ) {
-                for (
-                    let proxima = 1;
-                    proxima <= 5;
-                    proxima++
-                ) {
-                    const candidata =
-                        linhas[
-                        i +
-                        proxima
-                        ];
-
-                    if (
-                        candidata &&
-                        candidata.length >=
-                        3
-                    ) {
-                        return candidata;
-                    }
-                }
-            }
-        }
-
-        return "";
-    }
-
-    /* =====================================================
-       REMOVE ITENS DUPLICADOS
-       ===================================================== */
-
-    function removerItensDuplicados(
-        itens
-    ) {
-        const mapa =
-            new Map();
-
-        itens.forEach(
-            item => {
-                const chave =
-                    [
-                        item.ncm,
-                        normalizarComparacao(
-                            item.descricao
-                        )
-                    ].join("|");
-
-                if (
-                    !mapa.has(
-                        chave
-                    )
-                ) {
-                    mapa.set(
-                        chave,
-                        item
-                    );
-                }
-            }
-        );
+        });
 
         return Array.from(
             mapa.values()
         );
     }
 
-    /* =====================================================
-       ATIVIDADES
-       ===================================================== */
-
-    function classificarAtividadesItens(
-        itens
-    ) {
-        if (
-            !window.CreditoRuralNcmAtividades
-        ) {
-            return [];
-        }
-
-        return window
-            .CreditoRuralNcmAtividades
-            .consolidarAtividadesNota(
-                itens
-            );
-    }
-
-    /* =====================================================
-       DATA
-       ===================================================== */
-
-    function extrairData(
-        texto
-    ) {
-        const padroes = [
-            /DATA\s*(?:DE\s*)?EMISS[AÃ]O[^0-9]{0,40}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
-            /EMISS[AÃ]O[^0-9]{0,40}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
-            /EMITID[AO]\s+EM[^0-9]{0,40}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i
-        ];
-
-        for (
-            const padrao of
-            padroes
-        ) {
-            const match =
-                String(texto)
-                    .match(
-                        padrao
-                    );
-
-            if (
-                match &&
-                match[1]
-            ) {
-                const data =
-                    normalizarData(
-                        match[1]
-                    );
-
-                if (
-                    validarData(
-                        data
-                    )
-                ) {
-                    return data;
-                }
-            }
-        }
-
-        const datas =
-            String(texto)
-                .match(
-                    /\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g
-                ) ||
-            [];
-
-        for (
-            const valor of
-            datas
-        ) {
-            const data =
-                normalizarData(
-                    valor
-                );
-
-            if (
-                validarData(
-                    data
-                )
-            ) {
-                return data;
-            }
-        }
-
-        return null;
-    }
-
-    function normalizarData(
-        valor
-    ) {
+    function normalizarData(valor) {
         const match =
-            String(
-                valor ||
-                ""
-            )
+            String(valor || "")
                 .replace(
                     /[.-]/g,
                     "/"
@@ -1117,595 +940,66 @@
         }
 
         let ano =
-            Number(
-                match[3]
-            );
+            Number(match[3]);
 
-        if (
-            ano <
-            100
-        ) {
-            ano +=
-                ano >= 50
-                    ? 1900
-                    : 2000;
+        if (ano < 100) {
+            ano += ano >= 50
+                ? 1900
+                : 2000;
         }
 
-        return (
-            `${String(Number(match[1])).padStart(2, "0")}/${String(Number(match[2])).padStart(2, "0")}/${ano}`
+        return `${String(Number(match[1])).padStart(2, "0")}/${String(Number(match[2])).padStart(2, "0")}/${ano}`;
+    }
+
+    function validarData(data) {
+        return /^\d{2}\/\d{2}\/\d{4}$/.test(
+            String(data || "")
         );
     }
 
-    function validarData(
-        valor
-    ) {
+    function competencia(data) {
         const match =
-            String(
-                valor ||
-                ""
-            ).match(
-                /^(\d{2})\/(\d{2})\/(\d{4})$/
-            );
-
-        if (!match) {
-            return false;
-        }
-
-        const dia =
-            Number(
-                match[1]
-            );
-
-        const mes =
-            Number(
-                match[2]
-            );
-
-        const ano =
-            Number(
-                match[3]
-            );
-
-        const data =
-            new Date(
-                ano,
-                mes - 1,
-                dia
-            );
-
-        return (
-            data.getFullYear() ===
-            ano &&
-            data.getMonth() ===
-            mes - 1 &&
-            data.getDate() ===
-            dia
-        );
-    }
-
-    /* =====================================================
-       NÚMERO
-       ===================================================== */
-
-    function extrairNumero(
-        texto,
-        modelo
-    ) {
-        const padroes =
-            modelo ===
-                MODELOS_NOTA_FISCAL_RURAL
-                    .PRODUTOR_ANTIGA
-                ? [
-                    /NOTA\s+FISCAL\s+DE\s+PRODUTOR[\s\S]{0,100}?N[º°O.]?\s*[:.-]?\s*0*(\d{1,10})/i,
-                    /\bN[º°]\s*[:.-]?\s*0*(\d{1,10})\b/i
-                ]
-                : [
-                    /N[ÚU]MERO\s+(?:DA\s+)?(?:NF[- ]?E|NFS[- ]?E|NOTA)[^0-9]{0,20}(\d{1,20})/i,
-                    /NF[- ]?E[^0-9]{0,25}N[º°O.]?\s*[:.-]?\s*(\d{1,20})/i,
-                    /\bN[º°]\s*(\d{1,20})\b/i
-                ];
-
-        for (
-            const padrao of
-            padroes
-        ) {
-            const match =
-                String(texto)
-                    .match(
-                        padrao
-                    );
-
-            if (
-                match &&
-                match[1]
-            ) {
-                return String(
-                    match[1]
-                )
-                    .replace(
-                        /\D/g,
-                        ""
-                    )
-                    .replace(
-                        /^0+(?=\d)/,
-                        ""
-                    );
-            }
-        }
-
-        return "";
-    }
-
-    /* =====================================================
-       EMITENTE
-       ===================================================== */
-
-    function extrairEmitente(
-        texto,
-        modelo
-    ) {
-        const conteudo =
-            String(texto);
-
-        const recebido =
-            conteudo.match(
-                /RECEB(?:EMOS|I\/?EMOS)\s+DE\s+(.+?)\s+OS\s+PRODUTOS/i
-            );
-
-        if (
-            recebido &&
-            recebido[1]
-        ) {
-            return limparEmitente(
-                recebido[1]
-            );
-        }
-
-        const padroes = [
-            /RAZ[AÃ]O\s+SOCIAL[\s:.-]+([^\n]+)/i,
-            /EMITENTE[\s:.-]+([^\n]+)/i,
-            /FORNECEDOR[\s:.-]+([^\n]+)/i
-        ];
-
-        for (
-            const padrao of
-            padroes
-        ) {
-            const match =
-                conteudo.match(
-                    padrao
-                );
-
-            if (
-                match &&
-                match[1]
-            ) {
-                const nome =
-                    limparEmitente(
-                        match[1]
-                    );
-
-                if (nome) {
-                    return nome;
-                }
-            }
-        }
-
-        if (
-            modelo ===
-            MODELOS_NOTA_FISCAL_RURAL
-                .PRODUTOR_ANTIGA
-        ) {
-            const linhas =
-                conteudo
-                    .split(/\n/)
-                    .map(
-                        linha =>
-                            linha.trim()
-                    )
-                    .filter(Boolean);
-
-            for (
-                let i = 0;
-                i <
-                Math.min(
-                    15,
-                    linhas.length
-                );
-                i++
-            ) {
-                const normal =
-                    normalizarComparacao(
-                        linhas[i]
-                    );
-
-                if (
-                    normal.includes(
-                        "NOTA FISCAL"
-                    ) ||
-                    normal.includes(
-                        "CNPJ"
-                    ) ||
-                    normal.includes(
-                        "FAZENDA"
-                    )
-                ) {
-                    continue;
-                }
-
-                if (
-                    linhas[i].length >=
-                    8 &&
-                    linhas[i].length <=
-                    120
-                ) {
-                    return limparEmitente(
-                        linhas[i]
-                    );
-                }
-            }
-        }
-
-        return "";
-    }
-
-    function limparEmitente(
-        valor
-    ) {
-        let texto =
-            String(
-                valor ||
-                ""
-            )
-                .replace(
-                    /\s+/g,
-                    " "
-                )
-                .trim();
-
-        texto =
-            texto.replace(
-                /\b(CNPJ|CPF|INSCRI[CÇ][AÃ]O|ENDERE[CÇ]O|CEP|FONE)\b.*$/i,
-                ""
-            );
-
-        return texto
-            .substring(
-                0,
-                120
-            )
-            .trim();
-    }
-
-    /* =====================================================
-       VALOR TOTAL
-       ===================================================== */
-
-    function extrairValorTotal(
-        texto,
-        modelo
-    ) {
-        const conteudo =
-            String(texto);
-
-        const padroes = [
-            /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[^0-9]{0,100}(?:R\$\s*)?([\d.]+,\d{2})/i,
-            /TOTAL\s+DA\s+NOTA[^0-9]{0,100}(?:R\$\s*)?([\d.]+,\d{2})/i,
-            /VALOR\s+DA\s+NOTA[^0-9]{0,100}(?:R\$\s*)?([\d.]+,\d{2})/i
-        ];
-
-        for (
-            const padrao of
-            padroes
-        ) {
-            const match =
-                conteudo.match(
-                    padrao
-                );
-
-            if (
-                match &&
-                match[1]
-            ) {
-                const valor =
-                    converterNumeroBrasileiro(
-                        match[1]
-                    );
-
-                if (
-                    valor >
-                    0
-                ) {
-                    return valor;
-                }
-            }
-        }
-
-        const linhas =
-            conteudo
-                .split(/\n/)
-                .map(
-                    linha =>
-                        linha.trim()
-                )
-                .filter(Boolean);
-
-        const valor =
-            procurarValorProximo(
-                linhas,
-                [
-                    "TOTAL DA NOTA",
-                    "VALOR TOTAL DA NOTA"
-                ]
-            );
-
-        if (
-            valor >
-            0
-        ) {
-            return valor;
-        }
-
-        /*
-         * Nota antiga:
-         * somente usa "Valor Total dos Produtos" como
-         * fallback quando "Total da Nota" não foi encontrado.
-         */
-
-        if (
-            modelo ===
-            MODELOS_NOTA_FISCAL_RURAL
-                .PRODUTOR_ANTIGA
-        ) {
-            return procurarValorProximo(
-                linhas,
-                [
-                    "VALOR TOTAL DOS PRODUTOS"
-                ]
-            );
-        }
-
-        return 0;
-    }
-
-    function procurarValorProximo(
-        linhas,
-        rotulos
-    ) {
-        for (
-            let i = 0;
-            i <
-            linhas.length;
-            i++
-        ) {
-            const normal =
-                normalizarComparacao(
-                    linhas[i]
-                );
-
-            if (
-                !rotulos.some(
-                    rotulo =>
-                        normal.includes(
-                            rotulo
-                        )
-                )
-            ) {
-                continue;
-            }
-
-            for (
-                let distancia = 0;
-                distancia <= 8;
-                distancia++
-            ) {
-                const indices =
-                    distancia ===
-                        0
-                        ? [i]
-                        : [
-                            i - distancia,
-                            i + distancia
-                        ];
-
-                for (
-                    const indice of
-                    indices
-                ) {
-                    if (
-                        indice <
-                        0 ||
-                        indice >=
-                        linhas.length
-                    ) {
-                        continue;
-                    }
-
-                    const valores =
-                        extrairValoresMonetarios(
-                            linhas[
-                            indice
-                            ]
-                        );
-
-                    if (
-                        valores.length
-                    ) {
-                        return valores[
-                            valores.length -
-                            1
-                        ];
-                    }
-                }
-            }
-        }
-
-        return 0;
-    }
-
-    function extrairValoresMonetarios(
-        texto
-    ) {
-        return (
-            String(texto)
+            String(data || "")
                 .match(
-                    /(?:R\$\s*)?\d{1,3}(?:\.\d{3})*,\d{2}|(?:R\$\s*)?\d+,\d{2}/g
-                ) ||
-            []
-        )
-            .map(
-                converterNumeroBrasileiro
-            )
-            .filter(
-                valor =>
-                    Number.isFinite(
-                        valor
-                    )
-            );
-    }
-
-    function converterNumeroBrasileiro(
-        valor
-    ) {
-        let texto =
-            String(
-                valor ||
-                ""
-            )
-                .replace(
-                    /R\$/gi,
-                    ""
-                )
-                .replace(
-                    /\s/g,
-                    ""
+                    /^(\d{2})\/(\d{2})\/(\d{4})$/
                 );
 
-        if (
-            texto.includes(
-                ","
-            )
-        ) {
-            texto =
-                texto
-                    .replace(
-                        /\./g,
-                        ""
-                    )
-                    .replace(
-                        ",",
-                        "."
-                    );
-        }
-
-        return converterNumero(
-            texto
-        );
+        return match
+            ? `${match[3]}-${match[2]}`
+            : "";
     }
 
-    function converterNumero(
-        valor
-    ) {
+    function moeda(valor) {
         const numero =
             Number(
-                String(
-                    valor ||
-                    ""
-                )
+                String(valor || "")
+                    .replace(/\./g, "")
+                    .replace(",", ".")
                     .replace(
-                        ",",
-                        "."
+                        /[^\d.-]/g,
+                        ""
                     )
             );
 
-        return Number.isFinite(
-            numero
-        )
+        return Number.isFinite(numero)
             ? numero
             : 0;
     }
 
-    /* =====================================================
-       CONFIANÇA
-       ===================================================== */
-
-    function calcularConfianca(
-        dados,
-        modelo
-    ) {
-        const fator =
-            modelo ===
-                MODELOS_NOTA_FISCAL_RURAL
-                    .PRODUTOR_ANTIGA
-                ? 0.76
-                : 0.94;
-
-        const resultado = {
-            numero:
-                dados.numero
-                    ? fator
-                    : 0,
-
-            data:
-                dados.data
-                    ? fator
-                    : 0,
-
-            emitente:
-                dados.emitente
-                    ? fator
-                    : 0,
-
-            valor:
-                dados.valor > 0
-                    ? fator
-                    : 0
-        };
-
-        resultado.geral =
-            (
-                resultado.numero +
-                resultado.data +
-                resultado.emitente +
-                resultado.valor
-            ) /
-            4;
-
-        return resultado;
-    }
-
-    /* =====================================================
-       COMPETÊNCIA
-       ===================================================== */
-
-    function formatarCompetenciaData(
-        data
-    ) {
-        const match =
-            String(
-                data ||
-                ""
-            ).match(
-                /^(\d{2})\/(\d{2})\/(\d{4})$/
+    function numeroJs(valor) {
+        const numero =
+            Number(
+                String(valor || "")
+                    .replace(",", ".")
             );
 
-        if (!match) {
-            return "";
-        }
-
-        return (
-            `${match[3]}-${match[2]}`
-        );
+        return Number.isFinite(numero)
+            ? numero
+            : 0;
     }
 
-    /* =====================================================
-       DESCRIÇÃO DO MODELO
-       ===================================================== */
-
-    function obterDescricaoModelo(
-        modelo
-    ) {
-        const descricoes = {
+    function descricaoModelo(modelo) {
+        return {
             xml_nfe:
                 "XML NF-e",
 
@@ -1720,46 +1014,18 @@
 
             generica:
                 "Documento Fiscal Genérico"
-        };
-
-        return (
-            descricoes[
-            modelo
-            ] ||
-            modelo
-        );
+        }[modelo] || modelo;
     }
 
-    /* =====================================================
-       EXPORTAÇÃO
-       ===================================================== */
-
-    window.MODELOS_NOTA_FISCAL_RURAL =
-        MODELOS_NOTA_FISCAL_RURAL;
-
     window.CreditoRuralNotasFiscais = {
-        modelos:
-            MODELOS_NOTA_FISCAL_RURAL,
-
-        identificarModelo,
-
-        avaliarQualidadeTexto,
-
+        modelos: MODELOS,
         interpretar,
-
         interpretarXmlNfe,
-
-        normalizarTexto:
-            normalizarTextoOcr,
-
-        normalizarComparacao,
-
+        identificarModelo,
+        avaliarQualidadeTexto,
         normalizarData,
-
         validarData,
-
-        formatarCompetenciaData,
-
-        converterNumeroBrasileiro
+        formatarCompetenciaData:
+            competencia
     };
 })();
