@@ -1,24 +1,3 @@
-/**
- * media-movimentacao.js
- *
- * Caixa de Ferramentas | Sicoob Mantiqueira
- *
- * Correções principais:
- * - processa vários blocos/mês do extrato colados em sequência;
- * - não interrompe definitivamente no primeiro "RESUMO";
- * - identifica novamente cabeçalhos de extrato posteriores;
- * - SALDO ANTERIOR / SALDO DO DIA não alteram o período;
- * - mantém lançamentos legítimos repetidos;
- * - exclui automaticamente COOPERA - CRÉDITO RESGATE PONTOS C/C;
- * - regras automáticas aparecem marcadas por padrão;
- * - regras automáticas deixam de ficar bloqueadas/disabled;
- * - usuário pode desmarcar uma exclusão automática quando necessário;
- * - históricos de crédito continuam podendo ser marcados manualmente;
- * - meses detectados consideram todas as competências efetivamente presentes;
- * - alteração manual de meses muda somente o divisor;
- * - tabelas de considerados/excluídos mantêm cinco colunas.
- */
-
 (function () {
     "use strict";
 

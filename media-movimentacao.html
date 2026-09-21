@@ -118,7 +118,8 @@
                     <p>
                         O período é identificado automaticamente com base
                         na primeira e na última movimentação efetiva
-                        encontrada no extrato.
+                        encontrada no extrato, podendo ser ajustado
+                        manualmente quando necessário.
                     </p>
 
                 </div>
@@ -132,7 +133,12 @@
                         Primeira movimentação
                     </label>
 
-                    <input type="text" id="primeiraDataMovimentacao" value="" placeholder="--/--/----" readonly>
+                    <input type="text" id="primeiraDataMovimentacao" value="" placeholder="dd/mm/aaaa"
+                        inputmode="numeric" autocomplete="off">
+
+                    <small>
+                        Preenchida automaticamente e disponível para ajuste manual.
+                    </small>
 
                 </div>
 
@@ -142,7 +148,12 @@
                         Última movimentação
                     </label>
 
-                    <input type="text" id="ultimaDataMovimentacao" value="" placeholder="--/--/----" readonly>
+                    <input type="text" id="ultimaDataMovimentacao" value="" placeholder="dd/mm/aaaa" inputmode="numeric"
+                        autocomplete="off">
+
+                    <small>
+                        Preenchida automaticamente e disponível para ajuste manual.
+                    </small>
 
                 </div>
 
@@ -152,7 +163,12 @@
                         Meses detectados
                     </label>
 
-                    <input type="text" id="mesesDetectadosMovimentacao" value="" placeholder="-" readonly>
+                    <input type="number" id="mesesDetectadosMovimentacao" min="1" step="1" inputmode="numeric"
+                        placeholder="Ex.: 3">
+
+                    <small>
+                        Calculado automaticamente pelo período e ajustável manualmente.
+                    </small>
 
                 </div>
 
@@ -166,8 +182,7 @@
                         placeholder="Ex.: 3">
 
                     <small>
-                        Preenchido automaticamente e ajustável
-                        manualmente quando necessário.
+                        Utilizado como divisor da média mensal e ajustável manualmente.
                     </small>
 
                 </div>
@@ -183,7 +198,14 @@
                 <span>
                     A quantidade de meses considera todas as competências
                     entre a primeira e a última movimentação efetiva.
-                    Linhas exclusivamente informativas não alteram o período.
+                    Linhas exclusivamente informativas, como Saldo Anterior,
+                    Saldo Bloqueado Anterior e Saldo do Dia, não alteram
+                    automaticamente o período.
+                </span>
+
+                <span>
+                    Após o processamento, os campos acima permanecem livres
+                    para alteração manual.
                 </span>
 
             </div>
@@ -300,10 +322,9 @@
 
                     <p>
                         Todos os históricos encontrados são apresentados
-                        abaixo. Exclusões obrigatórias são aplicadas
-                        automaticamente. Para créditos configuráveis,
-                        marque o histórico quando ele não deve compor
-                        a média.
+                        abaixo. As exclusões automáticas são marcadas por
+                        padrão, mas permanecem disponíveis para alteração
+                        manual quando necessário.
                     </p>
 
                 </div>
@@ -434,7 +455,7 @@
         </section>
 
         <!-- =====================================================
-             DESCONSIDERADAS
+             MOVIMENTAÇÕES DESCONSIDERADAS
         ====================================================== -->
 
         <section class="card card-largura-total" id="cardMovimentacoesExcluidas">
@@ -451,7 +472,7 @@
                     </h2>
 
                     <p>
-                        Movimentações removidas automaticamente,
+                        Movimentações removidas por regra automática,
                         identificadas como débito ou excluídas
                         manualmente do cálculo.
                     </p>
