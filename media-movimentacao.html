@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Média de Movimentação | Sicoob Mantiqueira</title>
 
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
@@ -55,8 +54,9 @@
 
                     <p>
                         Copie o extrato do SISBR e cole no campo abaixo.
-                        O sistema identifica automaticamente as movimentações,
-                        o período efetivo e os históricos encontrados.
+                        O sistema identifica as movimentações, o período
+                        efetivo do primeiro bloco de extrato e os históricos
+                        encontrados.
                     </p>
 
                 </div>
@@ -72,12 +72,10 @@
                     placeholder="Cole aqui o extrato da conta corrente..."></textarea>
 
                 <small>
-                    O padrão esperado é DD/MM/AAAA. Caso o conteúdo copiado
-                    tenha sido convertido para M/D/YYYY, o sistema somente
-                    utilizará esse formato quando as próprias movimentações
-                    financeiras fornecerem evidência inequívoca. Saldo Anterior,
-                    Saldo Bloqueado Anterior e Saldo do Dia não interferem
-                    nessa identificação.
+                    Saldo Anterior, Saldo Bloqueado Anterior e Saldo do Dia
+                    são linhas informativas e não definem o período de
+                    apuração. Caso mais de um bloco de extrato seja colado,
+                    será considerado o primeiro bloco identificado.
                 </small>
 
             </div>
@@ -114,9 +112,9 @@
                     </h2>
 
                     <p>
-                        O período é identificado automaticamente com base
-                        na primeira e na última movimentação efetiva encontrada
-                        no extrato, permanecendo disponível para ajuste manual.
+                        Os valores são preenchidos automaticamente,
+                        porém todos os campos permanecem disponíveis
+                        para alteração manual.
                     </p>
 
                 </div>
@@ -134,7 +132,8 @@
                         inputmode="numeric" autocomplete="off">
 
                     <small>
-                        Preenchida automaticamente e disponível para ajuste manual.
+                        Preenchida automaticamente e disponível
+                        para ajuste manual.
                     </small>
 
                 </div>
@@ -149,7 +148,8 @@
                         autocomplete="off">
 
                     <small>
-                        Preenchida automaticamente e disponível para ajuste manual.
+                        Preenchida automaticamente e disponível
+                        para ajuste manual.
                     </small>
 
                 </div>
@@ -161,10 +161,11 @@
                     </label>
 
                     <input type="number" id="mesesDetectadosMovimentacao" value="" min="1" step="1" inputmode="numeric"
-                        placeholder="-">
+                        placeholder="Ex.: 1">
 
                     <small>
-                        Calculado automaticamente pelo período e disponível para ajuste.
+                        Preenchido automaticamente e disponível
+                        para ajuste manual.
                     </small>
 
                 </div>
@@ -176,10 +177,11 @@
                     </label>
 
                     <input type="number" id="mesesConsideradosMovimentacao" value="" min="1" step="1"
-                        inputmode="numeric" placeholder="Ex.: 3">
+                        inputmode="numeric" placeholder="Ex.: 1">
 
                     <small>
-                        Utilizado como divisor da média mensal e ajustável manualmente.
+                        Quantidade efetivamente utilizada como
+                        divisor da média mensal.
                     </small>
 
                 </div>
@@ -193,16 +195,10 @@
                 </strong>
 
                 <span>
-                    A quantidade automática de meses considera todas as
-                    competências entre a primeira e a última movimentação
-                    financeira efetiva. Saldo Anterior, Saldo Bloqueado
-                    Anterior e Saldo do Dia são linhas informativas e não
-                    modificam o período de apuração.
-                </span>
-
-                <span>
-                    Os campos permanecem livres para alteração após o
-                    processamento.
+                    O período automático considera somente as movimentações
+                    efetivas pertencentes ao primeiro bloco do extrato.
+                    Saldo Anterior, Saldo Bloqueado Anterior e Saldo do Dia
+                    não entram na definição da primeira ou última movimentação.
                 </span>
 
             </div>
@@ -211,6 +207,10 @@
 
                 <button type="button" id="btnRecalcularMovimentacao" class="btn btn-secundario">
                     Recalcular
+                </button>
+
+                <button type="button" id="btnRestaurarPeriodoMovimentacao" class="btn btn-secundario">
+                    Restaurar Período Automático
                 </button>
 
             </div>
@@ -326,10 +326,10 @@
                     </h2>
 
                     <p>
-                        Todos os históricos encontrados são apresentados
-                        abaixo. As exclusões automáticas já são marcadas
-                        inicialmente, porém todos os itens permanecem
-                        disponíveis para marcação ou desmarcação manual.
+                        Todos os históricos identificados são apresentados
+                        abaixo. Os históricos sugeridos para exclusão ficam
+                        inicialmente marcados, mas todas as marcações podem
+                        ser alteradas manualmente.
                     </p>
 
                 </div>
@@ -389,13 +389,11 @@
                     </thead>
 
                     <tbody>
-
                         <tr>
                             <td colspan="3" class="sem-dados">
                                 Nenhum extrato processado.
                             </td>
                         </tr>
-
                     </tbody>
 
                 </table>
@@ -444,13 +442,11 @@
                     </thead>
 
                     <tbody>
-
                         <tr>
                             <td colspan="5" class="sem-dados">
                                 Nenhum extrato processado.
                             </td>
                         </tr>
-
                     </tbody>
 
                 </table>
@@ -460,7 +456,7 @@
         </section>
 
         <!-- =====================================================
-             MOVIMENTAÇÕES DESCONSIDERADAS
+             DESCONSIDERADAS
         ====================================================== -->
 
         <section class="card card-largura-total" id="cardMovimentacoesExcluidas">
@@ -477,9 +473,9 @@
                     </h2>
 
                     <p>
-                        Movimentações identificadas como débito,
-                        informativas ou removidas do cálculo conforme
-                        a configuração dos históricos.
+                        Movimentações removidas automaticamente,
+                        identificadas como débito ou excluídas
+                        manualmente do cálculo.
                     </p>
 
                 </div>
@@ -500,13 +496,11 @@
                     </thead>
 
                     <tbody>
-
                         <tr>
                             <td colspan="5" class="sem-dados">
                                 Nenhum extrato processado.
                             </td>
                         </tr>
-
                     </tbody>
 
                 </table>

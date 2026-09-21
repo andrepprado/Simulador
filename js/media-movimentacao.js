@@ -13,9 +13,14 @@ let movimentacoesExcluidas = [];
 let primeiraDataExtrato = null;
 let ultimaDataExtrato = null;
 
-let formatoDataExtrato = "DMY";
+let primeiraDataExtratoAutomatica = null;
+let ultimaDataExtratoAutomatica = null;
+let mesesDetectadosAutomaticos = 0;
+
+let formatoDataExtrato = "BR";
 
 const historicosExcluidosManualmente = new Set();
+const historicosIncluidosManualmente = new Set();
 
 /* =========================================================
    REGRAS DE EXCLUSÃO
@@ -28,10 +33,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Empréstimo é dívida e não renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("CRED EMPRESTIMO") ||
-                historico.includes("CREDITO EMPRESTIMO")
-            );
+            return historico.includes("CRED EMPRESTIMO") ||
+                historico.includes("CREDITO EMPRESTIMO");
         }
     },
     {
@@ -40,11 +43,9 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Antecipação de recebíveis não é considerada renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("CRED LIBERACAO TD") ||
+            return historico.includes("CRED LIBERACAO TD") ||
                 historico.includes("CREDITO LIBERACAO TD") ||
-                historico.includes("TITULO DESCONTADO")
-            );
+                historico.includes("TITULO DESCONTADO");
         }
     },
     {
@@ -53,10 +54,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Liberação de empréstimo junto ao BNDES não é renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("CRED LIBERACAO BNDES") ||
-                historico.includes("CREDITO LIBERACAO BNDES")
-            );
+            return historico.includes("CRED LIBERACAO BNDES") ||
+                historico.includes("CREDITO LIBERACAO BNDES");
         }
     },
     {
@@ -65,76 +64,63 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Movimentação desconsiderada conforme regra definida.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("CRED LIBERACAO TITULO REC CARTAO") ||
+            return historico.includes("CRED LIBERACAO TITULO REC CARTAO") ||
                 historico.includes("CREDITO LIBERACAO TITULO REC CARTAO") ||
-                historico.includes("LIBERACAO TITULO REC CARTAO")
-            );
+                historico.includes("LIBERACAO TITULO REC CARTAO");
         }
     },
     {
         id: "devolucao-pix",
         rotulo: "CRÉDITO DEVOLUÇÃO PIX",
-        motivo: "Devolução de PIX não representa renda.",
+        motivo: "Devolução não é renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("CRED DEVOLUCAO PIX") ||
+            return historico.includes("CRED DEVOLUCAO PIX") ||
                 historico.includes("CREDITO DEVOLUCAO PIX") ||
-                historico.includes("DEVOLUCAO PIX")
-            );
+                historico.includes("DEVOLUCAO PIX");
         }
     },
     {
-        id: "coopera-resgate-pontos",
-        rotulo: "COOPERA - CRÉDITO RESGATE PONTOS C/C",
-        motivo: "Resgate de pontos do programa Coopera não representa renda ou depósito operacional.",
+        id: "credito-resgate-pontos",
+        rotulo: "CRÉDITO RESGATE PONTOS",
+        motivo: "Resgate de pontos não representa renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("COOPERA CREDITO RESGATE PONTOS") ||
-                historico.includes("COOPERA CRED RESGATE PONTOS") ||
+            return historico.includes("CREDITO RESGATE PONTOS") ||
+                historico.includes("CRED RESGATE PONTOS") ||
                 (
                     historico.includes("COOPERA") &&
-                    historico.includes("RESGATE") &&
-                    historico.includes("PONTOS")
-                )
-            );
+                    historico.includes("RESGATE PONTOS")
+                );
         }
     },
     {
         id: "est-pix-outra-if",
         rotulo: "EST. PIX EMITIDO OUTRA IF - MESMA TIT.",
-        motivo: "Estorno não representa renda.",
+        motivo: "Estorno não é renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("EST PIX EMITIDO OUTRA IF") &&
-                historico.includes("MESMA TIT")
-            );
+            return historico.includes("EST PIX EMITIDO OUTRA IF") &&
+                historico.includes("MESMA TIT");
         }
     },
     {
         id: "estorno-compra-mastercard",
         rotulo: "ESTORNO COMPRA NACIONAL DEBIT MASTERCARD",
-        motivo: "Estorno não representa renda.",
+        motivo: "Estorno não é renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return historico.includes(
-                "ESTORNO COMPRA NACIONAL DEBIT MASTERCARD"
-            );
+            return historico.includes("ESTORNO COMPRA NACIONAL DEBIT MASTERCARD");
         }
     },
     {
         id: "estorno-deb-convenio",
         rotulo: "ESTORNO DÉB. CONV. DEMAIS EMPRESAS",
-        motivo: "Estorno não representa renda.",
+        motivo: "Estorno não é renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.includes("ESTORNO DEB CONV DEMAIS EMPRESAS") ||
-                historico.includes("ESTORNO DEB CONV DEMAIS EMPRESA")
-            );
+            return historico.includes("ESTORNO DEB CONV DEMAIS EMPRESAS") ||
+                historico.includes("ESTORNO DEB CONV DEMAIS EMPRESA");
         }
     },
     {
@@ -143,16 +129,14 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Estornos não representam renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
-            return (
-                historico.startsWith("ESTORNO ") ||
-                historico.startsWith("EST ")
-            );
+            return historico.startsWith("ESTORNO ") ||
+                historico.startsWith("EST ");
         }
     },
     {
         id: "resgate-rdc",
         rotulo: "RESGATE RDC",
-        motivo: "Resgate de aplicação não representa renda.",
+        motivo: "Resgate de aplicação não é renda.",
         ignorarPeriodo: false,
         testar: function (historico) {
             return historico.includes("RESGATE RDC");
@@ -173,7 +157,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Linha informativa do extrato.",
         ignorarPeriodo: true,
         testar: function (historico) {
-            return historico.includes("SALDO ANTERIOR");
+            return historico.includes("SALDO ANTERIOR") &&
+                !historico.includes("SALDO BLOQUEADO ANTERIOR");
         }
     },
     {
@@ -182,16 +167,14 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         motivo: "Linha informativa do extrato.",
         ignorarPeriodo: true,
         testar: function (historico) {
-            return (
-                historico.includes("SALDO DO DIA") ||
-                historico.includes("SALDO FINAL DO DIA")
-            );
+            return historico.includes("SALDO DO DIA") ||
+                historico.includes("SALDO FINAL DO DIA");
         }
     }
 ];
 
 /* =========================================================
-   PADRÕES DE CRÉDITO
+   HISTÓRICOS RECONHECIDOS COMO CRÉDITO
 ========================================================= */
 
 const PADROES_CREDITO_SEM_INDICADOR = [
@@ -215,9 +198,7 @@ const PADROES_CREDITO_SEM_INDICADOR = [
     "TED RECEBIDA",
     "DOC RECEBIDO",
     "OUTROS CREDITOS",
-    "CRED DISTRIBUICAO SOBRAS VALORES",
-    "CR COMPRAS",
-    "CR ANTECIPACAO"
+    "CRED DISTRIBUICAO SOBRAS VALORES"
 ];
 
 /* =========================================================
@@ -235,211 +216,150 @@ function iniciarMediaMovimentacao() {
 ========================================================= */
 
 function configurarEventosMediaMovimentacao() {
-    const btnProcessar = document.getElementById(
-        "btnProcessarMovimentacao"
-    );
+    const btnProcessar = document.getElementById("btnProcessarMovimentacao");
+    const btnLimpar = document.getElementById("btnLimparMovimentacao");
+    const btnRecalcular = document.getElementById("btnRecalcularMovimentacao");
+    const btnRestaurar = document.getElementById("btnRestaurarPeriodoMovimentacao");
 
-    const btnLimpar = document.getElementById(
-        "btnLimparMovimentacao"
-    );
-
-    const btnRecalcular = document.getElementById(
-        "btnRecalcularMovimentacao"
-    );
-
-    const primeiraData = document.getElementById(
-        "primeiraDataMovimentacao"
-    );
-
-    const ultimaData = document.getElementById(
-        "ultimaDataMovimentacao"
-    );
-
-    const mesesDetectados = document.getElementById(
-        "mesesDetectadosMovimentacao"
-    );
-
-    const mesesConsiderados = document.getElementById(
-        "mesesConsideradosMovimentacao"
-    );
+    const primeiraData = document.getElementById("primeiraDataMovimentacao");
+    const ultimaData = document.getElementById("ultimaDataMovimentacao");
+    const mesesDetectados = document.getElementById("mesesDetectadosMovimentacao");
+    const mesesConsiderados = document.getElementById("mesesConsideradosMovimentacao");
 
     if (btnProcessar) {
-        btnProcessar.addEventListener(
-            "click",
-            processarMovimentacao
-        );
+        btnProcessar.addEventListener("click", processarMovimentacao);
     }
 
     if (btnLimpar) {
-        btnLimpar.addEventListener(
-            "click",
-            limparMediaMovimentacao
-        );
+        btnLimpar.addEventListener("click", limparMediaMovimentacao);
     }
 
     if (btnRecalcular) {
-        btnRecalcular.addEventListener(
-            "click",
-            recalcularTudoMovimentacao
-        );
+        btnRecalcular.addEventListener("click", function () {
+            if (movimentacoesExtrato.length === 0) {
+                return;
+            }
+
+            aplicarPeriodoInformadoPeloUsuario({
+                recalcularMesesDetectados: false,
+                preservarMesesConsiderados: true
+            });
+
+            classificarMovimentacoes();
+            calcularResultadosMovimentacao();
+            renderizarHistoricosExtrato();
+            renderizarResultadosMovimentacao();
+        });
     }
 
-    if (primeiraData) {
-        primeiraData.addEventListener(
-            "blur",
-            aplicarPeriodoInformadoManualmente
-        );
+    if (btnRestaurar) {
+        btnRestaurar.addEventListener("click", function () {
+            restaurarPeriodoAutomatico();
 
-        primeiraData.addEventListener(
-            "change",
-            aplicarPeriodoInformadoManualmente
-        );
+            if (movimentacoesExtrato.length === 0) {
+                return;
+            }
+
+            classificarMovimentacoes();
+            calcularResultadosMovimentacao();
+            renderizarHistoricosExtrato();
+            renderizarResultadosMovimentacao();
+        });
     }
 
-    if (ultimaData) {
-        ultimaData.addEventListener(
-            "blur",
-            aplicarPeriodoInformadoManualmente
-        );
+    [primeiraData, ultimaData].forEach(function (campo) {
+        if (!campo) {
+            return;
+        }
 
-        ultimaData.addEventListener(
-            "change",
-            aplicarPeriodoInformadoManualmente
-        );
-    }
+        campo.addEventListener("input", aplicarMascaraDataCampo);
+
+        campo.addEventListener("blur", function () {
+            if (movimentacoesExtrato.length === 0) {
+                return;
+            }
+
+            aplicarPeriodoInformadoPeloUsuario({
+                recalcularMesesDetectados: true,
+                preservarMesesConsiderados: true
+            });
+
+            calcularResultadosMovimentacao();
+            renderizarResultadosMovimentacao();
+        });
+    });
 
     if (mesesDetectados) {
-        mesesDetectados.addEventListener(
-            "input",
-            function () {
-                normalizarCampoMeses(
-                    mesesDetectados
-                );
+        mesesDetectados.addEventListener("input", function () {
+            normalizarCampoMeses(mesesDetectados, false);
+
+            if (movimentacoesExtrato.length > 0) {
+                calcularResultadosMovimentacao();
             }
-        );
+        });
+
+        mesesDetectados.addEventListener("blur", function () {
+            normalizarCampoMeses(mesesDetectados, true);
+
+            if (movimentacoesExtrato.length > 0) {
+                calcularResultadosMovimentacao();
+            }
+        });
     }
 
     if (mesesConsiderados) {
-        mesesConsiderados.addEventListener(
-            "input",
-            function () {
-                if (
-                    movimentacoesExtrato.length === 0
-                ) {
-                    return;
-                }
-
+        mesesConsiderados.addEventListener("input", function () {
+            if (movimentacoesExtrato.length > 0) {
                 calcularResultadosMovimentacao();
             }
-        );
+        });
 
-        mesesConsiderados.addEventListener(
-            "blur",
-            function () {
-                normalizarCampoMeses(
-                    mesesConsiderados
-                );
+        mesesConsiderados.addEventListener("blur", function () {
+            normalizarCampoMeses(mesesConsiderados, true);
 
-                if (
-                    movimentacoesExtrato.length === 0
-                ) {
-                    return;
-                }
-
+            if (movimentacoesExtrato.length > 0) {
                 calcularResultadosMovimentacao();
             }
-        );
+        });
     }
 }
 
 /* =========================================================
-   PROCESSAMENTO PRINCIPAL
+   PROCESSAMENTO
 ========================================================= */
 
 function processarMovimentacao() {
-    const textarea = document.getElementById(
-        "textoExtratoMovimentacao"
-    );
+    const textarea = document.getElementById("textoExtratoMovimentacao");
 
     if (!textarea) {
         return;
     }
 
-    const textoOriginal = String(
-        textarea.value || ""
-    ).trim();
+    const texto = String(textarea.value || "").trim();
 
-    if (!textoOriginal) {
-        alert(
-            "Cole o extrato no campo de texto."
-        );
-
+    if (!texto) {
+        alert("Cole o extrato no campo de texto.");
         return;
     }
 
     resetarEstadoMovimentacao();
 
-    const trechoExtrato =
-        prepararTrechoExtrato(
-            textoOriginal
-        );
+    movimentacoesExtrato = interpretarExtratoMovimentacao(texto);
 
-    formatoDataExtrato =
-        detectarFormatoDatasMovimentacao(
-            trechoExtrato
-        );
-
-    movimentacoesExtrato =
-        interpretarExtratoMovimentacao(
-            trechoExtrato,
-            formatoDataExtrato
-        );
-
-    if (
-        movimentacoesExtrato.length === 0
-    ) {
+    if (movimentacoesExtrato.length === 0) {
         limparResultadosMovimentacao();
         renderizarHistoricosExtrato();
 
-        alert(
-            "Nenhum lançamento financeiro válido foi identificado no extrato."
-        );
-
+        alert("Nenhum lançamento financeiro válido foi identificado no extrato.");
         return;
     }
 
-    inicializarExclusoesAutomaticas();
     identificarPeriodoExtrato();
     classificarMovimentacoes();
     calcularResultadosMovimentacao();
     renderizarHistoricosExtrato();
     renderizarResultadosMovimentacao();
 }
-
-/* =========================================================
-   RECÁLCULO
-========================================================= */
-
-function recalcularTudoMovimentacao() {
-    if (
-        movimentacoesExtrato.length === 0
-    ) {
-        return;
-    }
-
-    aplicarPeriodoInformadoManualmente(
-        false
-    );
-
-    classificarMovimentacoes();
-    calcularResultadosMovimentacao();
-    renderizarHistoricosExtrato();
-    renderizarResultadosMovimentacao();
-}
-
-/* =========================================================
-   RESET
-========================================================= */
 
 function resetarEstadoMovimentacao() {
     movimentacoesExtrato = [];
@@ -449,348 +369,220 @@ function resetarEstadoMovimentacao() {
     primeiraDataExtrato = null;
     ultimaDataExtrato = null;
 
-    formatoDataExtrato = "DMY";
+    primeiraDataExtratoAutomatica = null;
+    ultimaDataExtratoAutomatica = null;
+    mesesDetectadosAutomaticos = 0;
+
+    formatoDataExtrato = "BR";
 
     historicosExcluidosManualmente.clear();
+    historicosIncluidosManualmente.clear();
 }
 
 /* =========================================================
-   RECORTE DO EXTRATO
+   PREPARAÇÃO DO PRIMEIRO BLOCO DO EXTRATO
 ========================================================= */
 
-function prepararTrechoExtrato(
-    textoOriginal
-) {
-    const linhas = String(
-        textoOriginal || ""
-    )
+function prepararTrechoExtrato(textoOriginal) {
+    const linhas = String(textoOriginal || "")
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
         .split("\n");
 
-    let indiceCabecalho = -1;
+    let inicio = 0;
 
-    for (
-        let i = 0;
-        i < linhas.length;
-        i++
-    ) {
-        const normalizada =
-            normalizarTexto(
-                linhas[i]
-            );
+    /*
+     * Caso exista cabeçalho SISBR:
+     *
+     * DATA DOCUMENTO HISTÓRICO VALOR
+     *
+     * o processamento começa após ele.
+     */
+    for (let i = 0; i < linhas.length; i++) {
+        const normalizada = normalizarTexto(linhas[i]);
 
         if (
             normalizada.includes("DATA") &&
             normalizada.includes("HISTORICO") &&
             normalizada.includes("VALOR")
         ) {
-            indiceCabecalho = i;
+            inicio = i + 1;
             break;
         }
     }
 
-    const inicio =
-        indiceCabecalho >= 0
-            ? indiceCabecalho + 1
-            : 0;
+    const resultado = [];
 
-    const linhasValidas = [];
+    let encontrouSaldoAnteriorInicial = false;
+    let encontrouMovimentacaoEfetiva = false;
 
-    for (
-        let i = inicio;
-        i < linhas.length;
-        i++
-    ) {
-        const linha =
-            linhas[i];
+    for (let i = inicio; i < linhas.length; i++) {
+        const linha = String(linhas[i] || "");
+        const normalizada = normalizarTexto(linha);
 
-        const normalizada =
-            normalizarTexto(
-                linha
-            );
+        if (!normalizada) {
+            resultado.push(linha);
+            continue;
+        }
 
+        /*
+         * Fim tradicional de um extrato.
+         */
         if (
             normalizada === "RESUMO" ||
-            normalizada.startsWith(
-                "RESUMO "
-            ) ||
-            normalizada.includes(
-                "LANCAMENTOS FUTUROS"
-            )
+            normalizada.startsWith("RESUMO ") ||
+            normalizada.includes("LANCAMENTOS FUTUROS")
         ) {
             break;
         }
 
-        linhasValidas.push(
-            linha
-        );
-    }
+        const ehSaldoBloqueadoAnterior =
+            normalizada.includes("SALDO BLOQUEADO ANTERIOR");
 
-    return linhasValidas.join(
-        "\n"
-    );
-}
+        const ehSaldoAnterior =
+            normalizada.includes("SALDO ANTERIOR") &&
+            !ehSaldoBloqueadoAnterior;
 
-/* =========================================================
-   DETECÇÃO DO FORMATO DA DATA
-========================================================= */
-
-function detectarFormatoDatasMovimentacao(
-    texto
-) {
-    const linhas = String(
-        texto || ""
-    )
-        .replace(/\r\n/g, "\n")
-        .replace(/\r/g, "\n")
-        .split("\n");
-
-    let evidenciasDMY = 0;
-    let evidenciasMDY = 0;
-
-    linhas.forEach(
-        function (linhaOriginal) {
-            const linha =
-                String(
-                    linhaOriginal || ""
-                ).trim();
-
-            if (!linha) {
-                return;
-            }
-
-            const normalizada =
-                normalizarTexto(
-                    linha
-                );
-
-            /*
-             * Essas linhas nunca podem determinar
-             * o formato de data do extrato.
-             */
+        /*
+         * O primeiro SALDO ANTERIOR pertence ao bloco atual.
+         *
+         * Se depois de já termos movimentações efetivas surgir
+         * um NOVO SALDO ANTERIOR, significa que começou outro
+         * bloco de extrato concatenado.
+         */
+        if (ehSaldoAnterior) {
             if (
-                normalizada.includes(
-                    "SALDO ANTERIOR"
-                ) ||
-                normalizada.includes(
-                    "SALDO BLOQUEADO ANTERIOR"
-                ) ||
-                normalizada.includes(
-                    "SALDO DO DIA"
-                )
+                encontrouSaldoAnteriorInicial &&
+                encontrouMovimentacaoEfetiva
             ) {
-                return;
+                break;
             }
 
-            /*
-             * Somente linhas que parecem lançamentos
-             * financeiros participam da inferência.
-             */
-            if (
-                !possuiValorFinanceiroFinal(
-                    linha
-                )
-            ) {
-                return;
-            }
-
-            const correspondencia =
-                linha.match(
-                    /^\|?\s*(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?=\s|\t|\||$)/
-                );
-
-            if (!correspondencia) {
-                return;
-            }
-
-            const primeiraParte =
-                Number(
-                    correspondencia[1]
-                );
-
-            const segundaParte =
-                Number(
-                    correspondencia[2]
-                );
-
-            /*
-             * 18/09 só pode ser DD/MM.
-             */
-            if (
-                primeiraParte > 12 &&
-                segundaParte <= 12
-            ) {
-                evidenciasDMY++;
-                return;
-            }
-
-            /*
-             * 8/31 só pode ser MM/DD.
-             */
-            if (
-                segundaParte > 12 &&
-                primeiraParte <= 12
-            ) {
-                evidenciasMDY++;
-            }
+            encontrouSaldoAnteriorInicial = true;
         }
-    );
 
-    /*
-     * O padrão oficial/preferencial continua sendo
-     * brasileiro DD/MM/AAAA.
-     *
-     * MM/DD só é utilizado quando as movimentações
-     * efetivas fornecem evidência objetiva.
-     */
-    if (
-        evidenciasMDY >
-        evidenciasDMY
-    ) {
-        return "MDY";
+        /*
+         * Outro cabeçalho depois que o primeiro bloco já começou
+         * também significa início de outro bloco.
+         */
+        if (
+            encontrouMovimentacaoEfetiva &&
+            normalizada.includes("DATA") &&
+            normalizada.includes("HISTORICO") &&
+            normalizada.includes("VALOR")
+        ) {
+            break;
+        }
+
+        resultado.push(linha);
+
+        /*
+         * Consideramos que o primeiro bloco efetivamente começou
+         * quando encontramos uma linha com data + valor que não
+         * seja linha de saldo informativo.
+         */
+        if (
+            linhaPareceMovimentacaoFinanceira(linha) &&
+            !ehLinhaInformativaPeriodo(normalizada)
+        ) {
+            encontrouMovimentacaoEfetiva = true;
+        }
     }
 
-    return "DMY";
+    return resultado.join("\n");
 }
 
 /* =========================================================
    INTERPRETAÇÃO
 ========================================================= */
 
-function interpretarExtratoMovimentacao(
-    texto,
-    formatoPreferencial = "DMY"
-) {
-    const linhas = String(
-        texto || ""
-    )
+function interpretarExtratoMovimentacao(textoOriginal) {
+    const texto = prepararTrechoExtrato(textoOriginal);
+
+    const linhas = String(texto || "")
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
         .split("\n");
 
-    const movimentacoes = [];
+    /*
+     * O sistema brasileiro continua sendo o padrão.
+     *
+     * Só muda para M/D/YYYY quando existe evidência
+     * inequívoca dentro do próprio primeiro bloco, por exemplo:
+     *
+     * 7/31/2026
+     *
+     * pois 31 não pode ser mês.
+     */
+    formatoDataExtrato = detectarFormatoDataExtrato(linhas);
 
+    const movimentacoes = [];
     let dataCorrente = null;
 
-    linhas.forEach(
-        function (
-            linhaOriginal,
-            indice
-        ) {
-            const linha =
-                String(
-                    linhaOriginal || ""
-                ).trim();
+    linhas.forEach(function (linhaOriginal, indice) {
+        const linha = String(linhaOriginal || "").trim();
 
-            if (!linha) {
-                return;
-            }
-
-            if (
-                deveIgnorarLinhaExtrato(
-                    linha
-                )
-            ) {
-                return;
-            }
-
-            let resultado = null;
-
-            if (
-                linha.includes("|")
-            ) {
-                resultado =
-                    interpretarLinhaTabelaExtrato(
-                        linha,
-                        dataCorrente,
-                        indice + 1,
-                        formatoPreferencial
-                    );
-            }
-
-            if (!resultado) {
-                resultado =
-                    interpretarLinhaTextoExtrato(
-                        linha,
-                        dataCorrente,
-                        indice + 1,
-                        formatoPreferencial
-                    );
-            }
-
-            if (!resultado) {
-                return;
-            }
-
-            if (
-                resultado.dataCorrente
-            ) {
-                dataCorrente =
-                    resultado.dataCorrente;
-            }
-
-            if (
-                resultado.movimentacao
-            ) {
-                movimentacoes.push(
-                    resultado.movimentacao
-                );
-            }
+        if (!linha || deveIgnorarLinhaExtrato(linha)) {
+            return;
         }
-    );
 
-    /*
-     * Não removemos duplicidades.
-     *
-     * Duas transações podem legitimamente possuir
-     * mesma data, histórico, documento e valor.
-     */
+        let resultado = null;
+
+        if (linha.includes("|")) {
+            resultado = interpretarLinhaTabelaExtrato(
+                linha,
+                dataCorrente,
+                indice + 1
+            );
+        }
+
+        if (!resultado) {
+            resultado = interpretarLinhaTextoExtrato(
+                linha,
+                dataCorrente,
+                indice + 1
+            );
+        }
+
+        if (!resultado) {
+            return;
+        }
+
+        if (resultado.dataCorrente) {
+            dataCorrente = resultado.dataCorrente;
+        }
+
+        if (resultado.movimentacao) {
+            movimentacoes.push(resultado.movimentacao);
+        }
+    });
+
     return movimentacoes;
 }
 
-/* =========================================================
-   LINHAS IGNORADAS
-========================================================= */
-
-function deveIgnorarLinhaExtrato(
-    linha
-) {
-    const texto = String(
-        linha || ""
-    ).trim();
+function deveIgnorarLinhaExtrato(linha) {
+    const texto = String(linha || "").trim();
 
     if (!texto) {
         return true;
     }
 
     if (
-        /^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?$/.test(
-            texto
-        )
+        /^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?$/.test(texto)
     ) {
         return true;
     }
 
-    const normalizado =
-        normalizarTexto(
-            texto
-        );
+    const normalizado = normalizarTexto(texto);
 
     if (!normalizado) {
         return true;
     }
 
     if (
-        normalizado ===
-        "DATA DOCUMENTO HISTORICO VALOR"
-    ) {
-        return true;
-    }
-
-    if (
-        normalizado ===
-        "DATA HISTORICO VALOR"
+        normalizado === "DATA DOCUMENTO HISTORICO VALOR" ||
+        normalizado === "DATA HISTORICO VALOR" ||
+        normalizado === "DOCUMENTO HISTORICO VALOR"
     ) {
         return true;
     }
@@ -799,170 +591,210 @@ function deveIgnorarLinhaExtrato(
 }
 
 /* =========================================================
-   LINHA TABELADA
+   FORMATO DE DATA DO BLOCO
 ========================================================= */
 
-function interpretarLinhaTabelaExtrato(
-    linha,
-    dataCorrente,
-    numeroLinha,
-    formatoPreferencial
-) {
-    let texto = String(
-        linha || ""
-    ).trim();
+function detectarFormatoDataExtrato(linhas) {
+    let evidenciasBR = 0;
+    let evidenciasUS = 0;
 
-    if (
-        !texto.includes("|")
-    ) {
+    (linhas || []).forEach(function (linha) {
+        const match = String(linha || "")
+            .trim()
+            .match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?=\s|\t|\||$)/);
+
+        if (!match) {
+            return;
+        }
+
+        const primeiro = Number(match[1]);
+        const segundo = Number(match[2]);
+
+        /*
+         * 31/07/2026:
+         * primeiro > 12 => obrigatoriamente DD/MM.
+         */
+        if (
+            primeiro > 12 &&
+            primeiro <= 31 &&
+            segundo >= 1 &&
+            segundo <= 12
+        ) {
+            evidenciasBR++;
+        }
+
+        /*
+         * 7/31/2026:
+         * segundo > 12 => obrigatoriamente M/D.
+         */
+        if (
+            segundo > 12 &&
+            segundo <= 31 &&
+            primeiro >= 1 &&
+            primeiro <= 12
+        ) {
+            evidenciasUS++;
+        }
+    });
+
+    /*
+     * O padrão sempre é brasileiro quando não existe
+     * evidência inequívoca em contrário.
+     */
+    if (evidenciasUS > evidenciasBR) {
+        return "US";
+    }
+
+    return "BR";
+}
+
+function converterDataExtrato(valor) {
+    const match = String(valor || "")
+        .trim()
+        .match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+
+    if (!match) {
         return null;
     }
 
-    if (
-        texto.startsWith("|")
-    ) {
-        texto =
-            texto.substring(1);
+    let primeiro = Number(match[1]);
+    let segundo = Number(match[2]);
+    let ano = Number(match[3]);
+
+    if (match[3].length === 2) {
+        ano += ano >= 70 ? 1900 : 2000;
     }
 
-    if (
-        texto.endsWith("|")
-    ) {
-        texto =
-            texto.substring(
-                0,
-                texto.length - 1
-            );
+    let dia = primeiro;
+    let mes = segundo;
+
+    if (formatoDataExtrato === "US") {
+        mes = primeiro;
+        dia = segundo;
     }
 
-    const colunas =
-        texto
-            .split("|")
-            .map(function (item) {
-                return item.trim();
-            });
+    return criarDataValida(dia, mes, ano);
+}
 
-    if (
-        colunas.length < 3
-    ) {
+/* =========================================================
+   LINHA COM PIPE
+========================================================= */
+
+function interpretarLinhaTabelaExtrato(linha, dataCorrente, numeroLinha) {
+    let texto = String(linha || "").trim();
+
+    if (!texto.includes("|")) {
         return null;
     }
 
-    const dataTexto =
-        limparCelulaTexto(
-            colunas[0]
-        );
+    if (texto.startsWith("|")) {
+        texto = texto.substring(1);
+    }
 
-    const valorTexto =
-        limparCelulaValor(
-            colunas[
-            colunas.length - 1
-            ]
-        );
+    if (texto.endsWith("|")) {
+        texto = texto.substring(0, texto.length - 1);
+    }
+
+    const colunas = texto
+        .split("|")
+        .map(function (item) {
+            return item.trim();
+        });
+
+    if (colunas.length < 3) {
+        return null;
+    }
+
+    const dataTexto = limparCelulaTexto(colunas[0]);
+    const valorTexto = limparCelulaValor(colunas[colunas.length - 1]);
 
     let documento = "";
     let historico = "";
 
-    if (
-        colunas.length >= 4
-    ) {
-        documento =
-            limparCelulaTexto(
-                colunas[1]
-            );
+    if (colunas.length >= 4) {
+        documento = limparCelulaTexto(colunas[1]);
 
-        historico =
-            colunas
-                .slice(
-                    2,
-                    colunas.length - 1
-                )
-                .map(
-                    limparCelulaTexto
-                )
-                .filter(Boolean)
-                .join(" ");
+        historico = colunas
+            .slice(2, colunas.length - 1)
+            .map(limparCelulaTexto)
+            .filter(Boolean)
+            .join(" ");
     } else {
-        historico =
-            limparCelulaTexto(
-                colunas[1]
-            );
-    }
-
-    let dataMovimentacao =
-        dataCorrente;
-
-    if (dataTexto) {
-        dataMovimentacao =
-            converterDataExtrato(
-                dataTexto,
-                formatoPreferencial
-            );
-
-        if (!dataMovimentacao) {
-            return null;
-        }
+        historico = limparCelulaTexto(colunas[1]);
     }
 
     if (
-        !dataMovimentacao ||
-        !historico
+        ehCabecalhoTabela(
+            dataTexto,
+            documento,
+            historico,
+            valorTexto
+        )
     ) {
+        return null;
+    }
+
+    let dataMovimentacao = null;
+
+    if (validarFormatoDataGenerica(dataTexto)) {
+        dataMovimentacao = converterDataExtrato(dataTexto);
+    } else if (!dataTexto || ehCelulaVazia(dataTexto)) {
+        dataMovimentacao = dataCorrente;
+    } else {
+        return null;
+    }
+
+    const novaDataCorrente = dataMovimentacao || dataCorrente;
+
+    if (!dataMovimentacao || !historico) {
         return {
-            dataCorrente:
-                dataMovimentacao ||
-                dataCorrente,
+            dataCorrente: novaDataCorrente,
             movimentacao: null
         };
     }
 
-    const dadosValor =
-        extrairValorIndicador(
-            valorTexto
-        );
+    const dadosValor = extrairValorIndicador(valorTexto);
 
     if (!dadosValor) {
         return {
-            dataCorrente:
-                dataMovimentacao,
+            dataCorrente: novaDataCorrente,
             movimentacao: null
         };
     }
 
     return {
-        dataCorrente:
-            dataMovimentacao,
-
-        movimentacao:
-            criarMovimentacaoExtrato({
-                numeroLinha,
-                data:
-                    dataMovimentacao,
-                documento,
-                historico,
-                valor:
-                    dadosValor.valor,
-                indicador:
-                    dadosValor.indicador,
-                original:
-                    linha
-            })
+        dataCorrente: novaDataCorrente,
+        movimentacao: criarMovimentacaoExtrato({
+            numeroLinha: numeroLinha,
+            data: dataMovimentacao,
+            documento: documento,
+            historico: historico,
+            valor: dadosValor.valor,
+            indicador: dadosValor.indicador,
+            original: linha
+        })
     };
 }
 
+function ehCabecalhoTabela(data, documento, historico, valor) {
+    const combinado = normalizarTexto([
+        data,
+        documento,
+        historico,
+        valor
+    ].join(" "));
+
+    return combinado.includes("DATA") &&
+        combinado.includes("HISTORICO") &&
+        combinado.includes("VALOR");
+}
+
 /* =========================================================
-   LINHA TEXTO/TAB
+   LINHA TAB / TEXTO
 ========================================================= */
 
-function interpretarLinhaTextoExtrato(
-    linha,
-    dataCorrente,
-    numeroLinha,
-    formatoPreferencial
-) {
-    let texto = String(
-        linha || ""
-    )
+function interpretarLinhaTextoExtrato(linha, dataCorrente, numeroLinha) {
+    let texto = String(linha || "")
         .replace(/\u00A0/g, " ")
         .trim();
 
@@ -970,88 +802,73 @@ function interpretarLinhaTextoExtrato(
         return null;
     }
 
-    let dataMovimentacao =
-        dataCorrente;
+    let dataMovimentacao = null;
 
-    const correspondenciaData =
-        texto.match(
-            /^(\d{1,2}\/\d{1,2}\/\d{2,4})(?=\s|\t|$)/
-        );
+    const matchData = texto.match(
+        /^(\d{1,2}\/\d{1,2}\/\d{2,4})(?=\s|\t|$)/
+    );
 
-    if (correspondenciaData) {
-        dataMovimentacao =
-            converterDataExtrato(
-                correspondenciaData[1],
-                formatoPreferencial
-            );
+    if (matchData) {
+        dataMovimentacao = converterDataExtrato(matchData[1]);
 
         if (!dataMovimentacao) {
             return null;
         }
 
-        texto =
-            texto
-                .substring(
-                    correspondenciaData[0]
-                        .length
-                )
-                .trim();
+        texto = texto
+            .substring(matchData[0].length)
+            .trim();
+    } else {
+        dataMovimentacao = dataCorrente;
     }
+
+    const novaDataCorrente = dataMovimentacao || dataCorrente;
 
     if (!dataMovimentacao) {
         return null;
     }
 
-    const dadosValor =
-        extrairValorFinalLinha(
-            texto
-        );
+    /*
+     * Linhas complementares:
+     *
+     * Pagamento Pix
+     * Nome
+     * CPF/CNPJ
+     *
+     * não possuem valor ao final e por isso não viram
+     * uma nova movimentação.
+     */
+    const dadosValor = extrairValorFinalLinha(texto);
 
     if (!dadosValor) {
         return {
-            dataCorrente:
-                dataMovimentacao,
-            movimentacao:
-                null
+            dataCorrente: novaDataCorrente,
+            movimentacao: null
         };
     }
 
-    const dadosDescricao =
-        separarDocumentoHistorico(
-            dadosValor.parteDescricao
-        );
+    const dadosDescricao = separarDocumentoHistorico(
+        dadosValor.parteDescricao
+    );
 
-    if (
-        !dadosDescricao.historico
-    ) {
+    if (!dadosDescricao.historico) {
         return {
-            dataCorrente:
-                dataMovimentacao,
-            movimentacao:
-                null
+            dataCorrente: novaDataCorrente,
+            movimentacao: null
         };
     }
 
     return {
-        dataCorrente:
-            dataMovimentacao,
-
-        movimentacao:
-            criarMovimentacaoExtrato({
-                numeroLinha,
-                data:
-                    dataMovimentacao,
-                documento:
-                    dadosDescricao.documento,
-                historico:
-                    dadosDescricao.historico,
-                valor:
-                    dadosValor.valor,
-                indicador:
-                    dadosValor.indicador,
-                original:
-                    linha
-            })
+        dataCorrente: novaDataCorrente,
+        movimentacao: criarMovimentacaoExtrato({
+            numeroLinha: numeroLinha,
+            data: dataMovimentacao,
+            documento: dadosDescricao.documento,
+            historico: dadosDescricao.historico,
+            valor: dadosValor.valor,
+            indicador: dadosValor.indicador,
+            original: linha
+        })
     };
 }
 
@@ -1059,209 +876,144 @@ function interpretarLinhaTextoExtrato(
    CRIA MOVIMENTAÇÃO
 ========================================================= */
 
-function criarMovimentacaoExtrato(
-    dados
-) {
-    const historico =
-        limparCelulaTexto(
-            dados.historico
-        );
+function criarMovimentacaoExtrato(dados) {
+    const historico = limparCelulaTexto(dados.historico);
 
     return {
-        linha:
-            dados.numeroLinha,
-
-        data:
-            dados.data,
-
-        dataTexto:
-            formatarDataBrasileira(
-                dados.data
-            ),
-
-        competencia:
-            obterCompetenciaData(
-                dados.data
-            ),
-
-        documento:
-            String(
-                dados.documento || ""
-            ).trim(),
-
-        historico:
-            historico,
-
-        historicoNormalizado:
-            normalizarTexto(
-                historico
-            ),
-
-        valor:
-            Math.abs(
-                Number(
-                    dados.valor || 0
-                )
-            ),
-
-        indicador:
-            String(
-                dados.indicador || ""
-            ).toUpperCase(),
-
-        original:
-            dados.original || "",
-
-        considerado:
-            false,
-
-        motivo:
-            ""
+        linha: dados.numeroLinha,
+        data: dados.data,
+        dataTexto: formatarDataBrasileira(dados.data),
+        competencia: obterCompetenciaData(dados.data),
+        documento: String(dados.documento || "").trim(),
+        historico: historico,
+        historicoNormalizado: normalizarTexto(historico),
+        valor: Math.abs(Number(dados.valor || 0)),
+        indicador: String(dados.indicador || "").toUpperCase(),
+        original: dados.original || "",
+        considerado: false,
+        motivo: ""
     };
 }
 
 /* =========================================================
-   VALOR FINANCEIRO
+   VALORES
 ========================================================= */
 
-function possuiValorFinanceiroFinal(
-    texto
-) {
-    return /(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2}\s*[CD*]?\s*$/i.test(
-        String(
-            texto || ""
-        ).trim()
+function extrairValorFinalLinha(texto) {
+    const valor = limparCelulaValor(texto);
+
+    const regex =
+        /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i;
+
+    const match = valor.match(regex);
+
+    if (!match) {
+        return null;
+    }
+
+    const numero = converterValorBrasileiro(match[1]);
+
+    if (!Number.isFinite(numero)) {
+        return null;
+    }
+
+    let indicador = String(match[2] || "").toUpperCase();
+
+    if (!indicador && numero < 0) {
+        indicador = "D";
+    }
+
+    return {
+        valor: Math.abs(numero),
+        indicador: indicador,
+        parteDescricao: valor
+            .substring(0, match.index)
+            .trim()
+    };
+}
+
+function extrairValorIndicador(texto) {
+    const valorTexto = limparCelulaValor(texto);
+
+    const match = valorTexto.match(
+        /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i
+    );
+
+    if (!match) {
+        return null;
+    }
+
+    const valor = converterValorBrasileiro(match[1]);
+
+    if (!Number.isFinite(valor)) {
+        return null;
+    }
+
+    let indicador = String(match[2] || "").toUpperCase();
+
+    if (!indicador && valor < 0) {
+        indicador = "D";
+    }
+
+    return {
+        valor: Math.abs(valor),
+        indicador: indicador
+    };
+}
+
+function converterValorBrasileiro(valor) {
+    let texto = String(valor || "")
+        .replace(/R\$/gi, "")
+        .replace(/\s/g, "")
+        .trim();
+
+    if (!texto) {
+        return NaN;
+    }
+
+    if (texto.includes(",")) {
+        texto = texto
+            .replace(/\./g, "")
+            .replace(",", ".");
+    } else {
+        const pontos = (texto.match(/\./g) || []).length;
+
+        if (pontos > 1) {
+            texto = texto.replace(/\./g, "");
+        }
+    }
+
+    texto = texto.replace(/[^\d.-]/g, "");
+
+    const numero = Number(texto);
+
+    return Number.isFinite(numero)
+        ? numero
+        : NaN;
+}
+
+function formatarMoeda(valor) {
+    return Number(valor || 0).toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
     );
 }
 
-function extrairValorFinalLinha(
-    texto
-) {
-    const valor =
-        limparCelulaValor(
-            texto
-        );
-
-    const regexValorFinal =
-        /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i;
-
-    const correspondencia =
-        valor.match(
-            regexValorFinal
-        );
-
-    if (!correspondencia) {
-        return null;
-    }
-
-    const numero =
-        converterValorBrasileiro(
-            correspondencia[1]
-        );
-
-    if (
-        !Number.isFinite(
-            numero
-        )
-    ) {
-        return null;
-    }
-
-    let indicador =
-        String(
-            correspondencia[2] || ""
-        ).toUpperCase();
-
-    if (
-        !indicador &&
-        numero < 0
-    ) {
-        indicador = "D";
-    }
-
-    return {
-        valor:
-            Math.abs(
-                numero
-            ),
-
-        indicador,
-
-        parteDescricao:
-            valor
-                .substring(
-                    0,
-                    correspondencia.index
-                )
-                .trim()
-    };
-}
-
-function extrairValorIndicador(
-    texto
-) {
-    const valorTexto =
-        limparCelulaValor(
-            texto
-        );
-
-    const correspondencia =
-        valorTexto.match(
-            /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i
-        );
-
-    if (!correspondencia) {
-        return null;
-    }
-
-    const valor =
-        converterValorBrasileiro(
-            correspondencia[1]
-        );
-
-    if (
-        !Number.isFinite(
-            valor
-        )
-    ) {
-        return null;
-    }
-
-    let indicador =
-        String(
-            correspondencia[2] || ""
-        ).toUpperCase();
-
-    if (
-        !indicador &&
-        valor < 0
-    ) {
-        indicador = "D";
-    }
-
-    return {
-        valor:
-            Math.abs(
-                valor
-            ),
-        indicador
-    };
-}
-
 /* =========================================================
-   DOCUMENTO / HISTÓRICO
+   DOCUMENTO E HISTÓRICO
 ========================================================= */
 
-function separarDocumentoHistorico(
-    texto
-) {
-    const original = String(
-        texto || ""
-    )
+function separarDocumentoHistorico(texto) {
+    const valor = String(texto || "")
         .replace(/\u00A0/g, " ")
         .trim();
 
-    if (!original) {
+    if (!valor) {
         return {
             documento: "",
             historico: ""
@@ -1269,156 +1021,93 @@ function separarDocumentoHistorico(
     }
 
     /*
-     * Extrato copiado do SISBR normalmente conserva TABs.
-     * Havendo duas colunas, a primeira é Documento
-     * e a segunda é Histórico.
+     * Mantemos TAB aqui porque o conteúdo copiado
+     * da planilha/extrato utiliza as colunas:
+     *
+     * DOCUMENTO    HISTÓRICO
      */
-    const partesTab =
-        original
-            .split(/\t+/)
-            .map(function (item) {
-                return item.trim();
-            })
-            .filter(Boolean);
+    const partesTab = valor
+        .split(/\t+/)
+        .map(function (item) {
+            return item.trim();
+        })
+        .filter(Boolean);
 
-    if (
-        partesTab.length >= 2
-    ) {
-        return {
-            documento:
-                partesTab[0],
-
-            historico:
-                partesTab
-                    .slice(1)
-                    .join(" ")
-                    .trim()
-        };
-    }
-
-    /*
-     * Quando o documento está vazio, pode restar apenas
-     * o histórico.
-     */
-    if (
-        partesTab.length === 1
-    ) {
-        return {
-            documento: "",
-            historico:
-                partesTab[0]
-        };
-    }
-
-    const limpo =
-        limparCelulaTexto(
-            original
-        );
-
-    const partesEspaco =
-        limpo
-            .split(/\s{2,}/)
-            .map(function (item) {
-                return item.trim();
-            })
-            .filter(Boolean);
-
-    if (
-        partesEspaco.length >= 2
-    ) {
-        if (
-            pareceDocumento(
-                partesEspaco[0]
-            )
-        ) {
+    if (partesTab.length >= 2) {
+        if (pareceDocumento(partesTab[0])) {
             return {
-                documento:
-                    partesEspaco[0],
-
-                historico:
-                    partesEspaco
-                        .slice(1)
-                        .join(" ")
+                documento: partesTab[0],
+                historico: partesTab.slice(1).join(" ").trim()
             };
         }
 
         return {
             documento: "",
-            historico:
-                partesEspaco.join(" ")
+            historico: partesTab.join(" ").trim()
         };
     }
 
-    const correspondencia =
-        limpo.match(
-            /^([0-9A-Z./-]{1,30})\s+(.+)$/i
-        );
+    const partesEspacos = valor
+        .split(/\s{2,}/)
+        .map(function (item) {
+            return item.trim();
+        })
+        .filter(Boolean);
+
+    if (partesEspacos.length >= 2) {
+        if (pareceDocumento(partesEspacos[0])) {
+            return {
+                documento: partesEspacos[0],
+                historico: partesEspacos.slice(1).join(" ").trim()
+            };
+        }
+
+        return {
+            documento: "",
+            historico: partesEspacos.join(" ").trim()
+        };
+    }
+
+    const matchDocumento = valor.match(
+        /^([0-9A-Z./-]{1,30})\s+(.+)$/i
+    );
 
     if (
-        correspondencia &&
-        pareceDocumento(
-            correspondencia[1]
-        )
+        matchDocumento &&
+        pareceDocumento(matchDocumento[1])
     ) {
         return {
-            documento:
-                correspondencia[1],
-
-            historico:
-                correspondencia[2]
+            documento: matchDocumento[1],
+            historico: matchDocumento[2].trim()
         };
     }
 
     return {
         documento: "",
-        historico:
-            limpo
+        historico: valor
     };
 }
 
-function pareceDocumento(
-    valor
-) {
-    const texto = String(
-        valor || ""
-    ).trim();
+function pareceDocumento(valor) {
+    const texto = String(valor || "").trim();
 
-    if (
-        !texto ||
-        texto.length > 30
-    ) {
+    if (!texto || texto.length > 30) {
         return false;
     }
 
-    if (
-        /^\d+$/.test(
-            texto
-        )
-    ) {
+    if (/^\d+$/.test(texto)) {
         return true;
     }
 
-    if (
-        /^\d+[./-]\d+/.test(
-            texto
-        )
-    ) {
+    if (/^\d+[./-]\d+/.test(texto)) {
         return true;
     }
 
-    if (
-        /^[A-Z]{0,5}\d+[A-Z0-9./-]*$/i.test(
-            texto
-        )
-    ) {
+    if (/^[A-Z]{0,5}\d+[A-Z0-9./-]*$/i.test(texto)) {
         return true;
     }
 
-    if (
-        /^(PIX|TITULO|PAGAMENTO|MASTERCARD)$/i.test(
-            texto
-        )
-    ) {
+    if (/^(PIX|TITULO|PAGAMENTO|MASTERCARD)$/i.test(texto)) {
         return true;
     }
 
@@ -1426,15 +1115,11 @@ function pareceDocumento(
 }
 
 /* =========================================================
-   CÉLULAS
+   LIMPEZA
 ========================================================= */
 
-function limparCelulaTexto(
-    texto
-) {
-    return String(
-        texto || ""
-    )
+function limparCelulaTexto(texto) {
+    return String(texto || "")
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ")
         .replace(/<br\s*\/?>/gi, " ")
@@ -1447,380 +1132,96 @@ function limparCelulaTexto(
         .trim();
 }
 
-function limparCelulaValor(
-    texto
-) {
-    const marcador =
-        "__ASTERISCO_INDICADOR__";
+function limparCelulaValor(texto) {
+    const marcador = "__ASTERISCO_INDICADOR__";
 
-    let valor = String(
-        texto || ""
-    )
+    let valor = String(texto || "")
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ")
         .replace(/<br\s*\/?>/gi, " ")
-        .replace(
-            /\\\*/g,
-            marcador
-        )
+        .replace(/\\\*/g, marcador)
         .replace(/\*\*/g, "")
         .replace(/__/g, "")
         .trim();
 
-    valor =
-        valor.replace(
-            new RegExp(
-                marcador,
-                "g"
-            ),
-            "*"
-        );
+    return valor
+        .replace(new RegExp(marcador, "g"), "*")
+        .trim();
+}
 
-    return valor.trim();
+function ehCelulaVazia(texto) {
+    return !String(texto || "")
+        .replace(/\u00A0/g, "")
+        .trim();
 }
 
 /* =========================================================
-   DATAS DO EXTRATO
-========================================================= */
-
-function converterDataExtrato(
-    valor,
-    formatoPreferencial = "DMY"
-) {
-    const correspondencia =
-        String(
-            valor || ""
-        )
-            .trim()
-            .match(
-                /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/
-            );
-
-    if (!correspondencia) {
-        return null;
-    }
-
-    const parte1 =
-        Number(
-            correspondencia[1]
-        );
-
-    const parte2 =
-        Number(
-            correspondencia[2]
-        );
-
-    let ano =
-        Number(
-            correspondencia[3]
-        );
-
-    if (
-        correspondencia[3]
-            .length === 2
-    ) {
-        ano +=
-            ano >= 70
-                ? 1900
-                : 2000;
-    }
-
-    let dia;
-    let mes;
-
-    /*
-     * 31/07 só pode ser DD/MM.
-     */
-    if (
-        parte1 > 12 &&
-        parte2 <= 12
-    ) {
-        dia = parte1;
-        mes = parte2;
-    }
-
-    /*
-     * 7/31 só pode ser MM/DD.
-     */
-    else if (
-        parte2 > 12 &&
-        parte1 <= 12
-    ) {
-        mes = parte1;
-        dia = parte2;
-    }
-
-    /*
-     * 03/08 é ambígua.
-     * Utiliza o formato identificado pelas movimentações.
-     */
-    else if (
-        formatoPreferencial === "MDY"
-    ) {
-        mes = parte1;
-        dia = parte2;
-    }
-
-    /*
-     * Padrão oficial da ferramenta:
-     * DD/MM/AAAA.
-     */
-    else {
-        dia = parte1;
-        mes = parte2;
-    }
-
-    return criarDataSegura(
-        dia,
-        mes,
-        ano
-    );
-}
-
-function converterDataBrasileira(
-    valor
-) {
-    const correspondencia =
-        String(
-            valor || ""
-        )
-            .trim()
-            .match(
-                /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/
-            );
-
-    if (!correspondencia) {
-        return null;
-    }
-
-    const dia =
-        Number(
-            correspondencia[1]
-        );
-
-    const mes =
-        Number(
-            correspondencia[2]
-        );
-
-    let ano =
-        Number(
-            correspondencia[3]
-        );
-
-    if (
-        correspondencia[3]
-            .length === 2
-    ) {
-        ano +=
-            ano >= 70
-                ? 1900
-                : 2000;
-    }
-
-    return criarDataSegura(
-        dia,
-        mes,
-        ano
-    );
-}
-
-function criarDataSegura(
-    dia,
-    mes,
-    ano
-) {
-    if (
-        !Number.isInteger(dia) ||
-        !Number.isInteger(mes) ||
-        !Number.isInteger(ano) ||
-        dia < 1 ||
-        dia > 31 ||
-        mes < 1 ||
-        mes > 12 ||
-        ano < 1900 ||
-        ano > 2200
-    ) {
-        return null;
-    }
-
-    const data =
-        new Date(
-            ano,
-            mes - 1,
-            dia,
-            12,
-            0,
-            0,
-            0
-        );
-
-    if (
-        data.getFullYear() !== ano ||
-        data.getMonth() !==
-        mes - 1 ||
-        data.getDate() !== dia
-    ) {
-        return null;
-    }
-
-    return data;
-}
-
-function possuiDataValida(
-    data
-) {
-    return (
-        data instanceof Date &&
-        !Number.isNaN(
-            data.getTime()
-        )
-    );
-}
-
-function formatarDataBrasileira(
-    data
-) {
-    if (
-        !possuiDataValida(
-            data
-        )
-    ) {
-        return "";
-    }
-
-    const dia =
-        String(
-            data.getDate()
-        ).padStart(
-            2,
-            "0"
-        );
-
-    const mes =
-        String(
-            data.getMonth() + 1
-        ).padStart(
-            2,
-            "0"
-        );
-
-    return (
-        dia +
-        "/" +
-        mes +
-        "/" +
-        data.getFullYear()
-    );
-}
-
-/* =========================================================
-   PERÍODO
+   IDENTIFICAÇÃO DO PERÍODO
 ========================================================= */
 
 function identificarPeriodoExtrato() {
-    const movimentacoesPeriodo =
-        movimentacoesExtrato.filter(
-            function (movimentacao) {
-                return (
-                    possuiDataValida(
-                        movimentacao.data
-                    ) &&
-                    !deveIgnorarMovimentacaoNaDeteccaoPeriodo(
-                        movimentacao
-                    )
-                );
-            }
-        );
+    const movimentacoesPeriodo = movimentacoesExtrato.filter(
+        function (movimentacao) {
+            return possuiDataValida(movimentacao.data) &&
+                !deveIgnorarMovimentacaoNaDeteccaoPeriodo(movimentacao);
+        }
+    );
 
-    if (
-        movimentacoesPeriodo.length === 0
-    ) {
+    if (movimentacoesPeriodo.length === 0) {
         primeiraDataExtrato = null;
         ultimaDataExtrato = null;
 
-        definirValorCampo(
-            "primeiraDataMovimentacao",
-            ""
-        );
+        primeiraDataExtratoAutomatica = null;
+        ultimaDataExtratoAutomatica = null;
+        mesesDetectadosAutomaticos = 0;
 
-        definirValorCampo(
-            "ultimaDataMovimentacao",
-            ""
-        );
-
-        definirValorCampo(
-            "mesesDetectadosMovimentacao",
-            ""
-        );
-
-        definirValorCampo(
-            "mesesConsideradosMovimentacao",
-            ""
-        );
-
+        definirValorCampo("primeiraDataMovimentacao", "");
+        definirValorCampo("ultimaDataMovimentacao", "");
+        definirValorCampo("mesesDetectadosMovimentacao", "");
+        definirValorCampo("mesesConsideradosMovimentacao", "");
         return;
     }
 
-    const timestamps =
-        movimentacoesPeriodo.map(
-            function (movimentacao) {
-                return movimentacao
-                    .data
-                    .getTime();
-            }
-        );
+    const timestamps = movimentacoesPeriodo.map(
+        function (movimentacao) {
+            return movimentacao.data.getTime();
+        }
+    );
 
-    primeiraDataExtrato =
-        new Date(
-            Math.min.apply(
-                null,
-                timestamps
-            )
-        );
+    primeiraDataExtrato = new Date(
+        Math.min.apply(null, timestamps)
+    );
 
-    ultimaDataExtrato =
-        new Date(
-            Math.max.apply(
-                null,
-                timestamps
-            )
-        );
+    ultimaDataExtrato = new Date(
+        Math.max.apply(null, timestamps)
+    );
 
-    const meses =
+    primeiraDataExtratoAutomatica =
+        new Date(primeiraDataExtrato.getTime());
+
+    ultimaDataExtratoAutomatica =
+        new Date(ultimaDataExtrato.getTime());
+
+    mesesDetectadosAutomaticos =
         calcularQuantidadeMesesPeriodo(
             primeiraDataExtrato,
             ultimaDataExtrato
         );
 
-    definirValorCampo(
-        "primeiraDataMovimentacao",
-        formatarDataBrasileira(
-            primeiraDataExtrato
-        )
-    );
-
-    definirValorCampo(
-        "ultimaDataMovimentacao",
-        formatarDataBrasileira(
-            ultimaDataExtrato
-        )
-    );
+    atualizarExibicaoPeriodo();
 
     definirValorCampo(
         "mesesDetectadosMovimentacao",
-        meses
+        mesesDetectadosAutomaticos || ""
     );
 
     definirValorCampo(
         "mesesConsideradosMovimentacao",
-        meses
+        mesesDetectadosAutomaticos || ""
     );
 }
 
-function deveIgnorarMovimentacaoNaDeteccaoPeriodo(
-    movimentacao
-) {
+function deveIgnorarMovimentacaoNaDeteccaoPeriodo(movimentacao) {
     if (
         !movimentacao ||
         !movimentacao.historicoNormalizado
@@ -1828,181 +1229,13 @@ function deveIgnorarMovimentacaoNaDeteccaoPeriodo(
         return true;
     }
 
-    const regra =
-        localizarRegraExclusao(
-            movimentacao
-                .historicoNormalizado
-        );
+    const regra = localizarRegraExclusao(
+        movimentacao.historicoNormalizado
+    );
 
     return Boolean(
         regra &&
         regra.ignorarPeriodo === true
-    );
-}
-
-/* =========================================================
-   PERÍODO MANUAL
-========================================================= */
-
-function aplicarPeriodoInformadoManualmente(
-    mostrarAviso = true
-) {
-    if (
-        movimentacoesExtrato.length === 0
-    ) {
-        return;
-    }
-
-    const inputPrimeira =
-        document.getElementById(
-            "primeiraDataMovimentacao"
-        );
-
-    const inputUltima =
-        document.getElementById(
-            "ultimaDataMovimentacao"
-        );
-
-    if (
-        !inputPrimeira ||
-        !inputUltima
-    ) {
-        return;
-    }
-
-    const primeira =
-        converterDataBrasileira(
-            inputPrimeira.value
-        );
-
-    const ultima =
-        converterDataBrasileira(
-            inputUltima.value
-        );
-
-    if (
-        !primeira ||
-        !ultima
-    ) {
-        if (mostrarAviso) {
-            alert(
-                "Informe as datas no formato DD/MM/AAAA."
-            );
-        }
-
-        return;
-    }
-
-    if (
-        primeira.getTime() >
-        ultima.getTime()
-    ) {
-        if (mostrarAviso) {
-            alert(
-                "A primeira movimentação não pode ser posterior à última movimentação."
-            );
-        }
-
-        return;
-    }
-
-    primeiraDataExtrato =
-        primeira;
-
-    ultimaDataExtrato =
-        ultima;
-
-    const meses =
-        calcularQuantidadeMesesPeriodo(
-            primeiraDataExtrato,
-            ultimaDataExtrato
-        );
-
-    definirValorCampo(
-        "mesesDetectadosMovimentacao",
-        meses
-    );
-
-    classificarMovimentacoes();
-    calcularResultadosMovimentacao();
-    renderizarResultadosMovimentacao();
-}
-
-function calcularQuantidadeMesesPeriodo(
-    dataInicial,
-    dataFinal
-) {
-    if (
-        !possuiDataValida(
-            dataInicial
-        ) ||
-        !possuiDataValida(
-            dataFinal
-        )
-    ) {
-        return 0;
-    }
-
-    let inicial =
-        new Date(
-            dataInicial.getTime()
-        );
-
-    let final =
-        new Date(
-            dataFinal.getTime()
-        );
-
-    if (
-        inicial.getTime() >
-        final.getTime()
-    ) {
-        const temporaria =
-            inicial;
-
-        inicial =
-            final;
-
-        final =
-            temporaria;
-    }
-
-    return (
-        (
-            final.getFullYear() -
-            inicial.getFullYear()
-        ) *
-        12 +
-        (
-            final.getMonth() -
-            inicial.getMonth()
-        ) +
-        1
-    );
-}
-
-/* =========================================================
-   EXCLUSÕES AUTOMÁTICAS INICIAIS
-========================================================= */
-
-function inicializarExclusoesAutomaticas() {
-    historicosExcluidosManualmente.clear();
-
-    movimentacoesExtrato.forEach(
-        function (movimentacao) {
-            const regra =
-                localizarRegraExclusao(
-                    movimentacao
-                        .historicoNormalizado
-                );
-
-            if (regra) {
-                historicosExcluidosManualmente.add(
-                    movimentacao
-                        .historicoNormalizado
-                );
-            }
-        }
     );
 }
 
@@ -2014,144 +1247,96 @@ function classificarMovimentacoes() {
     movimentacoesConsideradas = [];
     movimentacoesExcluidas = [];
 
-    movimentacoesExtrato.forEach(
-        function (movimentacao) {
-            const classificacao =
-                classificarMovimentacao(
-                    movimentacao
-                );
+    movimentacoesExtrato.forEach(function (movimentacao) {
+        const classificacao =
+            classificarMovimentacao(movimentacao);
 
-            movimentacao.considerado =
-                classificacao.considerado;
+        movimentacao.considerado =
+            classificacao.considerado;
 
-            movimentacao.motivo =
-                classificacao.motivo;
+        movimentacao.motivo =
+            classificacao.motivo;
 
-            if (
-                classificacao.considerado
-            ) {
-                movimentacoesConsideradas.push(
-                    movimentacao
-                );
-            } else {
-                movimentacoesExcluidas.push(
-                    movimentacao
-                );
-            }
+        if (classificacao.considerado) {
+            movimentacoesConsideradas.push(movimentacao);
+        } else {
+            movimentacoesExcluidas.push(movimentacao);
         }
-    );
+    });
 }
 
-function classificarMovimentacao(
-    movimentacao
-) {
-    const historico =
-        movimentacao
-            .historicoNormalizado;
+function classificarMovimentacao(movimentacao) {
+    const historico = movimentacao.historicoNormalizado;
 
     const regraExclusao =
-        localizarRegraExclusao(
-            historico
-        );
+        localizarRegraExclusao(historico);
 
     /*
-     * O checkbox define se o histórico deve ser
-     * desconsiderado.
+     * Uma regra automática começa marcada.
      *
-     * Regras automáticas apenas iniciam marcadas;
-     * não ficam bloqueadas.
+     * Porém o usuário pode desmarcá-la.
      */
+    const inclusaoManual =
+        historicosIncluidosManualmente.has(historico);
+
     if (
-        historicosExcluidosManualmente.has(
-            historico
-        )
+        regraExclusao &&
+        !inclusaoManual
     ) {
         return {
             considerado: false,
-
-            motivo:
-                regraExclusao
-                    ? regraExclusao.rotulo
-                    : "Histórico desconsiderado manualmente"
+            motivo: regraExclusao.rotulo
         };
     }
 
-    /*
-     * Mesmo que o checkbox esteja livre,
-     * débito continua não compondo renda.
-     */
-    if (
-        movimentacao.indicador === "D"
-    ) {
+    if (movimentacao.indicador === "D") {
         return {
             considerado: false,
             motivo: "Débito"
         };
     }
 
+    if (movimentacao.indicador === "*") {
+        return {
+            considerado: false,
+            motivo: "Valor bloqueado/informativo"
+        };
+    }
+
     if (
-        movimentacao.indicador === "*"
+        historicosExcluidosManualmente.has(historico)
     ) {
         return {
             considerado: false,
-            motivo:
-                "Valor bloqueado/informativo"
+            motivo: "Histórico excluído manualmente"
         };
     }
 
-    if (
-        movimentacao.indicador === "C"
-    ) {
+    if (movimentacao.indicador === "C") {
         return {
             considerado: true,
-            motivo:
-                regraExclusao
-                    ? "Crédito incluído manualmente"
-                    : "Crédito identificado pelo indicador C"
+            motivo: "Crédito identificado pelo indicador C"
         };
     }
 
-    if (
-        identificarCreditoSemIndicador(
-            historico
-        )
-    ) {
+    if (identificarCreditoSemIndicador(historico)) {
         return {
             considerado: true,
-            motivo:
-                regraExclusao
-                    ? "Crédito incluído manualmente"
-                    : "Crédito identificado pelo histórico"
+            motivo: "Crédito identificado pelo histórico"
         };
     }
 
     return {
         considerado: false,
-        motivo:
-            "Sem identificação segura como crédito"
+        motivo: "Sem identificação segura como crédito"
     };
 }
 
-/* =========================================================
-   REGRAS
-========================================================= */
+function localizarRegraExclusao(historicoNormalizado) {
+    const historico = String(historicoNormalizado || "");
 
-function localizarRegraExclusao(
-    historicoNormalizado
-) {
-    const historico = String(
-        historicoNormalizado || ""
-    );
-
-    for (
-        const regra
-        of REGRAS_EXCLUSAO_MOVIMENTACAO
-    ) {
-        if (
-            regra.testar(
-                historico
-            )
-        ) {
+    for (const regra of REGRAS_EXCLUSAO_MOVIMENTACAO) {
+        if (regra.testar(historico)) {
             return regra;
         }
     }
@@ -2159,28 +1344,31 @@ function localizarRegraExclusao(
     return null;
 }
 
-function identificarCreditoSemIndicador(
-    historico
-) {
-    const valor = String(
-        historico || ""
-    );
+function identificarCreditoSemIndicador(historico) {
+    const valor = String(historico || "");
 
     return PADROES_CREDITO_SEM_INDICADOR.some(
         function (padrao) {
             return valor.includes(
-                normalizarTexto(
-                    padrao
-                )
+                normalizarTexto(padrao)
             );
         }
     );
 }
 
-function ehCreditoPotencial(
-    movimentacao
-) {
+function ehCreditoPotencial(movimentacao) {
     if (!movimentacao) {
+        return false;
+    }
+
+    const regra = localizarRegraExclusao(
+        movimentacao.historicoNormalizado
+    );
+
+    if (
+        regra &&
+        regra.ignorarPeriodo
+    ) {
         return false;
     }
 
@@ -2191,32 +1379,27 @@ function ehCreditoPotencial(
         return false;
     }
 
-    if (
-        movimentacao.indicador === "C"
-    ) {
+    if (movimentacao.indicador === "C") {
         return true;
     }
 
     return identificarCreditoSemIndicador(
-        movimentacao
-            .historicoNormalizado
+        movimentacao.historicoNormalizado
     );
 }
 
 /* =========================================================
-   HISTÓRICOS
+   HISTÓRICOS / CHECKBOXES
 ========================================================= */
 
 function renderizarHistoricosExtrato() {
-    const container =
-        document.getElementById(
-            "listaRegrasMovimentacao"
-        );
+    const container = document.getElementById(
+        "listaRegrasMovimentacao"
+    );
 
-    const resumo =
-        document.getElementById(
-            "resumoRegrasMovimentacao"
-        );
+    const resumo = document.getElementById(
+        "resumoRegrasMovimentacao"
+    );
 
     if (!container) {
         return;
@@ -2224,148 +1407,131 @@ function renderizarHistoricosExtrato() {
 
     container.innerHTML = "";
 
-    if (
-        movimentacoesExtrato.length === 0
-    ) {
+    if (movimentacoesExtrato.length === 0) {
         if (resumo) {
             resumo.textContent =
                 "Processe um extrato para visualizar os históricos encontrados.";
         }
 
-        const div =
-            document.createElement(
-                "div"
-            );
+        const vazio = document.createElement("div");
+        vazio.className = "sem-dados";
+        vazio.textContent = "Nenhum histórico identificado.";
 
-        div.className =
-            "sem-dados";
-
-        div.textContent =
-            "Nenhum histórico identificado.";
-
-        container.appendChild(
-            div
-        );
-
+        container.appendChild(vazio);
         return;
     }
 
-    const historicos =
-        agruparHistoricosExtrato();
+    const historicos = agruparHistoricosExtrato();
 
     if (resumo) {
         resumo.textContent =
             historicos.length +
             " histórico(s) diferente(s) identificado(s) em " +
             movimentacoesExtrato.length +
-            " lançamento(s). As exclusões automáticas já vêm marcadas, mas todos os históricos permanecem disponíveis para alteração manual.";
+            " lançamento(s). Os históricos sugeridos para exclusão já aparecem marcados, mas todos podem ser alterados manualmente.";
     }
 
-    historicos.forEach(
-        function (
-            grupo,
-            indice
-        ) {
-            const regraAutomatica =
-                localizarRegraExclusao(
-                    grupo.normalizado
-                );
+    historicos.forEach(function (grupo, indice) {
+        const regraAutomatica =
+            localizarRegraExclusao(grupo.normalizado);
 
-            const marcado =
-                historicosExcluidosManualmente.has(
-                    grupo.normalizado
-                );
+        const exclusaoManual =
+            historicosExcluidosManualmente.has(
+                grupo.normalizado
+            );
 
-            const label =
-                document.createElement(
-                    "label"
-                );
+        const inclusaoManual =
+            historicosIncluidosManualmente.has(
+                grupo.normalizado
+            );
 
-            label.className =
-                "opcao-simulacao regra-movimentacao-item";
+        /*
+         * Regra automática:
+         * checked por padrão.
+         *
+         * Regra não automática:
+         * unchecked por padrão.
+         */
+        const marcado = regraAutomatica
+            ? !inclusaoManual
+            : exclusaoManual;
 
-            if (
-                regraAutomatica &&
-                marcado
-            ) {
-                label.classList.add(
-                    "regra-movimentacao-automatica"
-                );
-            }
+        let status = "";
 
-            let status = "";
+        if (regraAutomatica) {
+            status =
+                "Sugestão automática de exclusão: " +
+                regraAutomatica.motivo +
+                " · pode ser alterada manualmente";
+        } else if (grupo.creditosPotenciais > 0) {
+            status =
+                grupo.creditosPotenciais +
+                " crédito(s) identificado(s) · marque para excluir";
+        } else if (grupo.debitos > 0) {
+            status =
+                grupo.debitos +
+                " débito(s) identificado(s) · marcação livre";
+        } else {
+            status =
+                "Movimentação informativa · marcação livre";
+        }
 
-            if (
-                regraAutomatica &&
-                marcado
-            ) {
-                status =
-                    "Exclusão automática inicial: " +
-                    regraAutomatica.motivo +
-                    " Desmarque para alterar excepcionalmente.";
-            } else if (
-                regraAutomatica &&
-                !marcado
-            ) {
-                status =
-                    "Regra automática desmarcada manualmente.";
-            } else if (
-                grupo.creditosPotenciais > 0
-            ) {
-                status =
-                    grupo.creditosPotenciais +
-                    " crédito(s) identificado(s) · marque para desconsiderar";
-            } else if (
-                grupo.debitos > 0
-            ) {
-                status =
-                    grupo.debitos +
-                    " débito(s) identificado(s)";
-            } else {
-                status =
-                    "Movimentação informativa";
-            }
+        const label = document.createElement("label");
 
-            label.innerHTML = `
-                <input
-                    type="checkbox"
-                    id="historico-movimentacao-${indice}"
-                    ${marcado ? "checked" : ""}
-                    aria-label="${escaparHtml(
-                grupo.historico
-            )}"
-                >
+        label.className =
+            "opcao-simulacao regra-movimentacao-item";
 
-                <span class="opcao-simulacao-conteudo">
-                    <strong>
-                        ${escaparHtml(
-                grupo.historico
-            )}
-                    </strong>
+        if (regraAutomatica) {
+            label.classList.add(
+                "regra-movimentacao-automatica"
+            );
+        }
 
-                    <small>
-                        ${escaparHtml(
-                status
-            )}
-                        ·
-                        ${grupo.quantidade}
-                        ocorrência(s)
-                    </small>
-                </span>
-            `;
+        label.innerHTML = `
+            <input
+                type="checkbox"
+                id="historico-movimentacao-${indice}"
+                ${marcado ? "checked" : ""}
+                aria-label="${escaparHtml(grupo.historico)}"
+            >
+            <span class="opcao-simulacao-conteudo">
+                <strong>${escaparHtml(grupo.historico)}</strong>
+                <small>
+                    ${escaparHtml(status)}
+                    · ${grupo.quantidade} ocorrência(s)
+                </small>
+            </span>
+        `;
 
-            const checkbox =
-                label.querySelector(
-                    "input[type='checkbox']"
-                );
+        const checkbox =
+            label.querySelector("input[type='checkbox']");
 
-            if (checkbox) {
-                checkbox.addEventListener(
-                    "change",
-                    function () {
-                        if (
-                            checkbox.checked
-                        ) {
+        /*
+         * IMPORTANTE:
+         * não existe disabled.
+         */
+        if (checkbox) {
+            checkbox.disabled = false;
+
+            checkbox.addEventListener(
+                "change",
+                function () {
+                    if (regraAutomatica) {
+                        if (checkbox.checked) {
+                            historicosIncluidosManualmente.delete(
+                                grupo.normalizado
+                            );
+                        } else {
+                            /*
+                             * Desmarcou uma exclusão automática:
+                             * usuário quer liberar esse histórico.
+                             */
+                            historicosIncluidosManualmente.add(
+                                grupo.normalizado
+                            );
+                        }
+                    } else {
+                        if (checkbox.checked) {
                             historicosExcluidosManualmente.add(
                                 grupo.normalizado
                             );
@@ -2374,106 +1540,66 @@ function renderizarHistoricosExtrato() {
                                 grupo.normalizado
                             );
                         }
-
-                        classificarMovimentacoes();
-                        calcularResultadosMovimentacao();
-                        renderizarHistoricosExtrato();
-                        renderizarResultadosMovimentacao();
                     }
-                );
-            }
 
-            container.appendChild(
-                label
+                    classificarMovimentacoes();
+                    calcularResultadosMovimentacao();
+                    renderizarResultadosMovimentacao();
+                }
             );
         }
-    );
+
+        container.appendChild(label);
+    });
 }
 
 function agruparHistoricosExtrato() {
-    const mapa =
-        new Map();
+    const mapa = new Map();
 
-    movimentacoesExtrato.forEach(
-        function (movimentacao) {
-            const chave =
-                movimentacao
-                    .historicoNormalizado;
+    movimentacoesExtrato.forEach(function (movimentacao) {
+        const chave = movimentacao.historicoNormalizado;
 
-            if (!chave) {
-                return;
-            }
-
-            if (
-                !mapa.has(
-                    chave
-                )
-            ) {
-                mapa.set(
-                    chave,
-                    {
-                        normalizado:
-                            chave,
-
-                        historico:
-                            movimentacao
-                                .historico,
-
-                        quantidade:
-                            0,
-
-                        creditosPotenciais:
-                            0,
-
-                        debitos:
-                            0,
-
-                        informativos:
-                            0
-                    }
-                );
-            }
-
-            const grupo =
-                mapa.get(
-                    chave
-                );
-
-            grupo.quantidade++;
-
-            const regra =
-                localizarRegraExclusao(
-                    chave
-                );
-
-            if (
-                regra &&
-                regra.ignorarPeriodo
-            ) {
-                grupo.informativos++;
-            } else if (
-                ehCreditoPotencial(
-                    movimentacao
-                )
-            ) {
-                grupo.creditosPotenciais++;
-            } else if (
-                movimentacao.indicador === "D"
-            ) {
-                grupo.debitos++;
-            } else {
-                grupo.informativos++;
-            }
+        if (!chave) {
+            return;
         }
-    );
 
-    return Array.from(
-        mapa.values()
-    ).sort(
-        function (
-            a,
-            b
+        if (!mapa.has(chave)) {
+            mapa.set(
+                chave,
+                {
+                    normalizado: chave,
+                    historico: movimentacao.historico,
+                    quantidade: 0,
+                    creditosPotenciais: 0,
+                    debitos: 0,
+                    informativos: 0
+                }
+            );
+        }
+
+        const grupo = mapa.get(chave);
+
+        grupo.quantidade++;
+
+        const regra =
+            localizarRegraExclusao(chave);
+
+        if (
+            regra &&
+            regra.ignorarPeriodo
         ) {
+            grupo.informativos++;
+        } else if (ehCreditoPotencial(movimentacao)) {
+            grupo.creditosPotenciais++;
+        } else if (movimentacao.indicador === "D") {
+            grupo.debitos++;
+        } else {
+            grupo.informativos++;
+        }
+    });
+
+    return Array.from(mapa.values()).sort(
+        function (a, b) {
             return a.historico.localeCompare(
                 b.historico,
                 "pt-BR",
@@ -2494,132 +1620,280 @@ function renderizarRegrasMovimentacao() {
 ========================================================= */
 
 function calcularResultadosMovimentacao() {
-    const total =
-        movimentacoesConsideradas.reduce(
-            function (
-                acumulado,
-                movimentacao
-            ) {
-                return (
-                    acumulado +
-                    movimentacao.valor
-                );
-            },
-            0
-        );
+    const total = movimentacoesConsideradas.reduce(
+        function (acumulado, movimentacao) {
+            return acumulado + movimentacao.valor;
+        },
+        0
+    );
 
-    let mesesConsiderados =
-        obterNumeroCampo(
-            "mesesConsideradosMovimentacao"
-        );
+    let mesesDetectados =
+        obterNumeroCampo("mesesDetectadosMovimentacao");
 
     if (
-        !Number.isFinite(
-            mesesConsiderados
-        ) ||
-        mesesConsiderados <= 0
+        !Number.isFinite(mesesDetectados) ||
+        mesesDetectados <= 0
     ) {
-        mesesConsiderados =
+        mesesDetectados =
             calcularQuantidadeMesesPeriodo(
                 primeiraDataExtrato,
                 ultimaDataExtrato
             );
     }
 
-    mesesConsiderados =
-        Math.max(
-            0,
-            Math.trunc(
-                mesesConsiderados
-            )
-        );
+    let mesesConsiderados =
+        obterNumeroCampo("mesesConsideradosMovimentacao");
 
-    const media =
-        mesesConsiderados > 0
-            ? total /
-            mesesConsiderados
-            : 0;
+    if (
+        !Number.isFinite(mesesConsiderados) ||
+        mesesConsiderados <= 0
+    ) {
+        mesesConsiderados = mesesDetectados;
+    }
+
+    mesesConsiderados = Math.max(
+        0,
+        Math.trunc(mesesConsiderados)
+    );
+
+    const media = mesesConsiderados > 0
+        ? total / mesesConsiderados
+        : 0;
 
     definirTexto(
         "resultadoMediaMovimentacao",
-        formatarMoeda(
-            media
-        )
+        formatarMoeda(media)
     );
 
     definirTexto(
         "resultadoTotalMovimentacao",
-        formatarMoeda(
-            total
-        )
+        formatarMoeda(total)
     );
 
     definirTexto(
         "resultadoMesesMovimentacao",
-        String(
-            mesesConsiderados || 0
-        )
+        String(mesesConsiderados || 0)
     );
 
     definirTexto(
         "resultadoQtdConsiderados",
-        String(
-            movimentacoesConsideradas.length
-        )
+        String(movimentacoesConsideradas.length)
     );
 
     definirTexto(
         "resultadoQtdExcluidos",
-        String(
-            movimentacoesExcluidas.length
-        )
+        String(movimentacoesExcluidas.length)
     );
 }
 
-function normalizarCampoMeses(
-    input
-) {
-    if (!input) {
+/* =========================================================
+   PERÍODO EDITÁVEL
+========================================================= */
+
+function aplicarMascaraDataCampo(evento) {
+    const campo = evento && evento.target
+        ? evento.target
+        : null;
+
+    if (!campo) {
         return;
     }
 
-    const texto =
-        String(
-            input.value || ""
-        ).trim();
+    const numeros = String(campo.value || "")
+        .replace(/\D/g, "")
+        .slice(0, 8);
+
+    let valor = numeros;
+
+    if (numeros.length > 4) {
+        valor =
+            numeros.slice(0, 2) +
+            "/" +
+            numeros.slice(2, 4) +
+            "/" +
+            numeros.slice(4);
+    } else if (numeros.length > 2) {
+        valor =
+            numeros.slice(0, 2) +
+            "/" +
+            numeros.slice(2);
+    }
+
+    campo.value = valor;
+}
+
+function aplicarPeriodoInformadoPeloUsuario(opcoes) {
+    const configuracao = Object.assign(
+        {
+            recalcularMesesDetectados: false,
+            preservarMesesConsiderados: true
+        },
+        opcoes || {}
+    );
+
+    const campoPrimeira =
+        document.getElementById("primeiraDataMovimentacao");
+
+    const campoUltima =
+        document.getElementById("ultimaDataMovimentacao");
+
+    const campoMesesDetectados =
+        document.getElementById("mesesDetectadosMovimentacao");
+
+    const campoMesesConsiderados =
+        document.getElementById("mesesConsideradosMovimentacao");
+
+    const primeiraInformada = campoPrimeira
+        ? converterDataBrasileira(campoPrimeira.value)
+        : null;
+
+    const ultimaInformada = campoUltima
+        ? converterDataBrasileira(campoUltima.value)
+        : null;
+
+    if (primeiraInformada) {
+        primeiraDataExtrato = primeiraInformada;
+    }
+
+    if (ultimaInformada) {
+        ultimaDataExtrato = ultimaInformada;
+    }
+
+    if (
+        possuiDataValida(primeiraDataExtrato) &&
+        possuiDataValida(ultimaDataExtrato) &&
+        primeiraDataExtrato.getTime() >
+        ultimaDataExtrato.getTime()
+    ) {
+        const temporaria = primeiraDataExtrato;
+
+        primeiraDataExtrato = ultimaDataExtrato;
+        ultimaDataExtrato = temporaria;
+    }
+
+    atualizarExibicaoPeriodo();
+
+    if (configuracao.recalcularMesesDetectados) {
+        const meses =
+            calcularQuantidadeMesesPeriodo(
+                primeiraDataExtrato,
+                ultimaDataExtrato
+            );
+
+        if (campoMesesDetectados) {
+            campoMesesDetectados.value =
+                meses > 0
+                    ? String(meses)
+                    : "";
+        }
+
+        if (
+            !configuracao.preservarMesesConsiderados &&
+            campoMesesConsiderados
+        ) {
+            campoMesesConsiderados.value =
+                meses > 0
+                    ? String(meses)
+                    : "";
+        }
+    }
+}
+
+function restaurarPeriodoAutomatico() {
+    primeiraDataExtrato =
+        possuiDataValida(primeiraDataExtratoAutomatica)
+            ? new Date(primeiraDataExtratoAutomatica.getTime())
+            : null;
+
+    ultimaDataExtrato =
+        possuiDataValida(ultimaDataExtratoAutomatica)
+            ? new Date(ultimaDataExtratoAutomatica.getTime())
+            : null;
+
+    atualizarExibicaoPeriodo();
+
+    definirValorCampo(
+        "mesesDetectadosMovimentacao",
+        mesesDetectadosAutomaticos || ""
+    );
+
+    definirValorCampo(
+        "mesesConsideradosMovimentacao",
+        mesesDetectadosAutomaticos || ""
+    );
+}
+
+function atualizarExibicaoPeriodo() {
+    definirValorCampo(
+        "primeiraDataMovimentacao",
+        primeiraDataExtrato
+            ? formatarDataBrasileira(primeiraDataExtrato)
+            : ""
+    );
+
+    definirValorCampo(
+        "ultimaDataMovimentacao",
+        ultimaDataExtrato
+            ? formatarDataBrasileira(ultimaDataExtrato)
+            : ""
+    );
+}
+
+function calcularQuantidadeMesesPeriodo(dataInicial, dataFinal) {
+    if (
+        !possuiDataValida(dataInicial) ||
+        !possuiDataValida(dataFinal)
+    ) {
+        return 0;
+    }
+
+    let inicial = new Date(dataInicial.getTime());
+    let final = new Date(dataFinal.getTime());
+
+    if (inicial.getTime() > final.getTime()) {
+        const temporaria = inicial;
+        inicial = final;
+        final = temporaria;
+    }
+
+    return (
+        (final.getFullYear() - inicial.getFullYear()) * 12 +
+        (final.getMonth() - inicial.getMonth()) +
+        1
+    );
+}
+
+function normalizarCampoMeses(campo, limparInvalido) {
+    if (!campo) {
+        return;
+    }
+
+    const texto = String(campo.value || "").trim();
 
     if (!texto) {
         return;
     }
 
-    const numero =
-        Number(
-            texto
-        );
+    const numero = Number(texto);
 
     if (
-        !Number.isFinite(
-            numero
-        ) ||
+        !Number.isFinite(numero) ||
         numero <= 0
     ) {
-        input.value = "";
+        if (limparInvalido) {
+            campo.value = "";
+        }
+
         return;
     }
 
-    input.value =
-        String(
-            Math.max(
-                1,
-                Math.trunc(
-                    numero
-                )
-            )
-        );
+    campo.value = String(
+        Math.max(1, Math.trunc(numero))
+    );
 }
 
 /* =========================================================
-   RESULTADOS
+   RESUMO MENSAL
 ========================================================= */
 
 function renderizarResultadosMovimentacao() {
@@ -2628,15 +1902,9 @@ function renderizarResultadosMovimentacao() {
     renderizarTabelaExcluidas();
 }
 
-/* =========================================================
-   RESUMO MENSAL
-========================================================= */
-
 function renderizarTabelaResumoMensal() {
     const tbody =
-        obterTbodyTabela(
-            "tabelaResumoMensalMovimentacao"
-        );
+        obterTbodyTabela("tabelaResumoMensalMovimentacao");
 
     if (!tbody) {
         return;
@@ -2645,8 +1913,8 @@ function renderizarTabelaResumoMensal() {
     tbody.innerHTML = "";
 
     if (
-        !primeiraDataExtrato ||
-        !ultimaDataExtrato
+        !possuiDataValida(primeiraDataExtrato) ||
+        !possuiDataValida(ultimaDataExtrato)
     ) {
         inserirLinhaSemDados(
             tbody,
@@ -2659,157 +1927,100 @@ function renderizarTabelaResumoMensal() {
 
     const agrupamento = {};
 
-    gerarCompetenciasPeriodo(
-        primeiraDataExtrato,
-        ultimaDataExtrato
-    ).forEach(
-        function (competencia) {
-            agrupamento[
-                competencia
-            ] = {
-                competencia,
+    const competenciasPeriodo =
+        gerarCompetenciasPeriodo(
+            primeiraDataExtrato,
+            ultimaDataExtrato
+        );
+
+    competenciasPeriodo.forEach(function (competencia) {
+        agrupamento[competencia] = {
+            competencia: competencia,
+            quantidade: 0,
+            total: 0
+        };
+    });
+
+    movimentacoesConsideradas.forEach(function (movimentacao) {
+        const competencia = movimentacao.competencia;
+
+        if (!competencia) {
+            return;
+        }
+
+        if (!agrupamento[competencia]) {
+            agrupamento[competencia] = {
+                competencia: competencia,
                 quantidade: 0,
                 total: 0
             };
         }
-    );
 
-    movimentacoesConsideradas.forEach(
-        function (movimentacao) {
-            const competencia =
-                movimentacao.competencia;
+        agrupamento[competencia].quantidade++;
+        agrupamento[competencia].total += movimentacao.valor;
+    });
 
-            if (!competencia) {
-                return;
-            }
-
-            /*
-             * Quando o período foi alterado manualmente,
-             * não exibe movimentos fora dele.
-             */
-            if (
-                movimentacao.data.getTime() <
-                primeiraDataExtrato.getTime() ||
-                movimentacao.data.getTime() >
-                ultimaDataExtrato.getTime()
-            ) {
-                return;
-            }
-
-            if (
-                !agrupamento[
-                competencia
-                ]
-            ) {
-                agrupamento[
-                    competencia
-                ] = {
-                    competencia,
-                    quantidade: 0,
-                    total: 0
-                };
-            }
-
-            agrupamento[
-                competencia
-            ].quantidade++;
-
-            agrupamento[
-                competencia
-            ].total +=
-                movimentacao.valor;
-        }
-    );
-
-    Object.keys(
-        agrupamento
-    )
+    Object.keys(agrupamento)
         .sort()
-        .forEach(
-            function (competencia) {
-                const grupo =
-                    agrupamento[
-                    competencia
-                    ];
+        .forEach(function (competencia) {
+            const grupo = agrupamento[competencia];
 
-                const tr =
-                    document.createElement(
-                        "tr"
-                    );
+            const tr = document.createElement("tr");
 
-                tr.innerHTML = `
-                    <td>
-                        ${escaparHtml(
-                    formatarCompetencia(
-                        competencia
-                    )
-                )}
-                    </td>
+            tr.innerHTML = `
+                <td>${escaparHtml(formatarCompetencia(competencia))}</td>
+                <td>${grupo.quantidade}</td>
+                <td>${formatarMoeda(grupo.total)}</td>
+            `;
 
-                    <td>
-                        ${grupo.quantidade}
-                    </td>
-
-                    <td>
-                        ${formatarMoeda(
-                    grupo.total
-                )}
-                    </td>
-                `;
-
-                tbody.appendChild(
-                    tr
-                );
-            }
-        );
+            tbody.appendChild(tr);
+        });
 }
 
-function gerarCompetenciasPeriodo(
-    dataInicial,
-    dataFinal
-) {
+function gerarCompetenciasPeriodo(dataInicial, dataFinal) {
     const competencias = [];
 
     if (
-        !possuiDataValida(
-            dataInicial
-        ) ||
-        !possuiDataValida(
-            dataFinal
-        )
+        !possuiDataValida(dataInicial) ||
+        !possuiDataValida(dataFinal)
     ) {
         return competencias;
     }
 
-    const atual =
-        new Date(
-            dataInicial.getFullYear(),
-            dataInicial.getMonth(),
-            1,
-            12
-        );
+    let inicial = new Date(
+        dataInicial.getFullYear(),
+        dataInicial.getMonth(),
+        1,
+        12,
+        0,
+        0,
+        0
+    );
 
-    const final =
-        new Date(
-            dataFinal.getFullYear(),
-            dataFinal.getMonth(),
-            1,
-            12
-        );
+    let final = new Date(
+        dataFinal.getFullYear(),
+        dataFinal.getMonth(),
+        1,
+        12,
+        0,
+        0,
+        0
+    );
 
-    while (
-        atual.getTime() <=
-        final.getTime()
-    ) {
+    if (inicial.getTime() > final.getTime()) {
+        const temporaria = inicial;
+        inicial = final;
+        final = temporaria;
+    }
+
+    const atual = new Date(inicial.getTime());
+
+    while (atual.getTime() <= final.getTime()) {
         competencias.push(
-            obterCompetenciaData(
-                atual
-            )
+            obterCompetenciaData(atual)
         );
 
-        atual.setMonth(
-            atual.getMonth() + 1
-        );
+        atual.setMonth(atual.getMonth() + 1);
     }
 
     return competencias;
@@ -2821,9 +2032,7 @@ function gerarCompetenciasPeriodo(
 
 function renderizarTabelaConsideradas() {
     const tbody =
-        obterTbodyTabela(
-            "tabelaMovimentacoesConsideradas"
-        );
+        obterTbodyTabela("tabelaMovimentacoesConsideradas");
 
     if (!tbody) {
         return;
@@ -2831,14 +2040,7 @@ function renderizarTabelaConsideradas() {
 
     tbody.innerHTML = "";
 
-    const registros =
-        movimentacoesConsideradas.filter(
-            movimentacaoDentroPeriodoAtual
-        );
-
-    if (
-        registros.length === 0
-    ) {
+    if (movimentacoesConsideradas.length === 0) {
         inserirLinhaSemDados(
             tbody,
             5,
@@ -2848,52 +2050,21 @@ function renderizarTabelaConsideradas() {
         return;
     }
 
-    registros.forEach(
-        function (movimentacao) {
-            const tr =
-                document.createElement(
-                    "tr"
-                );
+    movimentacoesConsideradas.forEach(function (movimentacao) {
+        const tr = document.createElement("tr");
 
-            tr.innerHTML = `
-                <td>
-                    ${escaparHtml(
-                movimentacao.dataTexto
-            )}
-                </td>
+        tr.innerHTML = `
+            <td>${escaparHtml(movimentacao.dataTexto)}</td>
+            <td>${escaparHtml(movimentacao.documento || "-")}</td>
+            <td>${escaparHtml(movimentacao.historico)}</td>
+            <td>${formatarMoeda(movimentacao.valor)}</td>
+            <td>${escaparHtml(
+            movimentacao.motivo || "Crédito considerado"
+        )}</td>
+        `;
 
-                <td>
-                    ${escaparHtml(
-                movimentacao.documento ||
-                "-"
-            )}
-                </td>
-
-                <td>
-                    ${escaparHtml(
-                movimentacao.historico
-            )}
-                </td>
-
-                <td>
-                    ${formatarMoeda(
-                movimentacao.valor
-            )}
-                </td>
-
-                <td>
-                    ${escaparHtml(
-                movimentacao.motivo ||
-                "Crédito considerado"
-            )}
-                </td>
-            `;
-
-            tbody.appendChild(
-                tr
-            );
-        }
-    );
+        tbody.appendChild(tr);
+    });
 }
 
 /* =========================================================
@@ -2902,9 +2073,7 @@ function renderizarTabelaConsideradas() {
 
 function renderizarTabelaExcluidas() {
     const tbody =
-        obterTbodyTabela(
-            "tabelaMovimentacoesExcluidas"
-        );
+        obterTbodyTabela("tabelaMovimentacoesExcluidas");
 
     if (!tbody) {
         return;
@@ -2912,14 +2081,7 @@ function renderizarTabelaExcluidas() {
 
     tbody.innerHTML = "";
 
-    const registros =
-        movimentacoesExcluidas.filter(
-            movimentacaoDentroPeriodoAtual
-        );
-
-    if (
-        registros.length === 0
-    ) {
+    if (movimentacoesExcluidas.length === 0) {
         inserirLinhaSemDados(
             tbody,
             5,
@@ -2929,140 +2091,172 @@ function renderizarTabelaExcluidas() {
         return;
     }
 
-    registros.forEach(
-        function (movimentacao) {
-            const tr =
-                document.createElement(
-                    "tr"
-                );
+    movimentacoesExcluidas.forEach(function (movimentacao) {
+        const tr = document.createElement("tr");
 
-            tr.innerHTML = `
-                <td>
-                    ${escaparHtml(
-                movimentacao.dataTexto
-            )}
-                </td>
+        tr.innerHTML = `
+            <td>${escaparHtml(movimentacao.dataTexto)}</td>
+            <td>${escaparHtml(movimentacao.documento || "-")}</td>
+            <td>${escaparHtml(movimentacao.historico)}</td>
+            <td>${formatarMoeda(movimentacao.valor)}</td>
+            <td>${escaparHtml(movimentacao.motivo)}</td>
+        `;
 
-                <td>
-                    ${escaparHtml(
-                movimentacao.documento ||
-                "-"
-            )}
-                </td>
-
-                <td>
-                    ${escaparHtml(
-                movimentacao.historico
-            )}
-                </td>
-
-                <td>
-                    ${formatarMoeda(
-                movimentacao.valor
-            )}
-                </td>
-
-                <td>
-                    ${escaparHtml(
-                movimentacao.motivo
-            )}
-                </td>
-            `;
-
-            tbody.appendChild(
-                tr
-            );
-        }
-    );
-}
-
-function movimentacaoDentroPeriodoAtual(
-    movimentacao
-) {
-    if (
-        !primeiraDataExtrato ||
-        !ultimaDataExtrato
-    ) {
-        return true;
-    }
-
-    const tempo =
-        movimentacao
-            .data
-            .getTime();
-
-    return (
-        tempo >=
-        primeiraDataExtrato.getTime() &&
-        tempo <=
-        ultimaDataExtrato.getTime()
-    );
+        tbody.appendChild(tr);
+    });
 }
 
 /* =========================================================
-   COMPETÊNCIA
+   DATAS
 ========================================================= */
 
-function obterCompetenciaData(
-    data
-) {
-    if (
-        !possuiDataValida(
-            data
-        )
-    ) {
-        return "";
-    }
-
-    const ano =
-        data.getFullYear();
-
-    const mes =
-        String(
-            data.getMonth() + 1
-        ).padStart(
-            2,
-            "0"
-        );
-
-    return (
-        ano +
-        "-" +
-        mes
+function validarFormatoDataGenerica(valor) {
+    return /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(
+        String(valor || "").trim()
     );
 }
 
-function formatarCompetencia(
-    competencia
-) {
-    const partes =
-        String(
-            competencia || ""
-        ).split("-");
+function converterDataBrasileira(valor) {
+    const match = String(valor || "")
+        .trim()
+        .match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+
+    if (!match) {
+        return null;
+    }
+
+    const dia = Number(match[1]);
+    const mes = Number(match[2]);
+
+    let ano = Number(match[3]);
+
+    if (match[3].length === 2) {
+        ano += ano >= 70
+            ? 1900
+            : 2000;
+    }
+
+    return criarDataValida(
+        dia,
+        mes,
+        ano
+    );
+}
+
+function criarDataValida(dia, mes, ano) {
+    if (
+        !Number.isInteger(dia) ||
+        !Number.isInteger(mes) ||
+        !Number.isInteger(ano) ||
+        dia < 1 ||
+        dia > 31 ||
+        mes < 1 ||
+        mes > 12 ||
+        ano < 1900 ||
+        ano > 2200
+    ) {
+        return null;
+    }
+
+    const data = new Date(
+        ano,
+        mes - 1,
+        dia,
+        12,
+        0,
+        0,
+        0
+    );
 
     if (
-        partes.length !== 2
+        data.getFullYear() !== ano ||
+        data.getMonth() !== mes - 1 ||
+        data.getDate() !== dia
     ) {
-        return competencia;
+        return null;
+    }
+
+    return data;
+}
+
+function possuiDataValida(data) {
+    return data instanceof Date &&
+        !Number.isNaN(data.getTime());
+}
+
+function formatarDataBrasileira(data) {
+    if (!possuiDataValida(data)) {
+        return "";
+    }
+
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const ano = data.getFullYear();
+
+    return dia + "/" + mes + "/" + ano;
+}
+
+function obterCompetenciaData(data) {
+    if (!possuiDataValida(data)) {
+        return "";
     }
 
     return (
-        partes[1] +
-        "/" +
-        partes[0]
+        data.getFullYear() +
+        "-" +
+        String(data.getMonth() + 1).padStart(2, "0")
     );
+}
+
+function formatarCompetencia(competencia) {
+    const partes = String(competencia || "").split("-");
+
+    if (partes.length !== 2) {
+        return competencia;
+    }
+
+    return partes[1] + "/" + partes[0];
+}
+
+/* =========================================================
+   RECONHECIMENTO DE LINHAS
+========================================================= */
+
+function linhaPareceMovimentacaoFinanceira(linha) {
+    const texto = String(linha || "")
+        .replace(/\u00A0/g, " ")
+        .trim();
+
+    if (!texto) {
+        return false;
+    }
+
+    if (
+        !/^\d{1,2}\/\d{1,2}\/\d{2,4}(?=\s|\t|\||$)/.test(texto)
+    ) {
+        return false;
+    }
+
+    return /-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2}\s*[CD*]?\s*$/i.test(
+        texto
+    );
+}
+
+function ehLinhaInformativaPeriodo(normalizada) {
+    const texto = String(normalizada || "");
+
+    return texto.includes("SALDO BLOQUEADO ANTERIOR") ||
+        texto.includes("SALDO ANTERIOR") ||
+        texto.includes("SALDO DO DIA") ||
+        texto.includes("SALDO FINAL DO DIA");
 }
 
 /* =========================================================
    NORMALIZAÇÃO
 ========================================================= */
 
-function normalizarTexto(
-    texto
-) {
-    return String(
-        texto || ""
-    )
+function normalizarTexto(texto) {
+    return String(texto || "")
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ")
         .replace(/<br\s*\/?>/gi, " ")
@@ -3070,121 +2264,33 @@ function normalizarTexto(
         .replace(/__/g, "")
         .replace(/\\([*_])/g, "$1")
         .normalize("NFD")
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        )
+        .replace(/[\u0300-\u036f]/g, "")
         .toUpperCase()
-        .replace(
-            /[.,:;()[\]{}]+/g,
-            " "
-        )
-        .replace(
-            /[-–—]+/g,
-            " "
-        )
-        .replace(
-            /[*_=<>]+/g,
-            " "
-        )
-        .replace(
-            /\s+/g,
-            " "
-        )
+        .replace(/[.,:;()[\]{}]+/g, " ")
+        .replace(/[-–—]+/g, " ")
+        .replace(/[*_=<>]+/g, " ")
+        .replace(/\s+/g, " ")
         .trim();
 }
 
 /* =========================================================
-   VALORES
-========================================================= */
-
-function converterValorBrasileiro(
-    valor
-) {
-    let texto =
-        String(
-            valor || ""
-        )
-            .replace(/R\$/gi, "")
-            .replace(/\s/g, "")
-            .trim();
-
-    if (!texto) {
-        return NaN;
-    }
-
-    if (
-        texto.includes(",")
-    ) {
-        texto =
-            texto
-                .replace(/\./g, "")
-                .replace(",", ".");
-    }
-
-    texto =
-        texto.replace(
-            /[^\d.-]/g,
-            ""
-        );
-
-    const numero =
-        Number(
-            texto
-        );
-
-    return Number.isFinite(
-        numero
-    )
-        ? numero
-        : NaN;
-}
-
-function formatarMoeda(
-    valor
-) {
-    return Number(
-        valor || 0
-    ).toLocaleString(
-        "pt-BR",
-        {
-            style: "currency",
-            currency: "BRL",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    );
-}
-
-/* =========================================================
-   LIMPEZA
+   LIMPAR
 ========================================================= */
 
 function limparMediaMovimentacao() {
     resetarEstadoMovimentacao();
 
     const textarea =
-        document.getElementById(
-            "textoExtratoMovimentacao"
-        );
+        document.getElementById("textoExtratoMovimentacao");
 
     if (textarea) {
         textarea.value = "";
     }
 
-    [
-        "primeiraDataMovimentacao",
-        "ultimaDataMovimentacao",
-        "mesesDetectadosMovimentacao",
-        "mesesConsideradosMovimentacao"
-    ].forEach(
-        function (id) {
-            definirValorCampo(
-                id,
-                ""
-            );
-        }
-    );
+    definirValorCampo("primeiraDataMovimentacao", "");
+    definirValorCampo("ultimaDataMovimentacao", "");
+    definirValorCampo("mesesDetectadosMovimentacao", "");
+    definirValorCampo("mesesConsideradosMovimentacao", "");
 
     limparResultadosMovimentacao();
     renderizarHistoricosExtrato();
@@ -3216,34 +2322,34 @@ function limparResultadosMovimentacao() {
         "0"
     );
 
-    [
+    definirValorCampo(
         "primeiraDataMovimentacao",
+        ""
+    );
+
+    definirValorCampo(
         "ultimaDataMovimentacao",
+        ""
+    );
+
+    definirValorCampo(
         "mesesDetectadosMovimentacao",
-        "mesesConsideradosMovimentacao"
-    ].forEach(
-        function (id) {
-            definirValorCampo(
-                id,
-                ""
-            );
-        }
+        ""
+    );
+
+    definirValorCampo(
+        "mesesConsideradosMovimentacao",
+        ""
     );
 
     const tabelaMensal =
-        obterTbodyTabela(
-            "tabelaResumoMensalMovimentacao"
-        );
+        obterTbodyTabela("tabelaResumoMensalMovimentacao");
 
     const tabelaConsideradas =
-        obterTbodyTabela(
-            "tabelaMovimentacoesConsideradas"
-        );
+        obterTbodyTabela("tabelaMovimentacoesConsideradas");
 
     const tabelaExcluidas =
-        obterTbodyTabela(
-            "tabelaMovimentacoesExcluidas"
-        );
+        obterTbodyTabela("tabelaMovimentacoesExcluidas");
 
     if (tabelaMensal) {
         tabelaMensal.innerHTML = "";
@@ -3280,13 +2386,8 @@ function limparResultadosMovimentacao() {
    DOM
 ========================================================= */
 
-function obterTbodyTabela(
-    id
-) {
-    const elemento =
-        document.getElementById(
-            id
-        );
+function obterTbodyTabela(id) {
+    const elemento = document.getElementById(id);
 
     if (!elemento) {
         return null;
@@ -3294,134 +2395,67 @@ function obterTbodyTabela(
 
     if (
         elemento.tagName &&
-        elemento.tagName.toUpperCase() ===
-        "TBODY"
+        elemento.tagName.toUpperCase() === "TBODY"
     ) {
         return elemento;
     }
 
     if (
         elemento.tagName &&
-        elemento.tagName.toUpperCase() ===
-        "TABLE"
+        elemento.tagName.toUpperCase() === "TABLE"
     ) {
-        return elemento.querySelector(
-            "tbody"
-        );
+        return elemento.querySelector("tbody");
     }
 
     return elemento;
 }
 
-function inserirLinhaSemDados(
-    tbody,
-    colspan,
-    mensagem
-) {
-    if (!tbody) {
-        return;
+function definirTexto(id, valor) {
+    const elemento = document.getElementById(id);
+
+    if (elemento) {
+        elemento.textContent = valor;
+    }
+}
+
+function definirValorCampo(id, valor) {
+    const elemento = document.getElementById(id);
+
+    if (elemento) {
+        elemento.value = valor;
+    }
+}
+
+function obterNumeroCampo(id) {
+    const elemento = document.getElementById(id);
+
+    if (!elemento) {
+        return 0;
     }
 
-    const tr =
-        document.createElement(
-            "tr"
-        );
+    const numero = Number(elemento.value);
+
+    return Number.isFinite(numero)
+        ? numero
+        : 0;
+}
+
+function inserirLinhaSemDados(tbody, colunas, mensagem) {
+    const tr = document.createElement("tr");
+
+    tr.className = "tabela-sem-dados";
 
     tr.innerHTML = `
-        <td
-            colspan="${colspan}"
-            class="sem-dados"
-        >
-            ${escaparHtml(
-        mensagem
-    )}
+        <td colspan="${colunas}" class="sem-dados">
+            ${escaparHtml(mensagem)}
         </td>
     `;
 
-    tbody.appendChild(
-        tr
-    );
+    tbody.appendChild(tr);
 }
 
-function obterNumeroCampo(
-    id
-) {
-    const elemento =
-        document.getElementById(
-            id
-        );
-
-    if (!elemento) {
-        return NaN;
-    }
-
-    const numero =
-        Number(
-            String(
-                elemento.value || ""
-            )
-                .replace(",", ".")
-                .trim()
-        );
-
-    return Number.isFinite(
-        numero
-    )
-        ? numero
-        : NaN;
-}
-
-function definirTexto(
-    id,
-    valor
-) {
-    const elemento =
-        document.getElementById(
-            id
-        );
-
-    if (elemento) {
-        elemento.textContent =
-            valor;
-    }
-}
-
-function definirValorCampo(
-    id,
-    valor
-) {
-    const elemento =
-        document.getElementById(
-            id
-        );
-
-    if (!elemento) {
-        return;
-    }
-
-    if (
-        "value" in elemento
-    ) {
-        elemento.value =
-            valor == null
-                ? ""
-                : valor;
-    } else {
-        elemento.textContent =
-            valor == null
-                ? ""
-                : valor;
-    }
-}
-
-function escaparHtml(
-    valor
-) {
-    return String(
-        valor == null
-            ? ""
-            : valor
-    )
+function escaparHtml(texto) {
+    return String(texto || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
