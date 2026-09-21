@@ -6055,1778 +6055,6 @@ footer p,
     }
 }
 
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML
-   DESKTOP
-   ========================================================= */
-
-.notas-fiscais-container {
-    display: grid;
-    grid-template-columns:
-        minmax(0, 1.45fr) minmax(320px, .55fr);
-    gap: 24px;
-    width: calc(100% - 40px);
-    max-width: 1180px;
-    min-width: 0;
-    margin: 0 auto;
-    padding-top: 30px;
-    padding-bottom: 46px;
-    align-items: start;
-}
-
-.notas-fiscais-container>* {
-    min-width: 0;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - CARDS
-   ========================================================= */
-
-.notas-card {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-    padding: 28px;
-    background: var(--branco);
-    border: 1px solid var(--borda);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
-}
-
-.notas-card-largura-total {
-    grid-column: 1 / -1;
-}
-
-.notas-card-periodos {
-    grid-column: 1;
-}
-
-.notas-card-resultado {
-    position: relative;
-    top: auto;
-    grid-column: 2;
-    overflow: hidden;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - DESTAQUES DOS CARDS
-   ========================================================= */
-
-.notas-card-resultado::before,
-#cardUploadNotas::before,
-#cardAtividadesNotas::before,
-#cardDetalhamentoNotas::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    border-radius: 16px 16px 0 0;
-    background:
-        linear-gradient(90deg,
-            var(--verde-claro),
-            var(--turquesa),
-            var(--verde-escuro));
-}
-
-#cardUploadNotas,
-#cardAtividadesNotas,
-#cardDetalhamentoNotas {
-    overflow: hidden;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TÍTULOS
-   ========================================================= */
-
-.notas-titulo-secao {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    margin-bottom: 20px;
-}
-
-.notas-titulo-secao>div {
-    width: 100%;
-    min-width: 0;
-}
-
-.notas-titulo-secao .categoria-etiqueta {
-    display: inline-flex;
-    align-items: center;
-    width: auto;
-    max-width: 100%;
-    margin-bottom: 9px;
-    padding: 6px 10px;
-    background: rgba(0, 160, 145, .10);
-    color: var(--turquesa);
-    border-radius: 999px;
-    font-size: 9px;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: .03em;
-    text-transform: uppercase;
-}
-
-.notas-titulo-secao h2 {
-    margin: 0 0 5px;
-    color: var(--verde-escuro);
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.25;
-}
-
-.notas-titulo-secao p {
-    max-width: 900px;
-    margin: 0;
-    color: var(--texto-secundario);
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - AVISOS
-   ========================================================= */
-
-.notas-aviso-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-    min-width: 0;
-    padding: 13px 15px;
-    background: rgba(0, 160, 145, .07);
-    color: var(--texto-secundario);
-    border: 1px solid rgba(0, 160, 145, .14);
-    border-left: 4px solid var(--turquesa);
-    border-radius: 9px;
-    font-size: 11px;
-    line-height: 1.5;
-}
-
-.notas-aviso-info strong {
-    color: var(--verde-escuro);
-    font-size: 11px;
-    font-weight: 800;
-}
-
-.notas-aviso-info span {
-    display: block;
-    color: var(--texto-secundario);
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - RESUMO DOS CRITÉRIOS
-   ========================================================= */
-
-#resumoCriteriosNotas {
-    gap: 7px;
-}
-
-#resumoCriteriosNotas>span {
-    display: block;
-    padding-top: 6px;
-    border-top: 1px solid rgba(0, 160, 145, .12);
-}
-
-#resumoCriteriosNotas>span:first-of-type {
-    padding-top: 0;
-    border-top: 0;
-}
-
-#resumoCriteriosNotas span strong {
-    color: var(--verde-escuro);
-    font-size: inherit;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - UPLOAD
-   ========================================================= */
-
-.notas-upload-area {
-    display: grid;
-    grid-template-columns:
-        auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    min-width: 0;
-    padding: 20px;
-    background:
-        linear-gradient(135deg,
-            rgba(0, 160, 145, .035),
-            rgba(201, 210, 0, .025)),
-        #FBFCFC;
-    border: 1px dashed var(--turquesa-claro);
-    border-radius: 12px;
-}
-
-.notas-upload-icone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 52px;
-    width: 52px;
-    height: 52px;
-    min-width: 52px;
-    min-height: 52px;
-    overflow: hidden;
-    background:
-        linear-gradient(135deg,
-            rgba(0, 160, 145, .12),
-            rgba(0, 54, 64, .08));
-    color: var(--turquesa);
-    border: 1px solid rgba(0, 160, 145, .12);
-    border-radius: 12px;
-}
-
-.notas-upload-texto {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.notas-upload-texto strong {
-    display: block;
-    margin-bottom: 3px;
-    color: var(--verde-escuro);
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1.35;
-}
-
-.notas-upload-texto span {
-    display: block;
-    color: var(--texto-secundario);
-    font-size: 10px;
-    line-height: 1.4;
-}
-
-#arquivosNotasFiscais {
-    display: none !important;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - SVG DO UPLOAD
-   ========================================================= */
-
-.notas-upload-area svg,
-.notas-upload-icone svg {
-    display: block !important;
-    position: static !important;
-    width: 24px !important;
-    height: 24px !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
-    max-width: 24px !important;
-    max-height: 24px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
-    color: var(--turquesa) !important;
-    fill: none !important;
-    stroke: currentColor !important;
-    stroke-width: 1.8 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
-    transform: none !important;
-}
-
-.notas-upload-area svg path,
-.notas-upload-area svg polygon,
-.notas-upload-area svg polyline,
-.notas-upload-area svg line,
-.notas-upload-area svg circle,
-.notas-upload-icone svg path,
-.notas-upload-icone svg polygon,
-.notas-upload-icone svg polyline,
-.notas-upload-icone svg line,
-.notas-upload-icone svg circle {
-    fill: none !important;
-    stroke: currentColor !important;
-    stroke-width: 1.8 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
-    vector-effect: non-scaling-stroke;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - BOTÕES
-   ========================================================= */
-
-.notas-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    min-width: 120px;
-    min-height: 40px;
-    height: auto;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.2;
-    text-align: center;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-    transition:
-        background .2s ease,
-        border-color .2s ease,
-        color .2s ease,
-        transform .2s ease,
-        box-shadow .2s ease;
-}
-
-.notas-btn:hover {
-    transform: translateY(-1px);
-}
-
-.notas-btn-primario {
-    background: var(--turquesa);
-    color: var(--branco);
-    border: 1px solid var(--turquesa);
-}
-
-.notas-btn-primario:hover {
-    background: var(--verde-escuro);
-    border-color: var(--verde-escuro);
-    box-shadow: 0 5px 14px rgba(0, 54, 64, .12);
-}
-
-.notas-btn-secundario {
-    background: var(--branco);
-    color: var(--turquesa);
-    border: 1px solid var(--turquesa);
-}
-
-.notas-btn-secundario:hover {
-    background: rgba(0, 160, 145, .06);
-}
-
-.notas-btn:disabled {
-    cursor: not-allowed;
-    opacity: .55;
-    transform: none;
-    box-shadow: none;
-}
-
-.notas-acoes {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 9px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 16px;
-}
-
-.notas-acoes-resultado {
-    margin-top: 18px;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - ARQUIVOS
-   ========================================================= */
-
-.notas-lista-arquivos {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 12px;
-}
-
-.notas-arquivo-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    padding: 10px 12px;
-    background: var(--fundo-secundario);
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-}
-
-.notas-arquivo-info {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.notas-arquivo-info strong {
-    display: block;
-    overflow: hidden;
-    color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1.35;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.notas-arquivo-info span {
-    display: block;
-    margin-top: 2px;
-    color: var(--texto-secundario);
-    font-size: 8px;
-}
-
-.notas-arquivo-remover {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    min-width: 64px;
-    min-height: 28px;
-    padding: 4px 8px;
-    background: var(--erro-fundo);
-    color: var(--erro);
-    border: 1px solid rgba(199, 58, 58, .22);
-    border-radius: 6px;
-    font-size: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s ease;
-}
-
-.notas-arquivo-remover:hover {
-    background: var(--erro);
-    color: var(--branco);
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - OCR
-   ========================================================= */
-
-.notas-status-ocr {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 14px;
-    padding: 13px 15px;
-    background: rgba(0, 160, 145, .06);
-    border: 1px solid rgba(0, 160, 145, .15);
-    border-radius: 9px;
-}
-
-.notas-status-ocr[hidden] {
-    display: none !important;
-}
-
-.notas-status-spinner {
-    flex: 0 0 22px;
-    width: 22px;
-    height: 22px;
-    border: 3px solid rgba(0, 160, 145, .18);
-    border-top-color: var(--turquesa);
-    border-radius: 50%;
-    animation: notasSpinner .8s linear infinite;
-}
-
-@keyframes notasSpinner {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.notas-status-ocr>div:last-child {
-    min-width: 0;
-}
-
-.notas-status-ocr strong {
-    display: block;
-    margin-bottom: 2px;
-    color: var(--verde-escuro);
-    font-size: 10px;
-}
-
-.notas-status-ocr span {
-    display: block;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.4;
-}
-
-.notas-resultado-ocr {
-    width: 100%;
-    min-width: 0;
-    margin-top: 12px;
-    padding: 11px 13px;
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    font-size: 9px;
-    line-height: 1.45;
-}
-
-.notas-resultado-ocr[hidden] {
-    display: none !important;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - STATUS
-   ========================================================= */
-
-.notas-status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 100%;
-    min-height: 24px;
-    padding: 4px 7px;
-    border-radius: 999px;
-    font-size: 7px;
-    font-weight: 800;
-    line-height: 1.25;
-    text-align: center;
-    white-space: normal;
-}
-
-.notas-status-sucesso,
-.notas-resultado-ocr.notas-status-sucesso {
-    background: var(--sucesso-fundo);
-    color: var(--sucesso);
-    border: 1px solid rgba(71, 125, 13, .18);
-}
-
-.notas-status-atencao,
-.notas-resultado-ocr.notas-status-atencao {
-    background: var(--atencao-fundo);
-    color: var(--atencao);
-    border: 1px solid rgba(166, 106, 0, .18);
-}
-
-.notas-status-erro,
-.notas-resultado-ocr.notas-status-erro {
-    background: var(--erro-fundo);
-    color: var(--erro);
-    border: 1px solid rgba(199, 58, 58, .18);
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - FORMULÁRIOS
-   ========================================================= */
-
-.notas-periodo-novo {
-    display: grid;
-    grid-template-columns:
-        minmax(180px, .95fr) minmax(160px, .85fr) minmax(150px, .75fr) minmax(130px, .55fr) auto;
-    align-items: end;
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    margin-bottom: 18px;
-}
-
-#cardAtividadesNotas .notas-periodo-novo {
-    grid-template-columns:
-        minmax(170px, .8fr) minmax(220px, 1.2fr) minmax(220px, 1fr) minmax(130px, .55fr);
-}
-
-.notas-campo {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: 100%;
-    min-width: 0;
-}
-
-.notas-campo[hidden] {
-    display: none !important;
-}
-
-.notas-campo label {
-    display: block;
-    color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1.35;
-}
-
-.notas-campo input,
-.notas-campo select,
-.notas-campo textarea {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    min-height: 42px;
-    padding: 0 11px;
-    background: var(--branco);
-    color: var(--texto);
-    border: 1px solid var(--borda-forte);
-    border-radius: 8px;
-    outline: none;
-    font-size: 12px;
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
-}
-
-.notas-campo textarea {
-    min-height: 72px;
-    padding-top: 9px;
-    padding-bottom: 9px;
-    resize: vertical;
-}
-
-.notas-campo select {
-    cursor: pointer;
-}
-
-.notas-campo input:hover,
-.notas-campo select:hover,
-.notas-campo textarea:hover {
-    border-color: var(--turquesa-claro);
-}
-
-.notas-campo input:focus,
-.notas-campo select:focus,
-.notas-campo textarea:focus {
-    border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
-}
-
-.notas-campo input:disabled,
-.notas-campo select:disabled {
-    background: var(--fundo-secundario);
-    color: var(--texto-secundario);
-    cursor: not-allowed;
-    opacity: .75;
-}
-
-.notas-campo-botao {
-    width: auto;
-}
-
-.notas-campo-botao .notas-btn {
-    min-height: 42px;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TABELAS
-   ========================================================= */
-
-.notas-tabela-wrapper {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    border: 1px solid var(--borda);
-    border-radius: 9px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color:
-        var(--turquesa-claro) var(--fundo-secundario);
-}
-
-.notas-tabela-wrapper::-webkit-scrollbar {
-    height: 8px;
-}
-
-.notas-tabela-wrapper::-webkit-scrollbar-track {
-    background: var(--fundo-secundario);
-}
-
-.notas-tabela-wrapper::-webkit-scrollbar-thumb {
-    background: var(--turquesa-claro);
-    border-radius: 999px;
-}
-
-.notas-tabela {
-    width: 100%;
-    min-width: 680px;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background: var(--branco);
-}
-
-.notas-tabela th,
-.notas-tabela td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--borda);
-    font-size: 10px;
-    line-height: 1.35;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.notas-tabela th {
-    background: var(--fundo-secundario);
-    color: var(--verde-escuro);
-    font-size: 9px;
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.notas-tabela td {
-    color: var(--texto-secundario);
-}
-
-.notas-tabela tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-.notas-tabela tbody tr:not(.notas-linha-vazia):hover {
-    background: rgba(0, 160, 145, .035);
-}
-
-.notas-tabela small {
-    display: block;
-    margin-top: 3px;
-    color: var(--texto-secundario);
-    font-size: 7px;
-    font-weight: 500;
-    line-height: 1.3;
-}
-
-.notas-coluna-acoes {
-    width: 95px;
-    text-align: center !important;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - INPUTS DAS TABELAS
-   ========================================================= */
-
-.notas-input-tabela {
-    width: 100%;
-    min-width: 95px;
-    min-height: 34px;
-    height: 34px;
-    padding: 0 8px;
-    background: var(--branco);
-    color: var(--texto);
-    border: 1px solid var(--borda-forte);
-    border-radius: 6px;
-    outline: none;
-    font-size: 9px;
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
-}
-
-.notas-input-tabela:hover {
-    border-color: var(--turquesa-claro);
-}
-
-.notas-input-tabela:focus {
-    border-color: var(--turquesa);
-    box-shadow: 0 0 0 2px rgba(0, 160, 145, .08);
-}
-
-.notas-input-tabela:disabled {
-    background: var(--fundo-secundario);
-    color: var(--texto-secundario);
-    cursor: not-allowed;
-    opacity: .8;
-}
-
-.notas-tabela select.notas-input-tabela {
-    min-width: 150px;
-    padding-right: 28px;
-    cursor: pointer;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - ATIVIDADES
-   ========================================================= */
-
-#cardAtividadesNotas .atividade-criterio,
-#cardAtividadesNotas .atividade-criterio-editar {
-    min-width: 195px;
-}
-
-#cardAtividadesNotas .atividade-meses,
-#cardAtividadesNotas .atividade-meses-editar {
-    min-width: 85px;
-    text-align: center;
-}
-
-#cardAtividadesNotas td:nth-child(2) small {
-    color: var(--turquesa);
-    font-weight: 700;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - NOTAS PROCESSADAS
-   ========================================================= */
-
-#cardDetalhamentoNotas .nota-data {
-    min-width: 105px;
-}
-
-#cardDetalhamentoNotas .nota-numero {
-    min-width: 90px;
-}
-
-#cardDetalhamentoNotas .nota-emitente {
-    min-width: 180px;
-}
-
-#cardDetalhamentoNotas .nota-valor {
-    min-width: 120px;
-    text-align: right;
-}
-
-#cardDetalhamentoNotas .nota-atividade-editar {
-    min-width: 190px;
-}
-
-#cardDetalhamentoNotas .nota-confirmar {
-    display: flex;
-    width: 100%;
-    min-width: 0;
-    min-height: 28px;
-    margin-top: 6px;
-    padding: 4px 8px;
-    background: var(--turquesa);
-    color: var(--branco);
-    border: 1px solid var(--turquesa);
-    border-radius: 6px;
-    font-size: 8px;
-    font-weight: 800;
-}
-
-#cardDetalhamentoNotas .nota-confirmar:hover {
-    background: var(--verde-escuro);
-    border-color: var(--verde-escuro);
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - BOTÃO REMOVER
-   ========================================================= */
-
-.notas-btn-remover {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 60px;
-    min-height: 30px;
-    padding: 4px 7px;
-    background: var(--erro-fundo);
-    color: var(--erro);
-    border: 1px solid rgba(199, 58, 58, .22);
-    border-radius: 6px;
-    font-size: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        background .2s ease,
-        color .2s ease,
-        border-color .2s ease,
-        transform .2s ease;
-}
-
-.notas-btn-remover:hover {
-    background: var(--erro);
-    color: var(--branco);
-    border-color: var(--erro);
-    transform: translateY(-1px);
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - SEM DADOS
-   ========================================================= */
-
-.notas-linha-vazia td,
-.notas-sem-dados {
-    padding: 22px 14px;
-    color: var(--texto-secundario);
-    background: #FBFCFC;
-    font-size: 9px;
-    font-style: italic;
-    text-align: center !important;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TOTALIZADORES
-   ========================================================= */
-
-.notas-totalizadores-periodo {
-    display: grid;
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 14px;
-}
-
-.notas-totalizador {
-    min-width: 0;
-    padding: 12px;
-    background: var(--fundo-secundario);
-    border: 1px solid var(--borda);
-    border-radius: 9px;
-}
-
-.notas-totalizador span {
-    display: block;
-    margin-bottom: 4px;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.3;
-}
-
-.notas-totalizador strong {
-    display: block;
-    color: var(--verde-escuro);
-    font-size: 13px;
-    line-height: 1.3;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - RESULTADO
-   ========================================================= */
-
-.notas-resultado-principal {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    width: 100%;
-    min-width: 0;
-    min-height: 82px;
-    margin-bottom: 14px;
-    padding: 16px 18px;
-    overflow: hidden;
-    background:
-        linear-gradient(115deg,
-            var(--turquesa),
-            var(--verde-escuro));
-    color: var(--branco);
-    border-radius: 11px;
-}
-
-.notas-resultado-principal span {
-    flex: 0 1 42%;
-    width: auto;
-    max-width: 42%;
-    color: rgba(255, 255, 255, .86);
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.35;
-}
-
-.notas-resultado-principal strong {
-    flex: 1 1 58%;
-    width: auto;
-    max-width: 58%;
-    color: var(--verde-claro);
-    font-size: 24px;
-    line-height: 1.1;
-    text-align: right;
-    white-space: normal;
-    overflow-wrap: break-word;
-}
-
-.notas-resultados-grid {
-    display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-    gap: 9px;
-    width: 100%;
-    min-width: 0;
-}
-
-.notas-resultado-item {
-    min-width: 0;
-    min-height: 66px;
-    padding: 11px;
-    background: var(--fundo-secundario);
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-}
-
-.notas-resultado-item span {
-    display: block;
-    margin-bottom: 4px;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.3;
-}
-
-.notas-resultado-item strong {
-    display: block;
-    color: var(--verde-escuro);
-    font-size: 12px;
-    line-height: 1.25;
-    overflow-wrap: break-word;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TABELA DE ATIVIDADES
-   ========================================================= */
-
-#cardAtividadesNotas .notas-tabela {
-    min-width: 980px;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(1),
-#cardAtividadesNotas .notas-tabela td:nth-child(1) {
-    width: 13%;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(2),
-#cardAtividadesNotas .notas-tabela td:nth-child(2) {
-    width: 20%;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(3),
-#cardAtividadesNotas .notas-tabela td:nth-child(3) {
-    width: 22%;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(4),
-#cardAtividadesNotas .notas-tabela td:nth-child(4) {
-    width: 12%;
-    text-align: center;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(5),
-#cardAtividadesNotas .notas-tabela td:nth-child(5) {
-    width: 12%;
-    text-align: center;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(6),
-#cardAtividadesNotas .notas-tabela td:nth-child(6) {
-    width: 13%;
-    text-align: right;
-    white-space: nowrap;
-}
-
-#cardAtividadesNotas .notas-tabela th:nth-child(7),
-#cardAtividadesNotas .notas-tabela td:nth-child(7) {
-    width: 8%;
-    text-align: center;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TABELA DE PERÍODOS
-   ========================================================= */
-
-#cardPeriodosNotas .notas-tabela {
-    min-width: 720px;
-}
-
-#cardPeriodosNotas .notas-tabela th:nth-child(1),
-#cardPeriodosNotas .notas-tabela td:nth-child(1) {
-    width: 26%;
-}
-
-#cardPeriodosNotas .notas-tabela th:nth-child(2),
-#cardPeriodosNotas .notas-tabela td:nth-child(2) {
-    width: 22%;
-}
-
-#cardPeriodosNotas .notas-tabela th:nth-child(3),
-#cardPeriodosNotas .notas-tabela td:nth-child(3) {
-    width: 22%;
-    text-align: right;
-    white-space: nowrap;
-}
-
-#cardPeriodosNotas .notas-tabela th:nth-child(4),
-#cardPeriodosNotas .notas-tabela td:nth-child(4) {
-    width: 15%;
-    text-align: center;
-}
-
-#cardPeriodosNotas .notas-tabela th:nth-child(5),
-#cardPeriodosNotas .notas-tabela td:nth-child(5) {
-    width: 15%;
-    text-align: center;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - DETALHAMENTO
-   ========================================================= */
-
-#cardDetalhamentoNotas .notas-tabela {
-    min-width: 1120px;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(1),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(1) {
-    width: 18%;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(2),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(2) {
-    width: 10%;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(3),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(3) {
-    width: 9%;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(4),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(4) {
-    width: 20%;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(5),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(5) {
-    width: 12%;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(6),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(6) {
-    width: 19%;
-}
-
-#cardDetalhamentoNotas .notas-tabela th:nth-child(7),
-#cardDetalhamentoNotas .notas-tabela td:nth-child(7) {
-    width: 12%;
-    text-align: center;
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TABLET
-   ========================================================= */
-
-@media (max-width: 1000px) {
-    .notas-fiscais-container {
-        grid-template-columns:
-            minmax(0, 1.25fr) minmax(280px, .75fr);
-    }
-
-    .notas-periodo-novo,
-    #cardAtividadesNotas .notas-periodo-novo {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
-    .notas-campo-botao {
-        width: 100%;
-    }
-
-    .notas-campo-botao .notas-btn {
-        width: 100%;
-    }
-
-    #cardAtividadesNotas .notas-tabela {
-        min-width: 900px;
-    }
-
-    #cardDetalhamentoNotas .notas-tabela {
-        min-width: 1050px;
-    }
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TABLET VERTICAL
-   ========================================================= */
-
-@media (max-width: 900px) {
-    .notas-fiscais-container {
-        grid-template-columns:
-            minmax(0, 1fr);
-        width: calc(100% - 32px);
-        gap: 18px;
-        padding-top: 18px;
-        padding-bottom: 30px;
-    }
-
-    .notas-card,
-    .notas-card-largura-total,
-    .notas-card-periodos,
-    .notas-card-resultado {
-        grid-column: 1;
-        grid-row: auto;
-    }
-
-    .notas-card-resultado {
-        position: relative;
-        top: auto;
-    }
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-    .notas-fiscais-container {
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1fr);
-        width: calc(100% - 24px);
-        max-width: none;
-        gap: 14px;
-        padding-top: 8px;
-        padding-bottom: 24px;
-    }
-
-    .notas-card {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        padding: 15px;
-        border-radius: 11px;
-    }
-
-    .notas-card-resultado::before,
-    #cardUploadNotas::before,
-    #cardAtividadesNotas::before,
-    #cardDetalhamentoNotas::before {
-        border-radius: 11px 11px 0 0;
-    }
-
-    .notas-titulo-secao {
-        margin-bottom: 14px;
-    }
-
-    .notas-titulo-secao h2 {
-        font-size: 17px;
-    }
-
-    .notas-titulo-secao p {
-        font-size: 9px;
-    }
-
-    .notas-titulo-secao .categoria-etiqueta {
-        margin-bottom: 7px;
-        padding: 5px 8px;
-        font-size: 7px;
-    }
-
-    .notas-aviso-info {
-        padding: 10px 11px;
-        border-left-width: 3px;
-        font-size: 8px;
-    }
-
-    .notas-aviso-info strong {
-        font-size: 8px;
-    }
-
-    #resumoCriteriosNotas {
-        gap: 5px;
-        font-size: 8px;
-    }
-
-    #resumoCriteriosNotas>span {
-        padding-top: 5px;
-    }
-
-    .notas-upload-area {
-        grid-template-columns:
-            auto minmax(0, 1fr);
-        gap: 10px;
-        padding: 12px;
-    }
-
-    .notas-upload-icone {
-        flex: 0 0 40px;
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        min-height: 40px;
-        border-radius: 9px;
-    }
-
-    .notas-upload-area svg,
-    .notas-upload-icone svg {
-        width: 20px !important;
-        height: 20px !important;
-        min-width: 20px !important;
-        min-height: 20px !important;
-        max-width: 20px !important;
-        max-height: 20px !important;
-    }
-
-    .notas-upload-texto strong {
-        font-size: 10px;
-    }
-
-    .notas-upload-texto span {
-        font-size: 8px;
-    }
-
-    .notas-upload-area>.notas-btn {
-        grid-column: 1 / -1;
-        width: 100%;
-    }
-
-    .notas-periodo-novo,
-    #cardAtividadesNotas .notas-periodo-novo {
-        grid-template-columns:
-            minmax(0, 1fr);
-        gap: 8px;
-    }
-
-    .notas-campo label {
-        font-size: 8px;
-    }
-
-    .notas-campo input,
-    .notas-campo select {
-        min-height: 38px;
-        height: 38px;
-        padding-right: 9px;
-        padding-left: 9px;
-        font-size: 11px;
-    }
-
-    .notas-campo textarea {
-        min-height: 60px;
-        height: auto;
-        font-size: 11px;
-    }
-
-    .notas-btn {
-        width: 100%;
-        min-width: 0;
-        min-height: 36px;
-        font-size: 9px;
-    }
-
-    .notas-acoes {
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1fr);
-        gap: 7px;
-    }
-
-    .notas-arquivo-item {
-        padding: 8px 9px;
-    }
-
-    .notas-arquivo-info strong {
-        font-size: 8px;
-    }
-
-    .notas-arquivo-info span {
-        font-size: 7px;
-    }
-
-    .notas-arquivo-remover {
-        min-width: 54px;
-        font-size: 7px;
-    }
-
-    .notas-tabela-wrapper {
-        border-radius: 7px;
-    }
-
-    .notas-tabela {
-        min-width: 620px;
-    }
-
-    .notas-tabela th,
-    .notas-tabela td {
-        padding: 8px 9px;
-        font-size: 8px;
-        white-space: nowrap;
-    }
-
-    .notas-tabela th {
-        font-size: 7px;
-    }
-
-    .notas-tabela small {
-        font-size: 6px;
-    }
-
-    .notas-input-tabela {
-        min-height: 32px;
-        height: 32px;
-        font-size: 8px;
-    }
-
-    .notas-tabela select.notas-input-tabela {
-        min-width: 135px;
-        font-size: 8px;
-    }
-
-    #cardAtividadesNotas .atividade-criterio,
-    #cardAtividadesNotas .atividade-criterio-editar {
-        min-width: 165px;
-    }
-
-    #cardAtividadesNotas .atividade-meses,
-    #cardAtividadesNotas .atividade-meses-editar {
-        min-width: 70px;
-    }
-
-    #cardDetalhamentoNotas .nota-atividade-editar {
-        min-width: 165px;
-    }
-
-    #cardDetalhamentoNotas .nota-data {
-        min-width: 95px;
-    }
-
-    #cardDetalhamentoNotas .nota-numero {
-        min-width: 80px;
-    }
-
-    #cardDetalhamentoNotas .nota-emitente {
-        min-width: 160px;
-    }
-
-    #cardDetalhamentoNotas .nota-valor {
-        min-width: 110px;
-    }
-
-    .notas-status {
-        min-height: 22px;
-        font-size: 6px;
-    }
-
-    #cardDetalhamentoNotas .nota-confirmar {
-        min-height: 26px;
-        font-size: 7px;
-    }
-
-    .notas-totalizadores-periodo {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-        gap: 6px;
-    }
-
-    .notas-totalizador {
-        padding: 8px;
-    }
-
-    .notas-totalizador span {
-        font-size: 6px;
-    }
-
-    .notas-totalizador strong {
-        font-size: 9px;
-    }
-
-    .notas-resultado-principal {
-        min-height: 0;
-        padding: 12px;
-    }
-
-    .notas-resultado-principal span {
-        font-size: 8px;
-    }
-
-    .notas-resultado-principal strong {
-        font-size: 16px;
-    }
-
-    .notas-resultados-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-        gap: 7px;
-    }
-
-    .notas-resultado-item {
-        min-height: 55px;
-        padding: 8px;
-    }
-
-    .notas-resultado-item span {
-        font-size: 7px;
-    }
-
-    .notas-resultado-item strong {
-        font-size: 10px;
-    }
-
-    #cardAtividadesNotas .notas-tabela {
-        min-width: 820px;
-    }
-
-    #cardPeriodosNotas .notas-tabela {
-        min-width: 680px;
-    }
-
-    #cardDetalhamentoNotas .notas-tabela {
-        min-width: 1000px;
-    }
-
-    #cardDetalhamentoNotas .notas-tabela td:nth-child(1),
-    #cardDetalhamentoNotas .notas-tabela td:nth-child(4) {
-        white-space: normal;
-    }
-
-    .notas-linha-vazia td,
-    .notas-sem-dados {
-        padding: 18px 10px;
-        font-size: 8px;
-    }
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - MOBILE PEQUENO
-   ========================================================= */
-
-@media (max-width: 480px) {
-    .notas-fiscais-container {
-        width: calc(100% - 20px);
-        padding-top: 6px;
-        padding-bottom: 20px;
-    }
-
-    .notas-card {
-        padding: 13px;
-        border-radius: 10px;
-    }
-
-    .notas-card-resultado::before,
-    #cardUploadNotas::before,
-    #cardAtividadesNotas::before,
-    #cardDetalhamentoNotas::before {
-        border-radius: 10px 10px 0 0;
-    }
-
-    .notas-titulo-secao h2 {
-        font-size: 16px;
-    }
-
-    .notas-titulo-secao p {
-        font-size: 8px;
-    }
-
-    .notas-totalizadores-periodo {
-        grid-template-columns:
-            minmax(0, 1fr);
-    }
-
-    .notas-resultado-principal {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-
-    .notas-resultado-principal span,
-    .notas-resultado-principal strong {
-        width: 100%;
-        max-width: 100%;
-        text-align: left;
-    }
-
-    .notas-resultados-grid {
-        grid-template-columns:
-            minmax(0, 1fr);
-    }
-
-    #cardAtividadesNotas .notas-tabela {
-        min-width: 780px;
-    }
-
-    #cardPeriodosNotas .notas-tabela {
-        min-width: 650px;
-    }
-
-    #cardDetalhamentoNotas .notas-tabela {
-        min-width: 960px;
-    }
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - MOBILE MUITO PEQUENO
-   ========================================================= */
-
-@media (max-width: 360px) {
-    .notas-fiscais-container {
-        width: calc(100% - 16px);
-    }
-
-    .notas-card {
-        padding: 11px;
-    }
-
-    .notas-titulo-secao h2 {
-        font-size: 15px;
-    }
-
-    .notas-titulo-secao p {
-        font-size: 8px;
-    }
-
-    #cardAtividadesNotas .notas-tabela {
-        min-width: 750px;
-    }
-
-    #cardPeriodosNotas .notas-tabela {
-        min-width: 630px;
-    }
-
-    #cardDetalhamentoNotas .notas-tabela {
-        min-width: 930px;
-    }
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - TOUCH
-   ========================================================= */
-
-@media (hover: none) and (pointer: coarse) {
-
-    .notas-btn:hover,
-    .notas-btn-remover:hover,
-    .notas-arquivo-remover:hover,
-    #cardDetalhamentoNotas .nota-confirmar:hover {
-        transform: none;
-    }
-}
-
-/* =========================================================
-   CALCULO-RENDA-NOTAS-FISCAIS.HTML - IMPRESSÃO
-   ========================================================= */
-
-@media print {
-    .notas-fiscais-container {
-        display: grid !important;
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
-        gap: 16px !important;
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 0 10px !important;
-        overflow: visible !important;
-    }
-
-    .notas-card {
-        width: 100% !important;
-        min-width: 0 !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        padding: 15px !important;
-        overflow: visible !important;
-        box-shadow: none !important;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    .notas-card-largura-total {
-        grid-column: 1 / -1 !important;
-    }
-
-    .notas-card-periodos {
-        grid-column: 1 !important;
-    }
-
-    .notas-card-resultado {
-        position: static !important;
-        top: auto !important;
-        grid-column: 2 !important;
-    }
-
-    #cardUploadNotas,
-    #cardAtividadesNotas,
-    #cardDetalhamentoNotas {
-        grid-column: 1 / -1 !important;
-    }
-
-    .notas-upload-area,
-    .notas-lista-arquivos,
-    .notas-status-ocr,
-    .notas-resultado-ocr,
-    .notas-acoes,
-    .notas-campo-botao,
-    .notas-coluna-acoes,
-    .notas-btn-remover,
-    .notas-arquivo-remover,
-    #cardDetalhamentoNotas .nota-confirmar {
-        display: none !important;
-    }
-
-    .notas-tabela-wrapper {
-        width: 100% !important;
-        max-width: none !important;
-        overflow: visible !important;
-        border-radius: 0 !important;
-    }
-
-    .notas-tabela,
-    #cardAtividadesNotas .notas-tabela,
-    #cardPeriodosNotas .notas-tabela,
-    #cardDetalhamentoNotas .notas-tabela {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: none !important;
-        table-layout: auto !important;
-    }
-
-    .notas-tabela th,
-    .notas-tabela td {
-        padding: 6px 7px !important;
-        font-size: 8px !important;
-        line-height: 1.3 !important;
-        white-space: normal !important;
-    }
-
-    .notas-tabela th {
-        font-size: 7px !important;
-    }
-
-    .notas-tabela small {
-        font-size: 6px !important;
-    }
-
-    .notas-input-tabela {
-        width: 100% !important;
-        min-width: 0 !important;
-        height: auto !important;
-        min-height: 28px !important;
-        padding: 3px 5px !important;
-        font-size: 8px !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-
-    .notas-tabela select.notas-input-tabela,
-    #cardAtividadesNotas .atividade-criterio,
-    #cardAtividadesNotas .atividade-criterio-editar,
-    #cardAtividadesNotas .atividade-meses,
-    #cardAtividadesNotas .atividade-meses-editar,
-    #cardDetalhamentoNotas .nota-atividade-editar,
-    #cardDetalhamentoNotas .nota-data,
-    #cardDetalhamentoNotas .nota-numero,
-    #cardDetalhamentoNotas .nota-emitente,
-    #cardDetalhamentoNotas .nota-valor {
-        min-width: 0 !important;
-    }
-
-    .notas-status {
-        padding: 2px 4px !important;
-        border-radius: 3px !important;
-        font-size: 6px !important;
-    }
-
-    .notas-tabela thead {
-        display: table-header-group !important;
-    }
-
-    .notas-tabela tr {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    #resumoCriteriosNotas {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    .notas-fiscais-container,
-    .notas-fiscais-container * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-}
 
 /* =========================================================
    MEDIA-MOVIMENTACAO.HTML
@@ -9173,6 +7401,1966 @@ footer p,
 
     .media-movimentacao-container,
     .media-movimentacao-container * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* =========================================================
+   CALCULO-RENDA-NOTAS-FISCAIS.HTML
+   CSS ISOLADO, RESPONSIVO E PADRONIZADO
+   ========================================================= */
+
+/* =========================================================
+   RESET LOCAL / PROTEÇÃO CONTRA OVERFLOW
+   ========================================================= */
+
+.notas-fiscais-container,
+.notas-fiscais-container *,
+.notas-fiscais-container *::before,
+.notas-fiscais-container *::after {
+    box-sizing: border-box;
+}
+
+.notas-fiscais-container {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, .55fr);
+    gap: 24px;
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    min-width: 0;
+    margin: 0 auto;
+    padding-top: 30px;
+    padding-bottom: 46px;
+    align-items: start;
+}
+
+.notas-fiscais-container>* {
+    min-width: 0;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.notas-card {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 28px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+    overflow-wrap: anywhere;
+}
+
+.notas-card-largura-total {
+    grid-column: 1 / -1;
+}
+
+.notas-card-periodos {
+    grid-column: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.notas-card-resultado {
+    position: relative;
+    top: auto;
+    grid-column: 2;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* =========================================================
+   BARRA SUPERIOR DOS CARDS
+   ========================================================= */
+
+.notas-card-resultado::before,
+#cardUploadNotas::before,
+#cardAtividadesNotas::before,
+#cardDetalhamentoNotas::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    border-radius: 16px 16px 0 0;
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+#cardUploadNotas,
+#cardAtividadesNotas,
+#cardDetalhamentoNotas {
+    overflow: hidden;
+}
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+.notas-titulo-secao {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 20px;
+}
+
+.notas-titulo-secao>div {
+    width: 100%;
+    min-width: 0;
+}
+
+.notas-titulo-secao .categoria-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    max-width: 100%;
+    margin-bottom: 9px;
+    padding: 6px 10px;
+    background: rgba(0, 160, 145, .10);
+    color: var(--turquesa);
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.notas-titulo-secao h2 {
+    margin: 0 0 5px;
+    color: var(--verde-escuro);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.notas-titulo-secao p {
+    max-width: 900px;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   AVISOS
+   ========================================================= */
+
+.notas-aviso-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    padding: 13px 15px;
+    background: rgba(0, 160, 145, .07);
+    color: var(--texto-secundario);
+    border: 1px solid rgba(0, 160, 145, .14);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 9px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.notas-aviso-info strong {
+    color: var(--verde-escuro);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.notas-aviso-info span {
+    display: block;
+    min-width: 0;
+    color: var(--texto-secundario);
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   RESUMO DOS CRITÉRIOS
+   ========================================================= */
+
+#resumoCriteriosNotas {
+    gap: 7px;
+}
+
+#resumoCriteriosNotas>span {
+    display: block;
+    min-width: 0;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 160, 145, .12);
+    overflow-wrap: anywhere;
+}
+
+#resumoCriteriosNotas>span:first-of-type {
+    padding-top: 0;
+    border-top: 0;
+}
+
+#resumoCriteriosNotas span strong {
+    color: var(--verde-escuro);
+    font-size: inherit;
+}
+
+/* =========================================================
+   UPLOAD
+   ========================================================= */
+
+.notas-upload-area {
+    display: grid;
+    grid-template-columns:
+        auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .035),
+            rgba(201, 210, 0, .025)),
+        #FBFCFC;
+    border: 1px dashed var(--turquesa-claro);
+    border-radius: 12px;
+}
+
+.notas-upload-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .12),
+            rgba(0, 54, 64, .08));
+    color: var(--turquesa);
+    border: 1px solid rgba(0, 160, 145, .12);
+    border-radius: 12px;
+}
+
+.notas-upload-texto {
+    min-width: 0;
+}
+
+.notas-upload-texto strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--verde-escuro);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.notas-upload-texto span {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+#arquivosNotasFiscais {
+    display: none !important;
+}
+
+/* =========================================================
+   SVG DO UPLOAD
+   ========================================================= */
+
+.notas-upload-area svg,
+.notas-upload-icone svg {
+    display: block !important;
+    position: static !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    color: var(--turquesa) !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.8 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    transform: none !important;
+}
+
+.notas-upload-area svg path,
+.notas-upload-area svg polygon,
+.notas-upload-area svg polyline,
+.notas-upload-area svg line,
+.notas-upload-area svg circle,
+.notas-upload-icone svg path,
+.notas-upload-icone svg polygon,
+.notas-upload-icone svg polyline,
+.notas-upload-icone svg line,
+.notas-upload-icone svg circle {
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.8 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    vector-effect: non-scaling-stroke;
+}
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.notas-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 120px;
+    min-height: 40px;
+    height: auto;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.notas-btn:hover {
+    transform: translateY(-1px);
+}
+
+.notas-btn-primario {
+    background: var(--turquesa);
+    color: var(--branco);
+    border: 1px solid var(--turquesa);
+}
+
+.notas-btn-primario:hover {
+    background: var(--verde-escuro);
+    border-color: var(--verde-escuro);
+    box-shadow: 0 5px 14px rgba(0, 54, 64, .12);
+}
+
+.notas-btn-secundario {
+    background: var(--branco);
+    color: var(--turquesa);
+    border: 1px solid var(--turquesa);
+}
+
+.notas-btn-secundario:hover {
+    background: rgba(0, 160, 145, .06);
+}
+
+.notas-btn:disabled {
+    cursor: not-allowed;
+    opacity: .55;
+    transform: none;
+    box-shadow: none;
+}
+
+.notas-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 16px;
+}
+
+.notas-acoes-resultado {
+    margin-top: 18px;
+}
+
+/* =========================================================
+   LISTA DE ARQUIVOS
+   ========================================================= */
+
+.notas-lista-arquivos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 12px;
+}
+
+.notas-arquivo-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+}
+
+.notas-arquivo-info {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.notas-arquivo-info strong {
+    display: block;
+    overflow: hidden;
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.notas-arquivo-info span {
+    display: block;
+    margin-top: 2px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+}
+
+.notas-arquivo-remover {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 64px;
+    min-height: 28px;
+    padding: 4px 8px;
+    background: var(--erro-fundo);
+    color: var(--erro);
+    border: 1px solid rgba(199, 58, 58, .22);
+    border-radius: 6px;
+    font-size: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.notas-arquivo-remover:hover {
+    background: var(--erro);
+    color: var(--branco);
+    border-color: var(--erro);
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   OCR
+   ========================================================= */
+
+.notas-status-ocr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 14px;
+    padding: 13px 15px;
+    background: rgba(0, 160, 145, .06);
+    border: 1px solid rgba(0, 160, 145, .15);
+    border-radius: 9px;
+}
+
+.notas-status-ocr[hidden] {
+    display: none !important;
+}
+
+.notas-status-spinner {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    border: 3px solid rgba(0, 160, 145, .18);
+    border-top-color: var(--turquesa);
+    border-radius: 50%;
+    animation: notasSpinner .8s linear infinite;
+}
+
+@keyframes notasSpinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.notas-status-ocr>div:last-child {
+    min-width: 0;
+}
+
+.notas-status-ocr strong {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--verde-escuro);
+    font-size: 10px;
+}
+
+.notas-status-ocr span {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.4;
+}
+
+.notas-resultado-ocr {
+    width: 100%;
+    min-width: 0;
+    margin-top: 12px;
+    padding: 11px 13px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.notas-resultado-ocr[hidden] {
+    display: none !important;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.notas-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    min-height: 24px;
+    padding: 4px 7px;
+    border-radius: 999px;
+    font-size: 7px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    white-space: normal;
+}
+
+.notas-status-sucesso,
+.notas-resultado-ocr.notas-status-sucesso {
+    background: var(--sucesso-fundo);
+    color: var(--sucesso);
+    border: 1px solid rgba(71, 125, 13, .18);
+}
+
+.notas-status-atencao,
+.notas-resultado-ocr.notas-status-atencao {
+    background: var(--atencao-fundo);
+    color: var(--atencao);
+    border: 1px solid rgba(166, 106, 0, .18);
+}
+
+.notas-status-erro,
+.notas-resultado-ocr.notas-status-erro {
+    background: var(--erro-fundo);
+    color: var(--erro);
+    border: 1px solid rgba(199, 58, 58, .18);
+}
+
+/* =========================================================
+   FORMULÁRIOS
+   ========================================================= */
+
+.notas-periodo-novo {
+    display: grid;
+    grid-template-columns:
+        minmax(145px, 1.15fr) minmax(125px, .90fr) minmax(120px, .85fr) minmax(95px, .60fr) minmax(105px, .65fr);
+    align-items: end;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-bottom: 18px;
+}
+
+.notas-periodo-novo>* {
+    min-width: 0;
+}
+
+#cardAtividadesNotas .notas-periodo-novo {
+    grid-template-columns:
+        minmax(150px, .8fr) minmax(190px, 1.2fr) minmax(180px, 1fr) minmax(110px, .55fr);
+}
+
+.notas-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+}
+
+.notas-campo[hidden] {
+    display: none !important;
+}
+
+.notas-campo label {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.notas-campo input,
+.notas-campo select,
+.notas-campo textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 11px;
+    background: var(--branco);
+    color: var(--texto);
+    border: 1px solid var(--borda-forte);
+    border-radius: 8px;
+    outline: none;
+    font-size: 12px;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.notas-campo textarea {
+    min-height: 72px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    resize: vertical;
+}
+
+.notas-campo select {
+    cursor: pointer;
+}
+
+.notas-campo input:hover,
+.notas-campo select:hover,
+.notas-campo textarea:hover {
+    border-color: var(--turquesa-claro);
+}
+
+.notas-campo input:focus,
+.notas-campo select:focus,
+.notas-campo textarea:focus {
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
+}
+
+.notas-campo input:disabled,
+.notas-campo select:disabled {
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    cursor: not-allowed;
+    opacity: .75;
+}
+
+.notas-campo-botao {
+    width: 100%;
+    min-width: 0;
+}
+
+.notas-campo-botao .notas-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+/* =========================================================
+   TABELAS
+   ========================================================= */
+
+.notas-tabela-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color:
+        var(--turquesa-claro) var(--fundo-secundario);
+}
+
+.notas-tabela-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.notas-tabela-wrapper::-webkit-scrollbar-track {
+    background: var(--fundo-secundario);
+}
+
+.notas-tabela-wrapper::-webkit-scrollbar-thumb {
+    background: var(--turquesa-claro);
+    border-radius: 999px;
+}
+
+.notas-tabela {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: var(--branco);
+}
+
+.notas-tabela th,
+.notas-tabela td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--borda);
+    font-size: 10px;
+    line-height: 1.35;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.notas-tabela th {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-size: 9px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.notas-tabela td {
+    color: var(--texto-secundario);
+}
+
+.notas-tabela tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.notas-tabela tbody tr:not(.notas-linha-vazia):hover {
+    background: rgba(0, 160, 145, .035);
+}
+
+.notas-tabela small {
+    display: block;
+    margin-top: 3px;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.notas-coluna-acoes {
+    width: 95px;
+    text-align: center !important;
+}
+
+/* =========================================================
+   INPUTS DAS TABELAS
+   ========================================================= */
+
+.notas-input-tabela {
+    width: 100%;
+    min-width: 95px;
+    min-height: 34px;
+    height: 34px;
+    padding: 0 8px;
+    background: var(--branco);
+    color: var(--texto);
+    border: 1px solid var(--borda-forte);
+    border-radius: 6px;
+    outline: none;
+    font-size: 9px;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.notas-input-tabela:hover {
+    border-color: var(--turquesa-claro);
+}
+
+.notas-input-tabela:focus {
+    border-color: var(--turquesa);
+    box-shadow:
+        0 0 0 2px rgba(0, 160, 145, .08);
+}
+
+.notas-input-tabela:disabled {
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    cursor: not-allowed;
+    opacity: .8;
+}
+
+.notas-tabela select.notas-input-tabela {
+    min-width: 150px;
+    padding-right: 28px;
+    cursor: pointer;
+}
+
+/* =========================================================
+   ATIVIDADES
+   ========================================================= */
+
+#cardAtividadesNotas .atividade-criterio,
+#cardAtividadesNotas .atividade-criterio-editar {
+    min-width: 195px;
+}
+
+#cardAtividadesNotas .atividade-meses,
+#cardAtividadesNotas .atividade-meses-editar {
+    min-width: 85px;
+    text-align: center;
+}
+
+#cardAtividadesNotas td:nth-child(2) small,
+#cardAtividadesNotas .notas-origem-automatica {
+    color: var(--turquesa);
+    font-weight: 700;
+}
+
+/* =========================================================
+   NOTAS PROCESSADAS
+   ========================================================= */
+
+#cardDetalhamentoNotas .nota-data {
+    min-width: 105px;
+}
+
+#cardDetalhamentoNotas .nota-numero {
+    min-width: 90px;
+}
+
+#cardDetalhamentoNotas .nota-emitente {
+    min-width: 180px;
+}
+
+#cardDetalhamentoNotas .nota-valor {
+    min-width: 120px;
+    text-align: right;
+}
+
+#cardDetalhamentoNotas .nota-atividade-editar,
+#cardDetalhamentoNotas .nota-atividade-manual {
+    min-width: 190px;
+}
+
+#cardDetalhamentoNotas .nota-confirmar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 28px;
+    margin-top: 6px;
+    padding: 4px 8px;
+    background: var(--turquesa);
+    color: var(--branco);
+    border: 1px solid var(--turquesa);
+    border-radius: 6px;
+    font-size: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+#cardDetalhamentoNotas .nota-confirmar:hover {
+    background: var(--verde-escuro);
+    border-color: var(--verde-escuro);
+    transform: translateY(-1px);
+}
+
+#cardDetalhamentoNotas .nota-coluna-atividade {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#cardDetalhamentoNotas .nota-requer-revisao {
+    background: rgba(166, 106, 0, .025);
+}
+
+#cardDetalhamentoNotas .nota-processada-automaticamente {
+    background: transparent;
+}
+
+/* =========================================================
+   BOTÃO REMOVER
+   ========================================================= */
+
+.notas-btn-remover {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    min-height: 30px;
+    padding: 4px 7px;
+    background: var(--erro-fundo);
+    color: var(--erro);
+    border: 1px solid rgba(199, 58, 58, .22);
+    border-radius: 6px;
+    font-size: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.notas-btn-remover:hover {
+    background: var(--erro);
+    color: var(--branco);
+    border-color: var(--erro);
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   SEM DADOS
+   ========================================================= */
+
+.notas-linha-vazia td,
+.notas-sem-dados {
+    padding: 22px 14px;
+    color: var(--texto-secundario);
+    background: #FBFCFC;
+    font-size: 9px;
+    font-style: italic;
+    text-align: center !important;
+}
+
+/* =========================================================
+   TOTALIZADORES
+   ========================================================= */
+
+.notas-totalizadores-periodo {
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 14px;
+}
+
+.notas-totalizador {
+    min-width: 0;
+    padding: 12px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+}
+
+.notas-totalizador span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.3;
+}
+
+.notas-totalizador strong {
+    display: block;
+    min-width: 0;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
+.notas-resultado-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    min-height: 86px;
+    margin-bottom: 14px;
+    padding: 16px 18px;
+    overflow: hidden;
+    background:
+        linear-gradient(115deg,
+            var(--turquesa),
+            var(--verde-escuro));
+    color: var(--branco);
+    border-radius: 11px;
+}
+
+.notas-resultado-principal span {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    color: rgba(255, 255, 255, .86);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.notas-resultado-principal strong {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    color: var(--verde-claro);
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 800;
+    line-height: 1.08;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notas-resultados-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+}
+
+.notas-resultado-item {
+    min-width: 0;
+    min-height: 66px;
+    padding: 11px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+}
+
+.notas-resultado-item span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.3;
+}
+
+.notas-resultado-item strong {
+    display: block;
+    min-width: 0;
+    color: var(--verde-escuro);
+    font-size: 12px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   TABELA DE ATIVIDADES
+   ========================================================= */
+
+#cardAtividadesNotas .notas-tabela {
+    min-width: 980px;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(1),
+#cardAtividadesNotas .notas-tabela td:nth-child(1) {
+    width: 13%;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(2),
+#cardAtividadesNotas .notas-tabela td:nth-child(2) {
+    width: 20%;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(3),
+#cardAtividadesNotas .notas-tabela td:nth-child(3) {
+    width: 22%;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(4),
+#cardAtividadesNotas .notas-tabela td:nth-child(4) {
+    width: 12%;
+    text-align: center;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(5),
+#cardAtividadesNotas .notas-tabela td:nth-child(5) {
+    width: 12%;
+    text-align: center;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(6),
+#cardAtividadesNotas .notas-tabela td:nth-child(6) {
+    width: 13%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#cardAtividadesNotas .notas-tabela th:nth-child(7),
+#cardAtividadesNotas .notas-tabela td:nth-child(7) {
+    width: 8%;
+    text-align: center;
+}
+
+/* =========================================================
+   TABELA DE PERÍODOS
+   ========================================================= */
+
+#cardPeriodosNotas {
+    min-width: 0;
+    overflow: hidden;
+}
+
+#cardPeriodosNotas .notas-periodo-novo {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+#cardPeriodosNotas .notas-tabela {
+    min-width: 720px;
+}
+
+#cardPeriodosNotas .notas-tabela th:nth-child(1),
+#cardPeriodosNotas .notas-tabela td:nth-child(1) {
+    width: 26%;
+}
+
+#cardPeriodosNotas .notas-tabela th:nth-child(2),
+#cardPeriodosNotas .notas-tabela td:nth-child(2) {
+    width: 22%;
+}
+
+#cardPeriodosNotas .notas-tabela th:nth-child(3),
+#cardPeriodosNotas .notas-tabela td:nth-child(3) {
+    width: 22%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#cardPeriodosNotas .notas-tabela th:nth-child(4),
+#cardPeriodosNotas .notas-tabela td:nth-child(4) {
+    width: 15%;
+    text-align: center;
+}
+
+#cardPeriodosNotas .notas-tabela th:nth-child(5),
+#cardPeriodosNotas .notas-tabela td:nth-child(5) {
+    width: 15%;
+    text-align: center;
+}
+
+/* =========================================================
+   DETALHAMENTO
+   ========================================================= */
+
+#cardDetalhamentoNotas .notas-tabela {
+    min-width: 1120px;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(1),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(1) {
+    width: 18%;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(2),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(2) {
+    width: 10%;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(3),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(3) {
+    width: 9%;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(4),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(4) {
+    width: 20%;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(5),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(5) {
+    width: 12%;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(6),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(6) {
+    width: 19%;
+}
+
+#cardDetalhamentoNotas .notas-tabela th:nth-child(7),
+#cardDetalhamentoNotas .notas-tabela td:nth-child(7) {
+    width: 12%;
+    text-align: center;
+}
+
+/* =========================================================
+   DESKTOP INTERMEDIÁRIO
+   Evita invasão entre os cards antes do layout virar coluna
+   ========================================================= */
+
+@media (max-width: 1120px) {
+    .notas-fiscais-container {
+        grid-template-columns:
+            minmax(0, 1.3fr) minmax(290px, .7fr);
+        gap: 18px;
+    }
+
+    .notas-card {
+        padding: 24px;
+    }
+
+    #cardPeriodosNotas .notas-periodo-novo {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    #cardPeriodosNotas .notas-campo-botao {
+        grid-column: 1 / -1;
+    }
+
+    #cardPeriodosNotas .notas-campo-botao .notas-btn {
+        width: 100%;
+    }
+
+    #cardAtividadesNotas .notas-periodo-novo {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .notas-resultado-principal strong {
+        font-size: 22px;
+    }
+}
+
+/* =========================================================
+   TABLET / JANELA REDUZIDA
+   ========================================================= */
+
+@media (max-width: 1050px) {
+    .notas-fiscais-container {
+        grid-template-columns:
+            minmax(0, 1fr);
+        width: calc(100% - 32px);
+        gap: 18px;
+        padding-top: 18px;
+        padding-bottom: 30px;
+    }
+
+    .notas-card,
+    .notas-card-largura-total,
+    .notas-card-periodos,
+    .notas-card-resultado,
+    #cardUploadNotas,
+    #cardAtividadesNotas,
+    #cardPeriodosNotas,
+    #cardResultadoNotas,
+    #cardDetalhamentoNotas {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .notas-card-resultado {
+        position: relative;
+        top: auto;
+    }
+
+    /*
+     * Quando o resultado ocupa a largura total novamente,
+     * os campos podem voltar a usar mais colunas.
+     */
+    #cardPeriodosNotas .notas-periodo-novo {
+        grid-template-columns:
+            minmax(150px, 1.15fr) minmax(140px, .9fr) minmax(130px, .85fr) minmax(100px, .6fr) minmax(110px, .65fr);
+    }
+
+    #cardPeriodosNotas .notas-campo-botao {
+        grid-column: auto;
+    }
+
+    #cardAtividadesNotas .notas-periodo-novo {
+        grid-template-columns:
+            minmax(150px, .8fr) minmax(190px, 1.2fr) minmax(180px, 1fr) minmax(110px, .55fr);
+    }
+
+    #cardAtividadesNotas .notas-tabela {
+        min-width: 900px;
+    }
+
+    #cardDetalhamentoNotas .notas-tabela {
+        min-width: 1050px;
+    }
+
+    .notas-resultado-principal strong {
+        font-size: 26px;
+    }
+}
+
+/* =========================================================
+   TABLET VERTICAL
+   ========================================================= */
+
+@media (max-width: 820px) {
+
+    #cardPeriodosNotas .notas-periodo-novo,
+    #cardAtividadesNotas .notas-periodo-novo {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    #cardPeriodosNotas .notas-campo-botao {
+        grid-column: 1 / -1;
+    }
+
+    .notas-campo-botao {
+        width: 100%;
+    }
+
+    .notas-campo-botao .notas-btn {
+        width: 100%;
+    }
+
+    .notas-upload-area {
+        grid-template-columns:
+            auto minmax(0, 1fr);
+    }
+
+    .notas-upload-area>.notas-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .notas-fiscais-container {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr);
+        width: calc(100% - 24px);
+        max-width: none;
+        gap: 14px;
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .notas-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .notas-card-resultado::before,
+    #cardUploadNotas::before,
+    #cardAtividadesNotas::before,
+    #cardDetalhamentoNotas::before {
+        border-radius: 11px 11px 0 0;
+    }
+
+    .notas-titulo-secao {
+        margin-bottom: 14px;
+    }
+
+    .notas-titulo-secao h2 {
+        font-size: 17px;
+    }
+
+    .notas-titulo-secao p {
+        font-size: 9px;
+    }
+
+    .notas-titulo-secao .categoria-etiqueta {
+        margin-bottom: 7px;
+        padding: 5px 8px;
+        font-size: 7px;
+    }
+
+    .notas-aviso-info {
+        padding: 10px 11px;
+        border-left-width: 3px;
+        font-size: 8px;
+    }
+
+    .notas-aviso-info strong {
+        font-size: 8px;
+    }
+
+    #resumoCriteriosNotas {
+        gap: 5px;
+        font-size: 8px;
+    }
+
+    #resumoCriteriosNotas>span {
+        padding-top: 5px;
+    }
+
+    .notas-upload-area {
+        grid-template-columns:
+            auto minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .notas-upload-icone {
+        flex: 0 0 40px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        border-radius: 9px;
+    }
+
+    .notas-upload-area svg,
+    .notas-upload-icone svg {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        max-width: 20px !important;
+        max-height: 20px !important;
+    }
+
+    .notas-upload-texto strong {
+        font-size: 10px;
+    }
+
+    .notas-upload-texto span {
+        font-size: 8px;
+    }
+
+    .notas-upload-area>.notas-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .notas-periodo-novo,
+    #cardAtividadesNotas .notas-periodo-novo,
+    #cardPeriodosNotas .notas-periodo-novo {
+        grid-template-columns:
+            minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    #cardPeriodosNotas .notas-campo-botao {
+        grid-column: auto;
+    }
+
+    .notas-campo label {
+        font-size: 8px;
+    }
+
+    .notas-campo input,
+    .notas-campo select {
+        min-height: 38px;
+        height: 38px;
+        padding-right: 9px;
+        padding-left: 9px;
+        font-size: 11px;
+    }
+
+    .notas-campo textarea {
+        min-height: 60px;
+        height: auto;
+        font-size: 11px;
+    }
+
+    .notas-btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 36px;
+        font-size: 9px;
+    }
+
+    .notas-acoes {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    .notas-arquivo-item {
+        padding: 8px 9px;
+    }
+
+    .notas-arquivo-info strong {
+        font-size: 8px;
+    }
+
+    .notas-arquivo-info span {
+        font-size: 7px;
+    }
+
+    .notas-arquivo-remover {
+        min-width: 54px;
+        font-size: 7px;
+    }
+
+    .notas-tabela-wrapper {
+        border-radius: 7px;
+    }
+
+    .notas-tabela {
+        min-width: 620px;
+    }
+
+    .notas-tabela th,
+    .notas-tabela td {
+        padding: 8px 9px;
+        font-size: 8px;
+        white-space: nowrap;
+    }
+
+    .notas-tabela th {
+        font-size: 7px;
+    }
+
+    .notas-tabela small {
+        font-size: 6px;
+    }
+
+    .notas-input-tabela {
+        min-height: 32px;
+        height: 32px;
+        font-size: 8px;
+    }
+
+    .notas-tabela select.notas-input-tabela {
+        min-width: 135px;
+        font-size: 8px;
+    }
+
+    #cardAtividadesNotas .atividade-criterio,
+    #cardAtividadesNotas .atividade-criterio-editar {
+        min-width: 165px;
+    }
+
+    #cardAtividadesNotas .atividade-meses,
+    #cardAtividadesNotas .atividade-meses-editar {
+        min-width: 70px;
+    }
+
+    #cardDetalhamentoNotas .nota-atividade-editar,
+    #cardDetalhamentoNotas .nota-atividade-manual {
+        min-width: 165px;
+    }
+
+    #cardDetalhamentoNotas .nota-data {
+        min-width: 95px;
+    }
+
+    #cardDetalhamentoNotas .nota-numero {
+        min-width: 80px;
+    }
+
+    #cardDetalhamentoNotas .nota-emitente {
+        min-width: 160px;
+    }
+
+    #cardDetalhamentoNotas .nota-valor {
+        min-width: 110px;
+    }
+
+    .notas-status {
+        min-height: 22px;
+        font-size: 6px;
+    }
+
+    #cardDetalhamentoNotas .nota-confirmar {
+        min-height: 26px;
+        font-size: 7px;
+    }
+
+    .notas-totalizadores-periodo {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .notas-totalizador {
+        padding: 8px;
+    }
+
+    .notas-totalizador span {
+        font-size: 6px;
+    }
+
+    .notas-totalizador strong {
+        font-size: 9px;
+    }
+
+    .notas-resultado-principal {
+        min-height: 76px;
+        padding: 12px;
+        gap: 4px;
+    }
+
+    .notas-resultado-principal span {
+        font-size: 8px;
+    }
+
+    .notas-resultado-principal strong {
+        font-size: 18px;
+    }
+
+    .notas-resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .notas-resultado-item {
+        min-height: 55px;
+        padding: 8px;
+    }
+
+    .notas-resultado-item span {
+        font-size: 7px;
+    }
+
+    .notas-resultado-item strong {
+        font-size: 10px;
+    }
+
+    #cardAtividadesNotas .notas-tabela {
+        min-width: 820px;
+    }
+
+    #cardPeriodosNotas .notas-tabela {
+        min-width: 680px;
+    }
+
+    #cardDetalhamentoNotas .notas-tabela {
+        min-width: 1000px;
+    }
+
+    #cardDetalhamentoNotas .notas-tabela td:nth-child(1),
+    #cardDetalhamentoNotas .notas-tabela td:nth-child(4),
+    #cardDetalhamentoNotas .notas-tabela td:nth-child(6) {
+        white-space: normal;
+    }
+
+    .notas-linha-vazia td,
+    .notas-sem-dados {
+        padding: 18px 10px;
+        font-size: 8px;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+    .notas-fiscais-container {
+        width: calc(100% - 20px);
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .notas-card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .notas-card-resultado::before,
+    #cardUploadNotas::before,
+    #cardAtividadesNotas::before,
+    #cardDetalhamentoNotas::before {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .notas-titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .notas-titulo-secao p {
+        font-size: 8px;
+    }
+
+    .notas-totalizadores-periodo {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .notas-resultado-principal {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .notas-resultado-principal span,
+    .notas-resultado-principal strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .notas-resultado-principal strong {
+        font-size: 17px;
+    }
+
+    .notas-resultados-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    #cardAtividadesNotas .notas-tabela {
+        min-width: 780px;
+    }
+
+    #cardPeriodosNotas .notas-tabela {
+        min-width: 650px;
+    }
+
+    #cardDetalhamentoNotas .notas-tabela {
+        min-width: 960px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width: 360px) {
+    .notas-fiscais-container {
+        width: calc(100% - 16px);
+    }
+
+    .notas-card {
+        padding: 11px;
+    }
+
+    .notas-titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .notas-titulo-secao p {
+        font-size: 8px;
+    }
+
+    .notas-resultado-principal strong {
+        font-size: 16px;
+    }
+
+    #cardAtividadesNotas .notas-tabela {
+        min-width: 750px;
+    }
+
+    #cardPeriodosNotas .notas-tabela {
+        min-width: 630px;
+    }
+
+    #cardDetalhamentoNotas .notas-tabela {
+        min-width: 930px;
+    }
+}
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .notas-btn:hover,
+    .notas-btn-remover:hover,
+    .notas-arquivo-remover:hover,
+    #cardDetalhamentoNotas .nota-confirmar:hover {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   IMPRESSÃO
+   ========================================================= */
+
+@media print {
+    .notas-fiscais-container {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 10px !important;
+        overflow: visible !important;
+    }
+
+    .notas-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 15px !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .notas-card-largura-total {
+        grid-column: 1 / -1 !important;
+    }
+
+    .notas-card-periodos {
+        grid-column: 1 !important;
+    }
+
+    .notas-card-resultado {
+        position: static !important;
+        top: auto !important;
+        grid-column: 2 !important;
+    }
+
+    #cardUploadNotas,
+    #cardAtividadesNotas,
+    #cardDetalhamentoNotas {
+        grid-column: 1 / -1 !important;
+    }
+
+    .notas-upload-area,
+    .notas-lista-arquivos,
+    .notas-status-ocr,
+    .notas-resultado-ocr,
+    .notas-acoes,
+    .notas-campo-botao,
+    .notas-coluna-acoes,
+    .notas-btn-remover,
+    .notas-arquivo-remover,
+    #cardDetalhamentoNotas .nota-confirmar {
+        display: none !important;
+    }
+
+    .notas-tabela-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        overflow: visible !important;
+        border-radius: 0 !important;
+    }
+
+    .notas-tabela,
+    #cardAtividadesNotas .notas-tabela,
+    #cardPeriodosNotas .notas-tabela,
+    #cardDetalhamentoNotas .notas-tabela {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        table-layout: auto !important;
+    }
+
+    .notas-tabela th,
+    .notas-tabela td {
+        padding: 6px 7px !important;
+        font-size: 8px !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+    }
+
+    .notas-tabela th {
+        font-size: 7px !important;
+    }
+
+    .notas-tabela small {
+        font-size: 6px !important;
+    }
+
+    .notas-input-tabela {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 28px !important;
+        padding: 3px 5px !important;
+        font-size: 8px !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .notas-tabela select.notas-input-tabela,
+    #cardAtividadesNotas .atividade-criterio,
+    #cardAtividadesNotas .atividade-criterio-editar,
+    #cardAtividadesNotas .atividade-meses,
+    #cardAtividadesNotas .atividade-meses-editar,
+    #cardDetalhamentoNotas .nota-atividade-editar,
+    #cardDetalhamentoNotas .nota-atividade-manual,
+    #cardDetalhamentoNotas .nota-data,
+    #cardDetalhamentoNotas .nota-numero,
+    #cardDetalhamentoNotas .nota-emitente,
+    #cardDetalhamentoNotas .nota-valor {
+        min-width: 0 !important;
+    }
+
+    .notas-status {
+        padding: 2px 4px !important;
+        border-radius: 3px !important;
+        font-size: 6px !important;
+    }
+
+    .notas-resultado-principal {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+    }
+
+    .notas-resultado-principal strong {
+        width: 100% !important;
+        max-width: 100% !important;
+        font-size: 18px !important;
+        text-align: left !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    .notas-tabela thead {
+        display: table-header-group !important;
+    }
+
+    .notas-tabela tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    #resumoCriteriosNotas {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .notas-fiscais-container,
+    .notas-fiscais-container * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
