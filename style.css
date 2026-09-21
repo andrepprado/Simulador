@@ -7362,3 +7362,674 @@ footer p,
             exact !important;
     }
 }
+
+/* =========================================================
+   MEDIA-MOVIMENTACAO.HTML
+   CSS ISOLADO E PADRONIZADO
+   ========================================================= */
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
+
+.media-movimentacao-container {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.65fr) minmax(340px, .85fr);
+    gap: 24px;
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    min-width: 0;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    align-items: start;
+}
+
+.media-movimentacao-container>* {
+    min-width: 0;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.media-movimentacao-container>.card,
+.media-movimentacao-container>.configuracao-card,
+.media-movimentacao-container>.resultado-card {
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+}
+
+/* Primeiro card: Extrato */
+.media-movimentacao-container>.card:first-child {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+/* Resultado */
+.media-movimentacao-container>.resultado-card {
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+}
+
+/* Período de apuração */
+.media-movimentacao-container>.configuracao-card {
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+    overflow: hidden;
+}
+
+/* Cards de largura total */
+.media-movimentacao-container>.card-largura-total {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+}
+
+/* =========================================================
+   BARRA SUPERIOR DOS CARDS
+   ========================================================= */
+
+.media-movimentacao-container>.resultado-card::before,
+.media-movimentacao-container>.configuracao-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+.media-movimentacao-container .titulo-secao {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 24px;
+}
+
+.media-movimentacao-container .titulo-secao>div {
+    width: 100%;
+    min-width: 0;
+}
+
+.media-movimentacao-container .titulo-secao .categoria-etiqueta {
+    display: inline-flex;
+    margin-bottom: 10px;
+}
+
+.media-movimentacao-container .titulo-secao h2 {
+    margin: 0 0 6px;
+    color: var(--verde-escuro);
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.media-movimentacao-container .titulo-secao p {
+    max-width: 900px;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   EXTRATO
+   ========================================================= */
+
+#textoExtratoMovimentacao {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 300px;
+    height: 300px;
+    padding: 13px;
+    background: var(--branco);
+    color: var(--texto);
+    border: 1px solid var(--borda-forte);
+    border-radius: 9px;
+    outline: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    resize: vertical;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+#textoExtratoMovimentacao:hover {
+    border-color: var(--turquesa-claro);
+}
+
+#textoExtratoMovimentacao:focus {
+    border-color: var(--turquesa);
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .10);
+}
+
+#textoExtratoMovimentacao::placeholder {
+    color: #8A9A9D;
+}
+
+/* =========================================================
+   FORMULÁRIOS
+   ========================================================= */
+
+.media-movimentacao-container .grid-form {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    width: 100%;
+    min-width: 0;
+}
+
+.media-movimentacao-container .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.media-movimentacao-container .campo label {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.media-movimentacao-container .campo small,
+.media-movimentacao-container .campo-ajuda {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.media-movimentacao-container input,
+.media-movimentacao-container select,
+.media-movimentacao-container textarea {
+    width: 100%;
+    min-width: 0;
+}
+
+#mesesDetectadosMovimentacao {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-weight: 700;
+}
+
+#mesesConsideradosMovimentacao {
+    font-weight: 700;
+}
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.media-movimentacao-container .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.media-movimentacao-container .acoes button {
+    min-width: 115px;
+}
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
+.media-movimentacao-container .resultado-destaque {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    min-height: 82px;
+    margin-bottom: 20px;
+    padding: 22px 24px;
+    overflow: hidden;
+    color: var(--branco);
+    background:
+        linear-gradient(115deg,
+            var(--turquesa),
+            var(--verde-escuro));
+    border-radius: 13px;
+}
+
+.media-movimentacao-container .resultado-destaque span {
+    flex: 0 1 40%;
+    max-width: 40%;
+    color: var(--branco);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.media-movimentacao-container .resultado-destaque strong {
+    flex: 1 1 60%;
+    max-width: 60%;
+    color: var(--verde-claro);
+    font-size: clamp(22px, 2vw, 31px);
+    line-height: 1.1;
+    text-align: right;
+}
+
+.media-movimentacao-container .resultados-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 0;
+}
+
+.media-movimentacao-container .resultado-item {
+    min-width: 0;
+    min-height: 82px;
+    padding: 15px;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+}
+
+.media-movimentacao-container .resultado-item span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.media-movimentacao-container .resultado-item strong {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+#resultadoTotalMovimentacao,
+#resultadoQtdConsiderados {
+    color: var(--sucesso);
+}
+
+#resultadoQtdExcluidos {
+    color: var(--erro);
+}
+
+/* =========================================================
+   REGRAS DE EXCLUSÃO
+   ========================================================= */
+
+#listaRegrasMovimentacao {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 84px;
+    height: 100%;
+    padding: 14px 15px 14px 48px;
+    background: #FBFCFC;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background: var(--branco);
+    border: 2px solid var(--borda-forte);
+    border-radius: 6px;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 22px;
+    width: 6px;
+    height: 11px;
+    opacity: 0;
+    transform:
+        translateY(-62%) rotate(45deg);
+    border-right: 2px solid var(--branco);
+    border-bottom: 2px solid var(--branco);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao-conteudo small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao:hover .opcao-simulacao-conteudo {
+    transform: translateY(-1px);
+    border-color: var(--turquesa-claro);
+    box-shadow:
+        0 5px 14px rgba(0, 54, 64, .07);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo {
+    background: rgba(199, 58, 58, .045);
+    border-color: rgba(199, 58, 58, .35);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::before {
+    background: var(--erro);
+    border-color: var(--erro);
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo::after {
+    opacity: 1;
+}
+
+#listaRegrasMovimentacao .opcao-simulacao>input:checked+.opcao-simulacao-conteudo strong {
+    color: var(--erro);
+}
+
+/* =========================================================
+   REGRAS ADICIONAIS
+   ========================================================= */
+
+#regrasAdicionaisMovimentacao {
+    min-height: 110px;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   TABELAS
+   ========================================================= */
+
+.media-movimentacao-container .tabela-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    -webkit-overflow-scrolling: touch;
+}
+
+#tabelaResumoMensalMovimentacao,
+#tabelaMovimentacoesConsideradas,
+#tabelaMovimentacoesExcluidas {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tabelaResumoMensalMovimentacao {
+    min-width: 560px;
+}
+
+#tabelaMovimentacoesConsideradas {
+    min-width: 820px;
+}
+
+#tabelaMovimentacoesExcluidas {
+    min-width: 980px;
+}
+
+#tabelaResumoMensalMovimentacao th,
+#tabelaResumoMensalMovimentacao td,
+#tabelaMovimentacoesConsideradas th,
+#tabelaMovimentacoesConsideradas td,
+#tabelaMovimentacoesExcluidas th,
+#tabelaMovimentacoesExcluidas td {
+    vertical-align: middle;
+}
+
+/* =========================================================
+   SEM DADOS
+   ========================================================= */
+
+.media-movimentacao-container .sem-dados {
+    padding: 30px 15px;
+    color: var(--texto-secundario);
+    background: #FBFCFC;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center !important;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .media-movimentacao-container {
+        grid-template-columns: minmax(0, 1fr);
+        width: calc(100% - 32px);
+        gap: 18px;
+        padding-top: 18px;
+        padding-bottom: 30px;
+    }
+
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card,
+    .media-movimentacao-container>.card-largura-total {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .media-movimentacao-container>.card:first-child {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    #listaRegrasMovimentacao {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .media-movimentacao-container {
+        width: calc(100% - 24px);
+        gap: 14px;
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card,
+    .media-movimentacao-container>.card-largura-total {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .media-movimentacao-container .titulo-secao {
+        margin-bottom: 14px;
+    }
+
+    .media-movimentacao-container .titulo-secao h2 {
+        font-size: 17px;
+    }
+
+    .media-movimentacao-container .titulo-secao p {
+        font-size: 10px;
+    }
+
+    #textoExtratoMovimentacao {
+        min-height: 240px;
+        height: 240px;
+        padding: 10px;
+        font-size: 11px;
+    }
+
+    .media-movimentacao-container .grid-form {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .media-movimentacao-container .resultado-destaque {
+        padding: 12px;
+    }
+
+    .media-movimentacao-container .resultado-destaque span {
+        font-size: 9px;
+    }
+
+    .media-movimentacao-container .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    .media-movimentacao-container .resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    #listaRegrasMovimentacao {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    .media-movimentacao-container .acoes {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+    }
+
+    .media-movimentacao-container .acoes button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #tabelaResumoMensalMovimentacao {
+        min-width: 480px;
+    }
+
+    #tabelaMovimentacoesConsideradas {
+        min-width: 720px;
+    }
+
+    #tabelaMovimentacoesExcluidas {
+        min-width: 850px;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+    .media-movimentacao-container {
+        width: calc(100% - 20px);
+    }
+
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card,
+    .media-movimentacao-container>.card-largura-total {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .media-movimentacao-container .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .media-movimentacao-container .resultado-destaque span,
+    .media-movimentacao-container .resultado-destaque strong {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .media-movimentacao-container .resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
