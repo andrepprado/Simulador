@@ -1,3 +1,31 @@
+/**
+ * calculo-renda-notas-fiscais.js
+ *
+ * Caixa de Ferramentas - Sicoob Mantiqueira
+ *
+ * Cálculo de renda por notas fiscais.
+ *
+ * Dependências:
+ *
+ * - credito-rural-atividades.js
+ * - credito-rural-ncm-atividades.js
+ * - credito-rural-notas-fiscais.js
+ * - Tesseract.js
+ *
+ * Fluxo:
+ *
+ * 1. usuário envia XML, PDF ou imagem;
+ * 2. sistema processa os documentos;
+ * 3. NF-e/XML tenta identificar a atividade automaticamente;
+ * 4. notas antigas são interpretadas com validações adicionais;
+ * 5. documentos incertos ficam para revisão humana;
+ * 6. atividades identificadas são adicionadas automaticamente;
+ * 7. notas confirmadas são agrupadas por atividade + competência;
+ * 8. renda é calculada individualmente por atividade;
+ * 9. rendas mensais são somadas;
+ * 10. renda anual = renda mensal total × 12.
+ */
+
 document.addEventListener(
     "DOMContentLoaded",
     iniciarCalculoRendaNotas
@@ -7,49 +35,92 @@ document.addEventListener(
    CONSTANTES
    ========================================================= */
 
-const CRITERIOS_APURACAO_NOTAS = Object.freeze({
-    MOVIMENTACAO: "movimentacao",
-    INTERVALO: "intervalo",
-    INFORMADO: "informado"
-});
+const CRITERIOS_APURACAO_NOTAS =
+    Object.freeze({
+        MOVIMENTACAO:
+            "movimentacao",
+
+        INTERVALO:
+            "intervalo",
+
+        INFORMADO:
+            "informado"
+    });
+
+const QUALIDADE_MINIMA_OCR =
+    45;
 
 /* =========================================================
    ESTADO
    ========================================================= */
 
-let periodosNotas = [];
-let notasProcessadas = [];
 let arquivosSelecionados = [];
+let notasProcessadas = [];
 let atividadesRendaNotas = [];
+let periodosNotas = [];
 
 /* =========================================================
    INICIALIZAÇÃO
    ========================================================= */
 
 function iniciarCalculoRendaNotas() {
-    verificarDependenciaAtividadesCreditoRural();
-
-    garantirOpcaoCriterioIntervalo();
-    garantirCampoAtividadePeriodoManual();
+    verificarDependencias();
 
     inicializarSeletoresAtividadeNotas();
     configurarEventosNotas();
 
     renderizarArquivosSelecionados();
     renderizarAtividadesRendaNotas();
-    renderizarPeriodosNotas();
     renderizarNotasProcessadas();
+    renderizarPeriodosNotas();
     atualizarResultadosNotas();
 }
 
 /* =========================================================
-   ELEMENTOS / COMPATIBILIDADE DE IDS
+   DEPENDÊNCIAS
    ========================================================= */
 
-function obterElementoPorIds(...ids) {
-    for (const id of ids) {
+function verificarDependencias() {
+    if (
+        !window.CreditoRuralAtividades
+    ) {
+        console.error(
+            "credito-rural-atividades.js não carregado."
+        );
+    }
+
+    if (
+        !window.CreditoRuralNcmAtividades
+    ) {
+        console.error(
+            "credito-rural-ncm-atividades.js não carregado."
+        );
+    }
+
+    if (
+        !window.CreditoRuralNotasFiscais
+    ) {
+        console.error(
+            "credito-rural-notas-fiscais.js não carregado."
+        );
+    }
+}
+
+/* =========================================================
+   ELEMENTOS
+   ========================================================= */
+
+function obterElementoPorIds(
+    ...ids
+) {
+    for (
+        const id of
+        ids
+    ) {
         const elemento =
-            document.getElementById(id);
+            document.getElementById(
+                id
+            );
 
         if (elemento) {
             return elemento;
@@ -60,22 +131,7 @@ function obterElementoPorIds(...ids) {
 }
 
 /* =========================================================
-   DEPENDÊNCIA DAS ATIVIDADES
-   ========================================================= */
-
-function verificarDependenciaAtividadesCreditoRural() {
-    if (
-        !window.CreditoRuralAtividades ||
-        !window.ATIVIDADES_CREDITO_RURAL
-    ) {
-        console.error(
-            "credito-rural-atividades.js não foi carregado antes de calculo-renda-notas-fiscais.js."
-        );
-    }
-}
-
-/* =========================================================
-   INICIALIZAÇÃO DOS SELETORES DE ATIVIDADE
+   SELETORES DE ATIVIDADE
    ========================================================= */
 
 function inicializarSeletoresAtividadeNotas() {
@@ -90,133 +146,27 @@ function inicializarSeletoresAtividadeNotas() {
         );
 
     if (
-        grupo &&
-        atividade &&
-        window.CreditoRuralAtividades
-    ) {
-        window.CreditoRuralAtividades
-            .preencherGruposEmSelect(
-                grupo,
-                "agricola",
-                false
-            );
-
-        window.CreditoRuralAtividades
-            .preencherAtividadesEmSelect(
-                atividade,
-                "agricola",
-                null,
-                false
-            );
-    }
-
-    atualizarSelectAtividadePeriodoManual();
-}
-
-/* =========================================================
-   GARANTE O CRITÉRIO "INTERVALO COMPLETO"
-   ========================================================= */
-
-function garantirOpcaoCriterioIntervalo() {
-    const select =
-        document.getElementById(
-            "criterioAtividadeNotas"
-        );
-
-    if (!select) {
-        return;
-    }
-
-    const existe =
-        [...select.options].some(
-            option =>
-                option.value ===
-                CRITERIOS_APURACAO_NOTAS.INTERVALO
-        );
-
-    if (existe) {
-        return;
-    }
-
-    const option =
-        document.createElement(
-            "option"
-        );
-
-    option.value =
-        CRITERIOS_APURACAO_NOTAS.INTERVALO;
-
-    option.textContent =
-        "Intervalo completo";
-
-    const optionInformado =
-        [...select.options].find(
-            item =>
-                item.value ===
-                CRITERIOS_APURACAO_NOTAS.INFORMADO
-        );
-
-    if (optionInformado) {
-        select.insertBefore(
-            option,
-            optionInformado
-        );
-    } else {
-        select.appendChild(
-            option
-        );
-    }
-}
-
-/* =========================================================
-   CAMPO DE ATIVIDADE NO LANÇAMENTO MANUAL
-   ========================================================= */
-
-function garantirCampoAtividadePeriodoManual() {
-    if (
-        document.getElementById(
-            "atividadePeriodoNota"
-        )
+        !grupo ||
+        !atividade ||
+        !window.CreditoRuralAtividades
     ) {
         return;
     }
 
-    const container =
-        document.querySelector(
-            "#cardPeriodosNotas .notas-periodo-novo"
-        ) ||
-        document.querySelector(
-            ".notas-card-periodos .notas-periodo-novo"
+    window.CreditoRuralAtividades
+        .preencherGruposEmSelect(
+            grupo,
+            "agricola",
+            false
         );
 
-    if (!container) {
-        return;
-    }
-
-    const campo =
-        document.createElement(
-            "div"
+    window.CreditoRuralAtividades
+        .preencherAtividadesEmSelect(
+            atividade,
+            "agricola",
+            null,
+            false
         );
-
-    campo.className =
-        "notas-campo";
-
-    campo.innerHTML = `
-        <label for="atividadePeriodoNota">
-            Atividade
-        </label>
-
-        <select id="atividadePeriodoNota">
-            <option value="">
-                Cadastre uma atividade
-            </option>
-        </select>
-    `;
-
-    container.insertBefore(
-        campo,
-        container.firstChild
-    );
 }
 
 /* =========================================================
@@ -224,36 +174,54 @@ function garantirCampoAtividadePeriodoManual() {
    ========================================================= */
 
 function configurarEventosNotas() {
-    const inputArquivos =
+    const arquivos =
         document.getElementById(
             "arquivosNotasFiscais"
         );
 
-    const btnSelecionarArquivos =
+    const btnSelecionar =
         document.getElementById(
             "btnSelecionarNotas"
         );
 
     const btnProcessar =
-        obterElementoPorIds(
-            "btnProcessarArquivosNotas",
+        document.getElementById(
             "btnProcessarNotas"
         );
 
-    const btnLimparArquivos =
+    const btnLimpar =
         document.getElementById(
             "btnLimparArquivosNotas"
         );
 
-    const btnAdicionarPeriodo =
-        obterElementoPorIds(
-            "btnAdicionarPeriodoNotas",
+    const btnAtividade =
+        document.getElementById(
+            "btnAdicionarAtividadeNotas"
+        );
+
+    const grupo =
+        document.getElementById(
+            "grupoAtividadeNotas"
+        );
+
+    const atividade =
+        document.getElementById(
+            "atividadeNotas"
+        );
+
+    const criterio =
+        document.getElementById(
+            "criterioAtividadeNotas"
+        );
+
+    const btnPeriodo =
+        document.getElementById(
             "btnAdicionarPeriodoNota"
         );
 
-    const btnAdicionarAtividade =
+    const valorPeriodo =
         document.getElementById(
-            "btnAdicionarAtividadeNotas"
+            "valorPeriodoNota"
         );
 
     const btnCalcular =
@@ -266,224 +234,93 @@ function configurarEventosNotas() {
             "btnLimparCalculoNotas"
         );
 
-    const inputValor =
-        obterElementoPorIds(
-            "novoValorNota",
-            "valorPeriodoNota"
-        );
+    btnSelecionar?.addEventListener(
+        "click",
+        () =>
+            arquivos?.click()
+    );
 
-    const grupoAtividade =
-        document.getElementById(
-            "grupoAtividadeNotas"
-        );
-
-    const atividade =
-        document.getElementById(
-            "atividadeNotas"
-        );
-
-    const criterio =
-        document.getElementById(
-            "criterioAtividadeNotas"
-        );
-
-    const mesesInformados =
-        document.getElementById(
-            "mesesAtividadeNotas"
-        );
-
-    if (btnSelecionarArquivos) {
-        btnSelecionarArquivos.addEventListener(
-            "click",
-            function () {
-                if (inputArquivos) {
-                    inputArquivos.click();
-                }
-            }
-        );
-    }
-
-    if (inputArquivos) {
-        inputArquivos.addEventListener(
-            "change",
-            function () {
-                const novosArquivos =
-                    Array.from(
-                        this.files || []
-                    );
-
-                adicionarArquivosSelecionados(
-                    novosArquivos
-                );
-
-                /*
-                 * Permite selecionar novamente
-                 * o mesmo arquivo após removê-lo.
-                 */
-                this.value = "";
-
-                renderizarArquivosSelecionados();
-                limparMensagemOcr();
-            }
-        );
-    }
-
-    if (btnProcessar) {
-        btnProcessar.addEventListener(
-            "click",
-            processarArquivosNotas
-        );
-    }
-
-    if (btnLimparArquivos) {
-        btnLimparArquivos.addEventListener(
-            "click",
-            limparArquivosNotas
-        );
-    }
-
-    if (btnAdicionarPeriodo) {
-        btnAdicionarPeriodo.addEventListener(
-            "click",
-            adicionarPeriodoManual
-        );
-    }
-
-    if (btnAdicionarAtividade) {
-        btnAdicionarAtividade.addEventListener(
-            "click",
-            adicionarAtividadeRendaNotas
-        );
-    }
-
-    if (btnCalcular) {
-        btnCalcular.addEventListener(
-            "click",
-            atualizarResultadosNotas
-        );
-    }
-
-    if (btnLimparCalculo) {
-        btnLimparCalculo.addEventListener(
-            "click",
-            limparCalculoNotas
-        );
-    }
-
-    if (grupoAtividade) {
-        grupoAtividade.addEventListener(
-            "change",
-            function () {
-                if (
-                    atividade &&
-                    window.CreditoRuralAtividades
-                ) {
-                    window.CreditoRuralAtividades
-                        .preencherAtividadesEmSelect(
-                            atividade,
-                            this.value,
-                            null,
-                            false
-                        );
-                }
-            }
-        );
-    }
-
-    if (criterio) {
-        criterio.addEventListener(
-            "change",
-            atualizarVisibilidadeMesesInformados
-        );
-
-        atualizarVisibilidadeMesesInformados();
-    }
-
-    if (mesesInformados) {
-        mesesInformados.addEventListener(
-            "input",
-            function () {
-                if (
-                    Number(this.value) < 1
-                ) {
-                    this.value = "1";
-                }
-            }
-        );
-    }
-
-    if (inputValor) {
-        inputValor.addEventListener(
-            "input",
-            function () {
-                aplicarMascaraMoeda(
-                    this
-                );
-            }
-        );
-
-        inputValor.addEventListener(
-            "blur",
-            function () {
-                const valor =
-                    converterMoedaParaNumero(
-                        this.value
-                    );
-
-                if (valor > 0) {
-                    this.value =
-                        formatarMoeda(
-                            valor
-                        );
-                }
-            }
-        );
-    }
-
-    document.addEventListener(
-        "keydown",
-        function (evento) {
-            if (
-                evento.key !==
-                "Enter"
-            ) {
-                return;
-            }
-
-            const ativo =
-                document.activeElement;
-
-            if (!ativo) {
-                return;
-            }
-
-            const idsPeriodo = [
-                "novoPeriodoNota",
-                "novoValorNota",
-                "novaQuantidadeNotas",
-                "periodoNota",
-                "valorPeriodoNota",
-                "quantidadeNotasPeriodo",
-                "atividadePeriodoNota"
-            ];
-
-            if (
-                idsPeriodo.includes(
-                    ativo.id
+    arquivos?.addEventListener(
+        "change",
+        function () {
+            adicionarArquivosSelecionados(
+                Array.from(
+                    this.files ||
+                    []
                 )
-            ) {
-                evento.preventDefault();
-                adicionarPeriodoManual();
-            }
+            );
+
+            this.value = "";
+
+            renderizarArquivosSelecionados();
         }
     );
+
+    btnProcessar?.addEventListener(
+        "click",
+        processarArquivosNotas
+    );
+
+    btnLimpar?.addEventListener(
+        "click",
+        limparArquivosNotas
+    );
+
+    btnAtividade?.addEventListener(
+        "click",
+        adicionarAtividadeManual
+    );
+
+    grupo?.addEventListener(
+        "change",
+        function () {
+            window.CreditoRuralAtividades
+                ?.preencherAtividadesEmSelect(
+                    atividade,
+                    this.value,
+                    null,
+                    false
+                );
+        }
+    );
+
+    criterio?.addEventListener(
+        "change",
+        atualizarCampoMeses
+    );
+
+    btnPeriodo?.addEventListener(
+        "click",
+        adicionarPeriodoManual
+    );
+
+    valorPeriodo?.addEventListener(
+        "input",
+        function () {
+            aplicarMascaraMoeda(
+                this
+            );
+        }
+    );
+
+    btnCalcular?.addEventListener(
+        "click",
+        atualizarResultadosNotas
+    );
+
+    btnLimparCalculo?.addEventListener(
+        "click",
+        limparCalculoNotas
+    );
+
+    atualizarCampoMeses();
 }
 
 /* =========================================================
-   VISIBILIDADE DOS MESES INFORMADOS
+   VISIBILIDADE DOS MESES
    ========================================================= */
 
-function atualizarVisibilidadeMesesInformados() {
+function atualizarCampoMeses() {
     const criterio =
         document.getElementById(
             "criterioAtividadeNotas"
@@ -494,1779 +331,32 @@ function atualizarVisibilidadeMesesInformados() {
             "campoMesesAtividadeNotas"
         );
 
-    const input =
-        document.getElementById(
-            "mesesAtividadeNotas"
-        );
-
     if (
-        !criterio ||
-        !campo
+        criterio &&
+        campo
     ) {
-        return;
-    }
-
-    const informar =
-        criterio.value ===
-        CRITERIOS_APURACAO_NOTAS.INFORMADO;
-
-    campo.hidden =
-        !informar;
-
-    if (
-        input &&
-        informar &&
-        Number(input.value) < 1
-    ) {
-        input.value = "12";
+        campo.hidden =
+            criterio.value !==
+            CRITERIOS_APURACAO_NOTAS
+                .INFORMADO;
     }
 }
 
 /* =========================================================
-   ATIVIDADES DO PRODUTOR
-   ========================================================= */
-
-function adicionarAtividadeRendaNotas() {
-    const grupoSelect =
-        document.getElementById(
-            "grupoAtividadeNotas"
-        );
-
-    const atividadeSelect =
-        document.getElementById(
-            "atividadeNotas"
-        );
-
-    const criterioSelect =
-        document.getElementById(
-            "criterioAtividadeNotas"
-        );
-
-    const mesesInput =
-        document.getElementById(
-            "mesesAtividadeNotas"
-        );
-
-    if (
-        !grupoSelect ||
-        !atividadeSelect ||
-        !criterioSelect
-    ) {
-        exibirMensagemOcr(
-            "Não foi possível localizar os campos da atividade.",
-            "erro"
-        );
-
-        return;
-    }
-
-    const grupo =
-        grupoSelect.value;
-
-    const atividade =
-        atividadeSelect.value;
-
-    const criterio =
-        normalizarCriterioApuracao(
-            criterioSelect.value
-        );
-
-    const mesesRepresentados =
-        Math.max(
-            1,
-            parseInt(
-                mesesInput?.value,
-                10
-            ) || 12
-        );
-
-    if (
-        !grupo ||
-        !atividade
-    ) {
-        exibirMensagemOcr(
-            "Selecione o grupo e a atividade rural.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    const duplicada =
-        atividadesRendaNotas.some(
-            item =>
-                item.grupo === grupo &&
-                item.atividade === atividade
-        );
-
-    if (duplicada) {
-        exibirMensagemOcr(
-            "Essa atividade já foi adicionada à apuração.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    atividadesRendaNotas.push({
-        id: gerarId(),
-        grupo,
-        atividade,
-        criterio,
-        mesesRepresentados
-    });
-
-    renderizarAtividadesRendaNotas();
-    atualizarSelectAtividadePeriodoManual();
-    renderizarNotasProcessadas();
-    renderizarPeriodosNotas();
-    atualizarResultadosNotas();
-
-    exibirMensagemOcr(
-        `${obterNomeAtividadeCadastro(grupo, atividade)} adicionada à apuração.`,
-        "sucesso"
-    );
-}
-
-/* =========================================================
-   REMOVER ATIVIDADE
-   ========================================================= */
-
-function removerAtividadeRendaNotas(id) {
-    const atividade =
-        atividadesRendaNotas.find(
-            item =>
-                item.id === id
-        );
-
-    if (!atividade) {
-        return;
-    }
-
-    const possuiPeriodos =
-        periodosNotas.some(
-            periodo =>
-                periodo.atividadeId ===
-                id
-        );
-
-    const possuiNotas =
-        notasProcessadas.some(
-            nota =>
-                nota.atividadeId ===
-                id
-        );
-
-    if (
-        (possuiPeriodos || possuiNotas) &&
-        !window.confirm(
-            "Esta atividade possui notas ou períodos vinculados. Ao removê-la, os períodos vinculados serão removidos e as notas ficarão sem atividade. Deseja continuar?"
-        )
-    ) {
-        return;
-    }
-
-    atividadesRendaNotas =
-        atividadesRendaNotas.filter(
-            item =>
-                item.id !== id
-        );
-
-    periodosNotas =
-        periodosNotas.filter(
-            periodo =>
-                periodo.atividadeId !== id
-        );
-
-    notasProcessadas.forEach(
-        nota => {
-            if (
-                nota.atividadeId ===
-                id
-            ) {
-                nota.atividadeId = "";
-            }
-        }
-    );
-
-    consolidarNotasNosPeriodos();
-
-    renderizarAtividadesRendaNotas();
-    atualizarSelectAtividadePeriodoManual();
-    renderizarNotasProcessadas();
-    renderizarPeriodosNotas();
-    atualizarResultadosNotas();
-}
-
-/* =========================================================
-   RENDERIZAÇÃO DAS ATIVIDADES
-   ========================================================= */
-
-function renderizarAtividadesRendaNotas() {
-    const tbody =
-        document.getElementById(
-            "tabelaAtividadesNotas"
-        );
-
-    if (!tbody) {
-        return;
-    }
-
-    tbody.innerHTML = "";
-
-    if (
-        atividadesRendaNotas.length ===
-        0
-    ) {
-        tbody.innerHTML = `
-            <tr class="notas-linha-vazia">
-                <td colspan="7">
-                    Nenhuma atividade cadastrada.
-                </td>
-            </tr>
-        `;
-
-        return;
-    }
-
-    const resumos =
-        calcularResumoAtividades();
-
-    atividadesRendaNotas.forEach(
-        item => {
-            const resumo =
-                resumos.find(
-                    resumoItem =>
-                        resumoItem.atividadeId ===
-                        item.id
-                );
-
-            const tr =
-                document.createElement(
-                    "tr"
-                );
-
-            const mesesInformados =
-                item.criterio ===
-                    CRITERIOS_APURACAO_NOTAS.INFORMADO
-                    ? item.mesesRepresentados
-                    : "-";
-
-            const mesesUtilizados =
-                resumo &&
-                    resumo.mesesConsiderados > 0
-                    ? resumo.mesesConsiderados
-                    : "-";
-
-            const renda =
-                resumo
-                    ? resumo.rendaMensal
-                    : 0;
-
-            tr.innerHTML = `
-                <td>
-                    ${escaparHtml(
-                obterNomeGrupoCadastro(
-                    item.grupo
-                )
-            )}
-                </td>
-
-                <td>
-                    ${escaparHtml(
-                obterNomeAtividadeCadastro(
-                    item.grupo,
-                    item.atividade
-                )
-            )}
-                </td>
-
-                <td>
-                    <select
-                        class="notas-input-tabela atividade-criterio-editar"
-                        aria-label="Critério de apuração"
-                    >
-                        ${gerarOpcoesCriterioHtml(
-                item.criterio
-            )}
-                    </select>
-                </td>
-
-                <td>
-                    <input
-                        type="number"
-                        min="1"
-                        max="120"
-                        step="1"
-                        class="notas-input-tabela atividade-meses-editar"
-                        value="${item.mesesRepresentados || 12}"
-                        ${item.criterio ===
-                    CRITERIOS_APURACAO_NOTAS.INFORMADO
-                    ? ""
-                    : "disabled"
-                }
-                        aria-label="Meses informados"
-                    >
-                </td>
-
-                <td>
-                    ${mesesUtilizados}
-                </td>
-
-                <td>
-                    ${formatarMoeda(
-                    renda
-                )}
-                </td>
-
-                <td class="notas-coluna-acoes">
-                    <button
-                        type="button"
-                        class="notas-btn-remover atividade-remover"
-                    >
-                        Remover
-                    </button>
-                </td>
-            `;
-
-            tbody.appendChild(
-                tr
-            );
-
-            const selectCriterio =
-                tr.querySelector(
-                    ".atividade-criterio-editar"
-                );
-
-            const inputMeses =
-                tr.querySelector(
-                    ".atividade-meses-editar"
-                );
-
-            const btnRemover =
-                tr.querySelector(
-                    ".atividade-remover"
-                );
-
-            if (selectCriterio) {
-                selectCriterio.addEventListener(
-                    "change",
-                    function () {
-                        item.criterio =
-                            normalizarCriterioApuracao(
-                                this.value
-                            );
-
-                        renderizarAtividadesRendaNotas();
-                        atualizarResultadosNotas();
-                    }
-                );
-            }
-
-            if (inputMeses) {
-                inputMeses.addEventListener(
-                    "change",
-                    function () {
-                        item.mesesRepresentados =
-                            Math.max(
-                                1,
-                                parseInt(
-                                    this.value,
-                                    10
-                                ) || 1
-                            );
-
-                        renderizarAtividadesRendaNotas();
-                        atualizarResultadosNotas();
-                    }
-                );
-            }
-
-            if (btnRemover) {
-                btnRemover.addEventListener(
-                    "click",
-                    function () {
-                        removerAtividadeRendaNotas(
-                            item.id
-                        );
-                    }
-                );
-            }
-        }
-    );
-}
-
-/* =========================================================
-   OPÇÕES DOS CRITÉRIOS
-   ========================================================= */
-
-function gerarOpcoesCriterioHtml(
-    criterioAtual
-) {
-    const criterio =
-        normalizarCriterioApuracao(
-            criterioAtual
-        );
-
-    const opcoes = [
-        {
-            valor:
-                CRITERIOS_APURACAO_NOTAS.MOVIMENTACAO,
-            nome:
-                "Meses com movimentação"
-        },
-        {
-            valor:
-                CRITERIOS_APURACAO_NOTAS.INTERVALO,
-            nome:
-                "Intervalo completo"
-        },
-        {
-            valor:
-                CRITERIOS_APURACAO_NOTAS.INFORMADO,
-            nome:
-                "Período econômico informado"
-        }
-    ];
-
-    return opcoes
-        .map(
-            opcao => `
-                <option
-                    value="${opcao.valor}"
-                    ${opcao.valor ===
-                    criterio
-                    ? "selected"
-                    : ""
-                }
-                >
-                    ${opcao.nome}
-                </option>
-            `
-        )
-        .join("");
-}
-
-/* =========================================================
-   NORMALIZA CRITÉRIO
-   ========================================================= */
-
-function normalizarCriterioApuracao(
-    criterio
-) {
-    const valor =
-        String(
-            criterio || ""
-        )
-            .trim()
-            .toLowerCase();
-
-    if (
-        valor ===
-        CRITERIOS_APURACAO_NOTAS.INTERVALO
-    ) {
-        return (
-            CRITERIOS_APURACAO_NOTAS.INTERVALO
-        );
-    }
-
-    if (
-        valor ===
-        CRITERIOS_APURACAO_NOTAS.INFORMADO
-    ) {
-        return (
-            CRITERIOS_APURACAO_NOTAS.INFORMADO
-        );
-    }
-
-    return (
-        CRITERIOS_APURACAO_NOTAS.MOVIMENTACAO
-    );
-}
-
-/* =========================================================
-   CONSULTA AO CADASTRO CENTRAL
-   ========================================================= */
-
-function obterNomeGrupoCadastro(
-    grupo
-) {
-    if (
-        window.CreditoRuralAtividades &&
-        typeof window.CreditoRuralAtividades
-            .obterNomeGrupo ===
-        "function"
-    ) {
-        return (
-            window.CreditoRuralAtividades
-                .obterNomeGrupo(
-                    grupo
-                ) ||
-            grupo
-        );
-    }
-
-    return grupo || "";
-}
-
-function obterNomeAtividadeCadastro(
-    grupo,
-    atividade
-) {
-    if (
-        window.CreditoRuralAtividades &&
-        typeof window.CreditoRuralAtividades
-            .obterNomeAtividade ===
-        "function"
-    ) {
-        return (
-            window.CreditoRuralAtividades
-                .obterNomeAtividade(
-                    atividade,
-                    grupo
-                ) ||
-            atividade
-        );
-    }
-
-    return atividade || "";
-}
-
-/* =========================================================
-   OPÇÕES DAS ATIVIDADES CADASTRADAS
-   ========================================================= */
-
-function gerarOpcoesAtividadesCadastradas(
-    atividadeIdSelecionada = ""
-) {
-    let html = `
-        <option value="">
-            Selecione a atividade
-        </option>
-    `;
-
-    atividadesRendaNotas.forEach(
-        item => {
-            const nomeGrupo =
-                obterNomeGrupoCadastro(
-                    item.grupo
-                );
-
-            const nomeAtividade =
-                obterNomeAtividadeCadastro(
-                    item.grupo,
-                    item.atividade
-                );
-
-            html += `
-                <option
-                    value="${escaparHtml(item.id)}"
-                    ${item.id ===
-                    atividadeIdSelecionada
-                    ? "selected"
-                    : ""
-                }
-                >
-                    ${escaparHtml(nomeGrupo)} - ${escaparHtml(nomeAtividade)}
-                </option>
-            `;
-        }
-    );
-
-    return html;
-}
-
-/* =========================================================
-   SELECT DE ATIVIDADE DO PERÍODO MANUAL
-   ========================================================= */
-
-function atualizarSelectAtividadePeriodoManual() {
-    const select =
-        document.getElementById(
-            "atividadePeriodoNota"
-        );
-
-    if (!select) {
-        return;
-    }
-
-    const valorAtual =
-        select.value;
-
-    select.innerHTML =
-        gerarOpcoesAtividadesCadastradas(
-            valorAtual
-        );
-
-    if (
-        atividadesRendaNotas.length ===
-        1
-    ) {
-        select.value =
-            atividadesRendaNotas[0].id;
-    }
-}
-
-/* =========================================================
-   PERÍODOS - INCLUSÃO MANUAL
-   ========================================================= */
-
-function adicionarPeriodoManual() {
-    const inputAtividade =
-        document.getElementById(
-            "atividadePeriodoNota"
-        );
-
-    const inputPeriodo =
-        obterElementoPorIds(
-            "novoPeriodoNota",
-            "periodoNota"
-        );
-
-    const inputValor =
-        obterElementoPorIds(
-            "novoValorNota",
-            "valorPeriodoNota"
-        );
-
-    const inputQuantidade =
-        obterElementoPorIds(
-            "novaQuantidadeNotas",
-            "quantidadeNotasPeriodo"
-        );
-
-    if (
-        !inputPeriodo ||
-        !inputValor ||
-        !inputQuantidade
-    ) {
-        return;
-    }
-
-    let atividadeId =
-        inputAtividade?.value ||
-        "";
-
-    if (
-        !atividadeId &&
-        atividadesRendaNotas.length ===
-        1
-    ) {
-        atividadeId =
-            atividadesRendaNotas[0].id;
-    }
-
-    if (!atividadeId) {
-        exibirMensagemOcr(
-            "Selecione a atividade correspondente ao período.",
-            "atencao"
-        );
-
-        inputAtividade?.focus();
-
-        return;
-    }
-
-    if (
-        !obterAtividadePorId(
-            atividadeId
-        )
-    ) {
-        exibirMensagemOcr(
-            "A atividade selecionada não é válida.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    const periodo =
-        String(
-            inputPeriodo.value || ""
-        ).trim();
-
-    const valor =
-        converterMoedaParaNumero(
-            inputValor.value
-        );
-
-    const quantidade =
-        Math.max(
-            0,
-            parseInt(
-                inputQuantidade.value,
-                10
-            ) || 0
-        );
-
-    if (!periodo) {
-        inputPeriodo.focus();
-
-        exibirMensagemOcr(
-            "Informe o período antes de adicionar.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    if (
-        converterPeriodoParaOrdenacao(
-            periodo
-        ) === null
-    ) {
-        inputPeriodo.focus();
-
-        exibirMensagemOcr(
-            "Informe uma competência válida. Exemplo: Março/2026.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    if (valor <= 0) {
-        inputValor.focus();
-
-        exibirMensagemOcr(
-            "Informe um valor maior que zero para o período.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    adicionarOuSomarPeriodo({
-        atividadeId,
-        periodo,
-        valor,
-        quantidade,
-        origem: "manual"
-    });
-
-    inputPeriodo.value = "";
-    inputValor.value = "";
-    inputQuantidade.value = "0";
-
-    renderizarPeriodosNotas();
-    renderizarAtividadesRendaNotas();
-    atualizarResultadosNotas();
-
-    inputPeriodo.focus();
-}
-
-/* =========================================================
-   ADICIONA OU CONSOLIDA PERÍODO
-   ========================================================= */
-
-function adicionarOuSomarPeriodo(
-    dados
-) {
-    const atividadeId =
-        String(
-            dados.atividadeId ||
-            ""
-        );
-
-    const chavePeriodo =
-        normalizarPeriodoChave(
-            dados.periodo
-        );
-
-    const existente =
-        periodosNotas.find(
-            item =>
-                item.atividadeId ===
-                atividadeId &&
-                normalizarPeriodoChave(
-                    item.periodo
-                ) ===
-                chavePeriodo
-        );
-
-    if (existente) {
-        existente.valor +=
-            Number(
-                dados.valor
-            ) || 0;
-
-        existente.quantidade +=
-            Number(
-                dados.quantidade
-            ) || 0;
-
-        /*
-         * Um período que possua lançamento manual
-         * e OCR continua marcado como misto para não
-         * ser apagado integralmente numa nova consolidação.
-         */
-        if (
-            existente.origem !==
-            dados.origem
-        ) {
-            existente.origem =
-                "misto";
-        }
-
-        return existente;
-    }
-
-    const novo = {
-        id:
-            gerarId(),
-
-        atividadeId,
-
-        periodo:
-            dados.periodo,
-
-        valor:
-            Number(
-                dados.valor
-            ) || 0,
-
-        quantidade:
-            Number(
-                dados.quantidade
-            ) || 0,
-
-        origem:
-            dados.origem ||
-            "manual"
-    };
-
-    periodosNotas.push(
-        novo
-    );
-
-    ordenarPeriodos();
-
-    return novo;
-}
-
-/* =========================================================
-   RENDERIZAÇÃO DOS PERÍODOS
-   ========================================================= */
-
-function renderizarPeriodosNotas() {
-    const tbody =
-        obterElementoPorIds(
-            "calculo-notas-periodo",
-            "tabelaPeriodosNotas"
-        );
-
-    if (!tbody) {
-        return;
-    }
-
-    tbody.innerHTML = "";
-
-    if (
-        periodosNotas.length ===
-        0
-    ) {
-        const tr =
-            document.createElement(
-                "tr"
-            );
-
-        tr.className =
-            "notas-linha-vazia";
-
-        tr.innerHTML = `
-            <td colspan="4">
-                Nenhum período informado.
-            </td>
-        `;
-
-        tbody.appendChild(
-            tr
-        );
-
-        atualizarTotalizadoresPeriodos();
-
-        return;
-    }
-
-    periodosNotas.forEach(
-        item => {
-            const tr =
-                document.createElement(
-                    "tr"
-                );
-
-            tr.dataset.periodoId =
-                item.id;
-
-            tr.innerHTML = `
-                <td>
-                    <select
-                        class="notas-input-tabela notas-periodo-atividade-editar"
-                        aria-label="Atividade"
-                        style="margin-bottom:6px;"
-                    >
-                        ${gerarOpcoesAtividadesCadastradas(
-                item.atividadeId
-            )}
-                    </select>
-
-                    <input
-                        type="text"
-                        class="notas-input-tabela notas-periodo-editar"
-                        value="${escaparHtml(item.periodo)}"
-                        aria-label="Período"
-                    >
-                </td>
-
-                <td>
-                    <input
-                        type="text"
-                        inputmode="decimal"
-                        class="notas-input-tabela notas-valor-editar"
-                        value="${formatarMoeda(item.valor)}"
-                        aria-label="Valor das notas"
-                    >
-                </td>
-
-                <td>
-                    <input
-                        type="number"
-                        min="0"
-                        step="1"
-                        class="notas-input-tabela notas-quantidade-editar"
-                        value="${item.quantidade}"
-                        aria-label="Quantidade de notas"
-                    >
-                </td>
-
-                <td class="notas-coluna-acoes">
-                    <button
-                        type="button"
-                        class="notas-btn-remover"
-                        data-id="${item.id}"
-                    >
-                        Remover
-                    </button>
-                </td>
-            `;
-
-            tbody.appendChild(
-                tr
-            );
-
-            const inputAtividade =
-                tr.querySelector(
-                    ".notas-periodo-atividade-editar"
-                );
-
-            const inputPeriodo =
-                tr.querySelector(
-                    ".notas-periodo-editar"
-                );
-
-            const inputValor =
-                tr.querySelector(
-                    ".notas-valor-editar"
-                );
-
-            const inputQuantidade =
-                tr.querySelector(
-                    ".notas-quantidade-editar"
-                );
-
-            const btnRemover =
-                tr.querySelector(
-                    ".notas-btn-remover"
-                );
-
-            if (inputAtividade) {
-                inputAtividade.addEventListener(
-                    "change",
-                    function () {
-                        if (
-                            !this.value
-                        ) {
-                            this.value =
-                                item.atividadeId;
-
-                            return;
-                        }
-
-                        item.atividadeId =
-                            this.value;
-
-                        consolidarPeriodosDuplicados();
-                        renderizarPeriodosNotas();
-                        renderizarAtividadesRendaNotas();
-                        atualizarResultadosNotas();
-                    }
-                );
-            }
-
-            if (inputPeriodo) {
-                inputPeriodo.addEventListener(
-                    "change",
-                    function () {
-                        const novoPeriodo =
-                            String(
-                                this.value ||
-                                ""
-                            ).trim();
-
-                        if (
-                            converterPeriodoParaOrdenacao(
-                                novoPeriodo
-                            ) ===
-                            null
-                        ) {
-                            this.value =
-                                item.periodo;
-
-                            exibirMensagemOcr(
-                                "Informe uma competência válida. Exemplo: Março/2026.",
-                                "atencao"
-                            );
-
-                            return;
-                        }
-
-                        item.periodo =
-                            novoPeriodo;
-
-                        consolidarPeriodosDuplicados();
-                        ordenarPeriodos();
-                        renderizarPeriodosNotas();
-                        renderizarAtividadesRendaNotas();
-                        atualizarResultadosNotas();
-                    }
-                );
-            }
-
-            if (inputValor) {
-                inputValor.addEventListener(
-                    "input",
-                    function () {
-                        aplicarMascaraMoeda(
-                            this
-                        );
-                    }
-                );
-
-                inputValor.addEventListener(
-                    "change",
-                    function () {
-                        item.valor =
-                            converterMoedaParaNumero(
-                                this.value
-                            );
-
-                        this.value =
-                            formatarMoeda(
-                                item.valor
-                            );
-
-                        renderizarAtividadesRendaNotas();
-                        atualizarResultadosNotas();
-                        atualizarTotalizadoresPeriodos();
-                    }
-                );
-            }
-
-            if (inputQuantidade) {
-                inputQuantidade.addEventListener(
-                    "input",
-                    function () {
-                        item.quantidade =
-                            Math.max(
-                                0,
-                                parseInt(
-                                    this.value,
-                                    10
-                                ) || 0
-                            );
-
-                        atualizarResultadosNotas();
-                        atualizarTotalizadoresPeriodos();
-                    }
-                );
-            }
-
-            if (btnRemover) {
-                btnRemover.addEventListener(
-                    "click",
-                    function () {
-                        removerPeriodo(
-                            item.id
-                        );
-                    }
-                );
-            }
-        }
-    );
-
-    atualizarTotalizadoresPeriodos();
-}
-
-/* =========================================================
-   CONSOLIDA PERÍODOS DUPLICADOS
-   ========================================================= */
-
-function consolidarPeriodosDuplicados() {
-    const mapa =
-        new Map();
-
-    periodosNotas.forEach(
-        item => {
-            const chave =
-                [
-                    item.atividadeId,
-                    normalizarPeriodoChave(
-                        item.periodo
-                    )
-                ].join("|");
-
-            if (
-                !mapa.has(
-                    chave
-                )
-            ) {
-                mapa.set(
-                    chave,
-                    {
-                        ...item
-                    }
-                );
-
-                return;
-            }
-
-            const existente =
-                mapa.get(
-                    chave
-                );
-
-            existente.valor +=
-                Number(
-                    item.valor
-                ) || 0;
-
-            existente.quantidade +=
-                Number(
-                    item.quantidade
-                ) || 0;
-
-            if (
-                existente.origem !==
-                item.origem
-            ) {
-                existente.origem =
-                    "misto";
-            }
-        }
-    );
-
-    periodosNotas =
-        Array.from(
-            mapa.values()
-        );
-
-    ordenarPeriodos();
-}
-
-/* =========================================================
-   REMOVER PERÍODO
-   ========================================================= */
-
-function removerPeriodo(id) {
-    periodosNotas =
-        periodosNotas.filter(
-            item =>
-                item.id !== id
-        );
-
-    renderizarPeriodosNotas();
-    renderizarAtividadesRendaNotas();
-    atualizarResultadosNotas();
-}
-
-/* =========================================================
-   TOTALIZADORES DOS PERÍODOS
-   ========================================================= */
-
-function atualizarTotalizadoresPeriodos() {
-    const totalNotas =
-        periodosNotas.reduce(
-            (total, item) =>
-                total +
-                (
-                    Number(
-                        item.valor
-                    ) || 0
-                ),
-            0
-        );
-
-    const quantidadeNotas =
-        periodosNotas.reduce(
-            (total, item) =>
-                total +
-                (
-                    Number(
-                        item.quantidade
-                    ) || 0
-                ),
-            0
-        );
-
-    definirTextoMultiplos(
-        [
-            "totalNotasPeriodos"
-        ],
-        formatarMoeda(
-            totalNotas
-        )
-    );
-
-    definirTextoMultiplos(
-        [
-            "quantidadeNotasPeriodos",
-            "quantidadeTotalNotas"
-        ],
-        String(
-            quantidadeNotas
-        )
-    );
-
-    definirTextoMultiplos(
-        [
-            "quantidadePeriodos",
-            "quantidadePeriodosNotas"
-        ],
-        String(
-            periodosNotas.length
-        )
-    );
-}
-
-/* =========================================================
-   RESUMO / CÁLCULO POR ATIVIDADE
-   ========================================================= */
-
-function calcularResumoAtividades() {
-    return atividadesRendaNotas.map(
-        atividade => {
-            const periodos =
-                periodosNotas.filter(
-                    item =>
-                        item.atividadeId ===
-                        atividade.id &&
-                        Number(
-                            item.valor
-                        ) > 0
-                );
-
-            const totalNotas =
-                periodos.reduce(
-                    (total, item) =>
-                        total +
-                        (
-                            Number(
-                                item.valor
-                            ) || 0
-                        ),
-                    0
-                );
-
-            const quantidadeNotas =
-                periodos.reduce(
-                    (total, item) =>
-                        total +
-                        (
-                            Number(
-                                item.quantidade
-                            ) || 0
-                        ),
-                    0
-                );
-
-            const apuracao =
-                determinarMesesConsiderados(
-                    atividade,
-                    periodos
-                );
-
-            const rendaMensal =
-                apuracao.meses > 0
-                    ? totalNotas /
-                    apuracao.meses
-                    : 0;
-
-            return {
-                atividadeId:
-                    atividade.id,
-
-                grupo:
-                    atividade.grupo,
-
-                atividade:
-                    atividade.atividade,
-
-                nomeGrupo:
-                    obterNomeGrupoCadastro(
-                        atividade.grupo
-                    ),
-
-                nomeAtividade:
-                    obterNomeAtividadeCadastro(
-                        atividade.grupo,
-                        atividade.atividade
-                    ),
-
-                criterio:
-                    atividade.criterio,
-
-                criterioDescricao:
-                    obterDescricaoCriterio(
-                        atividade.criterio
-                    ),
-
-                totalNotas,
-
-                quantidadeNotas,
-
-                mesesConsiderados:
-                    apuracao.meses,
-
-                rendaMensal,
-
-                valido:
-                    totalNotas === 0 ||
-                    apuracao.valido,
-
-                mensagem:
-                    apuracao.mensagem
-            };
-        }
-    );
-}
-
-/* =========================================================
-   DETERMINAÇÃO DOS MESES
-   ========================================================= */
-
-function determinarMesesConsiderados(
-    atividade,
-    periodos
-) {
-    if (
-        periodos.length ===
-        0
-    ) {
-        return {
-            meses: 0,
-            valido: true,
-            mensagem:
-                "Sem valores informados."
-        };
-    }
-
-    const criterio =
-        normalizarCriterioApuracao(
-            atividade.criterio
-        );
-
-    /* =====================================================
-       PERÍODO ECONÔMICO INFORMADO
-       ===================================================== */
-
-    if (
-        criterio ===
-        CRITERIOS_APURACAO_NOTAS.INFORMADO
-    ) {
-        const meses =
-            Math.max(
-                0,
-                parseInt(
-                    atividade.mesesRepresentados,
-                    10
-                ) || 0
-            );
-
-        return {
-            meses,
-            valido:
-                meses > 0,
-
-            mensagem:
-                meses > 0
-                    ? `Período econômico informado: ${meses} mês(es).`
-                    : "Informe a quantidade de meses do período econômico."
-        };
-    }
-
-    const referencias =
-        periodos
-            .map(
-                item =>
-                    converterPeriodoParaOrdenacao(
-                        item.periodo
-                    )
-            )
-            .filter(
-                valor =>
-                    valor !== null
-            );
-
-    if (
-        referencias.length !==
-        periodos.length
-    ) {
-        return {
-            meses: 0,
-            valido: false,
-            mensagem:
-                "Existe período com competência inválida."
-        };
-    }
-
-    /* =====================================================
-       INTERVALO COMPLETO
-       ===================================================== */
-
-    if (
-        criterio ===
-        CRITERIOS_APURACAO_NOTAS.INTERVALO
-    ) {
-        const seriais =
-            referencias.map(
-                converterReferenciaPeriodoParaSerialMes
-            );
-
-        const menor =
-            Math.min(
-                ...seriais
-            );
-
-        const maior =
-            Math.max(
-                ...seriais
-            );
-
-        const meses =
-            maior -
-            menor +
-            1;
-
-        return {
-            meses,
-            valido:
-                meses > 0,
-
-            mensagem:
-                `Intervalo completo entre a primeira e a última competência: ${meses} mês(es).`
-        };
-    }
-
-    /* =====================================================
-       MESES COM MOVIMENTAÇÃO
-       ===================================================== */
-
-    const competencias =
-        new Set(
-            referencias
-        );
-
-    const meses =
-        competencias.size;
-
-    return {
-        meses,
-        valido:
-            meses > 0,
-
-        mensagem:
-            `Competências com movimentação: ${meses} mês(es).`
-    };
-}
-
-/* =========================================================
-   SERIAL DO MÊS
-   ========================================================= */
-
-function converterReferenciaPeriodoParaSerialMes(
-    referencia
-) {
-    const ano =
-        Math.floor(
-            referencia /
-            100
-        );
-
-    const mes =
-        referencia %
-        100;
-
-    return (
-        ano *
-        12 +
-        mes -
-        1
-    );
-}
-
-/* =========================================================
-   DESCRIÇÃO DO CRITÉRIO
-   ========================================================= */
-
-function obterDescricaoCriterio(
-    criterio
-) {
-    const normalizado =
-        normalizarCriterioApuracao(
-            criterio
-        );
-
-    if (
-        normalizado ===
-        CRITERIOS_APURACAO_NOTAS.INTERVALO
-    ) {
-        return (
-            "Intervalo completo"
-        );
-    }
-
-    if (
-        normalizado ===
-        CRITERIOS_APURACAO_NOTAS.INFORMADO
-    ) {
-        return (
-            "Período econômico informado"
-        );
-    }
-
-    return (
-        "Meses com movimentação"
-    );
-}
-
-/* =========================================================
-   CÁLCULO CONSOLIDADO
-   ========================================================= */
-
-function atualizarResultadosNotas() {
-    const resumos =
-        calcularResumoAtividades();
-
-    const atividadesComValor =
-        resumos.filter(
-            item =>
-                item.totalNotas >
-                0
-        );
-
-    const totalNotas =
-        atividadesComValor.reduce(
-            (total, item) =>
-                total +
-                item.totalNotas,
-            0
-        );
-
-    const quantidadeNotas =
-        atividadesComValor.reduce(
-            (total, item) =>
-                total +
-                item.quantidadeNotas,
-            0
-        );
-
-    const rendaMensal =
-        atividadesComValor.reduce(
-            (total, item) =>
-                total +
-                (
-                    item.valido
-                        ? item.rendaMensal
-                        : 0
-                ),
-            0
-        );
-
-    const rendaAnual =
-        rendaMensal *
-        12;
-
-    definirTextoMultiplos(
-        [
-            "resultadoRendaMensal",
-            "resultadoRendaMensalNotas"
-        ],
-        formatarMoeda(
-            rendaMensal
-        )
-    );
-
-    definirTextoMultiplos(
-        [
-            "resultadoRendaAnual",
-            "resultadoRendaAnualNotas"
-        ],
-        formatarMoeda(
-            rendaAnual
-        )
-    );
-
-    definirTextoMultiplos(
-        [
-            "resultadoTotalNotas"
-        ],
-        formatarMoeda(
-            totalNotas
-        )
-    );
-
-    definirTextoMultiplos(
-        [
-            "resultadoQuantidadeAtividades"
-        ],
-        String(
-            atividadesComValor.length
-        )
-    );
-
-    definirTextoMultiplos(
-        [
-            "resultadoQuantidadeNotas"
-        ],
-        String(
-            quantidadeNotas
-        )
-    );
-
-    /*
-     * Mantém compatibilidade com o campo antigo.
-     * Aqui representa a quantidade total de
-     * registros de competência existentes.
-     */
-    definirTextoMultiplos(
-        [
-            "resultadoQuantidadePeriodos"
-        ],
-        String(
-            periodosNotas.length
-        )
-    );
-
-    atualizarTotalizadoresPeriodos();
-    atualizarResumoCriterios(
-        resumos
-    );
-}
-
-/* =========================================================
-   RESUMO DOS CRITÉRIOS
-   ========================================================= */
-
-function atualizarResumoCriterios(
-    resumos
-) {
-    const container =
-        document.getElementById(
-            "resumoCriteriosNotas"
-        );
-
-    if (!container) {
-        return;
-    }
-
-    const ativos =
-        resumos.filter(
-            item =>
-                item.totalNotas >
-                0
-        );
-
-    if (
-        ativos.length ===
-        0
-    ) {
-        container.innerHTML = `
-            <strong>
-                Critérios de apuração
-            </strong>
-
-            <span>
-                Cadastre uma atividade e informe ou processe
-                as notas fiscais para realizar o cálculo.
-            </span>
-        `;
-
-        return;
-    }
-
-    const linhas =
-        ativos.map(
-            item => {
-                if (!item.valido) {
-                    return `
-                        <span>
-                            <strong>
-                                ${escaparHtml(item.nomeAtividade)}:
-                            </strong>
-                            ${escaparHtml(item.mensagem)}
-                        </span>
-                    `;
-                }
-
-                return `
-                    <span>
-                        <strong>
-                            ${escaparHtml(item.nomeAtividade)}:
-                        </strong>
-                        ${escaparHtml(item.criterioDescricao)}
-                        — ${item.mesesConsiderados} mês(es)
-                        — ${formatarMoeda(item.rendaMensal)}/mês.
-                    </span>
-                `;
-            }
-        )
-            .join("");
-
-    container.innerHTML = `
-        <strong>
-            Critérios de apuração
-        </strong>
-
-        ${linhas}
-    `;
-}
-
-/* =========================================================
-   LIMPAR CÁLCULO
-   ========================================================= */
-
-function limparCalculoNotas() {
-    limparArquivosNotas();
-}
-
-/* =========================================================
-   ARQUIVOS SELECIONADOS
+   ARQUIVOS
    ========================================================= */
 
 function adicionarArquivosSelecionados(
-    novosArquivos
+    arquivos
 ) {
-    const chavesExistentes =
+    const existentes =
         new Set(
             arquivosSelecionados.map(
-                arquivo =>
-                    gerarChaveArquivo(
-                        arquivo
-                    )
+                gerarChaveArquivo
             )
         );
 
-    novosArquivos.forEach(
+    arquivos.forEach(
         arquivo => {
             const chave =
                 gerarChaveArquivo(
@@ -2274,7 +364,7 @@ function adicionarArquivosSelecionados(
                 );
 
             if (
-                !chavesExistentes.has(
+                !existentes.has(
                     chave
                 )
             ) {
@@ -2282,7 +372,7 @@ function adicionarArquivosSelecionados(
                     arquivo
                 );
 
-                chavesExistentes.add(
+                existentes.add(
                     chave
                 );
             }
@@ -2294,20 +384,15 @@ function gerarChaveArquivo(
     arquivo
 ) {
     return [
-        arquivo.name || "",
-        arquivo.size || 0,
-        arquivo.lastModified || 0
+        arquivo.name,
+        arquivo.size,
+        arquivo.lastModified
     ].join("|");
 }
 
-/* =========================================================
-   RENDERIZAÇÃO DOS ARQUIVOS
-   ========================================================= */
-
 function renderizarArquivosSelecionados() {
     const lista =
-        obterElementoPorIds(
-            "listaArquivosNotasFiscais",
+        document.getElementById(
             "listaArquivosNotas"
         );
 
@@ -2331,16 +416,19 @@ function renderizarArquivosSelecionados() {
     }
 
     arquivosSelecionados.forEach(
-        (arquivo, indice) => {
-            const item =
+        (
+            arquivo,
+            indice
+        ) => {
+            const div =
                 document.createElement(
                     "div"
                 );
 
-            item.className =
+            div.className =
                 "notas-arquivo-item";
 
-            item.innerHTML = `
+            div.innerHTML = `
                 <div class="notas-arquivo-info">
                     <strong>
                         ${escaparHtml(
@@ -2358,153 +446,34 @@ function renderizarArquivosSelecionados() {
                 <button
                     type="button"
                     class="notas-arquivo-remover"
-                    data-indice="${indice}"
-                    aria-label="Remover arquivo"
                 >
                     Remover
                 </button>
             `;
 
-            const botao =
-                item.querySelector(
-                    ".notas-arquivo-remover"
-                );
+            div.querySelector(
+                ".notas-arquivo-remover"
+            )?.addEventListener(
+                "click",
+                () => {
+                    arquivosSelecionados.splice(
+                        indice,
+                        1
+                    );
 
-            if (botao) {
-                botao.addEventListener(
-                    "click",
-                    function () {
-                        removerArquivoSelecionado(
-                            indice
-                        );
-                    }
-                );
-            }
+                    renderizarArquivosSelecionados();
+                }
+            );
 
             lista.appendChild(
-                item
+                div
             );
         }
     );
 }
 
 /* =========================================================
-   REMOVER ARQUIVO
-   ========================================================= */
-
-function removerArquivoSelecionado(
-    indice
-) {
-    arquivosSelecionados.splice(
-        indice,
-        1
-    );
-
-    atualizarInputArquivos();
-    renderizarArquivosSelecionados();
-}
-
-/* =========================================================
-   RECONSTRÓI FILELIST
-   ========================================================= */
-
-function atualizarInputArquivos() {
-    const input =
-        document.getElementById(
-            "arquivosNotasFiscais"
-        );
-
-    if (!input) {
-        return;
-    }
-
-    try {
-        const transfer =
-            new DataTransfer();
-
-        arquivosSelecionados.forEach(
-            arquivo => {
-                transfer.items.add(
-                    arquivo
-                );
-            }
-        );
-
-        input.files =
-            transfer.files;
-    } catch (erro) {
-        console.warn(
-            "Não foi possível reconstruir a lista de arquivos.",
-            erro
-        );
-    }
-}
-
-/* =========================================================
-   LIMPAR ARQUIVOS / CÁLCULO
-   ========================================================= */
-
-function limparArquivosNotas() {
-    const inputArquivos =
-        document.getElementById(
-            "arquivosNotasFiscais"
-        );
-
-    const inputPeriodo =
-        obterElementoPorIds(
-            "novoPeriodoNota",
-            "periodoNota"
-        );
-
-    const inputValor =
-        obterElementoPorIds(
-            "novoValorNota",
-            "valorPeriodoNota"
-        );
-
-    const inputQuantidade =
-        obterElementoPorIds(
-            "novaQuantidadeNotas",
-            "quantidadeNotasPeriodo"
-        );
-
-    arquivosSelecionados = [];
-    notasProcessadas = [];
-    periodosNotas = [];
-    atividadesRendaNotas = [];
-
-    if (inputArquivos) {
-        inputArquivos.value = "";
-    }
-
-    if (inputPeriodo) {
-        inputPeriodo.value = "";
-    }
-
-    if (inputValor) {
-        inputValor.value = "";
-    }
-
-    if (inputQuantidade) {
-        inputQuantidade.value = "0";
-    }
-
-    mostrarStatusProcessamento(
-        false
-    );
-
-    limparMensagemOcr();
-
-    renderizarArquivosSelecionados();
-    renderizarAtividadesRendaNotas();
-    atualizarSelectAtividadePeriodoManual();
-    renderizarPeriodosNotas();
-    renderizarNotasProcessadas();
-    atualizarResultadosNotas();
-}
-
-/* =========================================================
-   PROCESSAMENTO DOS ARQUIVOS
+   PROCESSAMENTO
    ========================================================= */
 
 async function processarArquivosNotas() {
@@ -2513,247 +482,180 @@ async function processarArquivosNotas() {
         0
     ) {
         exibirMensagemOcr(
-            "Selecione pelo menos um arquivo antes de processar.",
+            "Selecione pelo menos um arquivo.",
             "atencao"
         );
 
         return;
-    }
-
-    if (
-        atividadesRendaNotas.length ===
-        0
-    ) {
-        exibirMensagemOcr(
-            "Cadastre pelo menos uma atividade antes de processar as notas fiscais.",
-            "atencao"
-        );
-
-        return;
-    }
-
-    const btnProcessar =
-        obterElementoPorIds(
-            "btnProcessarArquivosNotas",
-            "btnProcessarNotas"
-        );
-
-    if (btnProcessar) {
-        btnProcessar.disabled =
-            true;
     }
 
     notasProcessadas = [];
 
-    mostrarStatusProcessamento(
-        true,
-        "Preparando processamento...",
-        "Aguarde enquanto os documentos são analisados."
-    );
+    const botao =
+        document.getElementById(
+            "btnProcessarNotas"
+        );
+
+    if (botao) {
+        botao.disabled = true;
+    }
 
     try {
         for (
-            let indice = 0;
-            indice <
+            let i = 0;
+            i <
             arquivosSelecionados.length;
-            indice++
+            i++
         ) {
             const arquivo =
-                arquivosSelecionados[
-                indice
-                ];
+                arquivosSelecionados[i];
 
-            atualizarStatusProcessamentoArquivo(
-                indice,
-                arquivosSelecionados.length,
+            mostrarStatusProcessamento(
+                true,
+                `Processando ${i + 1} de ${arquivosSelecionados.length}`,
                 arquivo.name
             );
 
             try {
-                const resultados =
+                const notas =
                     await processarArquivoNotaFiscal(
                         arquivo,
-                        indice,
+                        i,
                         arquivosSelecionados.length
                     );
 
-                /*
-                 * Quando existe apenas uma atividade,
-                 * vincula automaticamente todas as notas.
-                 *
-                 * Quando existem várias, o usuário deve
-                 * classificá-las no detalhamento.
-                 */
-                if (
-                    atividadesRendaNotas.length ===
-                    1
-                ) {
-                    resultados.forEach(
-                        nota => {
-                            nota.atividadeId =
-                                atividadesRendaNotas[0].id;
-                        }
-                    );
-                }
-
                 notasProcessadas.push(
-                    ...resultados
+                    ...notas
                 );
             } catch (erro) {
                 console.error(
-                    "Erro ao processar arquivo:",
                     arquivo.name,
                     erro
                 );
 
-                notasProcessadas.push({
-                    arquivo:
-                        arquivo.name,
-
-                    data:
-                        null,
-
-                    numero:
-                        "",
-
-                    emitente:
-                        "",
-
-                    valor:
-                        0,
-
-                    competencia:
-                        "",
-
-                    atividadeId:
-                        atividadesRendaNotas.length ===
-                            1
-                            ? atividadesRendaNotas[0].id
-                            : "",
-
-                    status:
-                        "Erro no processamento",
-
-                    texto:
-                        ""
-                });
+                notasProcessadas.push(
+                    criarNotaErro(
+                        arquivo.name
+                    )
+                );
             }
 
             await liberarInterface();
         }
 
+        processarAtividadesAutomaticas();
+
         consolidarNotasNosPeriodos();
+
+        renderizarAtividadesRendaNotas();
         renderizarNotasProcessadas();
+        renderizarPeriodosNotas();
+        atualizarResultadosNotas();
 
-        const identificadas =
+        const revisar =
             notasProcessadas.filter(
                 nota =>
-                    nota.data &&
-                    nota.valor > 0
+                    !nota.confirmada
             ).length;
 
-        const semAtividade =
-            notasProcessadas.filter(
-                nota =>
-                    nota.data &&
-                    nota.valor > 0 &&
-                    !nota.atividadeId
-            ).length;
-
-        let mensagem =
-            `${notasProcessadas.length} documento(s) ou página(s) analisado(s). ${identificadas} com data e valor identificados.`;
-
-        if (
-            semAtividade > 0
-        ) {
-            mensagem +=
-                ` ${semAtividade} nota(s) precisam ser vinculadas a uma atividade antes de entrar no cálculo.`;
-        }
-
         exibirMensagemOcr(
-            mensagem,
-            identificadas > 0
-                ? "sucesso"
-                : "atencao"
-        );
-    } catch (erro) {
-        console.error(
-            erro
-        );
-
-        exibirMensagemOcr(
-            "Ocorreu um erro durante o processamento dos documentos.",
-            "erro"
+            revisar > 0
+                ? `${notasProcessadas.length} documento(s) processado(s). ${revisar} requer(em) revisão.`
+                : `${notasProcessadas.length} documento(s) processado(s) com sucesso.`,
+            revisar > 0
+                ? "atencao"
+                : "sucesso"
         );
     } finally {
         mostrarStatusProcessamento(
             false
         );
 
-        if (btnProcessar) {
-            btnProcessar.disabled =
-                false;
+        if (botao) {
+            botao.disabled = false;
         }
     }
 }
 
 /* =========================================================
-   PROCESSAMENTO POR TIPO
+   PROCESSA UM ARQUIVO
    ========================================================= */
 
 async function processarArquivoNotaFiscal(
     arquivo,
-    indiceArquivo,
-    totalArquivos
+    indice,
+    total
 ) {
     const nome =
         String(
-            arquivo.name || ""
+            arquivo.name ||
+            ""
         ).toLowerCase();
+
+    if (
+        nome.endsWith(
+            ".xml"
+        )
+    ) {
+        const texto =
+            await arquivo.text();
+
+        return [
+            window.CreditoRuralNotasFiscais
+                .interpretarXmlNfe(
+                    texto,
+                    arquivo.name
+                )
+        ];
+    }
 
     if (
         nome.endsWith(
             ".pdf"
         )
     ) {
-        return (
-            processarPdfNotaFiscal(
-                arquivo,
-                indiceArquivo,
-                totalArquivos
-            )
+        return processarPdfNotaFiscal(
+            arquivo,
+            indice,
+            total
         );
     }
 
     if (
-        nome.endsWith(".jpg") ||
-        nome.endsWith(".jpeg") ||
-        nome.endsWith(".png") ||
-        nome.endsWith(".webp")
+        /\.(jpg|jpeg|png|webp)$/i
+            .test(
+                nome
+            )
     ) {
-        const texto =
-            await executarOcrImagem(
+        const ocr =
+            await executarOcrComRotacao(
                 arquivo,
-                progresso => {
+                progresso =>
                     atualizarProgressoArquivo(
-                        indiceArquivo,
-                        totalArquivos,
+                        indice,
+                        total,
                         progresso,
                         arquivo.name
-                    );
-                }
+                    )
             );
 
+        const nota =
+            window.CreditoRuralNotasFiscais
+                .interpretar(
+                    ocr.texto,
+                    arquivo.name
+                );
+
+        nota.rotacaoOcr =
+            ocr.angulo;
+
         return [
-            interpretarTextoNotaFiscal(
-                texto,
-                arquivo.name
-            )
+            nota
         ];
     }
 
     throw new Error(
-        "Formato de arquivo não suportado."
+        "Formato não suportado."
     );
 }
 
@@ -2766,21 +668,21 @@ async function processarPdfNotaFiscal(
     indiceArquivo,
     totalArquivos
 ) {
-    const pdfjsLib =
+    const pdfjs =
         await carregarPdfJs();
 
-    const arrayBuffer =
+    const buffer =
         await arquivo.arrayBuffer();
 
     const pdf =
-        await pdfjsLib
+        await pdfjs
             .getDocument({
                 data:
-                    arrayBuffer
+                    buffer
             })
             .promise;
 
-    const resultados = [];
+    const notas = [];
 
     for (
         let paginaNumero = 1;
@@ -2788,12 +690,6 @@ async function processarPdfNotaFiscal(
         pdf.numPages;
         paginaNumero++
     ) {
-        mostrarStatusProcessamento(
-            true,
-            `Processando ${arquivo.name}`,
-            `Página ${paginaNumero} de ${pdf.numPages}`
-        );
-
         const pagina =
             await pdf.getPage(
                 paginaNumero
@@ -2804,26 +700,31 @@ async function processarPdfNotaFiscal(
                 pagina
             );
 
+        let rotacaoOcr = 0;
+
+        const qualidade =
+            window.CreditoRuralNotasFiscais
+                .avaliarQualidadeTexto(
+                    texto
+                );
+
         if (
-            texto
-                .replace(
-                    /\s+/g,
-                    " "
-                )
-                .trim()
-                .length <
-            80
+            texto.replace(
+                /\s/g,
+                ""
+            ).length < 80 ||
+            qualidade < 20
         ) {
             const canvas =
                 await renderizarPaginaPdf(
                     pagina
                 );
 
-            texto =
-                await executarOcrImagem(
+            const ocr =
+                await executarOcrComRotacao(
                     canvas,
                     progresso => {
-                        const progressoPagina =
+                        const parcial =
                             (
                                 paginaNumero -
                                 1 +
@@ -2834,77 +735,74 @@ async function processarPdfNotaFiscal(
                         atualizarProgressoArquivo(
                             indiceArquivo,
                             totalArquivos,
-                            progressoPagina,
-                            `${arquivo.name} - página ${paginaNumero}`
+                            parcial,
+                            `${arquivo.name} - Página ${paginaNumero}`
                         );
                     }
                 );
+
+            texto =
+                ocr.texto;
+
+            rotacaoOcr =
+                ocr.angulo;
 
             canvas.width = 1;
             canvas.height = 1;
         }
 
-        resultados.push(
-            interpretarTextoNotaFiscal(
-                texto,
-                pdf.numPages > 1
-                    ? `${arquivo.name} - Página ${paginaNumero}`
-                    : arquivo.name
-            )
+        const nota =
+            window.CreditoRuralNotasFiscais
+                .interpretar(
+                    texto,
+                    pdf.numPages > 1
+                        ? `${arquivo.name} - Página ${paginaNumero}`
+                        : arquivo.name
+                );
+
+        nota.rotacaoOcr =
+            rotacaoOcr;
+
+        notas.push(
+            nota
         );
 
-        if (
-            typeof pagina.cleanup ===
-            "function"
-        ) {
-            pagina.cleanup();
-        }
+        pagina.cleanup?.();
 
         await liberarInterface();
     }
 
-    if (
-        typeof pdf.cleanup ===
-        "function"
-    ) {
-        pdf.cleanup();
-    }
+    pdf.cleanup?.();
 
-    return resultados;
+    return notas;
 }
 
 /* =========================================================
-   CARREGAMENTO DO PDF.JS
+   PDF.JS
    ========================================================= */
 
 async function carregarPdfJs() {
     if (
         window.pdfjsLib
     ) {
-        return (
-            window.pdfjsLib
-        );
+        return window.pdfjsLib;
     }
 
-    const pdfjsLib =
+    const pdfjs =
         await import(
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
         );
 
-    pdfjsLib
+    pdfjs
         .GlobalWorkerOptions
         .workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
 
     window.pdfjsLib =
-        pdfjsLib;
+        pdfjs;
 
-    return pdfjsLib;
+    return pdfjs;
 }
-
-/* =========================================================
-   TEXTO NATIVO DO PDF
-   ========================================================= */
 
 async function extrairTextoPaginaPdf(
     pagina
@@ -2920,44 +818,23 @@ async function extrairTextoPaginaPdf(
                     item.str
             )
             .join("\n");
-    } catch (erro) {
-        console.warn(
-            "Não foi possível extrair texto nativo do PDF.",
-            erro
-        );
-
+    } catch {
         return "";
     }
 }
 
-/* =========================================================
-   RENDERIZA PDF PARA OCR
-   ========================================================= */
-
 async function renderizarPaginaPdf(
     pagina
 ) {
-    const escala =
-        2.2;
-
     const viewport =
         pagina.getViewport({
             scale:
-                escala
+                2.2
         });
 
     const canvas =
         document.createElement(
             "canvas"
-        );
-
-    const contexto =
-        canvas.getContext(
-            "2d",
-            {
-                willReadFrequently:
-                    true
-            }
         );
 
     canvas.width =
@@ -2972,8 +849,13 @@ async function renderizarPaginaPdf(
 
     await pagina.render({
         canvasContext:
-            contexto,
-
+            canvas.getContext(
+                "2d",
+                {
+                    willReadFrequently:
+                        true
+                }
+            ),
         viewport
     }).promise;
 
@@ -2984,43 +866,38 @@ async function renderizarPaginaPdf(
    OCR
    ========================================================= */
 
-async function executarOcrImagem(
+async function executarOcrBasico(
     imagem,
-    callbackProgresso
+    callback
 ) {
     if (
-        typeof window.Tesseract ===
-        "undefined" ||
-        typeof window.Tesseract
-            .recognize !==
-        "function"
+        !window.Tesseract
     ) {
         throw new Error(
-            "Tesseract.js não foi carregado."
+            "Tesseract.js não carregado."
         );
     }
 
     const resultado =
-        await window.Tesseract.recognize(
-            imagem,
-            "por",
-            {
-                logger:
-                    mensagem => {
-                        if (
-                            mensagem.status ===
-                            "recognizing text" &&
-                            typeof callbackProgresso ===
-                            "function"
-                        ) {
-                            callbackProgresso(
-                                mensagem.progress ||
-                                0
-                            );
+        await window.Tesseract
+            .recognize(
+                imagem,
+                "por",
+                {
+                    logger:
+                        mensagem => {
+                            if (
+                                mensagem.status ===
+                                "recognizing text"
+                            ) {
+                                callback?.(
+                                    mensagem.progress ||
+                                    0
+                                );
+                            }
                         }
-                    }
-            }
-        );
+                }
+            );
 
     return (
         resultado?.data?.text ||
@@ -3028,1134 +905,767 @@ async function executarOcrImagem(
     );
 }
 
-/* =========================================================
-   INTERPRETAÇÃO DA NOTA FISCAL
-   ========================================================= */
-
-function interpretarTextoNotaFiscal(
-    textoOriginal,
-    nomeArquivo
+async function executarOcrComRotacao(
+    imagem,
+    callback
 ) {
-    const texto =
-        normalizarTextoOcr(
-            textoOriginal
+    const inicial =
+        await executarOcrBasico(
+            imagem,
+            callback
         );
 
-    const data =
-        extrairDataEmissao(
-            texto
-        );
-
-    const numero =
-        extrairNumeroNota(
-            texto
-        );
-
-    const emitente =
-        extrairEmitente(
-            texto
-        );
-
-    /*
-     * O cálculo utiliza exclusivamente
-     * o VALOR TOTAL DA NOTA.
-     */
-    const valor =
-        extrairValorTotal(
-            texto
-        );
-
-    const competencia =
-        data
-            ? formatarCompetenciaData(
-                data
-            )
-            : "";
-
-    const pendencias = [];
-
-    if (!data) {
-        pendencias.push(
-            "data"
-        );
-    }
-
-    if (!numero) {
-        pendencias.push(
-            "número"
-        );
-    }
-
-    if (!emitente) {
-        pendencias.push(
-            "emitente"
-        );
-    }
-
-    if (
-        valor <= 0
-    ) {
-        pendencias.push(
-            "valor"
-        );
-    }
-
-    let status =
-        "Identificada";
-
-    if (
-        pendencias.length >
-        0
-    ) {
-        status =
-            "Não identificado: " +
-            pendencias.join(
-                ", "
-            );
-    }
-
-    return {
-        arquivo:
-            nomeArquivo,
-
-        data,
-
-        numero,
-
-        emitente,
-
-        valor,
-
-        competencia,
-
-        atividadeId:
-            atividadesRendaNotas.length ===
-                1
-                ? atividadesRendaNotas[0].id
-                : "",
-
-        status,
-
+    let melhor = {
         texto:
-            textoOriginal
+            inicial,
+
+        angulo:
+            0,
+
+        qualidade:
+            window.CreditoRuralNotasFiscais
+                .avaliarQualidadeTexto(
+                    inicial
+                )
     };
-}
-
-/* =========================================================
-   NORMALIZAÇÃO OCR
-   ========================================================= */
-
-function normalizarTextoOcr(
-    texto
-) {
-    return String(
-        texto || ""
-    )
-        .replace(
-            /\r/g,
-            "\n"
-        )
-        .replace(
-            /[|]/g,
-            " "
-        )
-        .replace(
-            /[ \t]+/g,
-            " "
-        )
-        .replace(
-            /\n[ \t]+/g,
-            "\n"
-        )
-        .replace(
-            /\n{3,}/g,
-            "\n\n"
-        )
-        .trim();
-}
-
-function normalizarComparacao(
-    texto
-) {
-    return String(
-        texto || ""
-    )
-        .normalize(
-            "NFD"
-        )
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        )
-        .toUpperCase()
-        .replace(
-            /\s+/g,
-            " "
-        )
-        .trim();
-}
-
-/* =========================================================
-   EXTRAÇÃO DA DATA DE EMISSÃO
-   ========================================================= */
-
-function extrairDataEmissao(
-    texto
-) {
-    const linhas =
-        String(
-            texto || ""
-        )
-            .split(
-                /\n/
-            )
-            .map(
-                linha =>
-                    linha.trim()
-            )
-            .filter(
-                Boolean
-            );
-
-    const padroes = [
-        /DATA\s*(?:DE\s*)?EMISS[AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i,
-        /DATA\/HORA\s*(?:DE\s*)?EMISS[AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i,
-        /EMISS[AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i,
-        /EMITID[AO]\s+EM[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i,
-        /DATA\s+DA\s+EMISS[AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i,
-        /DATA\s+DE\s+GERA[CÇ][AÃ]O[^0-9]{0,30}(\d{2}\/\d{2}\/\d{4})/i
-    ];
-
-    for (
-        const padrao of
-        padroes
-    ) {
-        const match =
-            texto.match(
-                padrao
-            );
-
-        if (
-            match &&
-            validarDataBrasileira(
-                match[1]
-            )
-        ) {
-            return (
-                match[1]
-            );
-        }
-    }
-
-    for (
-        let i = 0;
-        i <
-        linhas.length;
-        i++
-    ) {
-        const normalizada =
-            normalizarComparacao(
-                linhas[i]
-            );
-
-        if (
-            normalizada.includes(
-                "EMISSAO"
-            ) ||
-            normalizada.includes(
-                "EMITIDA"
-            ) ||
-            normalizada.includes(
-                "DATA DE GERACAO"
-            )
-        ) {
-            const trecho = [
-                linhas[i],
-                linhas[i + 1] ||
-                "",
-                linhas[i + 2] ||
-                ""
-            ].join(" ");
-
-            const datas =
-                trecho.match(
-                    /\b\d{2}\/\d{2}\/\d{4}\b/g
-                ) || [];
-
-            for (
-                const data of
-                datas
-            ) {
-                if (
-                    validarDataBrasileira(
-                        data
-                    )
-                ) {
-                    return data;
-                }
-            }
-        }
-    }
-
-    const todasDatas =
-        texto.match(
-            /\b\d{2}\/\d{2}\/\d{4}\b/g
-        ) || [];
-
-    for (
-        const data of
-        todasDatas
-    ) {
-        if (
-            validarDataBrasileira(
-                data
-            )
-        ) {
-            return data;
-        }
-    }
-
-    return null;
-}
-
-/* =========================================================
-   VALIDAÇÃO DA DATA
-   ========================================================= */
-
-function validarDataBrasileira(
-    valor
-) {
-    const match =
-        String(
-            valor || ""
-        ).match(
-            /^(\d{2})\/(\d{2})\/(\d{4})$/
-        );
-
-    if (!match) {
-        return false;
-    }
-
-    const dia =
-        Number(
-            match[1]
-        );
-
-    const mes =
-        Number(
-            match[2]
-        );
-
-    const ano =
-        Number(
-            match[3]
-        );
 
     if (
-        ano < 1900 ||
-        ano > 2200 ||
-        mes < 1 ||
-        mes > 12 ||
-        dia < 1 ||
-        dia > 31
+        melhor.qualidade >=
+        QUALIDADE_MINIMA_OCR
     ) {
-        return false;
+        return melhor;
     }
 
-    const data =
-        new Date(
-            ano,
-            mes - 1,
-            dia
+    const base =
+        await converterImagemParaCanvas(
+            imagem
         );
-
-    return (
-        data.getFullYear() ===
-        ano &&
-        data.getMonth() ===
-        mes - 1 &&
-        data.getDate() ===
-        dia
-    );
-}
-
-/* =========================================================
-   EXTRAÇÃO DO NÚMERO DA NOTA
-   ========================================================= */
-
-function extrairNumeroNota(
-    texto
-) {
-    const padroes = [
-        /N[ÚU]MERO\s+(?:DA\s+)?(?:NFS[- ]?E|NF[- ]?E|NOTA)[^0-9]{0,20}(\d{1,20})/i,
-        /N[ÚU]MERO[^0-9]{0,15}(\d{1,20})/i,
-        /NF[- ]?E[^0-9]{0,15}(?:N[º°O.]*)?[^0-9]{0,10}(\d{1,20})/i,
-        /NFS[- ]?E[^0-9]{0,15}(?:N[º°O.]*)?[^0-9]{0,10}(\d{1,20})/i,
-        /NOTA\s+FISCAL[^0-9]{0,20}(?:N[º°O.]*)?[^0-9]{0,10}(\d{1,20})/i,
-        /\bN[º°]\s*(\d{1,20})\b/i
-    ];
 
     for (
-        const padrao of
-        padroes
+        const angulo of
+        [
+            90,
+            180,
+            270
+        ]
     ) {
-        const match =
-            texto.match(
-                padrao
+        const rotacionado =
+            rotacionarCanvas(
+                base,
+                angulo
             );
 
-        if (
-            match &&
-            match[1]
-        ) {
-            const numero =
-                String(
-                    match[1]
-                )
-                    .replace(
-                        /\D/g,
-                        ""
-                    )
-                    .trim();
-
-            if (numero) {
-                return numero;
-            }
-        }
-    }
-
-    return "";
-}
-
-/* =========================================================
-   EXTRAÇÃO DO EMITENTE
-   ========================================================= */
-
-function extrairEmitente(
-    texto
-) {
-    const conteudo =
-        String(
-            texto || ""
-        );
-
-    const linhas =
-        conteudo
-            .split(
-                /\n/
-            )
-            .map(
-                linha =>
-                    linha.trim()
-            )
-            .filter(
-                Boolean
+        const texto =
+            await executarOcrBasico(
+                rotacionado,
+                callback
             );
 
-    const matchRecebemos =
-        conteudo.match(
-            /RECEBEMOS\s+DE\s+(.+?)\s+OS\s+PRODUTOS\s+DA\s+NOTA\s+FISCAL/i
-        );
-
-    if (
-        matchRecebemos &&
-        matchRecebemos[1]
-    ) {
-        const candidato =
-            limparNomeEmitente(
-                matchRecebemos[1]
-            );
-
-        if (candidato) {
-            return candidato;
-        }
-    }
-
-    const padroes = [
-        /RAZ[AÃ]O\s+SOCIAL[\s:.-]+([^\n]+)/i,
-        /NOME\s*(?:\/|\s+)?RAZ[AÃ]O\s+SOCIAL[\s:.-]+([^\n]+)/i,
-        /PRESTADOR\s+DE\s+SERVI[CÇ]OS?[\s:.-]+([^\n]+)/i,
-        /EMITENTE[\s:.-]+([^\n]+)/i,
-        /FORNECEDOR[\s:.-]+([^\n]+)/i
-    ];
-
-    for (
-        const padrao of
-        padroes
-    ) {
-        const match =
-            conteudo.match(
-                padrao
-            );
-
-        if (
-            match &&
-            match[1]
-        ) {
-            const candidato =
-                limparNomeEmitente(
-                    match[1]
+        const qualidade =
+            window.CreditoRuralNotasFiscais
+                .avaliarQualidadeTexto(
+                    texto
                 );
 
-            if (candidato) {
-                return candidato;
-            }
+        if (
+            qualidade >
+            melhor.qualidade
+        ) {
+            melhor = {
+                texto,
+                angulo,
+                qualidade
+            };
         }
-    }
 
-    for (
-        let i = 0;
-        i <
-        linhas.length;
-        i++
-    ) {
-        const normalizada =
-            normalizarComparacao(
-                linhas[i]
-            );
+        rotacionado.width = 1;
+        rotacionado.height = 1;
 
         if (
-            normalizada ===
-            "DANFE" ||
-            normalizada.includes(
-                "DOCUMENTO AUXILIAR DA"
-            )
+            melhor.qualidade >=
+            QUALIDADE_MINIMA_OCR
         ) {
-            for (
-                let anterior = 1;
-                anterior <= 4;
-                anterior++
-            ) {
-                const candidato =
-                    limparNomeEmitente(
-                        linhas[
-                        i -
-                        anterior
-                        ] ||
-                        ""
-                    );
-
-                if (
-                    candidato &&
-                    !/^(NF-?E|SERIE|N[º°]|FAZENDA|SITIO|RODOVIA|RUA|AVENIDA)/i.test(
-                        candidato
-                    )
-                ) {
-                    return candidato;
-                }
-            }
+            break;
         }
     }
 
-    for (
-        let i = 0;
-        i <
-        linhas.length;
-        i++
-    ) {
-        const normalizada =
-            normalizarComparacao(
-                linhas[i]
-            );
+    base.width = 1;
+    base.height = 1;
 
-        if (
-            normalizada ===
-            "EMITENTE" ||
-            normalizada.includes(
-                "IDENTIFICACAO DO EMITENTE"
-            ) ||
-            normalizada.includes(
-                "DADOS DO EMITENTE"
-            ) ||
-            normalizada.includes(
-                "PRESTADOR DE SERVICOS"
-            )
-        ) {
-            for (
-                let proxima = 1;
-                proxima <= 4;
-                proxima++
-            ) {
-                const candidato =
-                    limparNomeEmitente(
-                        linhas[
-                        i +
-                        proxima
-                        ] ||
-                        ""
-                    );
-
-                if (candidato) {
-                    return candidato;
-                }
-            }
-        }
-    }
-
-    return "";
+    return melhor;
 }
 
 /* =========================================================
-   LIMPEZA DO EMITENTE
+   CANVAS
    ========================================================= */
 
-function limparNomeEmitente(
-    valor
+async function converterImagemParaCanvas(
+    origem
 ) {
-    let texto =
-        String(
-            valor || ""
-        )
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
-
-    if (!texto) {
-        return "";
-    }
-
-    texto =
-        texto
-            .replace(
-                /\b(CNPJ|CPF|INSCRI[CÇ][AÃ]O|IE|IM|ENDERE[CÇ]O|CEP|FONE|TELEFONE)\b.*$/i,
-                ""
-            )
-            .replace(
-                /^[\s:.-]+/,
-                ""
-            )
-            .trim();
-
     if (
-        texto.length < 3 ||
-        /^\d+$/.test(
-            texto
-        )
+        origem instanceof
+        HTMLCanvasElement
     ) {
-        return "";
-    }
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
 
-    if (
-        /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(
-            texto
-        )
-    ) {
-        return "";
-    }
+        canvas.width =
+            origem.width;
 
-    if (
-        texto.length >
-        120
-    ) {
-        texto =
-            texto.substring(
+        canvas.height =
+            origem.height;
+
+        canvas
+            .getContext(
+                "2d"
+            )
+            .drawImage(
+                origem,
                 0,
-                120
-            ).trim();
+                0
+            );
+
+        return canvas;
     }
 
-    return texto;
-}
-
-/* =========================================================
-   EXTRAÇÃO DO VALOR TOTAL DA NOTA
-   ========================================================= */
-
-function extrairValorTotal(
-    texto
-) {
-    const conteudo =
-        String(
-            texto || ""
+    const bitmap =
+        await createImageBitmap(
+            origem
         );
 
-    const linhas =
-        conteudo
-            .split(
-                /\n/
-            )
-            .map(
-                linha =>
-                    linha.trim()
-            )
-            .filter(
-                Boolean
-            );
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-    /* =====================================================
-       PRIORIDADE 1 - CANHOTO
-       ===================================================== */
+    canvas.width =
+        bitmap.width;
 
-    const padroesCanhoto = [
-        /EMISS[AÃ]O\s*:\s*\d{2}\/\d{2}\/\d{4}[\s\S]{0,350}?VALOR\s*:\s*R?\$?\s*([\d.]+,\d{2})/i,
-        /DESTINAT[AÁ]RIO\s*:[\s\S]{0,300}?VALOR\s*:\s*R?\$?\s*([\d.]+,\d{2})/i
-    ];
+    canvas.height =
+        bitmap.height;
 
-    for (
-        const padrao of
-        padroesCanhoto
-    ) {
-        const match =
-            conteudo.match(
-                padrao
-            );
-
-        if (
-            match &&
-            match[1]
-        ) {
-            const valor =
-                converterNumeroBrasileiro(
-                    match[1]
-                );
-
-            if (
-                valor > 0
-            ) {
-                return valor;
-            }
-        }
-    }
-
-    /* =====================================================
-       PRIORIDADE 2 - RÓTULO DIRETO
-       ===================================================== */
-
-    const padroesDiretos = [
-        /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+DA\s+NOTA[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /TOTAL\s+DA\s+NOTA[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /VALOR\s+TOTAL\s+(?:DA\s+)?NF[- ]?E[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i,
-        /TOTAL\s+NF[- ]?E[^0-9]{0,80}(?:R\$\s*)?([\d.]+,\d{2})/i
-    ];
-
-    for (
-        const padrao of
-        padroesDiretos
-    ) {
-        const match =
-            conteudo.match(
-                padrao
-            );
-
-        if (
-            match &&
-            match[1]
-        ) {
-            const valor =
-                converterNumeroBrasileiro(
-                    match[1]
-                );
-
-            if (
-                valor > 0
-            ) {
-                return valor;
-            }
-        }
-    }
-
-    /* =====================================================
-       PRIORIDADE 3 - VALOR PRÓXIMO DO RÓTULO
-       ===================================================== */
-
-    for (
-        let i = 0;
-        i <
-        linhas.length;
-        i++
-    ) {
-        const normalizada =
-            normalizarComparacao(
-                linhas[i]
-            );
-
-        const ehTotalDaNota =
-            normalizada.includes(
-                "VALOR TOTAL DA NOTA"
-            ) ||
-            normalizada.includes(
-                "VALOR TOTAL NOTA"
-            ) ||
-            normalizada.includes(
-                "TOTAL DA NOTA"
-            ) ||
-            normalizada ===
-            "VALOR DA NOTA";
-
-        if (!ehTotalDaNota) {
-            continue;
-        }
-
-        const valoresMesmaLinha =
-            extrairValoresMonetarios(
-                linhas[i]
-            );
-
-        if (
-            valoresMesmaLinha.length >
+    canvas
+        .getContext(
+            "2d"
+        )
+        .drawImage(
+            bitmap,
+            0,
             0
-        ) {
-            const valor =
-                valoresMesmaLinha[
-                valoresMesmaLinha.length -
-                1
-                ];
+        );
 
-            if (
-                valor > 0
-            ) {
-                return valor;
-            }
-        }
+    bitmap.close?.();
 
-        for (
-            let anterior = 1;
-            anterior <= 8;
-            anterior++
-        ) {
-            const linhaAnterior =
-                linhas[
-                i -
-                anterior
-                ];
-
-            if (!linhaAnterior) {
-                continue;
-            }
-
-            const valores =
-                extrairValoresMonetarios(
-                    linhaAnterior
-                );
-
-            if (
-                valores.length >
-                0
-            ) {
-                const valor =
-                    valores[
-                    valores.length -
-                    1
-                    ];
-
-                if (
-                    valor > 0
-                ) {
-                    return valor;
-                }
-            }
-        }
-
-        for (
-            let proxima = 1;
-            proxima <= 8;
-            proxima++
-        ) {
-            const linhaSeguinte =
-                linhas[
-                i +
-                proxima
-                ];
-
-            if (!linhaSeguinte) {
-                continue;
-            }
-
-            const valores =
-                extrairValoresMonetarios(
-                    linhaSeguinte
-                );
-
-            if (
-                valores.length >
-                0
-            ) {
-                const valor =
-                    valores[
-                    valores.length -
-                    1
-                    ];
-
-                if (
-                    valor > 0
-                ) {
-                    return valor;
-                }
-            }
-        }
-    }
-
-    /*
-     * Não utiliza descrição, valor unitário,
-     * subtotal, impostos ou maior valor do documento
-     * como fallback.
-     */
-    return 0;
+    return canvas;
 }
 
-/* =========================================================
-   VALORES MONETÁRIOS
-   ========================================================= */
-
-function extrairValoresMonetarios(
-    texto
+function rotacionarCanvas(
+    origem,
+    angulo
 ) {
-    const correspondencias =
-        String(
-            texto || ""
-        ).match(
-            /(?:R\$\s*)?\d{1,3}(?:\.\d{3})*,\d{2}|(?:R\$\s*)?\d+,\d{2}/g
-        ) || [];
+    const radianos =
+        angulo *
+        Math.PI /
+        180;
 
-    return correspondencias
-        .map(
-            valor =>
-                converterNumeroBrasileiro(
-                    valor
-                )
-        )
-        .filter(
-            valor =>
-                Number.isFinite(
-                    valor
-                ) &&
-                valor >= 0
-        );
-}
+    const trocar =
+        angulo === 90 ||
+        angulo === 270;
 
-function converterNumeroBrasileiro(
-    valor
-) {
-    let texto =
-        String(
-            valor || ""
-        )
-            .replace(
-                /R\$/gi,
-                ""
-            )
-            .replace(
-                /\s/g,
-                ""
-            )
-            .trim();
-
-    if (!texto) {
-        return 0;
-    }
-
-    if (
-        texto.includes(
-            ","
-        )
-    ) {
-        texto =
-            texto
-                .replace(
-                    /\./g,
-                    ""
-                )
-                .replace(
-                    ",",
-                    "."
-                );
-    }
-
-    texto =
-        texto.replace(
-            /[^\d.-]/g,
-            ""
+    const canvas =
+        document.createElement(
+            "canvas"
         );
 
-    const numero =
-        Number(
-            texto
+    canvas.width =
+        trocar
+            ? origem.height
+            : origem.width;
+
+    canvas.height =
+        trocar
+            ? origem.width
+            : origem.height;
+
+    const ctx =
+        canvas.getContext(
+            "2d"
         );
 
-    return Number.isFinite(
-        numero
-    )
-        ? numero
-        : 0;
-}
-
-/* =========================================================
-   CONSOLIDAÇÃO AUTOMÁTICA
-   ========================================================= */
-
-function consolidarNotasNosPeriodos() {
-    /*
-     * Remove somente a parte OCR.
-     *
-     * Períodos exclusivamente manuais continuam.
-     *
-     * Períodos mistos são mantidos apenas com os valores
-     * manuais? Como não há armazenamento separado das
-     * parcelas manual/OCR, o sistema evita criar "misto"
-     * automaticamente durante OCR e reconstrói o OCR
-     * sobre os períodos existentes.
-     */
-
-    periodosNotas =
-        periodosNotas.filter(
-            periodo =>
-                periodo.origem !==
-                "ocr"
-        );
-
-    const notasValidas =
-        notasProcessadas.filter(
-            nota =>
-                nota.competencia &&
-                Number(
-                    nota.valor
-                ) >
-                0 &&
-                nota.atividadeId &&
-                obterAtividadePorId(
-                    nota.atividadeId
-                )
-        );
-
-    const agrupamento =
-        new Map();
-
-    notasValidas.forEach(
-        nota => {
-            const chave =
-                [
-                    nota.atividadeId,
-                    nota.competencia
-                ].join("|");
-
-            if (
-                !agrupamento.has(
-                    chave
-                )
-            ) {
-                agrupamento.set(
-                    chave,
-                    {
-                        atividadeId:
-                            nota.atividadeId,
-
-                        periodo:
-                            formatarCompetenciaExibicao(
-                                nota.competencia
-                            ),
-
-                        valor:
-                            0,
-
-                        quantidade:
-                            0
-                    }
-                );
-            }
-
-            const grupo =
-                agrupamento.get(
-                    chave
-                );
-
-            grupo.valor +=
-                Number(
-                    nota.valor
-                ) || 0;
-
-            grupo.quantidade++;
-        }
+    ctx.translate(
+        canvas.width /
+        2,
+        canvas.height /
+        2
     );
 
-    agrupamento.forEach(
-        grupo => {
-            /*
-             * Se existir período manual na mesma competência
-             * e atividade, mantém registros separados para
-             * não transformar automaticamente o manual em OCR.
-             *
-             * A consolidação de duplicados só ocorre em
-             * edições feitas pelo usuário.
-             */
-            const existenteManual =
-                periodosNotas.find(
-                    periodo =>
-                        periodo.atividadeId ===
-                        grupo.atividadeId &&
-                        normalizarPeriodoChave(
-                            periodo.periodo
-                        ) ===
-                        normalizarPeriodoChave(
-                            grupo.periodo
-                        ) &&
-                        periodo.origem !==
-                        "ocr"
-                );
+    ctx.rotate(
+        radianos
+    );
 
-            if (existenteManual) {
-                periodosNotas.push({
-                    id:
-                        gerarId(),
+    ctx.drawImage(
+        origem,
+        -origem.width /
+        2,
+        -origem.height /
+        2
+    );
 
-                    atividadeId:
-                        grupo.atividadeId,
+    return canvas;
+}
 
-                    periodo:
-                        grupo.periodo,
+/* =========================================================
+   ATIVIDADES AUTOMÁTICAS
+   ========================================================= */
 
-                    valor:
-                        grupo.valor,
+function processarAtividadesAutomaticas() {
+    notasProcessadas.forEach(
+        nota => {
+            const sugestoes =
+                nota.atividadesSugeridas ||
+                [];
 
-                    quantidade:
-                        grupo.quantidade,
+            if (
+                sugestoes.length !==
+                1
+            ) {
+                nota.atividadeId =
+                    "";
 
-                    origem:
-                        "ocr"
-                });
+                nota.confirmada =
+                    false;
 
                 return;
             }
 
-            periodosNotas.push({
-                id:
-                    gerarId(),
+            const sugestao =
+                sugestoes[0];
 
-                atividadeId:
-                    grupo.atividadeId,
+            if (
+                !sugestao.atividade
+            ) {
+                nota.atividadeId =
+                    "";
 
-                periodo:
-                    grupo.periodo,
+                nota.confirmada =
+                    false;
 
-                valor:
-                    grupo.valor,
+                return;
+            }
 
-                quantidade:
-                    grupo.quantidade,
+            const atividade =
+                obterOuCriarAtividadeAutomatica(
+                    sugestao.grupo,
+                    sugestao.atividade
+                );
 
-                origem:
-                    "ocr"
-            });
+            nota.atividadeId =
+                atividade.id;
+
+            if (
+                !sugestao.automatico
+            ) {
+                nota.confirmada =
+                    false;
+
+                nota.requerConferencia =
+                    true;
+            }
+
+            /*
+             * Nota de produtor antiga nunca entra
+             * automaticamente.
+             */
+            if (
+                nota.modelo ===
+                "produtor_antiga"
+            ) {
+                nota.confirmada =
+                    false;
+
+                nota.requerConferencia =
+                    true;
+            }
+        }
+    );
+}
+
+/* =========================================================
+   CRIA ATIVIDADE AUTOMÁTICA
+   ========================================================= */
+
+function obterOuCriarAtividadeAutomatica(
+    grupo,
+    atividade
+) {
+    let existente =
+        atividadesRendaNotas.find(
+            item =>
+                item.grupo ===
+                grupo &&
+                item.atividade ===
+                atividade
+        );
+
+    if (existente) {
+        return existente;
+    }
+
+    existente = {
+        id:
+            gerarId(),
+
+        grupo,
+
+        atividade,
+
+        criterio:
+            CRITERIOS_APURACAO_NOTAS
+                .MOVIMENTACAO,
+
+        mesesRepresentados:
+            12,
+
+        origem:
+            "automatica"
+    };
+
+    atividadesRendaNotas.push(
+        existente
+    );
+
+    return existente;
+}
+
+/* =========================================================
+   ATIVIDADE MANUAL
+   ========================================================= */
+
+function adicionarAtividadeManual() {
+    const grupo =
+        document.getElementById(
+            "grupoAtividadeNotas"
+        );
+
+    const atividade =
+        document.getElementById(
+            "atividadeNotas"
+        );
+
+    const criterio =
+        document.getElementById(
+            "criterioAtividadeNotas"
+        );
+
+    const meses =
+        document.getElementById(
+            "mesesAtividadeNotas"
+        );
+
+    if (
+        !grupo?.value ||
+        !atividade?.value
+    ) {
+        return;
+    }
+
+    const existente =
+        atividadesRendaNotas.find(
+            item =>
+                item.grupo ===
+                grupo.value &&
+                item.atividade ===
+                atividade.value
+        );
+
+    if (existente) {
+        exibirMensagemOcr(
+            "Essa atividade já está cadastrada.",
+            "atencao"
+        );
+
+        return;
+    }
+
+    atividadesRendaNotas.push({
+        id:
+            gerarId(),
+
+        grupo:
+            grupo.value,
+
+        atividade:
+            atividade.value,
+
+        criterio:
+            criterio.value,
+
+        mesesRepresentados:
+            Math.max(
+                1,
+                Number(
+                    meses?.value
+                ) ||
+                12
+            ),
+
+        origem:
+            "manual"
+    });
+
+    renderizarAtividadesRendaNotas();
+    renderizarNotasProcessadas();
+}
+
+/* =========================================================
+   TABELA DE ATIVIDADES
+   ========================================================= */
+
+function renderizarAtividadesRendaNotas() {
+    const tbody =
+        document.getElementById(
+            "tabelaAtividadesNotas"
+        );
+
+    if (!tbody) {
+        return;
+    }
+
+    tbody.innerHTML = "";
+
+    if (
+        atividadesRendaNotas.length ===
+        0
+    ) {
+        tbody.innerHTML = `
+            <tr class="notas-linha-vazia">
+                <td colspan="7">
+                    Nenhuma atividade identificada ou adicionada.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    const resumo =
+        calcularResumoAtividades();
+
+    atividadesRendaNotas.forEach(
+        atividade => {
+            const calculo =
+                resumo.find(
+                    item =>
+                        item.atividadeId ===
+                        atividade.id
+                );
+
+            const nomeGrupo =
+                obterNomeGrupo(
+                    atividade.grupo
+                );
+
+            const nomeAtividade =
+                obterNomeAtividade(
+                    atividade.grupo,
+                    atividade.atividade
+                );
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+            tr.innerHTML = `
+                <td>
+                    ${escaparHtml(
+                nomeGrupo
+            )}
+                </td>
+
+                <td>
+                    ${escaparHtml(
+                nomeAtividade
+            )}
+
+                    ${atividade.origem ===
+                    "automatica"
+                    ? `
+                                <small
+                                    style="
+                                        display:block;
+                                        margin-top:3px;
+                                        opacity:.7;
+                                    "
+                                >
+                                    Identificada automaticamente
+                                </small>
+                            `
+                    : ""
+                }
+                </td>
+
+                <td>
+                    <select
+                        class="notas-input-tabela atividade-criterio"
+                    >
+                        ${gerarOpcoesCriterio(
+                    atividade.criterio
+                )}
+                    </select>
+                </td>
+
+                <td>
+                    <input
+                        type="number"
+                        min="1"
+                        max="120"
+                        class="notas-input-tabela atividade-meses"
+                        value="${atividade.mesesRepresentados}"
+                        ${atividade.criterio ===
+                    CRITERIOS_APURACAO_NOTAS
+                        .INFORMADO
+                    ? ""
+                    : "disabled"
+                }
+                    >
+                </td>
+
+                <td>
+                    ${calculo
+                    ?.mesesConsiderados ||
+                "-"
+                }
+                </td>
+
+                <td>
+                    ${formatarMoeda(
+                    calculo
+                        ?.rendaMensal ||
+                    0
+                )}
+                </td>
+
+                <td class="notas-coluna-acoes">
+                    <button
+                        type="button"
+                        class="notas-btn-remover"
+                    >
+                        Remover
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(
+                tr
+            );
+
+            tr.querySelector(
+                ".atividade-criterio"
+            )?.addEventListener(
+                "change",
+                function () {
+                    atividade.criterio =
+                        this.value;
+
+                    renderizarAtividadesRendaNotas();
+                    atualizarResultadosNotas();
+                }
+            );
+
+            tr.querySelector(
+                ".atividade-meses"
+            )?.addEventListener(
+                "change",
+                function () {
+                    atividade.mesesRepresentados =
+                        Math.max(
+                            1,
+                            Number(
+                                this.value
+                            ) ||
+                            1
+                        );
+
+                    atualizarResultadosNotas();
+                }
+            );
+
+            tr.querySelector(
+                ".notas-btn-remover"
+            )?.addEventListener(
+                "click",
+                () =>
+                    removerAtividade(
+                        atividade.id
+                    )
+            );
+        }
+    );
+}
+
+/* =========================================================
+   REMOVE ATIVIDADE
+   ========================================================= */
+
+function removerAtividade(
+    id
+) {
+    atividadesRendaNotas =
+        atividadesRendaNotas.filter(
+            item =>
+                item.id !==
+                id
+        );
+
+    notasProcessadas.forEach(
+        nota => {
+            if (
+                nota.atividadeId ===
+                id
+            ) {
+                nota.atividadeId =
+                    "";
+
+                nota.confirmada =
+                    false;
+            }
         }
     );
 
-    ordenarPeriodos();
+    periodosNotas =
+        periodosNotas.filter(
+            periodo =>
+                periodo.atividadeId !==
+                id
+        );
 
-    renderizarPeriodosNotas();
     renderizarAtividadesRendaNotas();
+    renderizarNotasProcessadas();
+    renderizarPeriodosNotas();
     atualizarResultadosNotas();
 }
 
 /* =========================================================
-   RENDERIZAÇÃO DAS NOTAS PROCESSADAS
+   OPÇÕES DE CRITÉRIO
+   ========================================================= */
+
+function gerarOpcoesCriterio(
+    atual
+) {
+    return `
+        <option
+            value="movimentacao"
+            ${atual ===
+            "movimentacao"
+            ? "selected"
+            : ""
+        }
+        >
+            Meses com movimentação
+        </option>
+
+        <option
+            value="intervalo"
+            ${atual ===
+            "intervalo"
+            ? "selected"
+            : ""
+        }
+        >
+            Intervalo completo
+        </option>
+
+        <option
+            value="informado"
+            ${atual ===
+            "informado"
+            ? "selected"
+            : ""
+        }
+        >
+            Período econômico informado
+        </option>
+    `;
+}
+
+/* =========================================================
+   NOMES
+   ========================================================= */
+
+function obterNomeGrupo(
+    grupo
+) {
+    return (
+        window.CreditoRuralAtividades
+            ?.obterNomeGrupo(
+                grupo
+            ) ||
+        grupo
+    );
+}
+
+function obterNomeAtividade(
+    grupo,
+    atividade
+) {
+    return (
+        window.CreditoRuralAtividades
+            ?.obterNomeAtividade(
+                atividade,
+                grupo
+            ) ||
+        atividade
+    );
+}
+
+/* =========================================================
+   SELECT DAS ATIVIDADES
+   ========================================================= */
+
+function gerarOpcoesAtividades(
+    selecionada
+) {
+    let html = `
+        <option value="">
+            Selecione
+        </option>
+    `;
+
+    atividadesRendaNotas.forEach(
+        atividade => {
+            html += `
+                <option
+                    value="${atividade.id}"
+                    ${atividade.id ===
+                    selecionada
+                    ? "selected"
+                    : ""
+                }
+                >
+                    ${escaparHtml(
+                    obterNomeAtividade(
+                        atividade.grupo,
+                        atividade.atividade
+                    )
+                )}
+                </option>
+            `;
+        }
+    );
+
+    return html;
+}
+
+/* =========================================================
+   NOTAS PROCESSADAS
    ========================================================= */
 
 function renderizarNotasProcessadas() {
     const tbody =
-        obterElementoPorIds(
-            "tabelaNotasFiscaisIdentificadas",
+        document.getElementById(
             "tabelaDetalhamentoNotas"
         );
 
@@ -4169,23 +1679,13 @@ function renderizarNotasProcessadas() {
         notasProcessadas.length ===
         0
     ) {
-        const tr =
-            document.createElement(
-                "tr"
-            );
-
-        tr.className =
-            "notas-linha-vazia";
-
-        tr.innerHTML = `
-            <td colspan="7">
-                Nenhuma nota fiscal processada.
-            </td>
+        tbody.innerHTML = `
+            <tr class="notas-linha-vazia">
+                <td colspan="7">
+                    Nenhuma nota fiscal processada.
+                </td>
+            </tr>
         `;
-
-        tbody.appendChild(
-            tr
-        );
 
         return;
     }
@@ -4197,78 +1697,117 @@ function renderizarNotasProcessadas() {
                     "tr"
                 );
 
-            const classeStatus =
-                nota.data &&
-                    nota.valor > 0
-                    ? "notas-status-sucesso"
-                    : nota.data ||
-                        nota.valor > 0
-                        ? "notas-status-atencao"
-                        : "notas-status-erro";
-
-            const atividadeValida =
-                obterAtividadePorId(
-                    nota.atividadeId
-                );
-
             tr.innerHTML = `
-                <td title="${escaparHtml(nota.arquivo)}">
-                    ${escaparHtml(nota.arquivo)}
+                <td>
+                    ${escaparHtml(
+                nota.arquivo
+            )}
+
+                    <small
+                        style="
+                            display:block;
+                            margin-top:3px;
+                            opacity:.7;
+                        "
+                    >
+                        ${escaparHtml(
+                nota.modeloDescricao ||
+                ""
+            )}
+                    </small>
                 </td>
 
                 <td>
-                    ${nota.data
-                    ? escaparHtml(
-                        nota.data
-                    )
-                    : "-"
-                }
+                    <input
+                        type="text"
+                        class="notas-input-tabela nota-data"
+                        value="${escaparHtml(
+                nota.data ||
+                ""
+            )}"
+                    >
                 </td>
 
                 <td>
-                    ${nota.numero
-                    ? escaparHtml(
-                        nota.numero
-                    )
-                    : "-"
-                }
-                </td>
-
-                <td title="${escaparHtml(nota.emitente || "")}">
-                    ${nota.emitente
-                    ? escaparHtml(
-                        nota.emitente
-                    )
-                    : "-"
-                }
+                    <input
+                        type="text"
+                        class="notas-input-tabela nota-numero"
+                        value="${escaparHtml(
+                nota.numero ||
+                ""
+            )}"
+                    >
                 </td>
 
                 <td>
-                    ${nota.valor > 0
+                    <input
+                        type="text"
+                        class="notas-input-tabela nota-emitente"
+                        value="${escaparHtml(
+                nota.emitente ||
+                ""
+            )}"
+                    >
+                </td>
+
+                <td>
+                    <input
+                        type="text"
+                        class="notas-input-tabela nota-valor"
+                        value="${nota.valor > 0
                     ? formatarMoeda(
                         nota.valor
                     )
-                    : "-"
-                }
+                    : ""
+                }"
+                    >
                 </td>
 
                 <td>
                     <select
                         class="notas-input-tabela nota-atividade-editar"
-                        aria-label="Atividade da nota fiscal"
                     >
-                        ${gerarOpcoesAtividadesCadastradas(
-                    atividadeValida
-                        ? nota.atividadeId
-                        : ""
+                        ${gerarOpcoesAtividades(
+                    nota.atividadeId ||
+                    ""
                 )}
                     </select>
                 </td>
 
                 <td>
-                    <span class="notas-status ${classeStatus}">
-                        ${escaparHtml(nota.status)}
+                    <span
+                        class="notas-status ${nota.confirmada
+                    ? "notas-status-sucesso"
+                    : "notas-status-atencao"
+                }"
+                    >
+                        ${nota.confirmada
+                    ? "Confirmada"
+                    : escaparHtml(
+                        nota.status ||
+                        "Revisar"
+                    )
+                }
                     </span>
+
+                    ${!nota.confirmada
+                    ? `
+                                <button
+                                    type="button"
+                                    class="notas-btn nota-confirmar"
+                                    style="
+                                        min-width:0;
+                                        min-height:28px;
+                                        margin-top:6px;
+                                        padding:4px 8px;
+                                        font-size:8px;
+                                    "
+                                >
+                                    Confirmar
+                                </button>
+                            `
+                    : ""
+                }
                 </td>
             `;
 
@@ -4276,218 +1815,1078 @@ function renderizarNotasProcessadas() {
                 tr
             );
 
-            const selectAtividade =
-                tr.querySelector(
-                    ".nota-atividade-editar"
-                );
-
-            if (selectAtividade) {
-                selectAtividade.addEventListener(
-                    "change",
-                    function () {
-                        nota.atividadeId =
-                            this.value;
-
-                        consolidarNotasNosPeriodos();
-                    }
-                );
-            }
+            configurarEventosLinhaNota(
+                tr,
+                nota
+            );
         }
     );
 }
 
 /* =========================================================
-   BUSCA ATIVIDADE PELO ID
+   EVENTOS DA NOTA
    ========================================================= */
 
-function obterAtividadePorId(
-    id
+function configurarEventosLinhaNota(
+    tr,
+    nota
 ) {
-    if (!id) {
-        return null;
-    }
+    const data =
+        tr.querySelector(
+            ".nota-data"
+        );
 
-    return (
-        atividadesRendaNotas.find(
-            item =>
-                item.id === id
-        ) ||
-        null
+    const numero =
+        tr.querySelector(
+            ".nota-numero"
+        );
+
+    const emitente =
+        tr.querySelector(
+            ".nota-emitente"
+        );
+
+    const valor =
+        tr.querySelector(
+            ".nota-valor"
+        );
+
+    const atividade =
+        tr.querySelector(
+            ".nota-atividade-editar"
+        );
+
+    data?.addEventListener(
+        "change",
+        function () {
+            const normalizada =
+                window.CreditoRuralNotasFiscais
+                    .normalizarData(
+                        this.value
+                    );
+
+            if (
+                window.CreditoRuralNotasFiscais
+                    .validarData(
+                        normalizada
+                    )
+            ) {
+                nota.data =
+                    normalizada;
+
+                nota.competencia =
+                    window.CreditoRuralNotasFiscais
+                        .formatarCompetenciaData(
+                            normalizada
+                        );
+
+                this.value =
+                    normalizada;
+            } else {
+                nota.data =
+                    null;
+
+                nota.competencia =
+                    "";
+            }
+
+            nota.confirmada =
+                false;
+
+            consolidarNotasNosPeriodos();
+        }
+    );
+
+    numero?.addEventListener(
+        "change",
+        function () {
+            nota.numero =
+                this.value.trim();
+        }
+    );
+
+    emitente?.addEventListener(
+        "change",
+        function () {
+            nota.emitente =
+                this.value.trim();
+        }
+    );
+
+    valor?.addEventListener(
+        "input",
+        function () {
+            aplicarMascaraMoeda(
+                this
+            );
+        }
+    );
+
+    valor?.addEventListener(
+        "change",
+        function () {
+            nota.valor =
+                converterMoedaParaNumero(
+                    this.value
+                );
+
+            nota.confirmada =
+                false;
+
+            consolidarNotasNosPeriodos();
+        }
+    );
+
+    atividade?.addEventListener(
+        "change",
+        function () {
+            nota.atividadeId =
+                this.value;
+
+            nota.confirmada =
+                false;
+
+            consolidarNotasNosPeriodos();
+        }
+    );
+
+    tr.querySelector(
+        ".nota-confirmar"
+    )?.addEventListener(
+        "click",
+        () =>
+            confirmarNota(
+                nota
+            )
     );
 }
 
 /* =========================================================
-   STATUS DE PROCESSAMENTO
+   CONFIRMA NOTA
    ========================================================= */
 
-function mostrarStatusProcessamento(
-    exibir,
-    titulo = "",
-    texto = ""
+function confirmarNota(
+    nota
 ) {
-    const status =
-        obterElementoPorIds(
-            "statusOcrNotasFiscais",
-            "statusOcrNotas"
+    if (
+        !nota.data ||
+        !nota.competencia
+    ) {
+        exibirMensagemOcr(
+            "Informe uma data válida.",
+            "atencao"
         );
 
-    const tituloElemento =
-        obterElementoPorIds(
-            "tituloStatusOcrNotasFiscais"
-        );
-
-    const textoElemento =
-        obterElementoPorIds(
-            "textoStatusOcrNotasFiscais",
-            "textoStatusOcrNotas"
-        );
-
-    if (!status) {
         return;
     }
 
-    status.hidden =
-        !exibir;
-
     if (
-        tituloElemento &&
-        titulo
+        Number(
+            nota.valor
+        ) <=
+        0
     ) {
-        tituloElemento.textContent =
-            titulo;
+        exibirMensagemOcr(
+            "Informe o valor total da nota.",
+            "atencao"
+        );
+
+        return;
     }
 
     if (
-        textoElemento &&
-        texto
+        !nota.atividadeId
     ) {
-        textoElemento.textContent =
-            texto;
+        exibirMensagemOcr(
+            "Selecione a atividade.",
+            "atencao"
+        );
+
+        return;
     }
+
+    nota.confirmada =
+        true;
+
+    nota.requerConferencia =
+        false;
+
+    nota.status =
+        "Conferida manualmente";
+
+    consolidarNotasNosPeriodos();
+
+    renderizarNotasProcessadas();
+    renderizarAtividadesRendaNotas();
+    atualizarResultadosNotas();
 }
 
 /* =========================================================
-   PROGRESSO
+   PERÍODO MANUAL
    ========================================================= */
 
-function atualizarStatusProcessamentoArquivo(
-    indice,
-    total,
-    nome
+function adicionarPeriodoManual() {
+    const atividade =
+        document.getElementById(
+            "atividadePeriodoNota"
+        );
+
+    const periodo =
+        document.getElementById(
+            "periodoNota"
+        );
+
+    const valor =
+        document.getElementById(
+            "valorPeriodoNota"
+        );
+
+    const quantidade =
+        document.getElementById(
+            "quantidadeNotasPeriodo"
+        );
+
+    if (
+        !atividade?.value ||
+        !periodo?.value ||
+        converterMoedaParaNumero(
+            valor?.value
+        ) <= 0
+    ) {
+        return;
+    }
+
+    adicionarOuSomarPeriodo({
+        atividadeId:
+            atividade.value,
+
+        periodo:
+            periodo.value.trim(),
+
+        valor:
+            converterMoedaParaNumero(
+                valor.value
+            ),
+
+        quantidade:
+            Math.max(
+                0,
+                Number(
+                    quantidade?.value
+                ) ||
+                0
+            ),
+
+        origem:
+            "manual"
+    });
+
+    periodo.value = "";
+    valor.value = "";
+    quantidade.value = "0";
+
+    renderizarPeriodosNotas();
+    atualizarResultadosNotas();
+}
+
+/* =========================================================
+   CONSOLIDAÇÃO
+   ========================================================= */
+
+function consolidarNotasNosPeriodos() {
+    periodosNotas =
+        periodosNotas.filter(
+            periodo =>
+                periodo.origem !==
+                "ocr"
+        );
+
+    notasProcessadas
+        .filter(
+            nota =>
+                nota.confirmada &&
+                nota.atividadeId &&
+                nota.competencia &&
+                Number(
+                    nota.valor
+                ) >
+                0
+        )
+        .forEach(
+            nota => {
+                adicionarOuSomarPeriodo({
+                    atividadeId:
+                        nota.atividadeId,
+
+                    periodo:
+                        formatarCompetenciaExibicao(
+                            nota.competencia
+                        ),
+
+                    valor:
+                        nota.valor,
+
+                    quantidade:
+                        1,
+
+                    origem:
+                        "ocr"
+                });
+            }
+        );
+
+    ordenarPeriodos();
+
+    renderizarPeriodosNotas();
+    renderizarAtividadesRendaNotas();
+    atualizarResultadosNotas();
+}
+
+/* =========================================================
+   PERÍODOS
+   ========================================================= */
+
+function adicionarOuSomarPeriodo(
+    dados
 ) {
-    mostrarStatusProcessamento(
-        true,
-        `Processando arquivo ${indice + 1} de ${total}`,
-        nome
+    const chave =
+        [
+            dados.atividadeId,
+            normalizarPeriodoChave(
+                dados.periodo
+            ),
+            dados.origem
+        ].join("|");
+
+    const existente =
+        periodosNotas.find(
+            periodo =>
+                [
+                    periodo.atividadeId,
+                    normalizarPeriodoChave(
+                        periodo.periodo
+                    ),
+                    periodo.origem
+                ].join("|") ===
+                chave
+        );
+
+    if (existente) {
+        existente.valor +=
+            Number(
+                dados.valor
+            ) ||
+            0;
+
+        existente.quantidade +=
+            Number(
+                dados.quantidade
+            ) ||
+            0;
+
+        return;
+    }
+
+    periodosNotas.push({
+        id:
+            gerarId(),
+
+        atividadeId:
+            dados.atividadeId,
+
+        periodo:
+            dados.periodo,
+
+        valor:
+            Number(
+                dados.valor
+            ) ||
+            0,
+
+        quantidade:
+            Number(
+                dados.quantidade
+            ) ||
+            0,
+
+        origem:
+            dados.origem
+    });
+}
+
+/* =========================================================
+   TABELA DOS PERÍODOS
+   ========================================================= */
+
+function renderizarPeriodosNotas() {
+    const tbody =
+        document.getElementById(
+            "tabelaPeriodosNotas"
+        );
+
+    const select =
+        document.getElementById(
+            "atividadePeriodoNota"
+        );
+
+    if (select) {
+        select.innerHTML =
+            gerarOpcoesAtividades(
+                select.value
+            );
+    }
+
+    if (!tbody) {
+        return;
+    }
+
+    tbody.innerHTML = "";
+
+    if (
+        periodosNotas.length ===
+        0
+    ) {
+        tbody.innerHTML = `
+            <tr class="notas-linha-vazia">
+                <td colspan="5">
+                    Nenhum período informado.
+                </td>
+            </tr>
+        `;
+
+        atualizarTotalizadoresPeriodos();
+
+        return;
+    }
+
+    periodosNotas.forEach(
+        periodo => {
+            const atividade =
+                atividadesRendaNotas
+                    .find(
+                        item =>
+                            item.id ===
+                            periodo.atividadeId
+                    );
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+            tr.innerHTML = `
+                <td>
+                    ${escaparHtml(
+                atividade
+                    ? obterNomeAtividade(
+                        atividade.grupo,
+                        atividade.atividade
+                    )
+                    : "-"
+            )}
+                </td>
+
+                <td>
+                    ${escaparHtml(
+                periodo.periodo
+            )}
+                </td>
+
+                <td>
+                    ${formatarMoeda(
+                periodo.valor
+            )}
+                </td>
+
+                <td>
+                    ${periodo.quantidade}
+                </td>
+
+                <td class="notas-coluna-acoes">
+                    <button
+                        type="button"
+                        class="notas-btn-remover"
+                    >
+                        Remover
+                    </button>
+                </td>
+            `;
+
+            tr.querySelector(
+                ".notas-btn-remover"
+            )?.addEventListener(
+                "click",
+                () => {
+                    periodosNotas =
+                        periodosNotas.filter(
+                            item =>
+                                item.id !==
+                                periodo.id
+                        );
+
+                    renderizarPeriodosNotas();
+                    atualizarResultadosNotas();
+                }
+            );
+
+            tbody.appendChild(
+                tr
+            );
+        }
+    );
+
+    atualizarTotalizadoresPeriodos();
+}
+
+/* =========================================================
+   TOTALIZADORES
+   ========================================================= */
+
+function atualizarTotalizadoresPeriodos() {
+    const total =
+        periodosNotas.reduce(
+            (
+                soma,
+                item
+            ) =>
+                soma +
+                item.valor,
+            0
+        );
+
+    const quantidade =
+        periodosNotas.reduce(
+            (
+                soma,
+                item
+            ) =>
+                soma +
+                item.quantidade,
+            0
+        );
+
+    definirTexto(
+        "totalNotasPeriodos",
+        formatarMoeda(
+            total
+        )
+    );
+
+    definirTexto(
+        "quantidadeTotalNotas",
+        String(
+            quantidade
+        )
+    );
+
+    definirTexto(
+        "quantidadePeriodosNotas",
+        String(
+            periodosNotas.length
+        )
     );
 }
 
+/* =========================================================
+   CÁLCULO
+   ========================================================= */
+
+function calcularResumoAtividades() {
+    return atividadesRendaNotas.map(
+        atividade => {
+            const periodos =
+                periodosNotas.filter(
+                    item =>
+                        item.atividadeId ===
+                        atividade.id
+                );
+
+            const total =
+                periodos.reduce(
+                    (
+                        soma,
+                        item
+                    ) =>
+                        soma +
+                        item.valor,
+                    0
+                );
+
+            const quantidade =
+                periodos.reduce(
+                    (
+                        soma,
+                        item
+                    ) =>
+                        soma +
+                        item.quantidade,
+                    0
+                );
+
+            const meses =
+                determinarMesesConsiderados(
+                    atividade,
+                    periodos
+                );
+
+            return {
+                atividadeId:
+                    atividade.id,
+
+                totalNotas:
+                    total,
+
+                quantidadeNotas:
+                    quantidade,
+
+                mesesConsiderados:
+                    meses,
+
+                rendaMensal:
+                    meses > 0
+                        ? total /
+                        meses
+                        : 0
+            };
+        }
+    );
+}
+
+function determinarMesesConsiderados(
+    atividade,
+    periodos
+) {
+    if (
+        !periodos.length
+    ) {
+        return 0;
+    }
+
+    if (
+        atividade.criterio ===
+        CRITERIOS_APURACAO_NOTAS
+            .INFORMADO
+    ) {
+        return Math.max(
+            1,
+            Number(
+                atividade
+                    .mesesRepresentados
+            ) ||
+            1
+        );
+    }
+
+    const referencias =
+        periodos
+            .map(
+                item =>
+                    converterPeriodoParaOrdenacao(
+                        item.periodo
+                    )
+            )
+            .filter(
+                item =>
+                    item !==
+                    null
+            );
+
+    if (
+        !referencias.length
+    ) {
+        return 0;
+    }
+
+    if (
+        atividade.criterio ===
+        CRITERIOS_APURACAO_NOTAS
+            .INTERVALO
+    ) {
+        const seriais =
+            referencias.map(
+                referencia => {
+                    const ano =
+                        Math.floor(
+                            referencia /
+                            100
+                        );
+
+                    const mes =
+                        referencia %
+                        100;
+
+                    return (
+                        ano *
+                        12 +
+                        mes -
+                        1
+                    );
+                }
+            );
+
+        return (
+            Math.max(
+                ...seriais
+            ) -
+            Math.min(
+                ...seriais
+            ) +
+            1
+        );
+    }
+
+    return new Set(
+        referencias
+    ).size;
+}
+
+function atualizarResultadosNotas() {
+    const resumo =
+        calcularResumoAtividades();
+
+    const mensal =
+        resumo.reduce(
+            (
+                soma,
+                item
+            ) =>
+                soma +
+                item.rendaMensal,
+            0
+        );
+
+    const total =
+        resumo.reduce(
+            (
+                soma,
+                item
+            ) =>
+                soma +
+                item.totalNotas,
+            0
+        );
+
+    const quantidade =
+        resumo.reduce(
+            (
+                soma,
+                item
+            ) =>
+                soma +
+                item.quantidadeNotas,
+            0
+        );
+
+    definirTexto(
+        "resultadoRendaMensalNotas",
+        formatarMoeda(
+            mensal
+        )
+    );
+
+    definirTexto(
+        "resultadoRendaAnualNotas",
+        formatarMoeda(
+            mensal *
+            12
+        )
+    );
+
+    definirTexto(
+        "resultadoTotalNotas",
+        formatarMoeda(
+            total
+        )
+    );
+
+    definirTexto(
+        "resultadoQuantidadeAtividades",
+        String(
+            resumo.filter(
+                item =>
+                    item.totalNotas >
+                    0
+            ).length
+        )
+    );
+
+    definirTexto(
+        "resultadoQuantidadeNotas",
+        String(
+            quantidade
+        )
+    );
+
+    atualizarResumoCriterios(
+        resumo
+    );
+
+    atualizarTotalizadoresPeriodos();
+}
+
+/* =========================================================
+   RESUMO DOS CRITÉRIOS
+   ========================================================= */
+
+function atualizarResumoCriterios(
+    resumo
+) {
+    const elemento =
+        document.getElementById(
+            "resumoCriteriosNotas"
+        );
+
+    if (!elemento) {
+        return;
+    }
+
+    const linhas =
+        resumo
+            .filter(
+                item =>
+                    item.totalNotas >
+                    0
+            )
+            .map(
+                item => {
+                    const atividade =
+                        atividadesRendaNotas
+                            .find(
+                                atividade =>
+                                    atividade.id ===
+                                    item.atividadeId
+                            );
+
+                    return `
+                        <span>
+                            <strong>
+                                ${escaparHtml(
+                        obterNomeAtividade(
+                            atividade.grupo,
+                            atividade.atividade
+                        )
+                    )}:
+                            </strong>
+
+                            ${item.mesesConsiderados} mês(es)
+                            —
+                            ${formatarMoeda(
+                        item.rendaMensal
+                    )}/mês
+                        </span>
+                    `;
+                }
+            )
+            .join("");
+
+    elemento.innerHTML = `
+        <strong>
+            Critérios de apuração
+        </strong>
+
+        ${linhas ||
+        `
+                <span>
+                    Processe as notas fiscais ou informe períodos manualmente.
+                </span>
+            `
+        }
+    `;
+}
+
+/* =========================================================
+   LIMPEZA
+   ========================================================= */
+
+function limparArquivosNotas() {
+    arquivosSelecionados = [];
+    notasProcessadas = [];
+    periodosNotas = [];
+    atividadesRendaNotas = [];
+
+    document.getElementById(
+        "arquivosNotasFiscais"
+    ).value = "";
+
+    limparMensagemOcr();
+
+    renderizarArquivosSelecionados();
+    renderizarAtividadesRendaNotas();
+    renderizarNotasProcessadas();
+    renderizarPeriodosNotas();
+    atualizarResultadosNotas();
+}
+
+function limparCalculoNotas() {
+    limparArquivosNotas();
+}
+
+/* =========================================================
+   NOTA DE ERRO
+   ========================================================= */
+
+function criarNotaErro(
+    arquivo
+) {
+    return {
+        arquivo,
+
+        modelo:
+            "erro",
+
+        modeloDescricao:
+            "Não identificado",
+
+        numero:
+            "",
+
+        data:
+            null,
+
+        emitente:
+            "",
+
+        valor:
+            0,
+
+        competencia:
+            "",
+
+        itens:
+            [],
+
+        atividadesSugeridas:
+            [],
+
+        atividadeId:
+            "",
+
+        confirmada:
+            false,
+
+        requerConferencia:
+            true,
+
+        status:
+            "Erro no processamento"
+    };
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+function mostrarStatusProcessamento(
+    mostrar,
+    titulo,
+    texto
+) {
+    const elemento =
+        document.getElementById(
+            "statusOcrNotas"
+        );
+
+    if (!elemento) {
+        return;
+    }
+
+    elemento.hidden =
+        !mostrar;
+
+    const tituloEl =
+        document.getElementById(
+            "tituloStatusOcrNotas"
+        );
+
+    const textoEl =
+        document.getElementById(
+            "textoStatusOcrNotas"
+        );
+
+    if (tituloEl) {
+        tituloEl.textContent =
+            titulo ||
+            "";
+    }
+
+    if (textoEl) {
+        textoEl.textContent =
+            texto ||
+            "";
+    }
+}
+
 function atualizarProgressoArquivo(
-    indiceArquivo,
-    totalArquivos,
-    progressoArquivo,
+    indice,
+    total,
+    progresso,
     descricao
 ) {
-    const progresso =
-        Math.min(
-            100,
-            Math.max(
-                0,
-                Math.round(
-                    (
-                        (
-                            indiceArquivo +
-                            Number(
-                                progressoArquivo ||
-                                0
-                            )
-                        ) /
-                        totalArquivos
-                    ) *
-                    100
-                )
-            )
+    const percentual =
+        Math.round(
+            (
+                (
+                    indice +
+                    Number(
+                        progresso ||
+                        0
+                    )
+                ) /
+                total
+            ) *
+            100
         );
 
     mostrarStatusProcessamento(
         true,
-        `Processando documentos... ${progresso}%`,
+        `Processando documentos... ${percentual}%`,
         descricao
     );
 }
 
-/* =========================================================
-   MENSAGEM OCR
-   ========================================================= */
-
 function exibirMensagemOcr(
     mensagem,
-    tipo = "sucesso"
+    tipo
 ) {
-    const resultado =
-        obterElementoPorIds(
-            "resultadoOcrNotasFiscais",
+    const elemento =
+        document.getElementById(
             "resultadoOcrNotas"
         );
 
-    if (!resultado) {
+    if (!elemento) {
         return;
     }
 
-    resultado.hidden =
+    elemento.hidden =
         false;
 
-    resultado.className =
+    elemento.className =
         `notas-resultado-ocr notas-status-${tipo}`;
 
-    resultado.textContent =
+    elemento.textContent =
         mensagem;
 }
 
 function limparMensagemOcr() {
-    const resultado =
-        obterElementoPorIds(
-            "resultadoOcrNotasFiscais",
+    const elemento =
+        document.getElementById(
             "resultadoOcrNotas"
         );
 
-    if (!resultado) {
+    if (!elemento) {
         return;
     }
 
-    resultado.hidden =
+    elemento.hidden =
         true;
 
-    resultado.textContent =
+    elemento.textContent =
         "";
-
-    resultado.className =
-        "notas-resultado-ocr";
 }
 
 /* =========================================================
-   COMPETÊNCIA
+   PERÍODOS
    ========================================================= */
-
-function formatarCompetenciaData(
-    dataBrasileira
-) {
-    const match =
-        String(
-            dataBrasileira ||
-            ""
-        ).match(
-            /^(\d{2})\/(\d{2})\/(\d{4})$/
-        );
-
-    if (!match) {
-        return "";
-    }
-
-    return (
-        `${match[3]}-${match[2]}`
-    );
-}
 
 function formatarCompetenciaExibicao(
     competencia
@@ -4501,23 +2900,10 @@ function formatarCompetenciaExibicao(
         );
 
     if (!match) {
-        return (
-            competencia ||
-            ""
-        );
+        return competencia;
     }
 
-    const ano =
-        Number(
-            match[1]
-        );
-
-    const mes =
-        Number(
-            match[2]
-        );
-
-    const nomesMeses = [
+    const meses = [
         "Janeiro",
         "Fevereiro",
         "Março",
@@ -4533,99 +2919,7 @@ function formatarCompetenciaExibicao(
     ];
 
     return (
-        `${nomesMeses[mes - 1]}/${ano}`
-    );
-}
-
-/* =========================================================
-   ORDENAÇÃO DOS PERÍODOS
-   ========================================================= */
-
-function ordenarPeriodos() {
-    periodosNotas.sort(
-        (a, b) => {
-            const atividadeA =
-                obterAtividadePorId(
-                    a.atividadeId
-                );
-
-            const atividadeB =
-                obterAtividadePorId(
-                    b.atividadeId
-                );
-
-            const nomeA =
-                atividadeA
-                    ? obterNomeAtividadeCadastro(
-                        atividadeA.grupo,
-                        atividadeA.atividade
-                    )
-                    : "";
-
-            const nomeB =
-                atividadeB
-                    ? obterNomeAtividadeCadastro(
-                        atividadeB.grupo,
-                        atividadeB.atividade
-                    )
-                    : "";
-
-            const comparacaoAtividade =
-                nomeA.localeCompare(
-                    nomeB,
-                    "pt-BR"
-                );
-
-            if (
-                comparacaoAtividade !==
-                0
-            ) {
-                return (
-                    comparacaoAtividade
-                );
-            }
-
-            const dataA =
-                converterPeriodoParaOrdenacao(
-                    a.periodo
-                );
-
-            const dataB =
-                converterPeriodoParaOrdenacao(
-                    b.periodo
-                );
-
-            if (
-                dataA !== null &&
-                dataB !== null
-            ) {
-                return (
-                    dataA -
-                    dataB
-                );
-            }
-
-            if (
-                dataA !== null
-            ) {
-                return -1;
-            }
-
-            if (
-                dataB !== null
-            ) {
-                return 1;
-            }
-
-            return String(
-                a.periodo
-            ).localeCompare(
-                String(
-                    b.periodo
-                ),
-                "pt-BR"
-            );
-        }
+        `${meses[Number(match[2]) - 1]}/${match[1]}`
     );
 }
 
@@ -4633,9 +2927,19 @@ function converterPeriodoParaOrdenacao(
     periodo
 ) {
     const texto =
-        normalizarComparacao(
-            periodo
-        );
+        String(
+            periodo ||
+            ""
+        )
+            .normalize(
+                "NFD"
+            )
+            .replace(
+                /[\u0300-\u036f]/g,
+                ""
+            )
+            .toUpperCase()
+            .trim();
 
     const meses = {
         JANEIRO: 1,
@@ -4654,7 +2958,7 @@ function converterPeriodoParaOrdenacao(
 
     let match =
         texto.match(
-            /^([A-Z]+)\s*\/\s*(\d{4})$/
+            /^([A-Z]+)\/(\d{4})$/
         );
 
     if (
@@ -4676,7 +2980,7 @@ function converterPeriodoParaOrdenacao(
 
     match =
         texto.match(
-            /^(\d{1,2})\s*\/\s*(\d{4})$/
+            /^(\d{1,2})\/(\d{4})$/
         );
 
     if (match) {
@@ -4685,20 +2989,19 @@ function converterPeriodoParaOrdenacao(
                 match[1]
             );
 
-        const ano =
-            Number(
-                match[2]
-            );
-
         if (
-            mes < 1 ||
-            mes > 12
+            mes <
+            1 ||
+            mes >
+            12
         ) {
             return null;
         }
 
         return (
-            ano *
+            Number(
+                match[2]
+            ) *
             100 +
             mes
         );
@@ -4710,59 +3013,49 @@ function converterPeriodoParaOrdenacao(
         );
 
     if (match) {
-        const ano =
+        return (
             Number(
                 match[1]
-            );
-
-        const mes =
+            ) *
+            100 +
             Number(
                 match[2]
-            );
-
-        if (
-            mes < 1 ||
-            mes > 12
-        ) {
-            return null;
-        }
-
-        return (
-            ano *
-            100 +
-            mes
+            )
         );
     }
 
     return null;
 }
 
-/* =========================================================
-   NORMALIZAÇÃO DO PERÍODO
-   ========================================================= */
-
 function normalizarPeriodoChave(
     periodo
 ) {
-    const referencia =
+    return String(
         converterPeriodoParaOrdenacao(
             periodo
-        );
-
-    if (
-        referencia !==
-        null
-    ) {
-        return String(
-            referencia
-        );
-    }
-
-    return normalizarComparacao(
+        ) ||
         periodo
-    ).replace(
-        /\s/g,
-        ""
+    );
+}
+
+function ordenarPeriodos() {
+    periodosNotas.sort(
+        (
+            a,
+            b
+        ) =>
+            (
+                converterPeriodoParaOrdenacao(
+                    a.periodo
+                ) ||
+                0
+            ) -
+            (
+                converterPeriodoParaOrdenacao(
+                    b.periodo
+                ) ||
+                0
+            )
     );
 }
 
@@ -4773,17 +3066,11 @@ function normalizarPeriodoChave(
 function converterMoedaParaNumero(
     valor
 ) {
-    const textoOriginal =
-        String(
-            valor || ""
-        ).trim();
-
-    if (!textoOriginal) {
-        return 0;
-    }
-
     let texto =
-        textoOriginal
+        String(
+            valor ||
+            ""
+        )
             .replace(
                 /R\$/gi,
                 ""
@@ -4791,12 +3078,7 @@ function converterMoedaParaNumero(
             .replace(
                 /\s/g,
                 ""
-            )
-            .trim();
-
-    if (!texto) {
-        return 0;
-    }
+            );
 
     if (
         texto.includes(
@@ -4813,17 +3095,14 @@ function converterMoedaParaNumero(
                     ",",
                     "."
                 );
-    } else {
-        texto =
-            texto.replace(
-                /[^\d.-]/g,
-                ""
-            );
     }
 
     const numero =
         Number(
-            texto
+            texto.replace(
+                /[^\d.-]/g,
+                ""
+            )
         );
 
     return Number.isFinite(
@@ -4836,11 +3115,7 @@ function converterMoedaParaNumero(
 function aplicarMascaraMoeda(
     input
 ) {
-    if (!input) {
-        return;
-    }
-
-    const apenasNumeros =
+    const digitos =
         String(
             input.value ||
             ""
@@ -4849,32 +3124,29 @@ function aplicarMascaraMoeda(
             ""
         );
 
-    if (!apenasNumeros) {
+    if (!digitos) {
         input.value = "";
         return;
     }
 
-    const centavos =
-        Number(
-            apenasNumeros
-        ) /
-        100;
-
     input.value =
         formatarMoeda(
-            centavos
+            Number(
+                digitos
+            ) /
+            100
         );
 }
 
 function formatarMoeda(
     valor
 ) {
-    const numero =
+    return (
         Number(
             valor
-        ) || 0;
-
-    return numero.toLocaleString(
+        ) ||
+        0
+    ).toLocaleString(
         "pt-BR",
         {
             style:
@@ -4893,34 +3165,29 @@ function formatarMoeda(
 }
 
 /* =========================================================
-   TAMANHO DO ARQUIVO
+   UTILITÁRIOS
    ========================================================= */
 
 function formatarTamanhoArquivo(
     bytes
 ) {
-    const tamanho =
-        Number(
-            bytes
-        ) || 0;
-
     if (
-        tamanho <
+        bytes <
         1024
     ) {
         return (
-            `${tamanho} B`
+            `${bytes} B`
         );
     }
 
     if (
-        tamanho <
+        bytes <
         1024 *
         1024
     ) {
         return (
             `${(
-                tamanho /
+                bytes /
                 1024
             ).toFixed(1)} KB`
         );
@@ -4928,55 +3195,36 @@ function formatarTamanhoArquivo(
 
     return (
         `${(
-            tamanho /
+            bytes /
             1024 /
             1024
         ).toFixed(2)} MB`
     );
 }
 
-/* =========================================================
-   ID
-   ========================================================= */
-
 function gerarId() {
-    if (
-        window.crypto &&
-        typeof window.crypto.randomUUID ===
-        "function"
-    ) {
-        return (
-            window.crypto.randomUUID()
-        );
-    }
-
     return (
-        Date.now()
-            .toString(36) +
-        Math.random()
-            .toString(36)
-            .substring(2)
+        window.crypto
+            ?.randomUUID?.() ||
+        (
+            Date.now()
+                .toString(36) +
+            Math.random()
+                .toString(36)
+                .slice(2)
+        )
     );
 }
-
-/* =========================================================
-   LIBERA A INTERFACE
-   ========================================================= */
 
 function liberarInterface() {
     return new Promise(
-        resolve => {
+        resolve =>
             setTimeout(
                 resolve,
                 0
-            );
-        }
+            )
     );
 }
-
-/* =========================================================
-   HTML SEGURO
-   ========================================================= */
 
 function escaparHtml(
     valor
@@ -5007,10 +3255,6 @@ function escaparHtml(
         );
 }
 
-/* =========================================================
-   TEXTO
-   ========================================================= */
-
 function definirTexto(
     id,
     valor
@@ -5024,18 +3268,4 @@ function definirTexto(
         elemento.textContent =
             valor;
     }
-}
-
-function definirTextoMultiplos(
-    ids,
-    valor
-) {
-    ids.forEach(
-        id => {
-            definirTexto(
-                id,
-                valor
-            );
-        }
-    );
 }
