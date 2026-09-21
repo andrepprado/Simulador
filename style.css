@@ -5252,8 +5252,8 @@ footer p,
 }
 
 .notas-card-resultado {
-    position: sticky;
-    top: 24px;
+    position: relative;
+    top: auto;
     grid-column: 2;
     overflow: hidden;
 }
