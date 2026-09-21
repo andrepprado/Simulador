@@ -34,19 +34,19 @@ const historicosIncluidosManualmente = new Set();
 ========================================================= */
 
 const REGRAS_EXCLUSAO_MOVIMENTACAO = [
-    {
-        id: "cred-emprestimo",
-        rotulo: "CRÉD. EMPRÉSTIMO",
-        motivo: "Empréstimo é dívida e não renda.",
-        ignorarPeriodo: false,
-        testar: function (historico) {
-            return (
-                historico.includes("CRED EMPRESTIMO") ||
-                historico.includes("CREDITO EMPRESTIMO") ||
-                historico.includes("LIBERACAO EMPRESTIMO")
-            );
-        }
-    },
+    /* {
+         id: "cred-emprestimo",
+         rotulo: "CRÉD. EMPRÉSTIMO",
+         motivo: "Empréstimo é dívida e não renda.",
+         ignorarPeriodo: false,
+         testar: function (historico) {
+             return (
+                 historico.includes("CRED EMPRESTIMO") ||
+                 historico.includes("CREDITO EMPRESTIMO") ||
+                 historico.includes("LIBERACAO EMPRESTIMO")
+             );
+         }
+     },*/
     {
         id: "cred-liberacao-td",
         rotulo: "CRÉD. LIBERAÇÃO TD",
