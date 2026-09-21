@@ -24,6 +24,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "cred-emprestimo",
         rotulo: "CRÉD. EMPRÉSTIMO",
         motivo: "Empréstimo é dívida e não renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.includes("CRED EMPRESTIMO") ||
@@ -35,9 +37,12 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "cred-liberacao-td",
         rotulo: "CRÉD. LIBERAÇÃO TD",
         motivo: "Antecipação de recebíveis não é considerada renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.includes("CRED LIBERACAO TD") ||
+                historico.includes("CREDITO LIBERACAO TD") ||
                 historico.includes("TITULO DESCONTADO")
             );
         }
@@ -46,17 +51,25 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "cred-liberacao-bndes",
         rotulo: "CRÉD. LIBERAÇÃO BNDES",
         motivo: "Liberação de empréstimo junto ao BNDES não é renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
-            return historico.includes("CRED LIBERACAO BNDES");
+            return (
+                historico.includes("CRED LIBERACAO BNDES") ||
+                historico.includes("CREDITO LIBERACAO BNDES")
+            );
         }
     },
     {
         id: "cred-liberacao-cartao",
         rotulo: "CRÉD. LIBERAÇÃO TÍTULO REC. CARTÃO",
         motivo: "Movimentação desconsiderada conforme regra definida.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.includes("CRED LIBERACAO TITULO REC CARTAO") ||
+                historico.includes("CREDITO LIBERACAO TITULO REC CARTAO") ||
                 historico.includes("LIBERACAO TITULO REC CARTAO")
             );
         }
@@ -65,10 +78,13 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "devolucao-pix",
         rotulo: "CRÉDITO DEVOLUÇÃO PIX",
         motivo: "Devolução não é renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.includes("CRED DEVOLUCAO PIX") ||
-                historico.includes("CREDITO DEVOLUCAO PIX")
+                historico.includes("CREDITO DEVOLUCAO PIX") ||
+                historico.includes("DEVOLUCAO PIX")
             );
         }
     },
@@ -76,6 +92,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "est-pix-outra-if",
         rotulo: "EST. PIX EMITIDO OUTRA IF - MESMA TIT.",
         motivo: "Estorno não é renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.includes("EST PIX EMITIDO OUTRA IF") &&
@@ -87,6 +105,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "estorno-compra-mastercard",
         rotulo: "ESTORNO COMPRA NACIONAL DEBIT MASTERCARD",
         motivo: "Estorno não é renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return historico.includes(
                 "ESTORNO COMPRA NACIONAL DEBIT MASTERCARD"
@@ -97,6 +117,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "estorno-deb-convenio",
         rotulo: "ESTORNO DÉB. CONV. DEMAIS EMPRESAS",
         motivo: "Estorno não é renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.includes("ESTORNO DEB CONV DEMAIS EMPRESAS") ||
@@ -108,6 +130,8 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "estorno-generico",
         rotulo: "OUTROS ESTORNOS",
         motivo: "Estornos não representam renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return (
                 historico.startsWith("ESTORNO ") ||
@@ -119,18 +143,33 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "resgate-rdc",
         rotulo: "RESGATE RDC",
         motivo: "Resgate de aplicação não é renda.",
+        ignorarPeriodo: false,
+        contabilizarCreditoExcluido: true,
         testar: function (historico) {
             return historico.includes("RESGATE RDC");
+        }
+    },
+    {
+        id: "saldo-bloqueado-anterior",
+        rotulo: "SALDO BLOQUEADO ANTERIOR",
+        motivo: "Linha informativa do extrato.",
+        ignorarPeriodo: true,
+        contabilizarCreditoExcluido: false,
+        testar: function (historico) {
+            return historico.includes(
+                "SALDO BLOQUEADO ANTERIOR"
+            );
         }
     },
     {
         id: "saldo-anterior",
         rotulo: "SALDO ANTERIOR",
         motivo: "Linha informativa do extrato.",
+        ignorarPeriodo: true,
+        contabilizarCreditoExcluido: false,
         testar: function (historico) {
-            return (
-                historico.includes("SALDO ANTERIOR") ||
-                historico.includes("SALDO BLOQUEADO ANTERIOR")
+            return historico.includes(
+                "SALDO ANTERIOR"
             );
         }
     },
@@ -138,8 +177,13 @@ const REGRAS_EXCLUSAO_MOVIMENTACAO = [
         id: "saldo-dia",
         rotulo: "SALDO DO DIA",
         motivo: "Linha informativa do extrato.",
+        ignorarPeriodo: true,
+        contabilizarCreditoExcluido: false,
         testar: function (historico) {
-            return historico.includes("SALDO DO DIA");
+            return (
+                historico.includes("SALDO DO DIA") ||
+                historico.includes("SALDO FINAL DO DIA")
+            );
         }
     }
 ];
@@ -153,18 +197,35 @@ const PADROES_CREDITO_SEM_INDICADOR = [
     "CRED TED STR",
     "CRED TRANSF CONTAS",
     "CRED TRANSF CONTAS INTERCREDIS",
+    "CRED TRANSF",
+    "CREDITO TRANSFERENCIA",
     "DEP CHEQUE COOP AG",
     "DEP CHEQUE AG",
     "DEPOSITO CHEQUE AG",
+    "DEPOSITO CHEQUE",
     "DEP DINHEIRO",
     "DEPOSITO EM DINHEIRO AG",
     "DEPOSITO EM DINHEIRO",
     "LIBERACAO DE DEPOSITO BLOQUEADO",
     "PIX RECEBIDO",
+    "PIX RECEB",
     "TRANSF RECEBIDA",
     "TRANSFERENCIA RECEBIDA",
+    "TED RECEBIDA",
+    "DOC RECEBIDO",
     "OUTROS CREDITOS",
     "CRED DISTRIBUICAO SOBRAS VALORES"
+];
+
+/* =========================================================
+   HISTÓRICOS INFORMATIVOS QUE NÃO DEFINEM PERÍODO
+========================================================= */
+
+const PADROES_INFORMATIVOS_PERIODO = [
+    "SALDO ANTERIOR",
+    "SALDO BLOQUEADO ANTERIOR",
+    "SALDO DO DIA",
+    "SALDO FINAL DO DIA"
 ];
 
 /* =========================================================
@@ -182,41 +243,83 @@ function iniciarMediaMovimentacao() {
 ========================================================= */
 
 function configurarEventosMediaMovimentacao() {
-    const btnProcessar = document.getElementById("btnProcessarMovimentacao");
-    const btnLimpar = document.getElementById("btnLimparMovimentacao");
-    const btnRecalcular = document.getElementById("btnRecalcularMovimentacao");
-    const mesesConsiderados = document.getElementById(
-        "mesesConsideradosMovimentacao"
-    );
+    const btnProcessar =
+        document.getElementById(
+            "btnProcessarMovimentacao"
+        );
+
+    const btnLimpar =
+        document.getElementById(
+            "btnLimparMovimentacao"
+        );
+
+    const btnRecalcular =
+        document.getElementById(
+            "btnRecalcularMovimentacao"
+        );
+
+    const mesesConsiderados =
+        document.getElementById(
+            "mesesConsideradosMovimentacao"
+        );
 
     if (btnProcessar) {
-        btnProcessar.addEventListener("click", processarMovimentacao);
+        btnProcessar.addEventListener(
+            "click",
+            processarMovimentacao
+        );
     }
 
     if (btnLimpar) {
-        btnLimpar.addEventListener("click", limparMediaMovimentacao);
+        btnLimpar.addEventListener(
+            "click",
+            limparMediaMovimentacao
+        );
     }
 
     if (btnRecalcular) {
-        btnRecalcular.addEventListener("click", function () {
-            if (movimentacoesExtrato.length === 0) {
-                return;
-            }
+        btnRecalcular.addEventListener(
+            "click",
+            function () {
+                if (
+                    movimentacoesExtrato.length === 0
+                ) {
+                    return;
+                }
 
-            classificarMovimentacoes();
-            calcularResultadosMovimentacao();
-            renderizarResultadosMovimentacao();
-        });
+                classificarMovimentacoes();
+                calcularResultadosMovimentacao();
+                renderizarHistoricosExtrato();
+                renderizarResultadosMovimentacao();
+            }
+        );
     }
 
     if (mesesConsiderados) {
-        mesesConsiderados.addEventListener("input", function () {
-            if (movimentacoesExtrato.length === 0) {
-                return;
-            }
+        mesesConsiderados.addEventListener(
+            "input",
+            function () {
+                if (
+                    movimentacoesExtrato.length === 0
+                ) {
+                    return;
+                }
 
-            calcularResultadosMovimentacao();
-        });
+                normalizarMesesConsiderados();
+
+                calcularResultadosMovimentacao();
+                renderizarResultadosMovimentacao();
+            }
+        );
+
+        mesesConsiderados.addEventListener(
+            "blur",
+            function () {
+                normalizarMesesConsiderados();
+                calcularResultadosMovimentacao();
+                renderizarResultadosMovimentacao();
+            }
+        );
     }
 }
 
@@ -225,31 +328,38 @@ function configurarEventosMediaMovimentacao() {
 ========================================================= */
 
 function processarMovimentacao() {
-    const textarea = document.getElementById("textoExtratoMovimentacao");
+    const textarea =
+        document.getElementById(
+            "textoExtratoMovimentacao"
+        );
 
     if (!textarea) {
         return;
     }
 
-    const texto = String(textarea.value || "").trim();
+    const texto =
+        String(
+            textarea.value || ""
+        ).trim();
 
     if (!texto) {
-        alert("Cole o extrato no campo de texto.");
+        alert(
+            "Cole o extrato no campo de texto."
+        );
+
         return;
     }
 
-    movimentacoesExtrato = [];
-    movimentacoesConsideradas = [];
-    movimentacoesExcluidas = [];
+    resetarEstadoMovimentacao();
 
-    primeiraDataExtrato = null;
-    ultimaDataExtrato = null;
+    movimentacoesExtrato =
+        interpretarExtratoMovimentacao(
+            texto
+        );
 
-    historicosExcluidosManualmente.clear();
-
-    movimentacoesExtrato = interpretarExtratoMovimentacao(texto);
-
-    if (movimentacoesExtrato.length === 0) {
+    if (
+        movimentacoesExtrato.length === 0
+    ) {
         limparResultadosMovimentacao();
         renderizarHistoricosExtrato();
 
@@ -268,107 +378,262 @@ function processarMovimentacao() {
 }
 
 /* =========================================================
+   RESET DO ESTADO
+========================================================= */
+
+function resetarEstadoMovimentacao() {
+    movimentacoesExtrato = [];
+    movimentacoesConsideradas = [];
+    movimentacoesExcluidas = [];
+
+    primeiraDataExtrato = null;
+    ultimaDataExtrato = null;
+
+    historicosExcluidosManualmente.clear();
+}
+
+/* =========================================================
    INTERPRETAÇÃO DO EXTRATO
 ========================================================= */
 
-function interpretarExtratoMovimentacao(textoOriginal) {
-    const texto = prepararTrechoExtrato(textoOriginal);
+function interpretarExtratoMovimentacao(
+    textoOriginal
+) {
+    const texto =
+        prepararTrechoExtrato(
+            textoOriginal
+        );
 
-    const linhas = String(texto || "")
-        .replace(/\r\n/g, "\n")
-        .replace(/\r/g, "\n")
-        .split("\n");
+    const linhas =
+        String(texto || "")
+            .replace(/\r\n/g, "\n")
+            .replace(/\r/g, "\n")
+            .split("\n");
 
     const movimentacoes = [];
 
     let dataCorrente = null;
 
-    linhas.forEach(function (linhaOriginal, indice) {
-        const linha = String(linhaOriginal || "").trim();
+    linhas.forEach(
+        function (
+            linhaOriginal,
+            indice
+        ) {
+            const linha =
+                String(
+                    linhaOriginal || ""
+                ).trim();
 
-        if (!linha) {
-            return;
+            if (!linha) {
+                return;
+            }
+
+            if (
+                deveIgnorarLinhaExtrato(
+                    linha
+                )
+            ) {
+                return;
+            }
+
+            let resultado = null;
+
+            if (
+                linha.includes("|")
+            ) {
+                resultado =
+                    interpretarLinhaTabelaExtrato(
+                        linha,
+                        dataCorrente,
+                        indice + 1
+                    );
+            }
+
+            if (!resultado) {
+                resultado =
+                    interpretarLinhaTextoExtrato(
+                        linha,
+                        dataCorrente,
+                        indice + 1
+                    );
+            }
+
+            if (!resultado) {
+                return;
+            }
+
+            if (
+                resultado.dataCorrente
+            ) {
+                dataCorrente =
+                    resultado.dataCorrente;
+            }
+
+            if (
+                resultado.movimentacao
+            ) {
+                movimentacoes.push(
+                    resultado.movimentacao
+                );
+            }
         }
+    );
 
-        let resultado = null;
+    return removerMovimentacoesDuplicadas(
+        movimentacoes
+    );
+}
 
-        if (linha.includes("|")) {
-            resultado = interpretarLinhaTabelaExtrato(
-                linha,
-                dataCorrente,
-                indice + 1
-            );
-        }
+/* =========================================================
+   LINHAS QUE NÃO REPRESENTAM MOVIMENTAÇÃO
+========================================================= */
 
-        if (!resultado) {
-            resultado = interpretarLinhaTextoExtrato(
-                linha,
-                dataCorrente,
-                indice + 1
-            );
-        }
+function deveIgnorarLinhaExtrato(
+    linha
+) {
+    const texto =
+        String(linha || "").trim();
 
-        if (!resultado) {
-            return;
-        }
+    if (!texto) {
+        return true;
+    }
 
-        if (resultado.dataCorrente) {
-            dataCorrente = resultado.dataCorrente;
-        }
+    /*
+     * Separadores Markdown.
+     */
+    if (
+        /^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?$/.test(
+            texto
+        )
+    ) {
+        return true;
+    }
 
-        if (resultado.movimentacao) {
-            movimentacoes.push(resultado.movimentacao);
-        }
-    });
+    const normalizado =
+        normalizarTexto(
+            texto
+        );
 
-    return movimentacoes;
+    if (!normalizado) {
+        return true;
+    }
+
+    const cabecalhos = [
+        "DATA DOCUMENTO HISTORICO VALOR",
+        "DATA HISTORICO VALOR",
+        "DOCUMENTO HISTORICO VALOR",
+        "DATA DOCUMENTO HISTORICO"
+    ];
+
+    if (
+        cabecalhos.some(
+            function (cabecalho) {
+                return (
+                    normalizado ===
+                    cabecalho
+                );
+            }
+        )
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
 /* =========================================================
    RECORTA SOMENTE O EXTRATO REAL
 ========================================================= */
 
-function prepararTrechoExtrato(textoOriginal) {
-    const linhas = String(textoOriginal || "")
-        .replace(/\r\n/g, "\n")
-        .replace(/\r/g, "\n")
-        .split("\n");
+function prepararTrechoExtrato(
+    textoOriginal
+) {
+    const linhas =
+        String(
+            textoOriginal || ""
+        )
+            .replace(/\r\n/g, "\n")
+            .replace(/\r/g, "\n")
+            .split("\n");
+
+    let indiceCabecalho = -1;
+
+    for (
+        let i = 0;
+        i < linhas.length;
+        i++
+    ) {
+        const normalizada =
+            normalizarTexto(
+                linhas[i]
+            );
+
+        const possuiEstruturaCabecalho =
+            normalizada.includes("DATA") &&
+            normalizada.includes("HISTORICO") &&
+            normalizada.includes("VALOR");
+
+        if (
+            normalizada.includes(
+                "DATADOCUMENTOHISTORICOVALOR"
+            ) ||
+            possuiEstruturaCabecalho
+        ) {
+            indiceCabecalho = i;
+            break;
+        }
+    }
+
+    /*
+     * Se encontramos o cabeçalho,
+     * descartamos tudo que veio antes.
+     *
+     * Isso impede dados cadastrais, saldos de tela
+     * ou outros textos de serem interpretados.
+     */
+    const inicio =
+        indiceCabecalho >= 0
+            ? indiceCabecalho + 1
+            : 0;
 
     const linhasValidas = [];
 
-    let encontrouMovimentacoes = false;
+    for (
+        let i = inicio;
+        i < linhas.length;
+        i++
+    ) {
+        const linha =
+            linhas[i];
 
-    for (const linha of linhas) {
-        const linhaNormalizada = normalizarTexto(linha);
-
-        if (
-            linhaNormalizada.includes("DATADOCUMENTOHISTORICOVALOR") ||
-            (
-                linhaNormalizada.includes("DATA") &&
-                linhaNormalizada.includes("DOCUMENTO") &&
-                linhaNormalizada.includes("HISTORICO") &&
-                linhaNormalizada.includes("VALOR")
-            )
-        ) {
-            encontrouMovimentacoes = true;
-            linhasValidas.push(linha);
-            continue;
-        }
+        const normalizada =
+            normalizarTexto(
+                linha
+            );
 
         if (
-            encontrouMovimentacoes &&
-            (
-                linhaNormalizada === "RESUMO" ||
-                linhaNormalizada.includes("LANCAMENTOS FUTUROS")
+            normalizada === "RESUMO" ||
+            normalizada.startsWith(
+                "RESUMO "
+            ) ||
+            normalizada.includes(
+                "LANCAMENTOS FUTUROS"
+            ) ||
+            normalizada.includes(
+                "LANÇAMENTOS FUTUROS"
             )
         ) {
             break;
         }
 
-        linhasValidas.push(linha);
+        linhasValidas.push(
+            linha
+        );
     }
 
-    return linhasValidas.join("\n");
+    return linhasValidas.join(
+        "\n"
+    );
 }
 
 /* =========================================================
@@ -380,91 +645,211 @@ function interpretarLinhaTabelaExtrato(
     dataCorrente,
     numeroLinha
 ) {
-    let texto = String(linha || "").trim();
+    let texto =
+        String(
+            linha || ""
+        ).trim();
 
     if (!texto.includes("|")) {
         return null;
     }
 
     if (texto.startsWith("|")) {
-        texto = texto.substring(1);
+        texto =
+            texto.substring(1);
     }
 
     if (texto.endsWith("|")) {
-        texto = texto.substring(
-            0,
-            texto.length - 1
-        );
+        texto =
+            texto.substring(
+                0,
+                texto.length - 1
+            );
     }
 
-    const colunas = texto.split("|");
+    const colunas =
+        texto
+            .split("|")
+            .map(function (item) {
+                return item.trim();
+            });
 
-    if (colunas.length < 4) {
+    if (
+        colunas.length < 3
+    ) {
         return null;
     }
 
-    const dataTextoCelula = limparCelulaTexto(colunas[0]);
-    const documento = limparCelulaTexto(colunas[1]);
-    const historico = limparCelulaTexto(colunas[2]);
-    const valorTextoCelula = limparCelulaValor(colunas[3]);
+    /*
+     * Formato esperado:
+     *
+     * Data | Documento | Histórico | Valor
+     *
+     * Se houver colunas extras no histórico,
+     * a última coluna continua sendo o valor.
+     */
+    const dataTextoCelula =
+        limparCelulaTexto(
+            colunas[0]
+        );
+
+    const valorTextoCelula =
+        limparCelulaValor(
+            colunas[
+            colunas.length - 1
+            ]
+        );
+
+    let documento = "";
+    let historico = "";
+
+    if (
+        colunas.length >= 4
+    ) {
+        documento =
+            limparCelulaTexto(
+                colunas[1]
+            );
+
+        historico =
+            colunas
+                .slice(
+                    2,
+                    colunas.length - 1
+                )
+                .map(
+                    limparCelulaTexto
+                )
+                .filter(Boolean)
+                .join(" ");
+    } else {
+        historico =
+            limparCelulaTexto(
+                colunas[1]
+            );
+    }
+
+    if (
+        ehCabecalhoTabela(
+            dataTextoCelula,
+            documento,
+            historico,
+            valorTextoCelula
+        )
+    ) {
+        return null;
+    }
 
     let dataMovimentacao = null;
 
-    if (validarFormatoDataBrasileira(dataTextoCelula)) {
-        dataMovimentacao = converterDataBrasileira(
+    if (
+        validarFormatoDataBrasileira(
             dataTextoCelula
-        );
+        )
+    ) {
+        dataMovimentacao =
+            converterDataBrasileira(
+                dataTextoCelula
+            );
     } else if (
         !dataTextoCelula ||
-        ehCelulaVazia(dataTextoCelula)
+        ehCelulaVazia(
+            dataTextoCelula
+        )
     ) {
-        dataMovimentacao = dataCorrente;
+        dataMovimentacao =
+            dataCorrente;
     } else {
         return null;
     }
 
     const novaDataCorrente =
-        dataMovimentacao || dataCorrente;
+        dataMovimentacao ||
+        dataCorrente;
 
     if (!dataMovimentacao) {
         return {
-            dataCorrente: novaDataCorrente,
-            movimentacao: null
+            dataCorrente:
+                novaDataCorrente,
+            movimentacao:
+                null
         };
     }
 
     if (!historico) {
         return {
-            dataCorrente: novaDataCorrente,
-            movimentacao: null
+            dataCorrente:
+                novaDataCorrente,
+            movimentacao:
+                null
         };
     }
 
     const dadosValor =
-        extrairValorIndicador(valorTextoCelula);
+        extrairValorIndicador(
+            valorTextoCelula
+        );
 
     if (!dadosValor) {
         return {
-            dataCorrente: novaDataCorrente,
-            movimentacao: null
+            dataCorrente:
+                novaDataCorrente,
+            movimentacao:
+                null
         };
     }
 
     const movimentacao =
         criarMovimentacaoExtrato({
-            numeroLinha: numeroLinha,
-            data: dataMovimentacao,
-            documento: documento,
-            historico: historico,
-            valor: dadosValor.valor,
-            indicador: dadosValor.indicador,
-            original: linha
+            numeroLinha:
+                numeroLinha,
+            data:
+                dataMovimentacao,
+            documento:
+                documento,
+            historico:
+                historico,
+            valor:
+                dadosValor.valor,
+            indicador:
+                dadosValor.indicador,
+            original:
+                linha
         });
 
     return {
-        dataCorrente: novaDataCorrente,
-        movimentacao: movimentacao
+        dataCorrente:
+            novaDataCorrente,
+        movimentacao:
+            movimentacao
     };
+}
+
+/* =========================================================
+   CABEÇALHO DE TABELA
+========================================================= */
+
+function ehCabecalhoTabela(
+    data,
+    documento,
+    historico,
+    valor
+) {
+    const combinado =
+        normalizarTexto(
+            [
+                data,
+                documento,
+                historico,
+                valor
+            ].join(" ")
+        );
+
+    return (
+        combinado.includes("DATA") &&
+        combinado.includes("HISTORICO") &&
+        combinado.includes("VALOR")
+    );
 }
 
 /* =========================================================
@@ -477,7 +862,9 @@ function interpretarLinhaTextoExtrato(
     numeroLinha
 ) {
     let texto =
-        String(linha || "")
+        String(
+            linha || ""
+        )
             .replace(/\u00A0/g, " ")
             .trim();
 
@@ -486,27 +873,29 @@ function interpretarLinhaTextoExtrato(
     }
 
     let dataMovimentacao = null;
-    let dataTexto = "";
 
     const correspondenciaData =
         texto.match(
-            /^(\d{2}\/\d{2}\/\d{4})(?=\s|\t|$)/
+            /^(\d{1,2}\/\d{1,2}\/\d{2,4})(?=\s|\t|$)/
         );
 
     if (correspondenciaData) {
-        dataTexto =
-            correspondenciaData[1];
-
         dataMovimentacao =
             converterDataBrasileira(
-                dataTexto
+                correspondenciaData[1]
             );
 
-        texto = texto
-            .substring(
-                correspondenciaData[0].length
-            )
-            .trim();
+        if (!dataMovimentacao) {
+            return null;
+        }
+
+        texto =
+            texto
+                .substring(
+                    correspondenciaData[0]
+                        .length
+                )
+                .trim();
     } else {
         dataMovimentacao =
             dataCorrente;
@@ -521,34 +910,41 @@ function interpretarLinhaTextoExtrato(
     }
 
     const dadosValor =
-        extrairValorFinalLinha(texto);
+        extrairValorFinalLinha(
+            texto
+        );
 
     if (!dadosValor) {
         return {
-            dataCorrente: novaDataCorrente,
-            movimentacao: null
+            dataCorrente:
+                novaDataCorrente,
+            movimentacao:
+                null
         };
     }
 
-    const parteDescricao =
-        dadosValor.parteDescricao;
-
     const dadosDescricao =
         separarDocumentoHistorico(
-            parteDescricao
+            dadosValor.parteDescricao
         );
 
-    if (!dadosDescricao.historico) {
+    if (
+        !dadosDescricao.historico
+    ) {
         return {
-            dataCorrente: novaDataCorrente,
-            movimentacao: null
+            dataCorrente:
+                novaDataCorrente,
+            movimentacao:
+                null
         };
     }
 
     const movimentacao =
         criarMovimentacaoExtrato({
-            numeroLinha: numeroLinha,
-            data: dataMovimentacao,
+            numeroLinha:
+                numeroLinha,
+            data:
+                dataMovimentacao,
             documento:
                 dadosDescricao.documento,
             historico:
@@ -573,52 +969,140 @@ function interpretarLinhaTextoExtrato(
    CRIA OBJETO DE MOVIMENTAÇÃO
 ========================================================= */
 
-function criarMovimentacaoExtrato(dados) {
+function criarMovimentacaoExtrato(
+    dados
+) {
+    const historico =
+        limparCelulaTexto(
+            dados.historico
+        );
+
     return {
-        linha: dados.numeroLinha,
-        data: dados.data,
-        dataTexto: formatarDataBrasileira(
-            dados.data
-        ),
-        competencia: obterCompetenciaData(
-            dados.data
-        ),
-        documento: String(
-            dados.documento || ""
-        ).trim(),
-        historico: String(
-            dados.historico || ""
-        ).trim(),
+        linha:
+            dados.numeroLinha,
+
+        data:
+            dados.data,
+
+        dataTexto:
+            formatarDataBrasileira(
+                dados.data
+            ),
+
+        competencia:
+            obterCompetenciaData(
+                dados.data
+            ),
+
+        documento:
+            String(
+                dados.documento || ""
+            ).trim(),
+
+        historico:
+            historico,
+
         historicoNormalizado:
             normalizarTexto(
-                dados.historico
+                historico
             ),
-        valor: Math.abs(
-            Number(
-                dados.valor || 0
-            )
-        ),
-        indicador: String(
-            dados.indicador || ""
-        ).toUpperCase(),
-        original: dados.original || "",
-        considerado: false,
-        motivo: ""
+
+        valor:
+            Math.abs(
+                Number(
+                    dados.valor || 0
+                )
+            ),
+
+        indicador:
+            String(
+                dados.indicador || ""
+            ).toUpperCase(),
+
+        original:
+            dados.original || "",
+
+        considerado:
+            false,
+
+        motivo:
+            ""
     };
+}
+
+/* =========================================================
+   REMOVE DUPLICIDADES
+========================================================= */
+
+function removerMovimentacoesDuplicadas(
+    movimentacoes
+) {
+    const resultado = [];
+    const vistos = new Set();
+
+    movimentacoes.forEach(
+        function (
+            movimentacao
+        ) {
+            const chave = [
+                movimentacao.dataTexto,
+                normalizarTexto(
+                    movimentacao.documento
+                ),
+                movimentacao
+                    .historicoNormalizado,
+                Number(
+                    movimentacao.valor
+                ).toFixed(2),
+                movimentacao.indicador
+            ].join("|");
+
+            if (
+                vistos.has(chave)
+            ) {
+                return;
+            }
+
+            vistos.add(chave);
+
+            resultado.push(
+                movimentacao
+            );
+        }
+    );
+
+    return resultado;
 }
 
 /* =========================================================
    VALOR FINAL DA LINHA
 ========================================================= */
 
-function extrairValorFinalLinha(texto) {
-    const valor = limparCelulaValor(texto);
+function extrairValorFinalLinha(
+    texto
+) {
+    const valor =
+        limparCelulaValor(
+            texto
+        );
 
+    /*
+     * Exemplos aceitos:
+     *
+     * 1.250,00 C
+     * 1.250,00C
+     * R$ 1.250,00 C
+     * -1.250,00
+     * 1.250,00 D
+     * 500,00 *
+     */
     const regexValorFinal =
         /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i;
 
     const correspondencia =
-        valor.match(regexValorFinal);
+        valor.match(
+            regexValorFinal
+        );
 
     if (!correspondencia) {
         return null;
@@ -629,8 +1113,28 @@ function extrairValorFinalLinha(texto) {
             correspondencia[1]
         );
 
-    if (!Number.isFinite(numero)) {
+    if (
+        !Number.isFinite(
+            numero
+        )
+    ) {
         return null;
+    }
+
+    let indicador =
+        String(
+            correspondencia[2] || ""
+        ).toUpperCase();
+
+    /*
+     * Valor explicitamente negativo sem indicador
+     * deve ser tratado como débito.
+     */
+    if (
+        !indicador &&
+        numero < 0
+    ) {
+        indicador = "D";
     }
 
     const parteDescricao =
@@ -642,11 +1146,16 @@ function extrairValorFinalLinha(texto) {
             .trim();
 
     return {
-        valor: Math.abs(numero),
-        indicador: String(
-            correspondencia[2] || ""
-        ).toUpperCase(),
-        parteDescricao: parteDescricao
+        valor:
+            Math.abs(
+                numero
+            ),
+
+        indicador:
+            indicador,
+
+        parteDescricao:
+            parteDescricao
     };
 }
 
@@ -654,9 +1163,13 @@ function extrairValorFinalLinha(texto) {
    VALOR DE UMA CÉLULA
 ========================================================= */
 
-function extrairValorIndicador(texto) {
+function extrairValorIndicador(
+    texto
+) {
     const valorTexto =
-        limparCelulaValor(texto);
+        limparCelulaValor(
+            texto
+        );
 
     const correspondencia =
         valorTexto.match(
@@ -672,15 +1185,34 @@ function extrairValorIndicador(texto) {
             correspondencia[1]
         );
 
-    if (!Number.isFinite(valor)) {
+    if (
+        !Number.isFinite(
+            valor
+        )
+    ) {
         return null;
     }
 
-    return {
-        valor: Math.abs(valor),
-        indicador: String(
+    let indicador =
+        String(
             correspondencia[2] || ""
-        ).toUpperCase()
+        ).toUpperCase();
+
+    if (
+        !indicador &&
+        valor < 0
+    ) {
+        indicador = "D";
+    }
+
+    return {
+        valor:
+            Math.abs(
+                valor
+            ),
+
+        indicador:
+            indicador
     };
 }
 
@@ -688,9 +1220,13 @@ function extrairValorIndicador(texto) {
    DOCUMENTO / HISTÓRICO
 ========================================================= */
 
-function separarDocumentoHistorico(texto) {
+function separarDocumentoHistorico(
+    texto
+) {
     const valor =
-        limparCelulaTexto(texto);
+        limparCelulaTexto(
+            texto
+        );
 
     if (!valor) {
         return {
@@ -699,6 +1235,9 @@ function separarDocumentoHistorico(texto) {
         };
     }
 
+    /*
+     * Primeiro tenta TAB.
+     */
     const partesTab =
         valor
             .split(/\t+/)
@@ -707,18 +1246,41 @@ function separarDocumentoHistorico(texto) {
             })
             .filter(Boolean);
 
-    if (partesTab.length >= 2) {
+    if (
+        partesTab.length >= 2
+    ) {
+        const primeiro =
+            partesTab[0];
+
+        if (
+            pareceDocumento(
+                primeiro
+            )
+        ) {
+            return {
+                documento:
+                    primeiro,
+
+                historico:
+                    partesTab
+                        .slice(1)
+                        .join(" ")
+                        .trim()
+            };
+        }
+
         return {
-            documento:
-                partesTab[0],
+            documento: "",
             historico:
                 partesTab
-                    .slice(1)
                     .join(" ")
                     .trim()
         };
     }
 
+    /*
+     * Depois tenta duas ou mais sequências de espaço.
+     */
     const partesEspaco =
         valor
             .split(/\s{2,}/)
@@ -727,16 +1289,21 @@ function separarDocumentoHistorico(texto) {
             })
             .filter(Boolean);
 
-    if (partesEspaco.length >= 2) {
+    if (
+        partesEspaco.length >= 2
+    ) {
         const primeiro =
             partesEspaco[0];
 
         if (
-            primeiro.length <= 30
+            pareceDocumento(
+                primeiro
+            )
         ) {
             return {
                 documento:
                     primeiro,
+
                 historico:
                     partesEspaco
                         .slice(1)
@@ -744,8 +1311,19 @@ function separarDocumentoHistorico(texto) {
                         .trim()
             };
         }
+
+        return {
+            documento: "",
+            historico:
+                partesEspaco
+                    .join(" ")
+                    .trim()
+        };
     }
 
+    /*
+     * Documento + histórico separados por espaço simples.
+     */
     const correspondenciaDocumento =
         valor.match(
             /^([0-9A-Z./-]{1,30})\s+(.+)$/i
@@ -760,6 +1338,7 @@ function separarDocumentoHistorico(texto) {
         return {
             documento:
                 correspondenciaDocumento[1],
+
             historico:
                 correspondenciaDocumento[2]
                     .trim()
@@ -768,23 +1347,55 @@ function separarDocumentoHistorico(texto) {
 
     return {
         documento: "",
-        historico: valor
+        historico:
+            valor
     };
 }
 
-function pareceDocumento(valor) {
+/* =========================================================
+   IDENTIFICA DOCUMENTO
+========================================================= */
+
+function pareceDocumento(
+    valor
+) {
     const texto =
-        String(valor || "").trim();
+        String(
+            valor || ""
+        ).trim();
 
     if (!texto) {
         return false;
     }
 
-    if (/^\d+$/.test(texto)) {
+    if (
+        texto.length >
+        30
+    ) {
+        return false;
+    }
+
+    if (
+        /^\d+$/.test(
+            texto
+        )
+    ) {
         return true;
     }
 
-    if (/^\d+[./-]\d+/.test(texto)) {
+    if (
+        /^\d+[./-]\d+/.test(
+            texto
+        )
+    ) {
+        return true;
+    }
+
+    if (
+        /^[A-Z]{0,5}\d+[A-Z0-9./-]*$/i.test(
+            texto
+        )
+    ) {
         return true;
     }
 
@@ -803,8 +1414,12 @@ function pareceDocumento(valor) {
    LIMPEZA DAS CÉLULAS
 ========================================================= */
 
-function limparCelulaTexto(texto) {
-    return String(texto || "")
+function limparCelulaTexto(
+    texto
+) {
+    return String(
+        texto || ""
+    )
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ")
         .replace(/<br\s*\/?>/gi, " ")
@@ -817,12 +1432,16 @@ function limparCelulaTexto(texto) {
         .trim();
 }
 
-function limparCelulaValor(texto) {
+function limparCelulaValor(
+    texto
+) {
     const marcadorAsterisco =
         "__ASTERISCO_INDICADOR__";
 
     let valor =
-        String(texto || "")
+        String(
+            texto || ""
+        )
             .replace(/\u00A0/g, " ")
             .replace(/&nbsp;/gi, " ")
             .replace(/<br\s*\/?>/gi, " ")
@@ -834,26 +1453,28 @@ function limparCelulaValor(texto) {
             .replace(/__/g, "")
             .trim();
 
-    valor = valor
-        .replace(
-            new RegExp(
-                marcadorAsterisco,
-                "g"
-            ),
-            "*"
-        )
-        .trim();
+    valor =
+        valor
+            .replace(
+                new RegExp(
+                    marcadorAsterisco,
+                    "g"
+                ),
+                "*"
+            )
+            .trim();
 
     return valor;
 }
 
-function ehCelulaVazia(texto) {
-    const valor =
-        String(texto || "")
-            .replace(/\u00A0/g, "")
-            .trim();
-
-    return !valor;
+function ehCelulaVazia(
+    texto
+) {
+    return !String(
+        texto || ""
+    )
+        .replace(/\u00A0/g, "")
+        .trim();
 }
 
 /* =========================================================
@@ -861,21 +1482,54 @@ function ehCelulaVazia(texto) {
 ========================================================= */
 
 function identificarPeriodoExtrato() {
-    const datas =
-        movimentacoesExtrato
-            .map(function (movimentacao) {
-                return movimentacao.data;
-            })
-            .filter(function (data) {
+    /*
+     * IMPORTANTE:
+     *
+     * O período NÃO pode ser determinado por:
+     *
+     * - SALDO ANTERIOR
+     * - SALDO BLOQUEADO ANTERIOR
+     * - SALDO DO DIA
+     *
+     * Essas linhas podem trazer datas fora do período
+     * real de movimentação e alterar o divisor da média.
+     *
+     * Também NÃO usamos somente os créditos considerados,
+     * pois um mês válido pode possuir apenas débitos ou
+     * créditos excluídos pelas regras de renda.
+     *
+     * Portanto o período é determinado por lançamentos
+     * reais do extrato, excluindo somente linhas
+     * estritamente informativas.
+     */
+    const movimentacoesPeriodo =
+        movimentacoesExtrato.filter(
+            function (
+                movimentacao
+            ) {
                 return (
-                    data instanceof Date &&
-                    !Number.isNaN(
-                        data.getTime()
+                    possuiDataValida(
+                        movimentacao.data
+                    ) &&
+                    !deveIgnorarMovimentacaoNaDeteccaoPeriodo(
+                        movimentacao
                     )
                 );
-            });
+            }
+        );
 
-    if (datas.length === 0) {
+    const datas =
+        movimentacoesPeriodo.map(
+            function (
+                movimentacao
+            ) {
+                return movimentacao.data;
+            }
+        );
+
+    if (
+        datas.length === 0
+    ) {
         primeiraDataExtrato = null;
         ultimaDataExtrato = null;
 
@@ -884,13 +1538,26 @@ function identificarPeriodoExtrato() {
             ""
         );
 
+        const inputMeses =
+            document.getElementById(
+                "mesesConsideradosMovimentacao"
+            );
+
+        if (inputMeses) {
+            inputMeses.value = "";
+        }
+
+        atualizarExibicaoPeriodo();
+
         return;
     }
 
     const timestamps =
-        datas.map(function (data) {
-            return data.getTime();
-        });
+        datas.map(
+            function (data) {
+                return data.getTime();
+            }
+        );
 
     primeiraDataExtrato =
         new Date(
@@ -933,6 +1600,64 @@ function identificarPeriodoExtrato() {
 }
 
 /* =========================================================
+   IGNORA LINHAS INFORMATIVAS NA DETECÇÃO DO PERÍODO
+========================================================= */
+
+function deveIgnorarMovimentacaoNaDeteccaoPeriodo(
+    movimentacao
+) {
+    if (!movimentacao) {
+        return true;
+    }
+
+    const historico =
+        movimentacao
+            .historicoNormalizado ||
+        "";
+
+    if (!historico) {
+        return true;
+    }
+
+    const regra =
+        localizarRegraExclusao(
+            historico
+        );
+
+    if (
+        regra &&
+        regra.ignorarPeriodo === true
+    ) {
+        return true;
+    }
+
+    return PADROES_INFORMATIVOS_PERIODO.some(
+        function (padrao) {
+            return historico.includes(
+                normalizarTexto(
+                    padrao
+                )
+            );
+        }
+    );
+}
+
+/* =========================================================
+   VALIDA DATA JS
+========================================================= */
+
+function possuiDataValida(
+    data
+) {
+    return (
+        data instanceof Date &&
+        !Number.isNaN(
+            data.getTime()
+        )
+    );
+}
+
+/* =========================================================
    QUANTIDADE DE MESES
 ========================================================= */
 
@@ -941,13 +1666,11 @@ function calcularQuantidadeMesesPeriodo(
     dataFinal
 ) {
     if (
-        !(dataInicial instanceof Date) ||
-        !(dataFinal instanceof Date) ||
-        Number.isNaN(
-            dataInicial.getTime()
+        !possuiDataValida(
+            dataInicial
         ) ||
-        Number.isNaN(
-            dataFinal.getTime()
+        !possuiDataValida(
+            dataFinal
         )
     ) {
         return 0;
@@ -977,27 +1700,15 @@ function calcularQuantidadeMesesPeriodo(
             temporaria;
     }
 
-    const anoInicial =
-        inicial.getFullYear();
-
-    const mesInicial =
-        inicial.getMonth();
-
-    const anoFinal =
-        final.getFullYear();
-
-    const mesFinal =
-        final.getMonth();
-
     return (
         (
-            anoFinal -
-            anoInicial
+            final.getFullYear() -
+            inicial.getFullYear()
         ) *
         12 +
         (
-            mesFinal -
-            mesInicial
+            final.getMonth() -
+            inicial.getMonth()
         ) +
         1
     );
@@ -1019,7 +1730,10 @@ function atualizarExibicaoPeriodo() {
         );
 
     if (elementoPrimeira) {
-        if ("value" in elementoPrimeira) {
+        if (
+            "value" in
+            elementoPrimeira
+        ) {
             elementoPrimeira.value =
                 primeiraDataExtrato
                     ? formatarDataBrasileira(
@@ -1037,7 +1751,10 @@ function atualizarExibicaoPeriodo() {
     }
 
     if (elementoUltima) {
-        if ("value" in elementoUltima) {
+        if (
+            "value" in
+            elementoUltima
+        ) {
             elementoUltima.value =
                 ultimaDataExtrato
                     ? formatarDataBrasileira(
@@ -1064,7 +1781,9 @@ function classificarMovimentacoes() {
     movimentacoesExcluidas = [];
 
     movimentacoesExtrato.forEach(
-        function (movimentacao) {
+        function (
+            movimentacao
+        ) {
             const classificacao =
                 classificarMovimentacao(
                     movimentacao
@@ -1099,76 +1818,113 @@ function classificarMovimentacao(
     movimentacao
 ) {
     const historico =
-        movimentacao.historicoNormalizado;
+        movimentacao
+            .historicoNormalizado;
 
     const regraExclusao =
         localizarRegraExclusao(
             historico
         );
 
+    /*
+     * Regra automática sempre tem prioridade.
+     */
     if (regraExclusao) {
         return {
-            considerado: false,
+            considerado:
+                false,
+
             motivo:
                 regraExclusao.rotulo
         };
     }
 
+    /*
+     * Débito explícito.
+     */
     if (
-        movimentacao.indicador === "D"
+        movimentacao.indicador ===
+        "D"
     ) {
         return {
-            considerado: false,
-            motivo: "Débito"
+            considerado:
+                false,
+
+            motivo:
+                "Débito"
         };
     }
 
+    /*
+     * Valor informativo/bloqueado.
+     */
     if (
-        movimentacao.indicador === "*"
+        movimentacao.indicador ===
+        "*"
     ) {
         return {
-            considerado: false,
+            considerado:
+                false,
+
             motivo:
                 "Valor bloqueado/informativo"
         };
     }
 
+    /*
+     * Exclusão selecionada pelo usuário.
+     */
     if (
         historicosExcluidosManualmente.has(
             historico
         )
     ) {
         return {
-            considerado: false,
+            considerado:
+                false,
+
             motivo:
                 "Histórico excluído manualmente"
         };
     }
 
+    /*
+     * Crédito explícito.
+     */
     if (
-        movimentacao.indicador === "C"
+        movimentacao.indicador ===
+        "C"
     ) {
         return {
-            considerado: true,
+            considerado:
+                true,
+
             motivo:
-                "Crédito considerado"
+                "Crédito identificado pelo indicador C"
         };
     }
 
+    /*
+     * Sem indicador, mas histórico reconhecido.
+     */
     if (
         identificarCreditoSemIndicador(
             historico
         )
     ) {
         return {
-            considerado: true,
+            considerado:
+                true,
+
             motivo:
                 "Crédito identificado pelo histórico"
         };
     }
 
     return {
-        considerado: false,
+        considerado:
+            false,
+
         motivo:
             "Sem identificação segura como crédito"
     };
@@ -1181,13 +1937,18 @@ function classificarMovimentacao(
 function localizarRegraExclusao(
     historicoNormalizado
 ) {
+    const historico =
+        String(
+            historicoNormalizado || ""
+        );
+
     for (
         const regra
         of REGRAS_EXCLUSAO_MOVIMENTACAO
     ) {
         if (
             regra.testar(
-                historicoNormalizado
+                historico
             )
         ) {
             return regra;
@@ -1204,9 +1965,14 @@ function localizarRegraExclusao(
 function identificarCreditoSemIndicador(
     historico
 ) {
+    const valor =
+        String(
+            historico || ""
+        );
+
     return PADROES_CREDITO_SEM_INDICADOR.some(
         function (padrao) {
-            return historico.includes(
+            return valor.includes(
                 normalizarTexto(
                     padrao
                 )
@@ -1222,22 +1988,62 @@ function identificarCreditoSemIndicador(
 function ehCreditoPotencial(
     movimentacao
 ) {
-    if (
-        movimentacao.indicador === "C"
-    ) {
-        return true;
+    if (!movimentacao) {
+        return false;
     }
 
     if (
-        movimentacao.indicador === "D" ||
-        movimentacao.indicador === "*"
+        movimentacao.indicador ===
+        "D" ||
+        movimentacao.indicador ===
+        "*"
     ) {
         return false;
     }
 
+    if (
+        movimentacao.indicador ===
+        "C"
+    ) {
+        return true;
+    }
+
     return identificarCreditoSemIndicador(
-        movimentacao.historicoNormalizado
+        movimentacao
+            .historicoNormalizado
     );
+}
+
+/* =========================================================
+   CRÉDITO EXCLUÍDO QUE DEVE SER CONTABILIZADO NO RESULTADO
+========================================================= */
+
+function ehCreditoExcluidoContabilizavel(
+    movimentacao
+) {
+    if (
+        !ehCreditoPotencial(
+            movimentacao
+        )
+    ) {
+        return false;
+    }
+
+    const regra =
+        localizarRegraExclusao(
+            movimentacao
+                .historicoNormalizado
+        );
+
+    if (
+        regra &&
+        regra.contabilizarCreditoExcluido ===
+        false
+    ) {
+        return false;
+    }
+
+    return true;
 }
 
 /* =========================================================
@@ -1262,7 +2068,8 @@ function renderizarHistoricosExtrato() {
     container.innerHTML = "";
 
     if (
-        movimentacoesExtrato.length === 0
+        movimentacoesExtrato.length ===
+        0
     ) {
         if (resumo) {
             resumo.textContent =
@@ -1295,7 +2102,8 @@ function renderizarHistoricosExtrato() {
             historicos.length +
             " histórico(s) diferente(s) identificado(s) em " +
             movimentacoesExtrato.length +
-            " lançamento(s) do extrato.";
+            " lançamento(s) do extrato. " +
+            "Regras automáticas são exibidas apenas para conferência e não podem ser alteradas.";
     }
 
     historicos.forEach(
@@ -1314,7 +2122,8 @@ function renderizarHistoricosExtrato() {
                 );
 
             const podeExcluirManual =
-                grupo.creditosPotenciais > 0 &&
+                grupo.creditosPotenciais >
+                0 &&
                 !regraAutomatica;
 
             const label =
@@ -1325,20 +2134,28 @@ function renderizarHistoricosExtrato() {
             label.className =
                 "opcao-simulacao regra-movimentacao-item";
 
+            if (regraAutomatica) {
+                label.classList.add(
+                    "regra-movimentacao-automatica"
+                );
+            }
+
             let status = "";
 
             if (regraAutomatica) {
                 status =
-                    "Exclusão automática: " +
+                    "Exclusão automática · " +
                     regraAutomatica.motivo;
             } else if (
-                grupo.creditosPotenciais > 0
+                grupo.creditosPotenciais >
+                0
             ) {
                 status =
                     grupo.creditosPotenciais +
                     " crédito(s) identificado(s)";
             } else if (
-                grupo.debitos > 0
+                grupo.debitos >
+                0
             ) {
                 status =
                     grupo.debitos +
@@ -1348,37 +2165,80 @@ function renderizarHistoricosExtrato() {
                     "Movimentação informativa";
             }
 
-            label.innerHTML = `
-                <input
-                    type="checkbox"
-                    id="historico-movimentacao-${indice}"
-                    ${regraAutomatica || manual ? "checked" : ""}
-                    ${podeExcluirManual ? "" : "disabled"}
-                >
+            /*
+             * Regras automáticas não são apresentadas como
+             * checkbox desabilitado.
+             *
+             * Assim o usuário não interpreta como erro da tela.
+             */
+            if (regraAutomatica) {
+                label.innerHTML = `
+                    <span
+                        class="regra-movimentacao-indicador-automatico"
+                        aria-hidden="true"
+                        title="Exclusão automática"
+                    >
+                        ✓
+                    </span>
 
-                <span class="opcao-simulacao-conteudo">
+                    <span class="opcao-simulacao-conteudo">
 
-                    <strong>
-                        ${escaparHtml(
-                grupo.historico
-            )}
-                    </strong>
+                        <strong>
+                            ${escaparHtml(
+                    grupo.historico
+                )}
+                        </strong>
 
-                    <small>
-                        ${escaparHtml(
-                status
-            )}
-                        ·
-                        ${grupo.quantidade}
-                        ocorrência(s)
-                    </small>
+                        <small>
+                            ${escaparHtml(
+                    status
+                )}
+                            ·
+                            ${grupo.quantidade}
+                            ocorrência(s)
+                            ·
+                            Regra automática
+                        </small>
 
-                </span>
-            `;
+                    </span>
+                `;
+            } else {
+                label.innerHTML = `
+                    <input
+                        type="checkbox"
+                        id="historico-movimentacao-${indice}"
+                        ${manual ? "checked" : ""}
+                        ${podeExcluirManual ? "" : "disabled"}
+                    >
+
+                    <span class="opcao-simulacao-conteudo">
+
+                        <strong>
+                            ${escaparHtml(
+                    grupo.historico
+                )}
+                        </strong>
+
+                        <small>
+                            ${escaparHtml(
+                    status
+                )}
+                            ·
+                            ${grupo.quantidade}
+                            ocorrência(s)
+                            ${podeExcluirManual
+                        ? " · Marque para excluir"
+                        : ""
+                    }
+                        </small>
+
+                    </span>
+                `;
+            }
 
             const checkbox =
                 label.querySelector(
-                    "input"
+                    "input[type='checkbox']"
                 );
 
             if (
@@ -1419,46 +2279,83 @@ function renderizarHistoricosExtrato() {
 ========================================================= */
 
 function agruparHistoricosExtrato() {
-    const mapa = new Map();
+    const mapa =
+        new Map();
 
     movimentacoesExtrato.forEach(
-        function (movimentacao) {
+        function (
+            movimentacao
+        ) {
             const chave =
-                movimentacao.historicoNormalizado;
+                movimentacao
+                    .historicoNormalizado;
 
             if (!chave) {
                 return;
             }
 
-            if (!mapa.has(chave)) {
+            if (
+                !mapa.has(
+                    chave
+                )
+            ) {
                 mapa.set(
                     chave,
                     {
                         normalizado:
                             chave,
+
                         historico:
-                            movimentacao.historico,
-                        quantidade: 0,
-                        creditosPotenciais: 0,
-                        debitos: 0,
-                        informativos: 0
+                            movimentacao
+                                .historico,
+
+                        quantidade:
+                            0,
+
+                        creditosPotenciais:
+                            0,
+
+                        debitos:
+                            0,
+
+                        informativos:
+                            0,
+
+                        regraAutomatica:
+                            localizarRegraExclusao(
+                                chave
+                            )
                     }
                 );
             }
 
             const grupo =
-                mapa.get(chave);
+                mapa.get(
+                    chave
+                );
 
             grupo.quantidade++;
 
+            const regraAutomatica =
+                localizarRegraExclusao(
+                    chave
+                );
+
             if (
+                regraAutomatica &&
+                regraAutomatica
+                    .ignorarPeriodo
+            ) {
+                grupo.informativos++;
+            } else if (
                 ehCreditoPotencial(
                     movimentacao
                 )
             ) {
                 grupo.creditosPotenciais++;
             } else if (
-                movimentacao.indicador === "D"
+                movimentacao.indicador ===
+                "D"
             ) {
                 grupo.debitos++;
             } else {
@@ -1470,12 +2367,16 @@ function agruparHistoricosExtrato() {
     return Array.from(
         mapa.values()
     ).sort(
-        function (a, b) {
+        function (
+            a,
+            b
+        ) {
             return a.historico.localeCompare(
                 b.historico,
                 "pt-BR",
                 {
-                    sensitivity: "base"
+                    sensitivity:
+                        "base"
                 }
             );
         }
@@ -1521,12 +2422,22 @@ function calcularResultadosMovimentacao() {
         );
 
     if (
-        !mesesConsiderados ||
+        !Number.isFinite(
+            mesesConsiderados
+        ) ||
         mesesConsiderados <= 0
     ) {
         mesesConsiderados =
             mesesDetectados;
     }
+
+    mesesConsiderados =
+        Math.max(
+            0,
+            Math.trunc(
+                mesesConsiderados
+            )
+        );
 
     const media =
         mesesConsiderados > 0
@@ -1536,8 +2447,10 @@ function calcularResultadosMovimentacao() {
 
     const creditosExcluidos =
         movimentacoesExcluidas.filter(
-            function (movimentacao) {
-                return ehCreditoPotencial(
+            function (
+                movimentacao
+            ) {
+                return ehCreditoExcluidoContabilizavel(
                     movimentacao
                 );
             }
@@ -1545,12 +2458,16 @@ function calcularResultadosMovimentacao() {
 
     definirTexto(
         "resultadoMediaMovimentacao",
-        formatarMoeda(media)
+        formatarMoeda(
+            media
+        )
     );
 
     definirTexto(
         "resultadoTotalMovimentacao",
-        formatarMoeda(total)
+        formatarMoeda(
+            total
+        )
     );
 
     definirTexto(
@@ -1563,7 +2480,8 @@ function calcularResultadosMovimentacao() {
     definirTexto(
         "resultadoQtdConsiderados",
         String(
-            movimentacoesConsideradas.length
+            movimentacoesConsideradas
+                .length
         )
     );
 
@@ -1576,8 +2494,57 @@ function calcularResultadosMovimentacao() {
 
     definirValorCampo(
         "mesesDetectadosMovimentacao",
-        mesesDetectados
+        mesesDetectados || ""
     );
+}
+
+/* =========================================================
+   NORMALIZA MESES CONSIDERADOS
+========================================================= */
+
+function normalizarMesesConsiderados() {
+    const input =
+        document.getElementById(
+            "mesesConsideradosMovimentacao"
+        );
+
+    if (!input) {
+        return;
+    }
+
+    const texto =
+        String(
+            input.value || ""
+        ).trim();
+
+    if (!texto) {
+        return;
+    }
+
+    const numero =
+        Number(
+            texto
+        );
+
+    if (
+        !Number.isFinite(
+            numero
+        ) ||
+        numero <= 0
+    ) {
+        input.value = "";
+        return;
+    }
+
+    input.value =
+        String(
+            Math.max(
+                1,
+                Math.trunc(
+                    numero
+                )
+            )
+        );
 }
 
 /* =========================================================
@@ -1628,22 +2595,36 @@ function renderizarTabelaResumoMensal() {
         );
 
     competenciasPeriodo.forEach(
-        function (competencia) {
+        function (
+            competencia
+        ) {
             agrupamento[
                 competencia
             ] = {
                 competencia:
                     competencia,
-                quantidade: 0,
-                total: 0
+
+                quantidade:
+                    0,
+
+                total:
+                    0
             };
         }
     );
 
     movimentacoesConsideradas.forEach(
-        function (movimentacao) {
+        function (
+            movimentacao
+        ) {
             const competencia =
                 movimentacao.competencia;
+
+            if (
+                !competencia
+            ) {
+                return;
+            }
 
             if (
                 !agrupamento[
@@ -1655,8 +2636,12 @@ function renderizarTabelaResumoMensal() {
                 ] = {
                     competencia:
                         competencia,
-                    quantidade: 0,
-                    total: 0
+
+                    quantidade:
+                        0,
+
+                    total:
+                        0
                 };
             }
 
@@ -1676,7 +2661,9 @@ function renderizarTabelaResumoMensal() {
     )
         .sort()
         .forEach(
-            function (competencia) {
+            function (
+                competencia
+            ) {
                 const grupo =
                     agrupamento[
                     competencia
@@ -1689,8 +2676,10 @@ function renderizarTabelaResumoMensal() {
 
                 tr.innerHTML = `
                     <td>
-                        ${formatarCompetencia(
-                    competencia
+                        ${escaparHtml(
+                    formatarCompetencia(
+                        competencia
+                    )
                 )}
                     </td>
 
@@ -1723,13 +2712,17 @@ function gerarCompetenciasPeriodo(
     const competencias = [];
 
     if (
-        !(dataInicial instanceof Date) ||
-        !(dataFinal instanceof Date)
+        !possuiDataValida(
+            dataInicial
+        ) ||
+        !possuiDataValida(
+            dataFinal
+        )
     ) {
         return competencias;
     }
 
-    const atual =
+    let inicial =
         new Date(
             dataInicial.getFullYear(),
             dataInicial.getMonth(),
@@ -1740,7 +2733,7 @@ function gerarCompetenciasPeriodo(
             0
         );
 
-    const final =
+    let final =
         new Date(
             dataFinal.getFullYear(),
             dataFinal.getMonth(),
@@ -1749,6 +2742,25 @@ function gerarCompetenciasPeriodo(
             0,
             0,
             0
+        );
+
+    if (
+        inicial.getTime() >
+        final.getTime()
+    ) {
+        const temporaria =
+            inicial;
+
+        inicial =
+            final;
+
+        final =
+            temporaria;
+    }
+
+    const atual =
+        new Date(
+            inicial.getTime()
         );
 
     while (
@@ -1786,11 +2798,16 @@ function renderizarTabelaConsideradas() {
     tbody.innerHTML = "";
 
     if (
-        movimentacoesConsideradas.length === 0
+        movimentacoesConsideradas
+            .length === 0
     ) {
+        /*
+         * O HTML atual possui 5 colunas:
+         * Data, Documento, Histórico, Valor e Identificação.
+         */
         inserirLinhaSemDados(
             tbody,
-            4,
+            5,
             "Nenhuma movimentação considerada."
         );
 
@@ -1798,7 +2815,9 @@ function renderizarTabelaConsideradas() {
     }
 
     movimentacoesConsideradas.forEach(
-        function (movimentacao) {
+        function (
+            movimentacao
+        ) {
             const tr =
                 document.createElement(
                     "tr"
@@ -1829,6 +2848,13 @@ function renderizarTabelaConsideradas() {
                 movimentacao.valor
             )}
                 </td>
+
+                <td>
+                    ${escaparHtml(
+                movimentacao.motivo ||
+                "Crédito considerado"
+            )}
+                </td>
             `;
 
             tbody.appendChild(
@@ -1855,7 +2881,8 @@ function renderizarTabelaExcluidas() {
     tbody.innerHTML = "";
 
     if (
-        movimentacoesExcluidas.length === 0
+        movimentacoesExcluidas
+            .length === 0
     ) {
         inserirLinhaSemDados(
             tbody,
@@ -1867,7 +2894,9 @@ function renderizarTabelaExcluidas() {
     }
 
     movimentacoesExcluidas.forEach(
-        function (movimentacao) {
+        function (
+            movimentacao
+        ) {
             const tr =
                 document.createElement(
                     "tr"
@@ -1917,7 +2946,9 @@ function renderizarTabelaExcluidas() {
    LOCALIZA TBODY
 ========================================================= */
 
-function obterTbodyTabela(id) {
+function obterTbodyTabela(
+    id
+) {
     const elemento =
         document.getElementById(
             id
@@ -1929,7 +2960,8 @@ function obterTbodyTabela(id) {
 
     if (
         elemento.tagName &&
-        elemento.tagName.toUpperCase() ===
+        elemento.tagName
+            .toUpperCase() ===
         "TBODY"
     ) {
         return elemento;
@@ -1937,7 +2969,8 @@ function obterTbodyTabela(id) {
 
     if (
         elemento.tagName &&
-        elemento.tagName.toUpperCase() ===
+        elemento.tagName
+            .toUpperCase() ===
         "TABLE"
     ) {
         return elemento.querySelector(
@@ -1955,8 +2988,10 @@ function obterTbodyTabela(id) {
 function validarFormatoDataBrasileira(
     valor
 ) {
-    return /^\d{2}\/\d{2}\/\d{4}$/.test(
-        String(valor || "").trim()
+    return /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(
+        String(
+            valor || ""
+        ).trim()
     );
 }
 
@@ -1964,10 +2999,12 @@ function converterDataBrasileira(
     valor
 ) {
     const correspondencia =
-        String(valor || "")
+        String(
+            valor || ""
+        )
             .trim()
             .match(
-                /^(\d{2})\/(\d{2})\/(\d{4})$/
+                /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/
             );
 
     if (!correspondencia) {
@@ -1984,10 +3021,23 @@ function converterDataBrasileira(
             correspondencia[2]
         );
 
-    const ano =
+    let ano =
         Number(
             correspondencia[3]
         );
+
+    /*
+     * Aceita ano com dois dígitos.
+     */
+    if (
+        correspondencia[3]
+            .length === 2
+    ) {
+        ano +=
+            ano >= 70
+                ? 1900
+                : 2000;
+    }
 
     if (
         dia < 1 ||
@@ -2012,10 +3062,12 @@ function converterDataBrasileira(
         );
 
     if (
-        data.getFullYear() !== ano ||
+        data.getFullYear() !==
+        ano ||
         data.getMonth() !==
         mes - 1 ||
-        data.getDate() !== dia
+        data.getDate() !==
+        dia
     ) {
         return null;
     }
@@ -2027,9 +3079,8 @@ function formatarDataBrasileira(
     data
 ) {
     if (
-        !(data instanceof Date) ||
-        Number.isNaN(
-            data.getTime()
+        !possuiDataValida(
+            data
         )
     ) {
         return "";
@@ -2066,6 +3117,14 @@ function formatarDataBrasileira(
 function obterCompetenciaData(
     data
 ) {
+    if (
+        !possuiDataValida(
+            data
+        )
+    ) {
+        return "";
+    }
+
     const ano =
         data.getFullYear();
 
@@ -2112,7 +3171,9 @@ function formatarCompetencia(
 function normalizarTexto(
     texto
 ) {
-    return String(texto || "")
+    return String(
+        texto || ""
+    )
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ")
         .replace(/<br\s*\/?>/gi, " ")
@@ -2152,7 +3213,9 @@ function converterValorBrasileiro(
     valor
 ) {
     let texto =
-        String(valor || "")
+        String(
+            valor || ""
+        )
             .replace(/R\$/gi, "")
             .replace(/\s/g, "")
             .trim();
@@ -2161,13 +3224,48 @@ function converterValorBrasileiro(
         return NaN;
     }
 
+    /*
+     * Formato brasileiro:
+     * 1.234.567,89
+     */
+    if (
+        texto.includes(",")
+    ) {
+        texto =
+            texto
+                .replace(/\./g, "")
+                .replace(",", ".");
+    } else {
+        /*
+         * Fallback para formato decimal com ponto.
+         */
+        const pontos =
+            (
+                texto.match(/\./g) ||
+                []
+            ).length;
+
+        if (
+            pontos > 1
+        ) {
+            texto =
+                texto.replace(
+                    /\./g,
+                    ""
+                );
+        }
+    }
+
     texto =
-        texto
-            .replace(/\./g, "")
-            .replace(",", ".");
+        texto.replace(
+            /[^\d.-]/g,
+            ""
+        );
 
     const numero =
-        Number(texto);
+        Number(
+            texto
+        );
 
     return Number.isFinite(
         numero
@@ -2184,10 +3282,14 @@ function formatarMoeda(
     ).toLocaleString(
         "pt-BR",
         {
-            style: "currency",
-            currency: "BRL",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            style:
+                "currency",
+            currency:
+                "BRL",
+            minimumFractionDigits:
+                2,
+            maximumFractionDigits:
+                2
         }
     );
 }
@@ -2197,14 +3299,7 @@ function formatarMoeda(
 ========================================================= */
 
 function limparMediaMovimentacao() {
-    movimentacoesExtrato = [];
-    movimentacoesConsideradas = [];
-    movimentacoesExcluidas = [];
-
-    primeiraDataExtrato = null;
-    ultimaDataExtrato = null;
-
-    historicosExcluidosManualmente.clear();
+    resetarEstadoMovimentacao();
 
     const textarea =
         document.getElementById(
@@ -2283,18 +3378,26 @@ function limparResultadosMovimentacao() {
         );
 
     if (primeira) {
-        if ("value" in primeira) {
+        if (
+            "value" in
+            primeira
+        ) {
             primeira.value = "";
         } else {
-            primeira.textContent = "-";
+            primeira.textContent =
+                "-";
         }
     }
 
     if (ultima) {
-        if ("value" in ultima) {
+        if (
+            "value" in
+            ultima
+        ) {
             ultima.value = "";
         } else {
-            ultima.textContent = "-";
+            ultima.textContent =
+                "-";
         }
     }
 
@@ -2314,7 +3417,8 @@ function limparResultadosMovimentacao() {
         );
 
     if (tabelaMensal) {
-        tabelaMensal.innerHTML = "";
+        tabelaMensal.innerHTML =
+            "";
 
         inserirLinhaSemDados(
             tabelaMensal,
@@ -2324,17 +3428,22 @@ function limparResultadosMovimentacao() {
     }
 
     if (tabelaConsideradas) {
-        tabelaConsideradas.innerHTML = "";
+        tabelaConsideradas.innerHTML =
+            "";
 
+        /*
+         * HTML possui 5 colunas.
+         */
         inserirLinhaSemDados(
             tabelaConsideradas,
-            4,
+            5,
             "Nenhum extrato processado."
         );
     }
 
     if (tabelaExcluidas) {
-        tabelaExcluidas.innerHTML = "";
+        tabelaExcluidas.innerHTML =
+            "";
 
         inserirLinhaSemDados(
             tabelaExcluidas,
@@ -2434,7 +3543,9 @@ function inserirLinhaSemDados(
 function escaparHtml(
     texto
 ) {
-    return String(texto || "")
+    return String(
+        texto || ""
+    )
         .replace(
             /&/g,
             "&amp;"
