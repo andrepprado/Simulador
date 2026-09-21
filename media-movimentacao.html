@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Média de Movimentação | Sicoob Mantiqueira</title>
+
+    <title>
+        Média de Movimentação | Sicoob Mantiqueira
+    </title>
 
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,7 +20,9 @@
         <div class="container topo-conteudo">
 
             <div class="topo-textos">
-                <h1>Média de Movimentação</h1>
+                <h1>
+                    Média de Movimentação
+                </h1>
 
                 <p>
                     Analise extratos de conta corrente e calcule a média
@@ -33,27 +39,31 @@
 
     <div id="menuPrincipal"></div>
 
-    <main class="container simulador-grid-igual media-movimentacao-container">
+    <main class="container media-movimentacao-container">
 
         <!-- =====================================================
              EXTRATO
         ====================================================== -->
 
-        <section class="card card-largura-total">
+        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Movimentação Financeira
                     </span>
 
-                    <h2>Extrato da Conta Corrente</h2>
+                    <h2>
+                        Extrato da Conta Corrente
+                    </h2>
 
                     <p>
                         Copie o extrato do SISBR e cole no campo abaixo.
-                        O sistema irá identificar as movimentações,
-                        o período analisado e os históricos encontrados.
+                        O sistema identifica as movimentações, o período
+                        efetivo do extrato e os históricos encontrados.
                     </p>
+
                 </div>
             </div>
 
@@ -63,12 +73,13 @@
                     Extrato
                 </label>
 
-                <textarea id="textoExtratoMovimentacao" rows="10"
+                <textarea id="textoExtratoMovimentacao" rows="10" spellcheck="false" autocomplete="off"
                     placeholder="Cole aqui o extrato da conta corrente..."></textarea>
 
                 <small>
-                    O processamento considera somente linhas que possam ser
-                    identificadas como movimentações do extrato.
+                    Linhas informativas como Saldo Anterior, Saldo
+                    Bloqueado Anterior e Saldo do Dia não participam
+                    da identificação do período.
                 </small>
 
             </div>
@@ -91,20 +102,25 @@
              PERÍODO
         ====================================================== -->
 
-        <section class="card configuracao-card">
+        <section class="card configuracao-card" id="cardPeriodoMovimentacao">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Período
                     </span>
 
-                    <h2>Período de Apuração</h2>
+                    <h2>
+                        Período de Apuração
+                    </h2>
 
                     <p>
                         O período é identificado automaticamente com base
-                        na primeira e na última data encontradas no extrato.
+                        na primeira e na última movimentação efetiva
+                        encontrada no extrato.
                     </p>
+
                 </div>
             </div>
 
@@ -113,7 +129,7 @@
                 <div class="campo">
 
                     <label for="primeiraDataMovimentacao">
-                        Primeira data identificada
+                        Primeira movimentação
                     </label>
 
                     <input type="text" id="primeiraDataMovimentacao" value="" placeholder="--/--/----" readonly>
@@ -123,7 +139,7 @@
                 <div class="campo">
 
                     <label for="ultimaDataMovimentacao">
-                        Última data identificada
+                        Última movimentação
                     </label>
 
                     <input type="text" id="ultimaDataMovimentacao" value="" placeholder="--/--/----" readonly>
@@ -136,7 +152,7 @@
                         Meses detectados
                     </label>
 
-                    <input type="text" id="mesesDetectadosMovimentacao" value="0" readonly>
+                    <input type="text" id="mesesDetectadosMovimentacao" value="" placeholder="-" readonly>
 
                 </div>
 
@@ -146,20 +162,30 @@
                         Meses considerados
                     </label>
 
-                    <input type="number" id="mesesConsideradosMovimentacao" min="1" step="1" placeholder="Ex.: 22">
+                    <input type="number" id="mesesConsideradosMovimentacao" min="1" step="1" inputmode="numeric"
+                        placeholder="Ex.: 3">
 
                     <small>
-                        Pode ser ajustado manualmente, se necessário.
+                        Preenchido automaticamente e ajustável
+                        manualmente quando necessário.
                     </small>
 
                 </div>
 
             </div>
 
-            <div class="aviso-info">
-                A quantidade de meses considera todas as competências
-                compreendidas entre a primeira e a última data identificadas
-                no extrato.
+            <div class="aviso-info aviso-periodo-movimentacao">
+
+                <strong>
+                    Regra do período
+                </strong>
+
+                <span>
+                    A quantidade de meses considera todas as competências
+                    entre a primeira e a última movimentação efetiva.
+                    Linhas exclusivamente informativas não alteram o período.
+                </span>
+
             </div>
 
         </section>
@@ -168,20 +194,24 @@
              RESULTADO
         ====================================================== -->
 
-        <aside class="card resultado-card">
+        <aside class="card resultado-card" id="cardResultadoMovimentacao">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Resultado
                     </span>
 
-                    <h2>Média de Movimentação</h2>
+                    <h2>
+                        Média de Movimentação
+                    </h2>
 
                     <p>
-                        Resultado calculado com base apenas nos créditos
+                        Resultado calculado apenas com os créditos
                         considerados válidos.
                     </p>
+
                 </div>
             </div>
 
@@ -252,29 +282,34 @@
         </aside>
 
         <!-- =====================================================
-             HISTÓRICOS DO EXTRATO
+             HISTÓRICOS
         ====================================================== -->
 
-        <section class="card card-largura-total">
+        <section class="card card-largura-total" id="cardHistoricosMovimentacao">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Regras
                     </span>
 
-                    <h2>Históricos do Extrato</h2>
+                    <h2>
+                        Históricos do Extrato
+                    </h2>
 
                     <p>
-                        Todos os históricos identificados no extrato são
-                        apresentados abaixo. Nos históricos de crédito,
-                        marque quando o movimento não deve compor o cálculo
-                        da média.
+                        Todos os históricos encontrados são apresentados
+                        abaixo. Exclusões obrigatórias são aplicadas
+                        automaticamente. Para créditos configuráveis,
+                        marque o histórico quando ele não deve compor
+                        a média.
                     </p>
+
                 </div>
             </div>
 
-            <div id="resumoRegrasMovimentacao" class="aviso-info">
+            <div id="resumoRegrasMovimentacao" class="aviso-info resumo-regras-movimentacao">
                 Processe um extrato para visualizar os históricos encontrados.
             </div>
 
@@ -294,20 +329,24 @@
              RESUMO MENSAL
         ====================================================== -->
 
-        <section class="card card-largura-total">
+        <section class="card card-largura-total" id="cardResumoMensalMovimentacao">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Resumo Mensal
                     </span>
 
-                    <h2>Movimentação por Mês</h2>
+                    <h2>
+                        Movimentação por Mês
+                    </h2>
 
                     <p>
                         Total de créditos considerados em cada competência
-                        identificada no extrato.
+                        pertencente ao período de apuração.
                     </p>
+
                 </div>
             </div>
 
@@ -343,20 +382,24 @@
              CRÉDITOS CONSIDERADOS
         ====================================================== -->
 
-        <section class="card card-largura-total">
+        <section class="card card-largura-total" id="cardCreditosConsideradosMovimentacao">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Movimentações
                     </span>
 
-                    <h2>Créditos Considerados</h2>
+                    <h2>
+                        Créditos Considerados
+                    </h2>
 
                     <p>
-                        Movimentações de crédito que efetivamente participam
-                        do cálculo da média mensal.
+                        Movimentações de crédito que efetivamente
+                        participam do cálculo da média mensal.
                     </p>
+
                 </div>
             </div>
 
@@ -391,23 +434,28 @@
         </section>
 
         <!-- =====================================================
-             MOVIMENTAÇÕES DESCONSIDERADAS
+             DESCONSIDERADAS
         ====================================================== -->
 
-        <section class="card card-largura-total">
+        <section class="card card-largura-total" id="cardMovimentacoesExcluidas">
 
             <div class="titulo-secao">
                 <div>
+
                     <span class="categoria-etiqueta">
                         Exclusões
                     </span>
 
-                    <h2>Movimentações Desconsideradas</h2>
+                    <h2>
+                        Movimentações Desconsideradas
+                    </h2>
 
                     <p>
-                        Movimentações removidas automaticamente ou manualmente
-                        das regras utilizadas no cálculo da média.
+                        Movimentações removidas automaticamente,
+                        identificadas como débito ou excluídas
+                        manualmente do cálculo.
                     </p>
+
                 </div>
             </div>
 
@@ -444,7 +492,6 @@
     </main>
 
     <footer>
-
         <div class="container">
 
             <p>
@@ -453,7 +500,6 @@
             </p>
 
         </div>
-
     </footer>
 
     <script src="js/media-movimentacao.js"></script>
