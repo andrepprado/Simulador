@@ -3,7 +3,7 @@
 
     /* =========================================================
        MODELOS
-    ========================================================= */
+       ========================================================= */
 
     const MODELOS = Object.freeze({
         XML_NFE: "xml_nfe",
@@ -15,14 +15,14 @@
 
     /* =========================================================
        CONSTANTES
-    ========================================================= */
+       ========================================================= */
 
     const QUALIDADE_MINIMA_DANFE = 45;
     const TAMANHO_CHAVE_NFE = 44;
 
     /* =========================================================
        NORMALIZAÇÃO
-    ========================================================= */
+       ========================================================= */
 
     function normalizar(texto) {
         return String(texto || "")
@@ -45,8 +45,8 @@
     }
 
     /* =========================================================
-       IDENTIFICA MODELO
-    ========================================================= */
+       IDENTIFICAÇÃO DO MODELO
+       ========================================================= */
 
     function identificarModelo(texto) {
         const t = comparacao(texto);
@@ -59,12 +59,10 @@
 
         if (
             t.includes("DANFE") ||
+            t.includes("D A N F E") ||
             t.includes("CHAVE DE ACESSO") ||
             t.includes(
                 "DOCUMENTO AUXILIAR DA NOTA FISCAL ELETRONICA"
-            ) ||
-            t.includes(
-                "DOCUMENTO AUXILIAR DA NOTA FISCAL ELETRÔNICA"
             )
         ) {
             return MODELOS.NFE;
@@ -85,7 +83,7 @@
 
     /* =========================================================
        QUALIDADE DO TEXTO
-    ========================================================= */
+       ========================================================= */
 
     function avaliarQualidadeTexto(texto) {
         const t = comparacao(texto);
@@ -98,9 +96,11 @@
 
         const marcadores = [
             ["DANFE", 12],
+            ["D A N F E", 12],
             ["NOTA FISCAL", 8],
             ["CHAVE DE ACESSO", 12],
             ["EMISSAO", 8],
+            ["DATA DA EMISSAO", 8],
             ["DATA DE EMISSAO", 8],
             ["VALOR TOTAL", 8],
             ["VALOR TOTAL DA NOTA", 10],
@@ -117,8 +117,7 @@
                         item[0]
                     )
                 ) {
-                    score +=
-                        item[1];
+                    score += item[1];
                 }
             }
         );
@@ -131,21 +130,15 @@
             score += 18;
         }
 
-        if (
-            t.length > 300
-        ) {
+        if (t.length > 300) {
             score += 5;
         }
 
-        if (
-            t.length > 800
-        ) {
+        if (t.length > 800) {
             score += 5;
         }
 
-        if (
-            t.length > 1500
-        ) {
+        if (t.length > 1500) {
             score += 5;
         }
 
@@ -157,7 +150,7 @@
 
     /* =========================================================
        XML - HELPERS
-    ========================================================= */
+       ========================================================= */
 
     function locais(
         elemento,
@@ -174,9 +167,7 @@
 
         return Array.from(
             elemento
-                .getElementsByTagName(
-                    "*"
-                )
+                .getElementsByTagName("*")
         ).filter(
             function (item) {
                 return (
@@ -218,8 +209,8 @@
     }
 
     /* =========================================================
-       XML - INTERPRETA NF-E
-    ========================================================= */
+       XML - INTERPRETAÇÃO NF-E
+       ========================================================= */
 
     function interpretarXmlNfe(
         xmlOriginal,
@@ -384,9 +375,7 @@
                 infNFe,
                 "det"
             ).map(
-                function (
-                    det
-                ) {
+                function (det) {
                     const prod =
                         local(
                             det,
@@ -520,7 +509,7 @@
 
     /* =========================================================
        DATA XML
-    ========================================================= */
+       ========================================================= */
 
     function converterDataXml(
         valor
@@ -547,8 +536,8 @@
     }
 
     /* =========================================================
-       TEXTO / DANFE / OCR
-    ========================================================= */
+       INTERPRETAÇÃO TEXTO / DANFE / OCR
+       ========================================================= */
 
     function interpretar(
         original,
@@ -658,8 +647,8 @@
     }
 
     /* =========================================================
-       MONTA RESULTADO FINAL
-    ========================================================= */
+       MONTA RESULTADO
+       ========================================================= */
 
     function montarResultado(
         dados
@@ -724,8 +713,7 @@
                 (
                     nfe &&
                     Number(
-                        dados
-                            .qualidadeTexto
+                        dados.qualidadeTexto
                     ) >=
                     QUALIDADE_MINIMA_DANFE
                 )
@@ -769,10 +757,8 @@
 
         const atividadesAutomaticas =
             atividades.filter(
-                function (
-                    item
-                ) {
-                    return (
+                function (item) {
+                    return Boolean(
                         item &&
                         item.automatico ===
                         true
@@ -785,19 +771,15 @@
             0;
 
         /*
-         * Só utiliza atividades efetivamente
-         * classificadas pelo motor.
+         * Só atividades automáticas são efetivamente
+         * utilizadas na alocação automática.
          *
-         * Atividades de baixa confiança podem continuar
-         * sendo apresentadas como sugestão, mas não
-         * devem gerar automaticamente renda.
+         * Sugestões continuam em atividadesSugeridas.
          */
         const atividadesParaAlocacao =
             atividades.filter(
-                function (
-                    item
-                ) {
-                    return (
+                function (item) {
+                    return Boolean(
                         item &&
                         item.grupo &&
                         item.atividade &&
@@ -827,8 +809,7 @@
 
                 origemEstruturada:
                     Boolean(
-                        dados
-                            .origemEstruturada
+                        dados.origemEstruturada
                     )
             });
 
@@ -924,10 +905,6 @@
 
             /*
              * Compatibilidade com versões anteriores.
-             *
-             * Este campo representa apenas revisão
-             * documental, não necessidade de selecionar
-             * atividade.
              */
             requerConferencia:
                 requerConferenciaDocumento,
@@ -954,7 +931,7 @@
 
     /* =========================================================
        STATUS
-    ========================================================= */
+       ========================================================= */
 
     function definirStatusDocumento(
         dados
@@ -993,7 +970,7 @@
 
     /* =========================================================
        ALOCAÇÃO AUTOMÁTICA
-    ========================================================= */
+       ========================================================= */
 
     function montarAlocacoesAtividade(
         atividades,
@@ -1014,14 +991,16 @@
                 valorNota
             ) || 0;
 
+        /*
+         * Uma única atividade:
+         * recebe o valor integral da NF.
+         */
         if (
-            atividades.length ===
-            1
+            atividades.length === 1
         ) {
             return [{
                 grupo:
-                    atividades[0]
-                        .grupo,
+                    atividades[0].grupo,
 
                 atividade:
                     atividades[0]
@@ -1065,11 +1044,10 @@
         }
 
         /*
-         * Mais de uma atividade.
+         * Mais de uma atividade:
          *
-         * A divisão só pode ser feita com segurança
-         * quando o classificador conseguiu somar o
-         * valor dos produtos de cada atividade.
+         * Usa os valores dos produtos para preservar
+         * o rateio real entre as atividades.
          */
         const totalProdutos =
             atividades.reduce(
@@ -1081,8 +1059,7 @@
                         soma +
                         (
                             Number(
-                                item
-                                    .valorProdutos
+                                item.valorProdutos
                             ) || 0
                         )
                     );
@@ -1090,70 +1067,73 @@
                 0
             );
 
+        /*
+         * Se todos os valores de produto foram extraídos
+         * corretamente, rateia usando-os.
+         */
         if (
-            totalProdutos <= 0
+            totalProdutos > 0
         ) {
-            return [];
+            return atividades.map(
+                function (item) {
+                    const valorProdutos =
+                        Number(
+                            item.valorProdutos
+                        ) || 0;
+
+                    return {
+                        grupo:
+                            item.grupo,
+
+                        atividade:
+                            item.atividade,
+
+                        nomeAtividade:
+                            item.nomeAtividade,
+
+                        valor:
+                            (
+                                valorProdutos /
+                                totalProdutos
+                            ) *
+                            valorTotalNota,
+
+                        valorProdutos:
+                            valorProdutos,
+
+                        confianca:
+                            Number(
+                                item.confianca
+                            ) || 0,
+
+                        automatico:
+                            item.automatico ===
+                            true,
+
+                        evidencias:
+                            Array.isArray(
+                                item.evidencias
+                            )
+                                ? [
+                                    ...item
+                                        .evidencias
+                                ]
+                                : []
+                    };
+                }
+            );
         }
 
-        return atividades.map(
-            function (
-                item
-            ) {
-                const valorProdutos =
-                    Number(
-                        item
-                            .valorProdutos
-                    ) || 0;
-
-                return {
-                    grupo:
-                        item.grupo,
-
-                    atividade:
-                        item.atividade,
-
-                    nomeAtividade:
-                        item
-                            .nomeAtividade,
-
-                    valor:
-                        (
-                            valorProdutos /
-                            totalProdutos
-                        ) *
-                        valorTotalNota,
-
-                    valorProdutos:
-                        valorProdutos,
-
-                    confianca:
-                        Number(
-                            item
-                                .confianca
-                        ) || 0,
-
-                    automatico:
-                        item.automatico ===
-                        true,
-
-                    evidencias:
-                        Array.isArray(
-                            item.evidencias
-                        )
-                            ? [
-                                ...item
-                                    .evidencias
-                            ]
-                            : []
-                };
-            }
-        );
+        /*
+         * Sem valorProduto confiável não divide a nota
+         * arbitrariamente.
+         */
+        return [];
     }
 
     /* =========================================================
-       EXTRAÇÃO DO NÚMERO
-    ========================================================= */
+       EXTRAÇÃO DO NÚMERO DA NF
+       ========================================================= */
 
     function extrairNumero(
         texto,
@@ -1172,9 +1152,23 @@
                     /\bN[º°]\s*[:.-]?\s*0*(\d{1,12})\b/i
                 ]
                 : [
-                    /NF-?E[\s\S]{0,80}?N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})/i,
-                    /N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})\s*(?:SERIE|S[ÉE]RIE)/i,
-                    /(?:NOTA\s+FISCAL|NF-?E)[\s\S]{0,100}?\b0*(\d{1,12})\b/i
+                    /*
+                     * Exemplo:
+                     * Nº 10 - FL 1/1
+                     */
+                    /N[º°O.]?\s*0*(\d{1,12})\s*-\s*FL\b/i,
+
+                    /*
+                     * Exemplo:
+                     * Nº 000000010
+                     * SÉRIE 1
+                     */
+                    /N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})[\s\S]{0,40}?S[ÉE]RIE/i,
+
+                    /*
+                     * NF-e Nº ...
+                     */
+                    /NF-?E[\s\S]{0,80}?N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})/i
                 ];
 
         for (
@@ -1204,11 +1198,10 @@
         const texto =
             String(
                 valor || ""
-            )
-                .replace(
-                    /\D/g,
-                    ""
-                );
+            ).replace(
+                /\D/g,
+                ""
+            );
 
         if (!texto) {
             return "";
@@ -1225,7 +1218,7 @@
 
     /* =========================================================
        SÉRIE
-    ========================================================= */
+       ========================================================= */
 
     function extrairSerie(
         texto
@@ -1260,7 +1253,7 @@
 
     /* =========================================================
        CHAVE DE ACESSO
-    ========================================================= */
+       ========================================================= */
 
     function extrairChave(
         texto
@@ -1271,8 +1264,8 @@
             );
 
         /*
-         * Primeiro tenta encontrar a chave próxima
-         * ao rótulo oficial.
+         * Prioridade:
+         * chave próxima ao rótulo oficial.
          */
         const proximaRotulo =
             fonte.match(
@@ -1297,8 +1290,7 @@
 
         /*
          * Fallback:
-         * procura grupos numéricos que totalizem
-         * exatamente 44 dígitos.
+         * procura qualquer grupo com 44 dígitos.
          */
         const candidatos =
             fonte.match(
@@ -1344,8 +1336,8 @@
     }
 
     /* =========================================================
-       DATA
-    ========================================================= */
+       DATA DE EMISSÃO
+       ========================================================= */
 
     function extrairData(
         texto
@@ -1355,10 +1347,17 @@
                 texto || ""
             );
 
+        /*
+         * Exemplo real:
+         *
+         * Emissão: 09/04/2026 Destinatário: ...
+         */
         const padroes = [
+            /\bEMISS[AÃ]O\s*:\s*(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
+
             /DATA\s+(?:DA|DE)\s+EMISS[AÃ]O[\s:.-]{0,20}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
-            /EMISS[AÃ]O[\s:.-]{0,20}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
-            /DATA\s+DE\s+EMISS[AÃ]O[\s\S]{0,60}?(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i
+
+            /DATA\s+(?:DA|DE)\s+EMISS[AÃ]O[\s\S]{0,60}?(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i
         ];
 
         for (
@@ -1389,11 +1388,40 @@
         }
 
         /*
-         * Fallback somente para datas válidas.
+         * No texto extraído pelo PDF.js pode ocorrer:
+         *
+         * 09/04/2026
+         * Data da Emissão
+         */
+        const valorAntesRotulo =
+            fonte.match(
+                /(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})[\s\S]{0,50}?DATA\s+(?:DA|DE)\s+EMISS[AÃ]O/i
+            );
+
+        if (
+            valorAntesRotulo?.[1]
+        ) {
+            const data =
+                normalizarData(
+                    valorAntesRotulo[1]
+                );
+
+            if (
+                validarData(
+                    data
+                )
+            ) {
+                return data;
+            }
+        }
+
+        /*
+         * Último fallback:
+         * primeira data realmente válida.
          */
         const datas =
             fonte.match(
-                /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/g
+                /\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g
             ) ||
             [];
 
@@ -1420,7 +1448,7 @@
 
     /* =========================================================
        EMITENTE
-    ========================================================= */
+       ========================================================= */
 
     function extrairEmitente(
         texto
@@ -1430,6 +1458,12 @@
                 texto || ""
             );
 
+        /*
+         * Exemplo real:
+         *
+         * Recebemos de CASSIO FERREIRA DA CRUZ VIEIRA
+         * os produtos da Nota Fiscal...
+         */
         const recebido =
             fonte.match(
                 /RECEBEMOS\s+DE\s+(.+?)\s+OS\s+PRODUTOS/i
@@ -1469,6 +1503,11 @@
             );
         }
 
+        /*
+         * DANFE frequentemente coloca a razão social
+         * imediatamente antes do endereço/fone.
+         * Não tentamos inferir além disso para evitar falso positivo.
+         */
         return "";
     }
 
@@ -1494,8 +1533,8 @@
     }
 
     /* =========================================================
-       VALOR DA NOTA
-    ========================================================= */
+       VALOR TOTAL DA NOTA
+       ========================================================= */
 
     function extrairValor(
         texto
@@ -1505,21 +1544,64 @@
                 texto || ""
             );
 
-        const padroes = [
-            /VALOR\s+TOTAL\s+DA\s+NOTA[\s\S]{0,80}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+        /*
+         * =====================================================
+         * 1. CABEÇALHO DO DANFE
+         *
+         * Exemplo real dos PDFs:
+         *
+         * Emissão: 09/04/2026
+         * Destinatário: ...
+         * Valor: R$81.505,56
+         *
+         * É a fonte preferencial.
+         * =====================================================
+         */
 
-            /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[\s\S]{0,80}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+        const valorCabecalho =
+            fonte.match(
+                /\bVALOR\s*:\s*R?\$?\s*([\d.]+,\d{2})/i
+            );
 
-            /TOTAL\s+DA\s+NOTA[\s\S]{0,80}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+        if (
+            valorCabecalho?.[1]
+        ) {
+            const valor =
+                moeda(
+                    valorCabecalho[1]
+                );
 
-            /VALOR\s+DA\s+NOTA[\s\S]{0,80}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+            if (
+                valor > 0
+            ) {
+                return valor;
+            }
+        }
 
-            /V\.?\s*TOTAL\s+DA\s+NOTA[\s\S]{0,80}?(?:R\$\s*)?([\d.]+,\d{2})/i
+        /*
+         * =====================================================
+         * 2. RÓTULO ANTES DO VALOR
+         *
+         * Valor Total da Nota
+         * 81.505,56
+         * =====================================================
+         */
+
+        const padroesRotuloAntes = [
+            /VALOR\s+TOTAL\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+
+            /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+
+            /TOTAL\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+
+            /VALOR\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
+
+            /V\.?\s*TOTAL\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i
         ];
 
         for (
             const regex
-            of padroes
+            of padroesRotuloAntes
         ) {
             const match =
                 fonte.match(
@@ -1542,12 +1624,104 @@
             }
         }
 
+        /*
+         * =====================================================
+         * 3. VALOR ANTES DO RÓTULO
+         *
+         * Formato real do PDF.js:
+         *
+         * 81.505,56
+         * Valor Total da Nota
+         * =====================================================
+         */
+
+        const padroesValorAntes = [
+            /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?VALOR\s+TOTAL\s+DA\s+NOTA/i,
+
+            /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?VALOR\s+TOTAL\s+(?:DA\s+)?NOTA/i,
+
+            /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?TOTAL\s+DA\s+NOTA/i
+        ];
+
+        for (
+            const regex
+            of padroesValorAntes
+        ) {
+            const match =
+                fonte.match(
+                    regex
+                );
+
+            if (
+                match?.[1]
+            ) {
+                const valor =
+                    moeda(
+                        match[1]
+                    );
+
+                if (
+                    valor > 0
+                ) {
+                    return valor;
+                }
+            }
+        }
+
+        /*
+         * =====================================================
+         * 4. VALOR TOTAL DOS PRODUTOS
+         *
+         * Fallback.
+         * =====================================================
+         */
+
+        const produtoRotuloAntes =
+            fonte.match(
+                /VALOR\s+TOTAL\s+DOS\s+PRODUTOS[\s\S]{0,100}?(?:R\$\s*)?([\d.]+,\d{2})/i
+            );
+
+        if (
+            produtoRotuloAntes?.[1]
+        ) {
+            const valor =
+                moeda(
+                    produtoRotuloAntes[1]
+                );
+
+            if (
+                valor > 0
+            ) {
+                return valor;
+            }
+        }
+
+        const produtoValorAntes =
+            fonte.match(
+                /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?VALOR\s+TOTAL\s+DOS\s+PRODUTOS/i
+            );
+
+        if (
+            produtoValorAntes?.[1]
+        ) {
+            const valor =
+                moeda(
+                    produtoValorAntes[1]
+                );
+
+            if (
+                valor > 0
+            ) {
+                return valor;
+            }
+        }
+
         return 0;
     }
 
     /* =========================================================
        ITENS DO DANFE / OCR
-    ========================================================= */
+       ========================================================= */
 
     function extrairItens(
         texto,
@@ -1566,13 +1740,9 @@
             String(
                 texto || ""
             )
-                .split(
-                    /\n/
-                )
+                .split(/\n/)
                 .map(
-                    function (
-                        item
-                    ) {
+                    function (item) {
                         return item
                             .replace(
                                 /\s+/g,
@@ -1581,24 +1751,57 @@
                             .trim();
                     }
                 )
-                .filter(
-                    Boolean
-                );
+                .filter(Boolean);
 
         const itens = [];
 
+        /*
+         * Primeiro tenta interpretar linhas completas,
+         * que é exatamente o formato dos PDFs enviados:
+         *
+         * 013 BOVINO FEMEA DE 9 A 12 MESES
+         * 01022990 040 5101 CB 31,0000
+         * 1.771,86000 54.927,66 ...
+         */
+        linhas.forEach(
+            function (linha) {
+                const item =
+                    interpretarLinhaProdutoDanfe(
+                        linha
+                    );
+
+                if (item) {
+                    itens.push(
+                        item
+                    );
+                }
+            }
+        );
+
+        /*
+         * Se as linhas já trouxeram itens completos,
+         * não usa a varredura genérica.
+         */
+        if (
+            itens.length > 0
+        ) {
+            return removerItensDuplicados(
+                itens
+            );
+        }
+
+        /*
+         * Fallback para OCR/texto fragmentado.
+         */
         for (
             let i = 0;
             i <
             linhas.length;
             i++
         ) {
-            const linha =
-                linhas[i];
-
             const candidatosNcm =
                 encontrarNcmsNaLinha(
-                    linha
+                    linhas[i]
                 );
 
             if (
@@ -1612,6 +1815,12 @@
                 const ncm
                 of candidatosNcm
             ) {
+                const bloco =
+                    obterBlocoItem(
+                        linhas,
+                        i
+                    );
+
                 if (
                     !pareceLinhaProdutoNfe(
                         linhas,
@@ -1622,96 +1831,17 @@
                     continue;
                 }
 
-                const bloco =
-                    obterBlocoItem(
-                        linhas,
-                        i
-                    );
-
-                const cfop =
-                    extrairCfopBloco(
-                        bloco
-                    );
-
-                const descricao =
-                    extrairDescricaoItem(
+                const item =
+                    interpretarBlocoProdutoDanfe(
                         bloco,
                         ncm
                     );
 
-                if (
-                    !descricao
-                ) {
-                    continue;
+                if (item) {
+                    itens.push(
+                        item
+                    );
                 }
-
-                const valores =
-                    extrairValoresMonetarios(
-                        bloco
-                    );
-
-                /*
-                 * Para DANFE/OCR não é seguro assumir
-                 * que o maior valor encontrado é vProd.
-                 *
-                 * Portanto valorProduto fica zero quando
-                 * não houver estrutura suficiente.
-                 *
-                 * Isso evita rateio incorreto entre
-                 * atividades.
-                 */
-                const valorProduto =
-                    extrairValorProdutoBloco(
-                        bloco
-                    );
-
-                itens.push({
-                    numeroItem:
-                        String(
-                            itens.length +
-                            1
-                        ),
-
-                    codigoProduto:
-                        extrairCodigoProduto(
-                            bloco,
-                            descricao
-                        ),
-
-                    gtin:
-                        "",
-
-                    descricao:
-                        descricao.substring(
-                            0,
-                            220
-                        ),
-
-                    ncm:
-                        ncm,
-
-                    cfop:
-                        cfop,
-
-                    unidade:
-                        extrairUnidadeBloco(
-                            bloco
-                        ),
-
-                    quantidade:
-                        extrairQuantidadeBloco(
-                            bloco
-                        ),
-
-                    valorUnitario:
-                        extrairValorUnitarioBloco(
-                            bloco,
-                            valores
-                        ),
-
-                    valorProduto:
-                        valorProduto
-                });
             }
         }
 
@@ -1721,8 +1851,220 @@
     }
 
     /* =========================================================
-       LOCALIZA NCM
-    ========================================================= */
+       LINHA COMPLETA DO DANFE
+       ========================================================= */
+
+    function interpretarLinhaProdutoDanfe(
+        linhaOriginal
+    ) {
+        const linha =
+            String(
+                linhaOriginal || ""
+            )
+                .replace(
+                    /\s+/g,
+                    " "
+                )
+                .trim();
+
+        /*
+         * Estrutura típica:
+         *
+         * código
+         * descrição
+         * NCM
+         * CST
+         * CFOP
+         * unidade
+         * quantidade
+         * valor unitário
+         * valor total
+         * impostos...
+         */
+
+        const match =
+            linha.match(
+                /^([A-Z0-9._/-]{1,20})\s+(.+?)\s+(\d{8})\s+(\d{2,4})\s+([12567]\d{3})\s+([A-Z]{1,5})\s+([\d.]+,\d{2,6})\s+([\d.]+,\d{2,6})\s+([\d.]+,\d{2})(?:\s|$)/i
+            );
+
+        if (!match) {
+            return null;
+        }
+
+        const ncm =
+            normalizarNcm(
+                match[3]
+            );
+
+        const cfop =
+            normalizarCfop(
+                match[5]
+            );
+
+        if (
+            !ncm ||
+            !cfop
+        ) {
+            return null;
+        }
+
+        const quantidade =
+            numeroBrasileiroGenerico(
+                match[7]
+            );
+
+        const valorUnitario =
+            numeroBrasileiroGenerico(
+                match[8]
+            );
+
+        const valorProduto =
+            moeda(
+                match[9]
+            );
+
+        return {
+            numeroItem:
+                "",
+
+            codigoProduto:
+                match[1],
+
+            gtin:
+                "",
+
+            descricao:
+                String(
+                    match[2]
+                )
+                    .trim()
+                    .substring(
+                        0,
+                        220
+                    ),
+
+            ncm:
+                ncm,
+
+            cfop:
+                cfop,
+
+            unidade:
+                String(
+                    match[6]
+                )
+                    .toUpperCase()
+                    .trim(),
+
+            quantidade:
+                Number.isFinite(
+                    quantidade
+                )
+                    ? quantidade
+                    : 0,
+
+            valorUnitario:
+                Number.isFinite(
+                    valorUnitario
+                )
+                    ? valorUnitario
+                    : 0,
+
+            valorProduto:
+                Number.isFinite(
+                    valorProduto
+                )
+                    ? valorProduto
+                    : 0
+        };
+    }
+
+    /* =========================================================
+       BLOCO FRAGMENTADO DO DANFE
+       ========================================================= */
+
+    function interpretarBlocoProdutoDanfe(
+        bloco,
+        ncm
+    ) {
+        const cfop =
+            extrairCfopBloco(
+                bloco
+            );
+
+        const descricao =
+            extrairDescricaoItem(
+                bloco,
+                ncm
+            );
+
+        if (
+            !descricao
+        ) {
+            return null;
+        }
+
+        const valores =
+            extrairValoresMonetarios(
+                bloco
+            );
+
+        const relacao =
+            identificarRelacaoQuantidadeValor(
+                bloco,
+                valores
+            );
+
+        return {
+            numeroItem:
+                "",
+
+            codigoProduto:
+                extrairCodigoProduto(
+                    bloco,
+                    descricao
+                ),
+
+            gtin:
+                "",
+
+            descricao:
+                descricao.substring(
+                    0,
+                    220
+                ),
+
+            ncm:
+                ncm,
+
+            cfop:
+                cfop,
+
+            unidade:
+                extrairUnidadeBloco(
+                    bloco
+                ),
+
+            quantidade:
+                relacao.quantidade ||
+                0,
+
+            valorUnitario:
+                relacao.valorUnitario ||
+                0,
+
+            valorProduto:
+                relacao.valorProduto ||
+                extrairValorProdutoBloco(
+                    bloco
+                ) ||
+                0
+        };
+    }
+
+    /* =========================================================
+       NCM
+       ========================================================= */
 
     function encontrarNcmsNaLinha(
         linha
@@ -1781,9 +2123,6 @@
             return false;
         }
 
-        /*
-         * Evita sequências evidentemente inválidas.
-         */
         if (
             /^0{8}$/.test(
                 ncm
@@ -1806,9 +2145,26 @@
         );
     }
 
+    function normalizarNcm(
+        valor
+    ) {
+        const ncm =
+            String(
+                valor || ""
+            ).replace(
+                /\D/g,
+                ""
+            );
+
+        return ncm.length ===
+            8
+            ? ncm
+            : "";
+    }
+
     /* =========================================================
-       CONFIRMA QUE NCM ESTÁ EM REGIÃO DE PRODUTO
-    ========================================================= */
+       CONFIRMA REGIÃO DE PRODUTO
+       ========================================================= */
 
     function pareceLinhaProdutoNfe(
         linhas,
@@ -1826,9 +2182,6 @@
                 bloco
             );
 
-        /*
-         * Evidência forte.
-         */
         if (
             comparado.includes(
                 "NCM"
@@ -1840,10 +2193,6 @@
             return true;
         }
 
-        /*
-         * Se houver CFOP plausível próximo do NCM,
-         * também é uma boa evidência de item fiscal.
-         */
         const cfop =
             extrairCfopBloco(
                 bloco
@@ -1853,10 +2202,6 @@
             return true;
         }
 
-        /*
-         * NCM reconhecido pelo próprio motor de
-         * classificação.
-         */
         if (
             window
                 .CreditoRuralNcmAtividades
@@ -1893,8 +2238,8 @@
     }
 
     /* =========================================================
-       BLOCO DO ITEM
-    ========================================================= */
+       BLOCO DE ITEM
+       ========================================================= */
 
     function obterBlocoItem(
         linhas,
@@ -1917,14 +2262,12 @@
                 inicio,
                 fim
             )
-            .join(
-                " "
-            );
+            .join(" ");
     }
 
     /* =========================================================
        DESCRIÇÃO DO ITEM
-    ========================================================= */
+       ========================================================= */
 
     function extrairDescricaoItem(
         bloco,
@@ -1975,7 +2318,8 @@
             texto.trim();
 
         /*
-         * Remove código inicial quando houver:
+         * Remove código inicial:
+         *
          * 013 BOVINO FEMEA...
          */
         texto =
@@ -1993,8 +2337,7 @@
                 .trim();
 
         if (
-            texto.length <
-            2
+            texto.length < 2
         ) {
             return "";
         }
@@ -2004,25 +2347,22 @@
 
     /* =========================================================
        CFOP
-    ========================================================= */
+       ========================================================= */
 
     function extrairCfopBloco(
         bloco
     ) {
-        const texto =
+        const candidatos =
             String(
                 bloco || ""
-            );
-
-        const proximosNcm =
-            texto.match(
+            ).match(
                 /\b([12567]\d{3})\b/g
             ) ||
             [];
 
         for (
             const candidato
-            of proximosNcm
+            of candidatos
         ) {
             const cfop =
                 normalizarCfop(
@@ -2056,29 +2396,8 @@
     }
 
     /* =========================================================
-       NCM
-    ========================================================= */
-
-    function normalizarNcm(
-        valor
-    ) {
-        const ncm =
-            String(
-                valor || ""
-            ).replace(
-                /\D/g,
-                ""
-            );
-
-        return ncm.length ===
-            8
-            ? ncm
-            : "";
-    }
-
-    /* =========================================================
-       VALORES DO BLOCO
-    ========================================================= */
+       VALORES DO ITEM
+       ========================================================= */
 
     function extrairValoresMonetarios(
         bloco
@@ -2092,12 +2411,10 @@
             []
         )
             .map(
-                moeda
+                numeroBrasileiroGenerico
             )
             .filter(
-                function (
-                    valor
-                ) {
+                function (valor) {
                     return (
                         Number.isFinite(
                             valor
@@ -2108,10 +2425,6 @@
             );
     }
 
-    /*
-     * Só tenta valorProduto quando o bloco tem
-     * indicação estrutural razoável.
-     */
     function extrairValorProdutoBloco(
         bloco
     ) {
@@ -2151,51 +2464,26 @@
             }
         }
 
-        /*
-         * DANFE normalmente apresenta:
-         *
-         * quantidade
-         * valor unitário
-         * valor total
-         *
-         * Se houver pelo menos 3 números monetários,
-         * usamos a relação matemática para identificar
-         * o total.
-         */
         const valores =
             extrairValoresMonetarios(
                 texto
             );
 
-        if (
-            valores.length >=
-            3
-        ) {
-            const candidatos =
-                identificarRelacaoQuantidadeValor(
-                    texto,
-                    valores
-                );
+        const relacao =
+            identificarRelacaoQuantidadeValor(
+                texto,
+                valores
+            );
 
-            if (
-                candidatos.valorProduto >
-                0
-            ) {
-                return candidatos
-                    .valorProduto;
-            }
-        }
-
-        /*
-         * Melhor não informar valor do item do que
-         * ratear a renda com dado errado.
-         */
-        return 0;
+        return (
+            relacao.valorProduto ||
+            0
+        );
     }
 
     /* =========================================================
-       QUANTIDADE / VALOR UNITÁRIO
-    ========================================================= */
+       IDENTIFICA QUANTIDADE x UNITÁRIO = TOTAL
+       ========================================================= */
 
     function identificarRelacaoQuantidadeValor(
         bloco,
@@ -2212,10 +2500,61 @@
                 0
         };
 
-        const numeros =
+        const texto =
             String(
                 bloco || ""
-            ).match(
+            );
+
+        /*
+         * Prioriza estrutura típica após:
+         * NCM CST CFOP UN
+         */
+        const matchEstruturado =
+            texto.match(
+                /\b\d{8}\b\s+\d{2,4}\s+[12567]\d{3}\s+[A-Z]{1,5}\s+([\d.]+,\d{2,6})\s+([\d.]+,\d{2,6})\s+([\d.]+,\d{2})(?:\s|$)/i
+            );
+
+        if (
+            matchEstruturado
+        ) {
+            const quantidade =
+                numeroBrasileiroGenerico(
+                    matchEstruturado[1]
+                );
+
+            const unitario =
+                numeroBrasileiroGenerico(
+                    matchEstruturado[2]
+                );
+
+            const total =
+                moeda(
+                    matchEstruturado[3]
+                );
+
+            if (
+                quantidade > 0 &&
+                unitario > 0 &&
+                total > 0
+            ) {
+                return {
+                    quantidade:
+                        quantidade,
+
+                    valorUnitario:
+                        unitario,
+
+                    valorProduto:
+                        total
+                };
+            }
+        }
+
+        /*
+         * Fallback matemático.
+         */
+        const numeros =
+            texto.match(
                 /\b\d+(?:[.,]\d+)?\b/g
             ) ||
             [];
@@ -2226,9 +2565,7 @@
                     numeroBrasileiroGenerico
                 )
                 .filter(
-                    function (
-                        numero
-                    ) {
+                    function (numero) {
                         return (
                             Number.isFinite(
                                 numero
@@ -2238,10 +2575,6 @@
                     }
                 );
 
-        /*
-         * Testa combinações:
-         * quantidade × unitário ≈ total.
-         */
         for (
             let i = 0;
             i <
@@ -2301,16 +2634,16 @@
                         ) <=
                         tolerancia
                     ) {
-                        resultado.quantidade =
-                            quantidade;
+                        return {
+                            quantidade:
+                                quantidade,
 
-                        resultado.valorUnitario =
-                            unitario;
+                            valorUnitario:
+                                unitario,
 
-                        resultado.valorProduto =
-                            total;
-
-                        return resultado;
+                            valorProduto:
+                                total
+                        };
                     }
                 }
             }
@@ -2319,43 +2652,9 @@
         return resultado;
     }
 
-    function extrairQuantidadeBloco(
-        bloco
-    ) {
-        const relacao =
-            identificarRelacaoQuantidadeValor(
-                bloco,
-                extrairValoresMonetarios(
-                    bloco
-                )
-            );
-
-        return relacao
-            .quantidade ||
-            0;
-    }
-
-    function extrairValorUnitarioBloco(
-        bloco,
-        valores = null
-    ) {
-        const relacao =
-            identificarRelacaoQuantidadeValor(
-                bloco,
-                valores ||
-                extrairValoresMonetarios(
-                    bloco
-                )
-            );
-
-        return relacao
-            .valorUnitario ||
-            0;
-    }
-
     /* =========================================================
        CÓDIGO PRODUTO
-    ========================================================= */
+       ========================================================= */
 
     function extrairCodigoProduto(
         bloco,
@@ -2374,8 +2673,7 @@
                 : -1;
 
         if (
-            indiceDescricao >
-            0
+            indiceDescricao > 0
         ) {
             const anterior =
                 texto
@@ -2402,7 +2700,7 @@
 
     /* =========================================================
        UNIDADE
-    ========================================================= */
+       ========================================================= */
 
     function extrairUnidadeBloco(
         bloco
@@ -2413,6 +2711,7 @@
             );
 
         const unidades = [
+            "CB",
             "UN",
             "UND",
             "UNID",
@@ -2422,7 +2721,6 @@
             "LT",
             "SC",
             "SACA",
-            "CB",
             "CX"
         ];
 
@@ -2448,8 +2746,8 @@
     }
 
     /* =========================================================
-       REMOVE ITENS DUPLICADOS
-    ========================================================= */
+       REMOVE DUPLICIDADES DE EXTRAÇÃO
+       ========================================================= */
 
     function removerItensDuplicados(
         itens
@@ -2458,15 +2756,25 @@
             new Map();
 
         itens.forEach(
-            function (
-                item
-            ) {
+            function (item) {
+                /*
+                 * Não usamos apenas descrição/NCM porque
+                 * uma mesma NF pode conter dois itens iguais
+                 * com códigos ou valores diferentes.
+                 */
                 const chave = [
-                    item.ncm,
+                    item.codigoProduto || "",
+                    item.ncm || "",
                     comparacao(
                         item.descricao
                     ),
-                    item.cfop
+                    item.cfop || "",
+                    Number(
+                        item.quantidade
+                    ) || 0,
+                    Number(
+                        item.valorProduto
+                    ) || 0
                 ].join("|");
 
                 if (
@@ -2478,65 +2786,6 @@
                         chave,
                         item
                     );
-
-                    return;
-                }
-
-                const existente =
-                    mapa.get(
-                        chave
-                    );
-
-                /*
-                 * Se uma leitura posterior trouxer
-                 * valorProduto mais confiável,
-                 * preserva o melhor dado.
-                 */
-                if (
-                    Number(
-                        item.valorProduto
-                    ) >
-                    Number(
-                        existente
-                            .valorProduto
-                    )
-                ) {
-                    existente.valorProduto =
-                        item.valorProduto;
-                }
-
-                if (
-                    !existente
-                        .codigoProduto &&
-                    item.codigoProduto
-                ) {
-                    existente.codigoProduto =
-                        item.codigoProduto;
-                }
-
-                if (
-                    !existente.unidade &&
-                    item.unidade
-                ) {
-                    existente.unidade =
-                        item.unidade;
-                }
-
-                if (
-                    !existente.quantidade &&
-                    item.quantidade
-                ) {
-                    existente.quantidade =
-                        item.quantidade;
-                }
-
-                if (
-                    !existente
-                        .valorUnitario &&
-                    item.valorUnitario
-                ) {
-                    existente.valorUnitario =
-                        item.valorUnitario;
                 }
             }
         );
@@ -2550,10 +2799,10 @@
             ) {
                 return {
                     ...item,
+
                     numeroItem:
                         String(
-                            indice +
-                            1
+                            indice + 1
                         )
                 };
             }
@@ -2562,7 +2811,7 @@
 
     /* =========================================================
        DATA
-    ========================================================= */
+       ========================================================= */
 
     function normalizarData(
         valor
@@ -2691,7 +2940,7 @@
 
     /* =========================================================
        COMPETÊNCIA
-    ========================================================= */
+       ========================================================= */
 
     function competencia(
         data
@@ -2716,7 +2965,7 @@
 
     /* =========================================================
        NÚMEROS
-    ========================================================= */
+       ========================================================= */
 
     function moeda(
         valor
@@ -2810,6 +3059,13 @@
             return NaN;
         }
 
+        /*
+         * Exemplos:
+         *
+         * 31,0000
+         * 1.771,86000
+         * 54.927,66
+         */
         if (
             texto.includes(",")
         ) {
@@ -2827,11 +3083,10 @@
 
         const numero =
             Number(
-                texto
-                    .replace(
-                        /[^\d.-]/g,
-                        ""
-                    )
+                texto.replace(
+                    /[^\d.-]/g,
+                    ""
+                )
             );
 
         return Number.isFinite(
@@ -2843,7 +3098,7 @@
 
     /* =========================================================
        DESCRIÇÃO DO MODELO
-    ========================================================= */
+       ========================================================= */
 
     function descricaoModelo(
         modelo
@@ -2870,7 +3125,7 @@
 
     /* =========================================================
        API PÚBLICA
-    ========================================================= */
+       ========================================================= */
 
     window.CreditoRuralNotasFiscais = {
         modelos:
