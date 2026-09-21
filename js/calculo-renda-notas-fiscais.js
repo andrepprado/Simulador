@@ -1,30 +1,3 @@
-/**
- * calculo-renda-notas-fiscais.js
- *
- * Caixa de Ferramentas | Sicoob Mantiqueira
- *
- * Responsabilidades:
- * - seleção e remoção de arquivos;
- * - processamento de XML NF-e;
- * - processamento de PDF com texto nativo;
- * - OCR somente quando necessário;
- * - processamento de imagens;
- * - identificação automática das notas;
- * - classificação automática das atividades;
- * - classificação item a item;
- * - suporte a múltiplas atividades na mesma NF-e;
- * - rateio do valor da nota por atividade;
- * - classificação específica de bovinos por faixa etária;
- * - conferência apenas quando realmente necessária;
- * - consolidação automática por atividade e competência;
- * - inclusão manual de atividades e períodos;
- * - cálculo da renda mensal por atividade;
- * - cálculo da renda mensal total;
- * - cálculo da renda anual;
- * - atualização dos totalizadores;
- * - limpeza completa do cálculo.
- */
-
 (function () {
     "use strict";
 
@@ -50,6 +23,8 @@
     });
 
     const TOLERANCIA_VALOR = 0.05;
+
+    const MESES_PADRAO_ATIVIDADE = 12;
 
     /* =========================================================
        ESTADO
@@ -170,11 +145,6 @@
                         )
                     );
 
-                    /*
-                     * Mantém arquivosSelecionados no estado.
-                     * O input pode ser limpo para permitir
-                     * selecionar novamente o mesmo arquivo.
-                     */
                     this.value = "";
 
                     renderizarArquivos();
@@ -942,6 +912,7 @@
             true;
 
         notasProcessadas = [];
+        atividadesNotas = [];
         periodosManuais = [];
         periodosNotas = [];
 
@@ -974,11 +945,6 @@
                 );
             }
 
-            /*
-             * Classificação é feita novamente após todos
-             * os documentos estarem carregados para garantir
-             * consistência do estado.
-             */
             notasProcessadas.forEach(
                 prepararClassificacaoNota
             );
@@ -1102,6 +1068,7 @@
             window.pdfjsLib
         ) {
             configurarWorkerPdf();
+
             return window.pdfjsLib;
         }
 
@@ -1217,10 +1184,6 @@
                     `${arquivo.name} - Página ${paginaNumero}`
                 );
 
-            /*
-             * OCR é usado apenas quando o texto nativo não
-             * permitiu identificar suficientemente o documento.
-             */
             if (
                 deveExecutarOcr(
                     resultado,
@@ -1304,16 +1267,7 @@
             return "";
         }
 
-        /*
-         * Agrupa os itens pela coordenada vertical.
-         *
-         * Isso é fundamental para DANFEs porque preserva
-         * a linha dos produtos:
-         *
-         * 005 BOVINO FEMEA ... 01022990 ...
-         */
-        const linhas =
-            [];
+        const linhas = [];
 
         conteudo.items.forEach(
             function (item) {
@@ -1579,10 +1533,6 @@
             return true;
         }
 
-        /*
-         * Documento completo não precisa de OCR apenas
-         * porque a atividade ainda não foi classificada.
-         */
         if (
             resultado
                 .documentoFiscalCompleto &&
@@ -1733,11 +1683,6 @@
         if (
             itens.length === 0
         ) {
-            /*
-             * Compatibilidade:
-             * caso o módulo fiscal já tenha produzido
-             * alocações confiáveis.
-             */
             return normalizarAlocacoesExistentes(
                 nota
                     .alocacoesAtividade ||
@@ -1746,8 +1691,7 @@
             );
         }
 
-        const classificacoes =
-            [];
+        const classificacoes = [];
 
         itens.forEach(
             function (
@@ -1773,11 +1717,6 @@
             }
         );
 
-        /*
-         * Se nenhum item pôde ser classificado, tenta
-         * aproveitar as alocações já produzidas pelo
-         * credito-rural-notas-fiscais.js.
-         */
         if (
             classificacoes.length ===
             0
@@ -1956,16 +1895,6 @@
                 nota.valor
             ) || 0;
 
-        /*
-         * Quando TODOS os itens foram classificados,
-         * o valor integral da NF é distribuído entre
-         * as atividades proporcionalmente ao valor
-         * dos produtos.
-         *
-         * Isso garante:
-         *
-         * Soma das atividades = Valor da NF
-         */
         if (
             todosItensClassificados &&
             totalProdutosClassificados >
@@ -1984,10 +1913,6 @@
                 }
             );
         } else {
-            /*
-             * Havendo item não classificado, não se deve
-             * distribuir arbitrariamente o valor residual.
-             */
             alocacoes.forEach(
                 function (item) {
                     item.valor =
@@ -2014,10 +1939,6 @@
         const apiNcm =
             obterApiNcm();
 
-        /*
-         * Primeira opção:
-         * classificador central.
-         */
         if (
             apiNcm &&
             typeof apiNcm
@@ -2047,12 +1968,6 @@
             }
         }
 
-        /*
-         * Fallback bovino específico.
-         *
-         * Importante porque os DANFEs de exemplo trazem
-         * explicitamente a faixa etária.
-         */
         const bovino =
             classificarBovinoPorDescricao(
                 item
@@ -2140,14 +2055,6 @@
             );
 
         if (faixa) {
-            /*
-             * Regra adotada no projeto:
-             *
-             * 0 a 8 meses  -> Cria
-             * 9 a 24       -> Recria
-             * > 24         -> Engorda
-             */
-
             if (
                 faixa.max <= 8
             ) {
@@ -2268,6 +2175,7 @@
                     Number(
                         match[1]
                     ),
+
                 max:
                     Number(
                         match[2]
@@ -2287,6 +2195,7 @@
                         match[1]
                     ) +
                     1,
+
                 max:
                     120
             };
@@ -2301,6 +2210,7 @@
             return {
                 min:
                     0,
+
                 max:
                     Number(
                         match[1]
@@ -2322,6 +2232,7 @@
             return {
                 min:
                     idade,
+
                 max:
                     idade
             };
@@ -2567,7 +2478,7 @@
     }
 
     /* =========================================================
-       ATIVIDADES AUTOMÁTICAS
+       ATIVIDADES
        ========================================================= */
 
     function reconstruirAtividadesAutomaticas() {
@@ -2644,27 +2555,54 @@
                     true;
             }
 
+            /*
+             * Compatibilidade com atividade criada
+             * antes da inclusão de mesesOriginais.
+             */
+            garantirMesesOriginais(
+                existente
+            );
+
             return existente;
         }
 
         existente = {
             id,
+
             grupo,
+
             atividade:
                 normalizarAtividade(
                     atividade
                 ),
+
             nomeAtividade:
                 nomeAtividade ||
                 obterNomeAtividade(
                     atividade,
                     grupo
                 ),
+
             criterio:
                 CRITERIOS_APURACAO
                     .MOVIMENTACAO,
+
+            /*
+             * Valor original da atividade.
+             *
+             * Este valor nunca é alterado quando o usuário
+             * edita o campo "Meses Informados".
+             */
+            mesesOriginais:
+                MESES_PADRAO_ATIVIDADE,
+
+            /*
+             * Campo utilizado exclusivamente pelo critério
+             * "Período econômico informado".
+             */
             mesesInformados:
-                12,
+                MESES_PADRAO_ATIVIDADE,
+
             automatica:
                 automatica
         };
@@ -2676,6 +2614,71 @@
         ordenarAtividades();
 
         return existente;
+    }
+
+    function garantirMesesOriginais(
+        atividade
+    ) {
+        const original =
+            Number(
+                atividade
+                    .mesesOriginais
+            );
+
+        if (
+            !Number.isFinite(
+                original
+            ) ||
+            original < 1
+        ) {
+            const valorAtual =
+                Number(
+                    atividade
+                        .mesesInformados
+                );
+
+            atividade.mesesOriginais =
+                Number.isFinite(
+                    valorAtual
+                ) &&
+                    valorAtual > 0
+                    ? valorAtual
+                    : MESES_PADRAO_ATIVIDADE;
+        }
+
+        if (
+            !Number.isFinite(
+                Number(
+                    atividade
+                        .mesesInformados
+                )
+            ) ||
+            Number(
+                atividade
+                    .mesesInformados
+            ) < 1
+        ) {
+            atividade.mesesInformados =
+                atividade
+                    .mesesOriginais;
+        }
+
+        return atividade
+            .mesesOriginais;
+    }
+
+    function restaurarMesesOriginais(
+        atividade
+    ) {
+        const original =
+            garantirMesesOriginais(
+                atividade
+            );
+
+        atividade.mesesInformados =
+            original;
+
+        return original;
     }
 
     function ordenarAtividades() {
@@ -2771,20 +2774,38 @@
                 false
             );
 
+        if (!item) {
+            return;
+        }
+
+        garantirMesesOriginais(
+            item
+        );
+
         item.criterio =
             criterioSelect?.value ||
             CRITERIOS_APURACAO
                 .MOVIMENTACAO;
 
-        item.mesesInformados =
-            Math.max(
-                1,
-                parseInt(
-                    mesesInput?.value,
-                    10
-                ) ||
-                12
+        if (
+            item.criterio ===
+            CRITERIOS_APURACAO
+                .INFORMADO
+        ) {
+            item.mesesInformados =
+                Math.max(
+                    1,
+                    parseInt(
+                        mesesInput?.value,
+                        10
+                    ) ||
+                    item.mesesOriginais
+                );
+        } else {
+            restaurarMesesOriginais(
+                item
             );
+        }
 
         renderizarAtividades();
         atualizarSelectAtividadePeriodo();
@@ -2802,6 +2823,11 @@
                 "campoMesesAtividadeNotas"
             );
 
+        const input =
+            document.getElementById(
+                "mesesAtividadeNotas"
+            );
+
         if (
             !criterio ||
             !campo
@@ -2809,10 +2835,23 @@
             return;
         }
 
-        campo.hidden =
-            criterio.value !==
+        const informado =
+            criterio.value ===
             CRITERIOS_APURACAO
                 .INFORMADO;
+
+        campo.hidden =
+            !informado;
+
+        if (
+            !informado &&
+            input
+        ) {
+            input.value =
+                String(
+                    MESES_PADRAO_ATIVIDADE
+                );
+        }
     }
 
     /* =========================================================
@@ -2850,10 +2889,37 @@
 
         atividadesNotas.forEach(
             function (atividade) {
+                garantirMesesOriginais(
+                    atividade
+                );
+
+                /*
+                 * Nos critérios que não usam meses informados,
+                 * o valor temporário digitado é descartado.
+                 */
+                if (
+                    atividade.criterio !==
+                    CRITERIOS_APURACAO
+                        .INFORMADO
+                ) {
+                    restaurarMesesOriginais(
+                        atividade
+                    );
+                }
+
                 const calculo =
                     calcularRendaAtividade(
                         atividade
                     );
+
+                const valorExibidoMeses =
+                    atividade.criterio ===
+                        CRITERIOS_APURACAO
+                            .INFORMADO
+                        ? atividade
+                            .mesesInformados
+                        : atividade
+                            .mesesOriginais;
 
                 const tr =
                     document.createElement(
@@ -2907,10 +2973,9 @@
                             value="${Math.max(
                         1,
                         Number(
-                            atividade
-                                .mesesInformados
+                            valorExibidoMeses
                         ) ||
-                        12
+                        MESES_PADRAO_ATIVIDADE
                     )}"
                             ${atividade
                         .criterio ===
@@ -2964,17 +3029,71 @@
                     ?.addEventListener(
                         "change",
                         function () {
-                            atividade.criterio =
+                            const novoCriterio =
                                 this.value;
 
-                            inputMeses.disabled =
+                            atividade.criterio =
+                                novoCriterio;
+
+                            garantirMesesOriginais(
                                 atividade
-                                    .criterio !==
+                            );
+
+                            /*
+                             * Sempre que entra em
+                             * "Período econômico informado",
+                             * o campo parte novamente do valor
+                             * original da atividade.
+                             *
+                             * Exemplo:
+                             * original = 12
+                             * usuário digitou 11 anteriormente
+                             * ao voltar para INFORMADO => 12
+                             */
+                            if (
+                                novoCriterio ===
                                 CRITERIOS_APURACAO
-                                    .INFORMADO;
+                                    .INFORMADO
+                            ) {
+                                atividade.mesesInformados =
+                                    atividade
+                                        .mesesOriginais;
+
+                                if (inputMeses) {
+                                    inputMeses.disabled =
+                                        false;
+
+                                    inputMeses.value =
+                                        String(
+                                            atividade
+                                                .mesesOriginais
+                                        );
+                                }
+                            } else {
+                                /*
+                                 * Meses com movimentação
+                                 * ou Intervalo completo:
+                                 *
+                                 * descarta o valor digitado
+                                 * no campo de meses informados.
+                                 */
+                                restaurarMesesOriginais(
+                                    atividade
+                                );
+
+                                if (inputMeses) {
+                                    inputMeses.value =
+                                        String(
+                                            atividade
+                                                .mesesOriginais
+                                        );
+
+                                    inputMeses.disabled =
+                                        true;
+                                }
+                            }
 
                             atualizarResultados();
-                            renderizarAtividades();
                         }
                     );
 
@@ -2982,18 +3101,61 @@
                     ?.addEventListener(
                         "change",
                         function () {
-                            atividade.mesesInformados =
+                            garantirMesesOriginais(
+                                atividade
+                            );
+
+                            /*
+                             * Segurança:
+                             * fora do critério informado,
+                             * o campo nunca altera o estado.
+                             */
+                            if (
+                                atividade.criterio !==
+                                CRITERIOS_APURACAO
+                                    .INFORMADO
+                            ) {
+                                restaurarMesesOriginais(
+                                    atividade
+                                );
+
+                                this.value =
+                                    String(
+                                        atividade
+                                            .mesesOriginais
+                                    );
+
+                                this.disabled =
+                                    true;
+
+                                atualizarResultados();
+
+                                return;
+                            }
+
+                            const valor =
                                 Math.max(
                                     1,
-                                    parseInt(
-                                        this.value,
-                                        10
-                                    ) ||
-                                    1
+                                    Math.min(
+                                        120,
+                                        parseInt(
+                                            this.value,
+                                            10
+                                        ) ||
+                                        atividade
+                                            .mesesOriginais
+                                    )
+                                );
+
+                            atividade.mesesInformados =
+                                valor;
+
+                            this.value =
+                                String(
+                                    valor
                                 );
 
                             atualizarResultados();
-                            renderizarAtividades();
                         }
                     );
 
@@ -3083,6 +3245,7 @@
                 valor:
                     CRITERIOS_APURACAO
                         .MOVIMENTACAO,
+
                 texto:
                     "Meses com movimentação"
             },
@@ -3090,6 +3253,7 @@
                 valor:
                     CRITERIOS_APURACAO
                         .INTERVALO,
+
                 texto:
                     "Intervalo completo"
             },
@@ -3097,6 +3261,7 @@
                 valor:
                     CRITERIOS_APURACAO
                         .INFORMADO,
+
                 texto:
                     "Período econômico informado"
             }
@@ -3256,9 +3421,6 @@
         const mapa =
             new Map();
 
-        /*
-         * Períodos automáticos.
-         */
         notasProcessadas.forEach(
             function (nota) {
                 if (
@@ -3369,9 +3531,6 @@
             }
         );
 
-        /*
-         * Períodos manuais.
-         */
         periodosManuais.forEach(
             function (manual) {
                 const chave =
@@ -3453,6 +3612,7 @@
                     function (item) {
                         return {
                             ...item,
+
                             notasIds:
                                 Array.from(
                                     item.notasIds ||
@@ -3508,6 +3668,7 @@
 
         if (!tbody) {
             atualizarTotalizadoresPeriodo();
+
             return;
         }
 
@@ -3526,6 +3687,7 @@
             `;
 
             atualizarTotalizadoresPeriodo();
+
             return;
         }
 
@@ -3927,12 +4089,6 @@
             `);
         }
 
-        /*
-         * Se ainda existe valor pendente, oferece o select.
-         *
-         * Isso evita pedir atividade para notas em que todas
-         * as informações já foram identificadas.
-         */
         if (
             nota.valorPendente >
             TOLERANCIA_VALOR
@@ -4031,13 +4187,6 @@
                     return;
                 }
 
-                /*
-                 * A classificação manual recebe apenas o
-                 * valor ainda não alocado automaticamente.
-                 *
-                 * Nunca sobrescreve atividades automáticas
-                 * já identificadas em outros itens.
-                 */
                 nota.alocacaoManual = {
                     idAtividade:
                         criarIdAtividade(
@@ -4145,6 +4294,10 @@
     function calcularRendaAtividade(
         atividade
     ) {
+        garantirMesesOriginais(
+            atividade
+        );
+
         const periodos =
             periodosNotas
                 .filter(
@@ -4185,6 +4338,7 @@
         ) {
             case CRITERIOS_APURACAO
                 .INFORMADO:
+
                 meses =
                     Math.max(
                         1,
@@ -4192,21 +4346,35 @@
                             atividade
                                 .mesesInformados
                         ) ||
-                        1
+                        atividade
+                            .mesesOriginais
                     );
+
                 break;
 
             case CRITERIOS_APURACAO
                 .INTERVALO:
+
+                /*
+                 * O valor digitado em Meses Informados
+                 * não interfere no intervalo completo.
+                 */
                 meses =
                     calcularMesesIntervalo(
                         periodos
                     );
+
                 break;
 
             case CRITERIOS_APURACAO
                 .MOVIMENTACAO:
+
             default:
+
+                /*
+                 * O valor digitado em Meses Informados
+                 * não interfere em meses com movimentação.
+                 */
                 meses =
                     new Set(
                         periodos.map(
@@ -4214,6 +4382,7 @@
                                 item.competencia
                         )
                     ).size;
+
                 break;
         }
 
@@ -4292,6 +4461,7 @@
                 function (atividade) {
                     return {
                         atividade,
+
                         ...calcularRendaAtividade(
                             atividade
                         )
@@ -4617,6 +4787,7 @@
         atualizarResultados();
 
         limparMensagemProcessamento();
+
         mostrarStatusProcessamento(
             false
         );
@@ -4645,6 +4816,11 @@
                 "mesesAtividadeNotas"
             );
 
+        const criterio =
+            document.getElementById(
+                "criterioAtividadeNotas"
+            );
+
         if (periodo) {
             periodo.value =
                 "";
@@ -4662,7 +4838,15 @@
 
         if (meses) {
             meses.value =
-                "12";
+                String(
+                    MESES_PADRAO_ATIVIDADE
+                );
+        }
+
+        if (criterio) {
+            criterio.value =
+                CRITERIOS_APURACAO
+                    .MOVIMENTACAO;
         }
 
         inicializarSeletoresAtividade();
@@ -4769,9 +4953,6 @@
             return null;
         }
 
-        /*
-         * YYYY-MM
-         */
         let match =
             texto.match(
                 /^(\d{4})[-/](\d{1,2})$/
@@ -4802,6 +4983,7 @@
 
                 return {
                     competencia,
+
                     exibicao:
                         formatarCompetencia(
                             competencia
@@ -4810,9 +4992,6 @@
             }
         }
 
-        /*
-         * MM/YYYY
-         */
         match =
             texto.match(
                 /^(\d{1,2})[/-](\d{4})$/
@@ -4843,6 +5022,7 @@
 
                 return {
                     competencia,
+
                     exibicao:
                         formatarCompetencia(
                             competencia
@@ -4851,9 +5031,6 @@
             }
         }
 
-        /*
-         * Nome do mês.
-         */
         const normalizado =
             normalizarTextoComparacao(
                 texto
@@ -4907,6 +5084,7 @@
 
             return {
                 competencia,
+
                 exibicao:
                     formatarCompetencia(
                         competencia
@@ -5007,6 +5185,7 @@
             {
                 style:
                     "currency",
+
                 currency:
                     "BRL"
             }
@@ -5082,6 +5261,7 @@
         if (!digitos) {
             input.value =
                 "";
+
             return;
         }
 
@@ -5097,6 +5277,7 @@
                 {
                     minimumFractionDigits:
                         2,
+
                     maximumFractionDigits:
                         2
                 }
