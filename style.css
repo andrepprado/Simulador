@@ -7412,7 +7412,7 @@ footer p,
    ========================================================= */
 
 /* =========================================================
-   RESET LOCAL / PROTEÇÃO CONTRA OVERFLOW
+   BASE / PROTEÇÃO CONTRA OVERFLOW
    ========================================================= */
 
 .notas-fiscais-container,
@@ -7424,15 +7424,13 @@ footer p,
 
 .notas-fiscais-container {
     display: grid;
-    grid-template-columns:
-        minmax(0, 1.45fr) minmax(300px, .55fr);
+    grid-template-columns: minmax(0, 1.4fr) minmax(320px, .6fr);
     gap: 24px;
     width: calc(100% - 40px);
     max-width: 1180px;
     min-width: 0;
     margin: 0 auto;
-    padding-top: 30px;
-    padding-bottom: 46px;
+    padding: 30px 0 46px;
     align-items: start;
 }
 
@@ -7448,13 +7446,12 @@ footer p,
     position: relative;
     width: 100%;
     min-width: 0;
-    max-width: 100%;
     padding: 28px;
+    overflow: hidden;
     background: var(--branco);
     border: 1px solid var(--borda);
     border-radius: 16px;
     box-shadow: var(--sombra);
-    overflow-wrap: anywhere;
 }
 
 .notas-card-largura-total {
@@ -7463,21 +7460,11 @@ footer p,
 
 .notas-card-periodos {
     grid-column: 1;
-    min-width: 0;
-    overflow: hidden;
 }
 
 .notas-card-resultado {
-    position: relative;
-    top: auto;
     grid-column: 2;
-    min-width: 0;
-    overflow: hidden;
 }
-
-/* =========================================================
-   BARRA SUPERIOR DOS CARDS
-   ========================================================= */
 
 .notas-card-resultado::before,
 #cardUploadNotas::before,
@@ -7489,18 +7476,10 @@ footer p,
     left: 0;
     width: 100%;
     height: 4px;
-    border-radius: 16px 16px 0 0;
-    background:
-        linear-gradient(90deg,
+    background: linear-gradient(90deg,
             var(--verde-claro),
             var(--turquesa),
             var(--verde-escuro));
-}
-
-#cardUploadNotas,
-#cardAtividadesNotas,
-#cardDetalhamentoNotas {
-    overflow: hidden;
 }
 
 /* =========================================================
@@ -7508,21 +7487,18 @@ footer p,
    ========================================================= */
 
 .notas-titulo-secao {
-    display: block;
     width: 100%;
     min-width: 0;
     margin-bottom: 20px;
 }
 
 .notas-titulo-secao>div {
-    width: 100%;
     min-width: 0;
 }
 
 .notas-titulo-secao .categoria-etiqueta {
     display: inline-flex;
     align-items: center;
-    width: auto;
     max-width: 100%;
     margin-bottom: 9px;
     padding: 6px 10px;
@@ -7581,13 +7557,8 @@ footer p,
 .notas-aviso-info span {
     display: block;
     min-width: 0;
-    color: var(--texto-secundario);
     overflow-wrap: anywhere;
 }
-
-/* =========================================================
-   RESUMO DOS CRITÉRIOS
-   ========================================================= */
 
 #resumoCriteriosNotas {
     gap: 7px;
@@ -7595,10 +7566,8 @@ footer p,
 
 #resumoCriteriosNotas>span {
     display: block;
-    min-width: 0;
     padding-top: 6px;
     border-top: 1px solid rgba(0, 160, 145, .12);
-    overflow-wrap: anywhere;
 }
 
 #resumoCriteriosNotas>span:first-of-type {
@@ -7608,7 +7577,6 @@ footer p,
 
 #resumoCriteriosNotas span strong {
     color: var(--verde-escuro);
-    font-size: inherit;
 }
 
 /* =========================================================
@@ -7617,12 +7585,10 @@ footer p,
 
 .notas-upload-area {
     display: grid;
-    grid-template-columns:
-        auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 16px;
     width: 100%;
-    min-width: 0;
     padding: 20px;
     background:
         linear-gradient(135deg,
@@ -7637,14 +7603,10 @@ footer p,
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 52px;
     width: 52px;
     height: 52px;
-    min-width: 52px;
-    min-height: 52px;
-    overflow: hidden;
-    background:
-        linear-gradient(135deg,
+    flex: 0 0 52px;
+    background: linear-gradient(135deg,
             rgba(0, 160, 145, .12),
             rgba(0, 54, 64, .08));
     color: var(--turquesa);
@@ -7675,10 +7637,6 @@ footer p,
 #arquivosNotasFiscais {
     display: none !important;
 }
-
-/* =========================================================
-   SVG DO UPLOAD
-   ========================================================= */
 
 .notas-upload-area svg,
 .notas-upload-icone svg {
@@ -7731,7 +7689,6 @@ footer p,
     flex: 0 0 auto;
     min-width: 120px;
     min-height: 40px;
-    height: auto;
     padding: 8px 16px;
     border-radius: 8px;
     font-size: 10px;
@@ -7789,7 +7746,6 @@ footer p,
     justify-content: flex-end;
     gap: 9px;
     width: 100%;
-    min-width: 0;
     margin-top: 16px;
     margin-bottom: 18px;
 }
@@ -7807,7 +7763,6 @@ footer p,
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    min-width: 0;
     margin-top: 12px;
 }
 
@@ -7847,13 +7802,13 @@ footer p,
     font-size: 8px;
 }
 
-.notas-arquivo-remover {
+.notas-arquivo-remover,
+.notas-btn-remover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
-    min-width: 64px;
-    min-height: 28px;
+    min-width: 60px;
+    min-height: 30px;
     padding: 4px 8px;
     background: var(--erro-fundo);
     color: var(--erro);
@@ -7869,7 +7824,8 @@ footer p,
         transform .2s ease;
 }
 
-.notas-arquivo-remover:hover {
+.notas-arquivo-remover:hover,
+.notas-btn-remover:hover {
     background: var(--erro);
     color: var(--branco);
     border-color: var(--erro);
@@ -7885,7 +7841,6 @@ footer p,
     align-items: center;
     gap: 12px;
     width: 100%;
-    min-width: 0;
     margin-top: 14px;
     padding: 13px 15px;
     background: rgba(0, 160, 145, .06);
@@ -7893,7 +7848,8 @@ footer p,
     border-radius: 9px;
 }
 
-.notas-status-ocr[hidden] {
+.notas-status-ocr[hidden],
+.notas-resultado-ocr[hidden] {
     display: none !important;
 }
 
@@ -7933,17 +7889,12 @@ footer p,
 
 .notas-resultado-ocr {
     width: 100%;
-    min-width: 0;
     margin-top: 12px;
     padding: 11px 13px;
     border: 1px solid var(--borda);
     border-radius: 8px;
     font-size: 9px;
     line-height: 1.45;
-}
-
-.notas-resultado-ocr[hidden] {
-    display: none !important;
 }
 
 /* =========================================================
@@ -7962,7 +7913,6 @@ footer p,
     font-weight: 800;
     line-height: 1.25;
     text-align: center;
-    white-space: normal;
 }
 
 .notas-status-sucesso,
@@ -7993,11 +7943,10 @@ footer p,
 .notas-periodo-novo {
     display: grid;
     grid-template-columns:
-        minmax(145px, 1.15fr) minmax(125px, .90fr) minmax(120px, .85fr) minmax(95px, .60fr) minmax(105px, .65fr);
+        minmax(145px, 1.15fr) minmax(125px, .9fr) minmax(120px, .85fr) minmax(95px, .6fr) minmax(105px, .65fr);
     align-items: end;
     gap: 10px;
     width: 100%;
-    max-width: 100%;
     min-width: 0;
     margin-bottom: 18px;
 }
@@ -8110,8 +8059,7 @@ footer p,
     border-radius: 9px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    scrollbar-color:
-        var(--turquesa-claro) var(--fundo-secundario);
+    scrollbar-color: var(--turquesa-claro) var(--fundo-secundario);
 }
 
 .notas-tabela-wrapper::-webkit-scrollbar {
@@ -8180,7 +8128,7 @@ footer p,
 }
 
 /* =========================================================
-   INPUTS DAS TABELAS
+   INPUTS NAS TABELAS
    ========================================================= */
 
 .notas-input-tabela {
@@ -8207,8 +8155,7 @@ footer p,
 
 .notas-input-tabela:focus {
     border-color: var(--turquesa);
-    box-shadow:
-        0 0 0 2px rgba(0, 160, 145, .08);
+    box-shadow: 0 0 0 2px rgba(0, 160, 145, .08);
 }
 
 .notas-input-tabela:disabled {
@@ -8246,7 +8193,7 @@ footer p,
 }
 
 /* =========================================================
-   NOTAS PROCESSADAS
+   DETALHAMENTO DAS NOTAS
    ========================================================= */
 
 #cardDetalhamentoNotas .nota-data {
@@ -8271,12 +8218,24 @@ footer p,
     min-width: 190px;
 }
 
+#cardDetalhamentoNotas .nota-coluna-atividade {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#cardDetalhamentoNotas .nota-requer-revisao {
+    background: rgba(166, 106, 0, .025);
+}
+
+#cardDetalhamentoNotas .nota-processada-automaticamente {
+    background: transparent;
+}
+
 #cardDetalhamentoNotas .nota-confirmar {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-width: 0;
     min-height: 28px;
     margin-top: 6px;
     padding: 4px 8px;
@@ -8299,51 +8258,6 @@ footer p,
     transform: translateY(-1px);
 }
 
-#cardDetalhamentoNotas .nota-coluna-atividade {
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-
-#cardDetalhamentoNotas .nota-requer-revisao {
-    background: rgba(166, 106, 0, .025);
-}
-
-#cardDetalhamentoNotas .nota-processada-automaticamente {
-    background: transparent;
-}
-
-/* =========================================================
-   BOTÃO REMOVER
-   ========================================================= */
-
-.notas-btn-remover {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 60px;
-    min-height: 30px;
-    padding: 4px 7px;
-    background: var(--erro-fundo);
-    color: var(--erro);
-    border: 1px solid rgba(199, 58, 58, .22);
-    border-radius: 6px;
-    font-size: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        background .2s ease,
-        color .2s ease,
-        border-color .2s ease,
-        transform .2s ease;
-}
-
-.notas-btn-remover:hover {
-    background: var(--erro);
-    color: var(--branco);
-    border-color: var(--erro);
-    transform: translateY(-1px);
-}
-
 /* =========================================================
    SEM DADOS
    ========================================================= */
@@ -8351,8 +8265,8 @@ footer p,
 .notas-linha-vazia td,
 .notas-sem-dados {
     padding: 22px 14px;
-    color: var(--texto-secundario);
     background: #FBFCFC;
+    color: var(--texto-secundario);
     font-size: 9px;
     font-style: italic;
     text-align: center !important;
@@ -8364,11 +8278,9 @@ footer p,
 
 .notas-totalizadores-periodo {
     display: grid;
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     width: 100%;
-    min-width: 0;
     margin-top: 14px;
 }
 
@@ -8408,13 +8320,11 @@ footer p,
     justify-content: center;
     gap: 6px;
     width: 100%;
-    min-width: 0;
     min-height: 86px;
     margin-bottom: 14px;
     padding: 16px 18px;
     overflow: hidden;
-    background:
-        linear-gradient(115deg,
+    background: linear-gradient(115deg,
             var(--turquesa),
             var(--verde-escuro));
     color: var(--branco);
@@ -8422,9 +8332,6 @@ footer p,
 }
 
 .notas-resultado-principal span {
-    display: block;
-    width: 100%;
-    max-width: 100%;
     color: rgba(255, 255, 255, .86);
     font-size: 10px;
     font-weight: 700;
@@ -8434,25 +8341,21 @@ footer p,
 .notas-resultado-principal strong {
     display: block;
     width: 100%;
-    max-width: 100%;
     min-width: 0;
+    overflow: hidden;
     color: var(--verde-claro);
     font-size: clamp(20px, 2vw, 26px);
     font-weight: 800;
     line-height: 1.08;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .notas-resultados-grid {
     display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
     width: 100%;
-    min-width: 0;
 }
 
 .notas-resultado-item {
@@ -8474,7 +8377,6 @@ footer p,
 
 .notas-resultado-item strong {
     display: block;
-    min-width: 0;
     color: var(--verde-escuro);
     font-size: 12px;
     line-height: 1.25;
@@ -8505,15 +8407,19 @@ footer p,
 }
 
 #cardAtividadesNotas .notas-tabela th:nth-child(4),
-#cardAtividadesNotas .notas-tabela td:nth-child(4) {
-    width: 12%;
+#cardAtividadesNotas .notas-tabela td:nth-child(4),
+#cardAtividadesNotas .notas-tabela th:nth-child(5),
+#cardAtividadesNotas .notas-tabela td:nth-child(5),
+#cardAtividadesNotas .notas-tabela th:nth-child(7),
+#cardAtividadesNotas .notas-tabela td:nth-child(7) {
     text-align: center;
 }
 
+#cardAtividadesNotas .notas-tabela th:nth-child(4),
+#cardAtividadesNotas .notas-tabela td:nth-child(4),
 #cardAtividadesNotas .notas-tabela th:nth-child(5),
 #cardAtividadesNotas .notas-tabela td:nth-child(5) {
     width: 12%;
-    text-align: center;
 }
 
 #cardAtividadesNotas .notas-tabela th:nth-child(6),
@@ -8526,7 +8432,6 @@ footer p,
 #cardAtividadesNotas .notas-tabela th:nth-child(7),
 #cardAtividadesNotas .notas-tabela td:nth-child(7) {
     width: 8%;
-    text-align: center;
 }
 
 /* =========================================================
@@ -8541,7 +8446,6 @@ footer p,
 #cardPeriodosNotas .notas-periodo-novo {
     width: 100%;
     max-width: 100%;
-    min-width: 0;
 }
 
 #cardPeriodosNotas .notas-tabela {
@@ -8566,11 +8470,7 @@ footer p,
 }
 
 #cardPeriodosNotas .notas-tabela th:nth-child(4),
-#cardPeriodosNotas .notas-tabela td:nth-child(4) {
-    width: 15%;
-    text-align: center;
-}
-
+#cardPeriodosNotas .notas-tabela td:nth-child(4),
 #cardPeriodosNotas .notas-tabela th:nth-child(5),
 #cardPeriodosNotas .notas-tabela td:nth-child(5) {
     width: 15%;
@@ -8578,7 +8478,7 @@ footer p,
 }
 
 /* =========================================================
-   DETALHAMENTO
+   TABELA DE DETALHAMENTO
    ========================================================= */
 
 #cardDetalhamentoNotas .notas-tabela {
@@ -8623,13 +8523,11 @@ footer p,
 
 /* =========================================================
    DESKTOP INTERMEDIÁRIO
-   Evita invasão entre os cards antes do layout virar coluna
    ========================================================= */
 
 @media (max-width: 1120px) {
     .notas-fiscais-container {
-        grid-template-columns:
-            minmax(0, 1.3fr) minmax(290px, .7fr);
+        grid-template-columns: minmax(0, 1.3fr) minmax(290px, .7fr);
         gap: 18px;
     }
 
@@ -8637,22 +8535,13 @@ footer p,
         padding: 24px;
     }
 
-    #cardPeriodosNotas .notas-periodo-novo {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+    #cardPeriodosNotas .notas-periodo-novo,
+    #cardAtividadesNotas .notas-periodo-novo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     #cardPeriodosNotas .notas-campo-botao {
         grid-column: 1 / -1;
-    }
-
-    #cardPeriodosNotas .notas-campo-botao .notas-btn {
-        width: 100%;
-    }
-
-    #cardAtividadesNotas .notas-periodo-novo {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
     }
 
     .notas-resultado-principal strong {
@@ -8666,8 +8555,7 @@ footer p,
 
 @media (max-width: 1050px) {
     .notas-fiscais-container {
-        grid-template-columns:
-            minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 32px);
         gap: 18px;
         padding-top: 18px;
@@ -8687,15 +8575,6 @@ footer p,
         grid-row: auto;
     }
 
-    .notas-card-resultado {
-        position: relative;
-        top: auto;
-    }
-
-    /*
-     * Quando o resultado ocupa a largura total novamente,
-     * os campos podem voltar a usar mais colunas.
-     */
     #cardPeriodosNotas .notas-periodo-novo {
         grid-template-columns:
             minmax(150px, 1.15fr) minmax(140px, .9fr) minmax(130px, .85fr) minmax(100px, .6fr) minmax(110px, .65fr);
@@ -8731,25 +8610,20 @@ footer p,
 
     #cardPeriodosNotas .notas-periodo-novo,
     #cardAtividadesNotas .notas-periodo-novo {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     #cardPeriodosNotas .notas-campo-botao {
         grid-column: 1 / -1;
     }
 
-    .notas-campo-botao {
-        width: 100%;
-    }
-
+    .notas-campo-botao,
     .notas-campo-botao .notas-btn {
         width: 100%;
     }
 
     .notas-upload-area {
-        grid-template-columns:
-            auto minmax(0, 1fr);
+        grid-template-columns: auto minmax(0, 1fr);
     }
 
     .notas-upload-area>.notas-btn {
@@ -8764,9 +8638,7 @@ footer p,
 
 @media (max-width: 700px) {
     .notas-fiscais-container {
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 24px);
         max-width: none;
         gap: 14px;
@@ -8775,9 +8647,6 @@ footer p,
     }
 
     .notas-card {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
         padding: 15px;
         border-radius: 11px;
     }
@@ -8822,23 +8691,16 @@ footer p,
         font-size: 8px;
     }
 
-    #resumoCriteriosNotas>span {
-        padding-top: 5px;
-    }
-
     .notas-upload-area {
-        grid-template-columns:
-            auto minmax(0, 1fr);
+        grid-template-columns: auto minmax(0, 1fr);
         gap: 10px;
         padding: 12px;
     }
 
     .notas-upload-icone {
-        flex: 0 0 40px;
         width: 40px;
         height: 40px;
-        min-width: 40px;
-        min-height: 40px;
+        flex-basis: 40px;
         border-radius: 9px;
     }
 
@@ -8868,8 +8730,7 @@ footer p,
     .notas-periodo-novo,
     #cardAtividadesNotas .notas-periodo-novo,
     #cardPeriodosNotas .notas-periodo-novo {
-        grid-template-columns:
-            minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         gap: 8px;
     }
 
@@ -8892,7 +8753,6 @@ footer p,
 
     .notas-campo textarea {
         min-height: 60px;
-        height: auto;
         font-size: 11px;
     }
 
@@ -8905,30 +8765,8 @@ footer p,
 
     .notas-acoes {
         display: grid;
-        grid-template-columns:
-            minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         gap: 7px;
-    }
-
-    .notas-arquivo-item {
-        padding: 8px 9px;
-    }
-
-    .notas-arquivo-info strong {
-        font-size: 8px;
-    }
-
-    .notas-arquivo-info span {
-        font-size: 7px;
-    }
-
-    .notas-arquivo-remover {
-        min-width: 54px;
-        font-size: 7px;
-    }
-
-    .notas-tabela-wrapper {
-        border-radius: 7px;
     }
 
     .notas-tabela {
@@ -8992,19 +8830,8 @@ footer p,
         min-width: 110px;
     }
 
-    .notas-status {
-        min-height: 22px;
-        font-size: 6px;
-    }
-
-    #cardDetalhamentoNotas .nota-confirmar {
-        min-height: 26px;
-        font-size: 7px;
-    }
-
     .notas-totalizadores-periodo {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 6px;
     }
 
@@ -9035,8 +8862,7 @@ footer p,
     }
 
     .notas-resultados-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 7px;
     }
 
@@ -9110,30 +8936,15 @@ footer p,
     }
 
     .notas-totalizadores-periodo {
-        grid-template-columns:
-            minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .notas-resultado-principal {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-
-    .notas-resultado-principal span,
-    .notas-resultado-principal strong {
-        width: 100%;
-        max-width: 100%;
-        text-align: left;
+    .notas-resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .notas-resultado-principal strong {
         font-size: 17px;
-    }
-
-    .notas-resultados-grid {
-        grid-template-columns:
-            minmax(0, 1fr);
     }
 
     #cardAtividadesNotas .notas-tabela {
@@ -9164,10 +8975,6 @@ footer p,
 
     .notas-titulo-secao h2 {
         font-size: 15px;
-    }
-
-    .notas-titulo-secao p {
-        font-size: 8px;
     }
 
     .notas-resultado-principal strong {
@@ -9208,8 +9015,7 @@ footer p,
 @media print {
     .notas-fiscais-container {
         display: grid !important;
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 16px !important;
         width: 100% !important;
         max-width: none !important;
@@ -9241,7 +9047,6 @@ footer p,
 
     .notas-card-resultado {
         position: static !important;
-        top: auto !important;
         grid-column: 2 !important;
     }
 
@@ -9303,10 +9108,10 @@ footer p,
         height: auto !important;
         min-height: 28px !important;
         padding: 3px 5px !important;
-        font-size: 8px !important;
+        background: transparent !important;
         border: 0 !important;
         box-shadow: none !important;
-        background: transparent !important;
+        font-size: 8px !important;
     }
 
     .notas-tabela select.notas-input-tabela,
@@ -9330,8 +9135,6 @@ footer p,
     }
 
     .notas-resultado-principal {
-        display: flex !important;
-        flex-direction: column !important;
         align-items: flex-start !important;
         gap: 4px !important;
     }
@@ -9339,22 +9142,18 @@ footer p,
     .notas-resultado-principal strong {
         width: 100% !important;
         max-width: 100% !important;
+        overflow: visible !important;
         font-size: 18px !important;
         text-align: left !important;
-        white-space: nowrap !important;
-        overflow: visible !important;
         text-overflow: clip !important;
+        white-space: nowrap !important;
     }
 
     .notas-tabela thead {
         display: table-header-group !important;
     }
 
-    .notas-tabela tr {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
+    .notas-tabela tr,
     #resumoCriteriosNotas {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
