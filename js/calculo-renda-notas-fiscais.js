@@ -23,7 +23,6 @@
     });
 
     const TOLERANCIA_VALOR = 0.05;
-
     const MESES_PADRAO_ATIVIDADE = 12;
 
     /* =========================================================
@@ -246,7 +245,7 @@
     }
 
     /* =========================================================
-       CATÁLOGO DE ATIVIDADES
+       CATÁLOGO
        ========================================================= */
 
     function obterApiAtividades() {
@@ -276,14 +275,12 @@
 
         if (
             api &&
-            typeof api
-                .normalizarIdentificadorAtividade ===
+            typeof api.normalizarIdentificadorAtividade ===
             "function"
         ) {
-            return api
-                .normalizarIdentificadorAtividade(
-                    valor
-                );
+            return api.normalizarIdentificadorAtividade(
+                valor
+            );
         }
 
         return String(
@@ -324,15 +321,13 @@
 
         if (
             api &&
-            typeof api
-                .interpretarValorAtividadeAgrupada ===
+            typeof api.interpretarValorAtividadeAgrupada ===
             "function"
         ) {
             const interpretado =
-                api
-                    .interpretarValorAtividadeAgrupada(
-                        valor
-                    );
+                api.interpretarValorAtividadeAgrupada(
+                    valor
+                );
 
             if (interpretado) {
                 return interpretado;
@@ -345,7 +340,8 @@
             ).split("|");
 
         if (
-            partes.length !== 2
+            partes.length !==
+            2
         ) {
             return null;
         }
@@ -409,8 +405,7 @@
 
         if (
             api &&
-            typeof api
-                .obterNomeAtividade ===
+            typeof api.obterNomeAtividade ===
             "function"
         ) {
             const nome =
@@ -483,16 +478,14 @@
 
         if (
             api &&
-            typeof api
-                .localizarAtividadePorNome ===
+            typeof api.localizarAtividadePorNome ===
             "function"
         ) {
             return (
-                api
-                    .localizarAtividadePorNome(
-                        nome,
-                        grupo
-                    ) ||
+                api.localizarAtividadePorNome(
+                    nome,
+                    grupo
+                ) ||
                 null
             );
         }
@@ -501,7 +494,7 @@
     }
 
     /* =========================================================
-       SELECTS DE ATIVIDADE
+       SELECTS
        ========================================================= */
 
     function inicializarSeletoresAtividade() {
@@ -549,8 +542,7 @@
 
         if (
             api &&
-            typeof api
-                .preencherGruposEmSelect ===
+            typeof api.preencherGruposEmSelect ===
             "function"
         ) {
             api.preencherGruposEmSelect(
@@ -602,8 +594,7 @@
 
         if (
             api &&
-            typeof api
-                .preencherAtividadesEmSelect ===
+            typeof api.preencherAtividadesEmSelect ===
             "function"
         ) {
             api.preencherAtividadesEmSelect(
@@ -662,16 +653,14 @@
 
         if (
             api &&
-            typeof api
-                .preencherTodasAtividadesAgrupadas ===
+            typeof api.preencherTodasAtividadesAgrupadas ===
             "function"
         ) {
-            api
-                .preencherTodasAtividadesAgrupadas(
-                    select,
-                    selecionada,
-                    incluirVazio
-                );
+            api.preencherTodasAtividadesAgrupadas(
+                select,
+                selecionada,
+                incluirVazio
+            );
 
             return;
         }
@@ -874,7 +863,7 @@
     }
 
     /* =========================================================
-       PROCESSAMENTO GERAL
+       PROCESSAMENTO
        ========================================================= */
 
     async function processarArquivosSelecionados() {
@@ -1001,7 +990,8 @@
             );
 
         if (
-            extensao === "xml"
+            extensao ===
+            "xml"
         ) {
             await processarXml(
                 arquivo
@@ -1011,7 +1001,8 @@
         }
 
         if (
-            extensao === "pdf"
+            extensao ===
+            "pdf"
         ) {
             await processarPdf(
                 arquivo
@@ -1039,11 +1030,10 @@
             obterApiNotas();
 
         const resultado =
-            apiNotas
-                .interpretarXmlNfe(
-                    texto,
-                    arquivo.name
-                );
+            apiNotas.interpretarXmlNfe(
+                texto,
+                arquivo.name
+            );
 
         resultado.arquivoOriginal =
             arquivo.name;
@@ -1108,10 +1098,9 @@
                             );
                         };
 
-                    document.head
-                        .appendChild(
-                            script
-                        );
+                    document.head.appendChild(
+                        script
+                    );
                 }
             );
 
@@ -1142,8 +1131,7 @@
             await garantirPdfJs();
 
         const buffer =
-            await arquivo
-                .arrayBuffer();
+            await arquivo.arrayBuffer();
 
         const documento =
             await pdfjsLib
@@ -1168,10 +1156,9 @@
             );
 
             const pagina =
-                await documento
-                    .getPage(
-                        paginaNumero
-                    );
+                await documento.getPage(
+                    paginaNumero
+                );
 
             let texto =
                 await extrairTextoPaginaPdf(
@@ -1248,16 +1235,11 @@
         }
     }
 
-    /* =========================================================
-       EXTRAÇÃO DE TEXTO NATIVO DO PDF
-       ========================================================= */
-
     async function extrairTextoPaginaPdf(
         pagina
     ) {
         const conteudo =
-            await pagina
-                .getTextContent();
+            await pagina.getTextContent();
 
         if (
             !conteudo.items ||
@@ -1367,10 +1349,6 @@
             .join("\n");
     }
 
-    /* =========================================================
-       OCR PDF
-       ========================================================= */
-
     async function executarOcrPaginaPdf(
         pagina
     ) {
@@ -1432,10 +1410,6 @@
             ""
         );
     }
-
-    /* =========================================================
-       IMAGENS
-       ========================================================= */
 
     async function processarImagem(
         arquivo
@@ -1501,8 +1475,7 @@
 
         if (
             !apiNotas ||
-            typeof apiNotas
-                .interpretar !==
+            typeof apiNotas.interpretar !==
             "function"
         ) {
             throw new Error(
@@ -1510,11 +1483,10 @@
             );
         }
 
-        return apiNotas
-            .interpretar(
-                texto,
-                arquivo
-            );
+        return apiNotas.interpretar(
+            texto,
+            arquivo
+        );
     }
 
     function deveExecutarOcr(
@@ -1534,8 +1506,7 @@
         }
 
         if (
-            resultado
-                .documentoFiscalCompleto &&
+            resultado.documentoFiscalCompleto &&
             resultado.numero &&
             resultado.data &&
             Number(
@@ -1642,7 +1613,7 @@
     }
 
     /* =========================================================
-       CLASSIFICAÇÃO DAS NOTAS
+       CLASSIFICAÇÃO
        ========================================================= */
 
     function prepararClassificacaoNota(
@@ -1651,6 +1622,15 @@
         nota.id =
             nota.id ||
             gerarId();
+
+        if (
+            typeof nota.incluidaCalculo !==
+            "boolean"
+        ) {
+            nota.incluidaCalculo =
+                nota.elegivelCalculo !==
+                false;
+        }
 
         nota.alocacoesAutomaticas =
             classificarItensNota(
@@ -1666,10 +1646,6 @@
         );
     }
 
-    /* =========================================================
-       CLASSIFICAÇÃO ITEM A ITEM
-       ========================================================= */
-
     function classificarItensNota(
         nota
     ) {
@@ -1681,11 +1657,11 @@
                 : [];
 
         if (
-            itens.length === 0
+            itens.length ===
+            0
         ) {
             return normalizarAlocacoesExistentes(
-                nota
-                    .alocacoesAtividade ||
+                nota.alocacoesAtividade ||
                 [],
                 nota.valor
             );
@@ -1722,8 +1698,7 @@
             0
         ) {
             return normalizarAlocacoesExistentes(
-                nota
-                    .alocacoesAtividade ||
+                nota.alocacoesAtividade ||
                 [],
                 nota.valor
             );
@@ -1905,8 +1880,7 @@
                 function (item) {
                     item.valor =
                         (
-                            item
-                                .valorProdutos /
+                            item.valorProdutos /
                             totalProdutosClassificados
                         ) *
                         valorNota;
@@ -1941,16 +1915,14 @@
 
         if (
             apiNcm &&
-            typeof apiNcm
-                .classificarItem ===
+            typeof apiNcm.classificarItem ===
             "function"
         ) {
             try {
                 const resultado =
-                    apiNcm
-                        .classificarItem(
-                            item
-                        );
+                    apiNcm.classificarItem(
+                        item
+                    );
 
                 if (
                     resultado &&
@@ -1981,7 +1953,7 @@
     }
 
     /* =========================================================
-       BOVINOCULTURA POR FAIXA ETÁRIA
+       BOVINOCULTURA
        ========================================================= */
 
     function classificarBovinoPorDescricao(
@@ -1989,8 +1961,7 @@
     ) {
         const descricao =
             normalizarTextoComparacao(
-                item
-                    ?.descricao ||
+                item?.descricao ||
                 ""
             );
 
@@ -2056,7 +2027,8 @@
 
         if (faixa) {
             if (
-                faixa.max <= 8
+                faixa.max <=
+                8
             ) {
                 return criarClassificacao(
                     "pecuaria",
@@ -2067,8 +2039,10 @@
             }
 
             if (
-                faixa.min >= 9 &&
-                faixa.max <= 24
+                faixa.min >=
+                9 &&
+                faixa.max <=
+                24
             ) {
                 return criarClassificacao(
                     "pecuaria",
@@ -2079,7 +2053,8 @@
             }
 
             if (
-                faixa.min > 24
+                faixa.min >
+                24
             ) {
                 return criarClassificacao(
                     "pecuaria",
@@ -2090,8 +2065,10 @@
             }
 
             if (
-                faixa.min <= 24 &&
-                faixa.max > 24
+                faixa.min <=
+                24 &&
+                faixa.max >
+                24
             ) {
                 return criarClassificacao(
                     "pecuaria",
@@ -2268,8 +2245,7 @@
                 localizada.atividade,
 
             nomeAtividade:
-                localizada
-                    .nomeAtividade,
+                localizada.nomeAtividade,
 
             confianca,
 
@@ -2298,8 +2274,8 @@
             return [];
         }
 
-        return alocacoes
-            .filter(
+        const validas =
+            alocacoes.filter(
                 function (item) {
                     return (
                         item &&
@@ -2309,73 +2285,198 @@
                         false
                     );
                 }
-            )
-            .map(
-                function (item) {
-                    return {
-                        idAtividade:
-                            criarIdAtividade(
-                                item.grupo,
-                                item.atividade
-                            ),
+            );
 
-                        grupo:
-                            item.grupo,
+        if (
+            validas.length ===
+            0
+        ) {
+            return [];
+        }
 
-                        atividade:
-                            item.atividade,
+        /*
+         * Se existe apenas uma atividade, o valor integral
+         * da NF pode ser utilizado quando a alocação não
+         * possuir valor próprio.
+         */
+        if (
+            validas.length ===
+            1
+        ) {
+            const item =
+                validas[0];
 
-                        nomeAtividade:
-                            item
-                                .nomeAtividade ||
-                            obterNomeAtividade(
-                                item.atividade,
-                                item.grupo
-                            ),
+            return [{
+                idAtividade:
+                    criarIdAtividade(
+                        item.grupo,
+                        item.atividade
+                    ),
 
-                        valor:
+                grupo:
+                    item.grupo,
+
+                atividade:
+                    item.atividade,
+
+                nomeAtividade:
+                    item.nomeAtividade ||
+                    obterNomeAtividade(
+                        item.atividade,
+                        item.grupo
+                    ),
+
+                valor:
+                    Number(
+                        item.valor
+                    ) ||
+                    Number(
+                        valorNota
+                    ) ||
+                    0,
+
+                valorProdutos:
+                    Number(
+                        item.valorProdutos
+                    ) ||
+                    0,
+
+                indicesItens:
+                    item.indicesItens ||
+                    [],
+
+                evidencias:
+                    item.evidencias ||
+                    [],
+
+                confianca:
+                    Number(
+                        item.confianca
+                    ) || 0,
+
+                automatico:
+                    true,
+
+                completa:
+                    true
+            }];
+        }
+
+        /*
+         * Mais de uma atividade:
+         * nunca replica o valor integral da NF para cada
+         * atividade. Usa os valores efetivamente alocados.
+         */
+        const totalValores =
+            validas.reduce(
+                function (
+                    soma,
+                    item
+                ) {
+                    return (
+                        soma +
+                        (
                             Number(
                                 item.valor
                             ) ||
                             Number(
-                                valorNota
+                                item.valorProdutos
                             ) ||
-                            0,
-
-                        valorProdutos:
-                            Number(
-                                item
-                                    .valorProdutos
-                            ) ||
-                            0,
-
-                        indicesItens:
-                            item
-                                .indicesItens ||
-                            [],
-
-                        evidencias:
-                            item
-                                .evidencias ||
-                            [],
-
-                        confianca:
-                            Number(
-                                item.confianca
-                            ) || 0,
-
-                        automatico:
-                            true,
-
-                        completa:
-                            true
-                    };
-                }
+                            0
+                        )
+                    );
+                },
+                0
             );
+
+        const valorTotalNota =
+            Number(
+                valorNota
+            ) || 0;
+
+        return validas.map(
+            function (item) {
+                const valorBase =
+                    Number(
+                        item.valor
+                    ) ||
+                    Number(
+                        item.valorProdutos
+                    ) ||
+                    0;
+
+                let valor =
+                    valorBase;
+
+                if (
+                    valorTotalNota >
+                    0 &&
+                    totalValores >
+                    0
+                ) {
+                    valor =
+                        (
+                            valorBase /
+                            totalValores
+                        ) *
+                        valorTotalNota;
+                }
+
+                return {
+                    idAtividade:
+                        criarIdAtividade(
+                            item.grupo,
+                            item.atividade
+                        ),
+
+                    grupo:
+                        item.grupo,
+
+                    atividade:
+                        item.atividade,
+
+                    nomeAtividade:
+                        item.nomeAtividade ||
+                        obterNomeAtividade(
+                            item.atividade,
+                            item.grupo
+                        ),
+
+                    valor:
+                        valor,
+
+                    valorProdutos:
+                        Number(
+                            item.valorProdutos
+                        ) ||
+                        0,
+
+                    indicesItens:
+                        item.indicesItens ||
+                        [],
+
+                    evidencias:
+                        item.evidencias ||
+                        [],
+
+                    confianca:
+                        Number(
+                            item.confianca
+                        ) || 0,
+
+                    automatico:
+                        true,
+
+                    completa:
+                        totalValores >
+                        0
+                };
+            }
+        );
     }
 
     /* =========================================================
-       SITUAÇÃO DA NOTA
+       SITUAÇÃO
        ========================================================= */
 
     function recalcularSituacaoNota(
@@ -2388,8 +2489,7 @@
 
         const totalAutomatico =
             (
-                nota
-                    .alocacoesAutomaticas ||
+                nota.alocacoesAutomaticas ||
                 []
             ).reduce(
                 function (
@@ -2447,13 +2547,11 @@
                 0 &&
                 (
                     (
-                        nota
-                            .alocacoesAutomaticas ||
+                        nota.alocacoesAutomaticas ||
                         []
                     ).length >
                     0 ||
-                    nota
-                        .alocacaoManual
+                    nota.alocacaoManual
                 )
             );
 
@@ -2466,7 +2564,10 @@
 
         nota.requerConferencia =
             !nota.documentoCompleto ||
-            !nota.atividadeCompleta;
+            !nota.atividadeCompleta ||
+            Boolean(
+                nota.requerConferenciaElegibilidade
+            );
     }
 
     function notaRequerRevisao(
@@ -2484,9 +2585,15 @@
     function reconstruirAtividadesAutomaticas() {
         notasProcessadas.forEach(
             function (nota) {
+                if (
+                    nota.incluidaCalculo ===
+                    false
+                ) {
+                    return;
+                }
+
                 (
-                    nota
-                        .alocacoesAutomaticas ||
+                    nota.alocacoesAutomaticas ||
                     []
                 ).forEach(
                     function (
@@ -2495,27 +2602,19 @@
                         garantirAtividade(
                             alocacao.grupo,
                             alocacao.atividade,
-                            alocacao
-                                .nomeAtividade,
+                            alocacao.nomeAtividade,
                             true
                         );
                     }
                 );
 
                 if (
-                    nota
-                        .alocacaoManual
+                    nota.alocacaoManual
                 ) {
                     garantirAtividade(
-                        nota
-                            .alocacaoManual
-                            .grupo,
-                        nota
-                            .alocacaoManual
-                            .atividade,
-                        nota
-                            .alocacaoManual
-                            .nomeAtividade,
+                        nota.alocacaoManual.grupo,
+                        nota.alocacaoManual.atividade,
+                        nota.alocacaoManual.nomeAtividade,
                         false
                     );
                 }
@@ -2555,10 +2654,6 @@
                     true;
             }
 
-            /*
-             * Compatibilidade com atividade criada
-             * antes da inclusão de mesesOriginais.
-             */
             garantirMesesOriginais(
                 existente
             );
@@ -2584,24 +2679,13 @@
                 ),
 
             criterio:
-                CRITERIOS_APURACAO
-                    .MOVIMENTACAO,
+                "",
 
-            /*
-             * Valor original da atividade.
-             *
-             * Este valor nunca é alterado quando o usuário
-             * edita o campo "Meses Informados".
-             */
             mesesOriginais:
-                MESES_PADRAO_ATIVIDADE,
+                0,
 
-            /*
-             * Campo utilizado exclusivamente pelo critério
-             * "Período econômico informado".
-             */
             mesesInformados:
-                MESES_PADRAO_ATIVIDADE,
+                0,
 
             automatica:
                 automatica
@@ -2621,50 +2705,39 @@
     ) {
         const original =
             Number(
-                atividade
-                    .mesesOriginais
+                atividade.mesesOriginais
             );
 
         if (
             !Number.isFinite(
                 original
             ) ||
-            original < 1
+            original <
+            0
         ) {
-            const valorAtual =
-                Number(
-                    atividade
-                        .mesesInformados
-                );
-
             atividade.mesesOriginais =
-                Number.isFinite(
-                    valorAtual
-                ) &&
-                    valorAtual > 0
-                    ? valorAtual
-                    : MESES_PADRAO_ATIVIDADE;
+                0;
         }
+
+        const informado =
+            Number(
+                atividade.mesesInformados
+            );
 
         if (
             !Number.isFinite(
-                Number(
-                    atividade
-                        .mesesInformados
-                )
+                informado
             ) ||
-            Number(
-                atividade
-                    .mesesInformados
-            ) < 1
+            informado <
+            0
         ) {
             atividade.mesesInformados =
-                atividade
-                    .mesesOriginais;
+                0;
         }
 
-        return atividade
-            .mesesOriginais;
+        return Number(
+            atividade.mesesOriginais
+        ) || 0;
     }
 
     function restaurarMesesOriginais(
@@ -2711,7 +2784,7 @@
     }
 
     /* =========================================================
-       ADICIONAR ATIVIDADE MANUAL
+       ADICIONAR ATIVIDADE
        ========================================================= */
 
     function adicionarAtividadeManual() {
@@ -2784,22 +2857,20 @@
 
         item.criterio =
             criterioSelect?.value ||
-            CRITERIOS_APURACAO
-                .MOVIMENTACAO;
+            "";
 
         if (
             item.criterio ===
-            CRITERIOS_APURACAO
-                .INFORMADO
+            CRITERIOS_APURACAO.INFORMADO
         ) {
             item.mesesInformados =
                 Math.max(
-                    1,
+                    0,
                     parseInt(
                         mesesInput?.value,
                         10
                     ) ||
-                    item.mesesOriginais
+                    0
                 );
         } else {
             restaurarMesesOriginais(
@@ -2837,8 +2908,7 @@
 
         const informado =
             criterio.value ===
-            CRITERIOS_APURACAO
-                .INFORMADO;
+            CRITERIOS_APURACAO.INFORMADO;
 
         campo.hidden =
             !informado;
@@ -2848,14 +2918,12 @@
             input
         ) {
             input.value =
-                String(
-                    MESES_PADRAO_ATIVIDADE
-                );
+                "";
         }
     }
 
     /* =========================================================
-       RENDERIZAÇÃO DAS ATIVIDADES
+       RENDERIZA ATIVIDADES
        ========================================================= */
 
     function renderizarAtividades() {
@@ -2893,14 +2961,9 @@
                     atividade
                 );
 
-                /*
-                 * Nos critérios que não usam meses informados,
-                 * o valor temporário digitado é descartado.
-                 */
                 if (
                     atividade.criterio !==
-                    CRITERIOS_APURACAO
-                        .INFORMADO
+                    CRITERIOS_APURACAO.INFORMADO
                 ) {
                     restaurarMesesOriginais(
                         atividade
@@ -2914,12 +2977,16 @@
 
                 const valorExibidoMeses =
                     atividade.criterio ===
-                        CRITERIOS_APURACAO
-                            .INFORMADO
-                        ? atividade
-                            .mesesInformados
-                        : atividade
-                            .mesesOriginais;
+                        CRITERIOS_APURACAO.INFORMADO
+                        ? (
+                            Number(
+                                atividade.mesesInformados
+                            ) >
+                                0
+                                ? atividade.mesesInformados
+                                : ""
+                        )
+                        : "";
 
                 const tr =
                     document.createElement(
@@ -2938,8 +3005,7 @@
                     <td>
                         <strong>
                             ${escaparHtml(
-                    atividade
-                        .nomeAtividade
+                    atividade.nomeAtividade
                 )}
                         </strong>
 
@@ -2958,8 +3024,7 @@
                             class="notas-input-tabela atividade-criterio-editar"
                         >
                             ${gerarOpcoesCriterio(
-                        atividade
-                            .criterio
+                        atividade.criterio
                     )}
                         </select>
                     </td>
@@ -2970,17 +3035,11 @@
                             min="1"
                             max="120"
                             class="notas-input-tabela atividade-meses-editar"
-                            value="${Math.max(
-                        1,
-                        Number(
-                            valorExibidoMeses
-                        ) ||
-                        MESES_PADRAO_ATIVIDADE
+                            value="${escaparHtml(
+                        valorExibidoMeses
                     )}"
-                            ${atividade
-                        .criterio ===
-                        CRITERIOS_APURACAO
-                            .INFORMADO
+                            ${atividade.criterio ===
+                        CRITERIOS_APURACAO.INFORMADO
                         ? ""
                         : "disabled"
                     }
@@ -2988,16 +3047,32 @@
                     </td>
 
                     <td>
-                        ${calculo.meses}
+                        ${calculo.valido
+                        ? calculo.meses
+                        : "Pendente"
+                    }
                     </td>
 
                     <td>
                         <strong>
-                            ${formatarMoeda(
-                        calculo
-                            .rendaMensal
-                    )}
+                            ${calculo.valido
+                        ? formatarMoeda(
+                            calculo.rendaMensal
+                        )
+                        : "Pendente"
+                    }
                         </strong>
+
+                        ${!calculo.valido
+                        ? `
+                                <small>
+                                    ${escaparHtml(
+                            calculo.mensagem
+                        )}
+                                </small>
+                            `
+                        : ""
+                    }
                     </td>
 
                     <td class="notas-coluna-acoes">
@@ -3039,25 +3114,27 @@
                                 atividade
                             );
 
-                            /*
-                             * Sempre que entra em
-                             * "Período econômico informado",
-                             * o campo parte novamente do valor
-                             * original da atividade.
-                             *
-                             * Exemplo:
-                             * original = 12
-                             * usuário digitou 11 anteriormente
-                             * ao voltar para INFORMADO => 12
-                             */
                             if (
                                 novoCriterio ===
-                                CRITERIOS_APURACAO
-                                    .INFORMADO
+                                CRITERIOS_APURACAO.INFORMADO
                             ) {
-                                atividade.mesesInformados =
-                                    atividade
-                                        .mesesOriginais;
+                                if (
+                                    !Number.isFinite(
+                                        Number(
+                                            atividade.mesesInformados
+                                        )
+                                    ) ||
+                                    Number(
+                                        atividade.mesesInformados
+                                    ) <=
+                                    0
+                                ) {
+                                    atividade.mesesInformados =
+                                        atividade.mesesOriginais >
+                                            0
+                                            ? atividade.mesesOriginais
+                                            : MESES_PADRAO_ATIVIDADE;
+                                }
 
                                 if (inputMeses) {
                                     inputMeses.disabled =
@@ -3065,28 +3142,17 @@
 
                                     inputMeses.value =
                                         String(
-                                            atividade
-                                                .mesesOriginais
+                                            atividade.mesesInformados
                                         );
                                 }
                             } else {
-                                /*
-                                 * Meses com movimentação
-                                 * ou Intervalo completo:
-                                 *
-                                 * descarta o valor digitado
-                                 * no campo de meses informados.
-                                 */
                                 restaurarMesesOriginais(
                                     atividade
                                 );
 
                                 if (inputMeses) {
                                     inputMeses.value =
-                                        String(
-                                            atividade
-                                                .mesesOriginais
-                                        );
+                                        "";
 
                                     inputMeses.disabled =
                                         true;
@@ -3105,25 +3171,16 @@
                                 atividade
                             );
 
-                            /*
-                             * Segurança:
-                             * fora do critério informado,
-                             * o campo nunca altera o estado.
-                             */
                             if (
                                 atividade.criterio !==
-                                CRITERIOS_APURACAO
-                                    .INFORMADO
+                                CRITERIOS_APURACAO.INFORMADO
                             ) {
                                 restaurarMesesOriginais(
                                     atividade
                                 );
 
                                 this.value =
-                                    String(
-                                        atividade
-                                            .mesesOriginais
-                                    );
+                                    "";
 
                                 this.disabled =
                                     true;
@@ -3133,27 +3190,34 @@
                                 return;
                             }
 
-                            const valor =
-                                Math.max(
-                                    1,
-                                    Math.min(
-                                        120,
-                                        parseInt(
-                                            this.value,
-                                            10
-                                        ) ||
-                                        atividade
-                                            .mesesOriginais
-                                    )
+                            const informado =
+                                parseInt(
+                                    this.value,
+                                    10
                                 );
+
+                            const valor =
+                                Number.isFinite(
+                                    informado
+                                )
+                                    ? Math.max(
+                                        1,
+                                        Math.min(
+                                            120,
+                                            informado
+                                        )
+                                    )
+                                    : 0;
 
                             atividade.mesesInformados =
                                 valor;
 
                             this.value =
-                                String(
-                                    valor
-                                );
+                                valor > 0
+                                    ? String(
+                                        valor
+                                    )
+                                    : "";
 
                             atualizarResultados();
                         }
@@ -3186,19 +3250,16 @@
                 function (nota) {
                     const automatica =
                         (
-                            nota
-                                .alocacoesAutomaticas ||
+                            nota.alocacoesAutomaticas ||
                             []
                         ).some(
                             alocacao =>
-                                alocacao
-                                    .idAtividade ===
+                                alocacao.idAtividade ===
                                 id
                         );
 
                     const manual =
-                        nota
-                            .alocacaoManual
+                        nota.alocacaoManual
                             ?.idAtividade ===
                         id;
 
@@ -3242,28 +3303,30 @@
     ) {
         return [
             {
-                valor:
-                    CRITERIOS_APURACAO
-                        .MOVIMENTACAO,
-
+                valor: "",
                 texto:
-                    "Meses com movimentação"
+                    "Selecione a forma de apuração"
             },
             {
                 valor:
-                    CRITERIOS_APURACAO
-                        .INTERVALO,
+                    CRITERIOS_APURACAO.INFORMADO,
 
                 texto:
-                    "Intervalo completo"
+                    "Período econômico representado"
             },
             {
                 valor:
-                    CRITERIOS_APURACAO
-                        .INFORMADO,
+                    CRITERIOS_APURACAO.MOVIMENTACAO,
 
                 texto:
-                    "Período econômico informado"
+                    "Meses comprovados pelas notas"
+            },
+            {
+                valor:
+                    CRITERIOS_APURACAO.INTERVALO,
+
+                texto:
+                    "Intervalo entre primeira e última competência"
             }
         ]
             .map(
@@ -3335,8 +3398,7 @@
             Math.max(
                 0,
                 parseInt(
-                    quantidadeInput
-                        ?.value,
+                    quantidadeInput?.value,
                     10
                 ) ||
                 0
@@ -3363,7 +3425,8 @@
         }
 
         if (
-            valor <= 0
+            valor <=
+            0
         ) {
             exibirMensagemProcessamento(
                 "Informe um valor maior que zero.",
@@ -3392,8 +3455,7 @@
             quantidade,
 
             origem:
-                ORIGEM_PERIODO
-                    .MANUAL
+                ORIGEM_PERIODO.MANUAL
         });
 
         periodoInput.value =
@@ -3414,7 +3476,7 @@
     }
 
     /* =========================================================
-       CONSOLIDAÇÃO DOS PERÍODOS
+       CONSOLIDAÇÃO
        ========================================================= */
 
     function reconstruirPeriodos() {
@@ -3424,25 +3486,26 @@
         notasProcessadas.forEach(
             function (nota) {
                 if (
+                    nota.incluidaCalculo ===
+                    false ||
                     !nota.competencia ||
                     Number(
                         nota.valor
-                    ) <= 0
+                    ) <=
+                    0
                 ) {
                     return;
                 }
 
                 const alocacoes = [
                     ...(
-                        nota
-                            .alocacoesAutomaticas ||
+                        nota.alocacoesAutomaticas ||
                         []
                     )
                 ];
 
                 if (
-                    nota
-                        .alocacaoManual
+                    nota.alocacaoManual
                 ) {
                     alocacoes.push(
                         nota.alocacaoManual
@@ -3454,11 +3517,11 @@
                         alocacao
                     ) {
                         if (
-                            !alocacao
-                                .idAtividade ||
+                            !alocacao.idAtividade ||
                             Number(
                                 alocacao.valor
-                            ) <= 0
+                            ) <=
+                            0
                         ) {
                             return;
                         }
@@ -3478,17 +3541,14 @@
                                         chave,
 
                                     atividadeId:
-                                        alocacao
-                                            .idAtividade,
+                                        alocacao.idAtividade,
 
                                     competencia:
-                                        nota
-                                            .competencia,
+                                        nota.competencia,
 
                                     periodo:
                                         formatarCompetencia(
-                                            nota
-                                                .competencia
+                                            nota.competencia
                                         ),
 
                                     valor:
@@ -3501,8 +3561,7 @@
                                         new Set(),
 
                                     origem:
-                                        ORIGEM_PERIODO
-                                            .AUTOMATICO
+                                        ORIGEM_PERIODO.AUTOMATICO
                                 }
                             );
                         }
@@ -3523,9 +3582,7 @@
                         );
 
                         periodo.quantidade =
-                            periodo
-                                .notasIds
-                                .size;
+                            periodo.notasIds.size;
                     }
                 );
             }
@@ -3548,16 +3605,13 @@
                                 manual.id,
 
                             atividadeId:
-                                manual
-                                    .atividadeId,
+                                manual.atividadeId,
 
                             competencia:
-                                manual
-                                    .competencia,
+                                manual.competencia,
 
                             periodo:
-                                manual
-                                    .periodo,
+                                manual.periodo,
 
                             valor:
                                 0,
@@ -3569,8 +3623,7 @@
                                 new Set(),
 
                             origem:
-                                ORIGEM_PERIODO
-                                    .MANUAL
+                                ORIGEM_PERIODO.MANUAL
                         }
                     );
                 }
@@ -3588,15 +3641,13 @@
 
                 periodo.quantidade +=
                     Number(
-                        manual
-                            .quantidade
+                        manual.quantidade
                     ) ||
                     0;
 
                 if (
                     periodo.origem ===
-                    ORIGEM_PERIODO
-                        .AUTOMATICO
+                    ORIGEM_PERIODO.AUTOMATICO
                 ) {
                     periodo.origem =
                         "misto";
@@ -3642,7 +3693,8 @@
             );
 
         if (
-            competencia !== 0
+            competencia !==
+            0
         ) {
             return competencia;
         }
@@ -3657,7 +3709,7 @@
     }
 
     /* =========================================================
-       RENDERIZAÇÃO DOS PERÍODOS
+       RENDERIZA PERÍODOS
        ========================================================= */
 
     function renderizarPeriodos() {
@@ -3695,8 +3747,7 @@
             function (periodo) {
                 const atividade =
                     obterAtividadePorId(
-                        periodo
-                            .atividadeId
+                        periodo.atividadeId
                     );
 
                 const tr =
@@ -3706,16 +3757,14 @@
 
                 const podeRemover =
                     periodo.origem ===
-                    ORIGEM_PERIODO
-                        .MANUAL ||
+                    ORIGEM_PERIODO.MANUAL ||
                     periodo.origem ===
                     "misto";
 
                 tr.innerHTML = `
                     <td>
                         ${escaparHtml(
-                    atividade
-                        ?.nomeAtividade ||
+                    atividade?.nomeAtividade ||
                     "Atividade não identificada"
                 )}
                     </td>
@@ -3764,10 +3813,8 @@
                             "click",
                             function () {
                                 removerPeriodoManualDaCompetencia(
-                                    periodo
-                                        .atividadeId,
-                                    periodo
-                                        .competencia
+                                    periodo.atividadeId,
+                                    periodo.competencia
                                 );
                             }
                         );
@@ -3792,11 +3839,9 @@
                     item
                 ) {
                     return !(
-                        item
-                            .atividadeId ===
+                        item.atividadeId ===
                         atividadeId &&
-                        item
-                            .competencia ===
+                        item.competencia ===
                         competencia
                     );
                 }
@@ -3807,7 +3852,7 @@
     }
 
     /* =========================================================
-       TOTALIZADORES DOS PERÍODOS
+       TOTALIZADORES
        ========================================================= */
 
     function atualizarTotalizadoresPeriodo() {
@@ -3818,9 +3863,12 @@
             notasProcessadas
                 .filter(
                     nota =>
+                        nota.incluidaCalculo !==
+                        false &&
                         Number(
                             nota.valor
-                        ) > 0
+                        ) >
+                        0
                 )
                 .length +
             periodosManuais.reduce(
@@ -3872,7 +3920,7 @@
     }
 
     /* =========================================================
-       CONFERÊNCIA / DETALHAMENTO
+       DETALHAMENTO
        ========================================================= */
 
     function renderizarNotasProcessadas() {
@@ -3898,7 +3946,7 @@
         ) {
             tbody.innerHTML = `
                 <tr class="notas-linha-vazia">
-                    <td colspan="7">
+                    <td colspan="9">
                         Nenhuma nota fiscal processada.
                     </td>
                 </tr>
@@ -3953,8 +4001,7 @@
                         <strong>
                             ${escaparHtml(
                     nota.arquivo ||
-                    nota
-                        .arquivoOriginal ||
+                    nota.arquivoOriginal ||
                     ""
                 )}
                         </strong>
@@ -3989,9 +4036,28 @@
                     </td>
 
                     <td>
+                        ${escaparHtml(
+                    nota.naturezaOperacao ||
+                    "Não identificada"
+                )}
+
+                        ${nota.motivoElegibilidade
+                        ? `
+                                <small>
+                                    ${escaparHtml(
+                            nota.motivoElegibilidade
+                        )}
+                                </small>
+                            `
+                        : ""
+                    }
+                    </td>
+
+                    <td>
                         ${Number(
-                    nota.valor
-                ) > 0
+                        nota.valor
+                    ) >
+                        0
                         ? formatarMoeda(
                             nota.valor
                         )
@@ -4001,6 +4067,31 @@
 
                     <td class="nota-coluna-atividade">
                         ${atividadeHtml}
+                    </td>
+
+                    <td>
+                        <label class="opcao-simulacao">
+                            <input
+                                type="checkbox"
+                                class="nota-incluir-calculo"
+                                data-nota-id="${nota.id}"
+                                ${nota.incluidaCalculo !==
+                        false
+                        ? "checked"
+                        : ""
+                    }
+                            >
+
+                            <span class="opcao-simulacao-conteudo">
+                                <strong>
+                                    ${nota.incluidaCalculo !==
+                        false
+                        ? "Incluída"
+                        : "Desconsiderada"
+                    }
+                                </strong>
+                            </span>
+                        </label>
                     </td>
 
                     <td>
@@ -4015,9 +4106,44 @@
                     nota
                 );
 
+                configurarInclusaoNotaCalculo(
+                    tr,
+                    nota
+                );
+
                 tbody.appendChild(
                     tr
                 );
+            }
+        );
+    }
+
+    function configurarInclusaoNotaCalculo(
+        tr,
+        nota
+    ) {
+        const checkbox =
+            tr.querySelector(
+                ".nota-incluir-calculo"
+            );
+
+        if (!checkbox) {
+            return;
+        }
+
+        checkbox.addEventListener(
+            "change",
+            function () {
+                nota.incluidaCalculo =
+                    Boolean(
+                        this.checked
+                    );
+
+                reconstruirAtividadesAutomaticas();
+                reconstruirPeriodos();
+                renderizarAtividades();
+                renderizarNotasProcessadas();
+                atualizarResultados();
             }
         );
     }
@@ -4026,8 +4152,7 @@
         nota
     ) {
         const automaticas =
-            nota
-                .alocacoesAutomaticas ||
+            nota.alocacoesAutomaticas ||
             [];
 
         const partes = [];
@@ -4065,22 +4190,16 @@
                 <div>
                     <strong>
                         ${escaparHtml(
-                nota
-                    .alocacaoManual
-                    .nomeAtividade
+                nota.alocacaoManual.nomeAtividade
             )}
                     </strong>
 
                     <small>
                         Classificação manual
-                        ${nota
-                    .alocacaoManual
-                    .valor >
+                        ${nota.alocacaoManual.valor >
                     0
                     ? ` — ${formatarMoeda(
-                        nota
-                            .alocacaoManual
-                            .valor
+                        nota.alocacaoManual.valor
                     )}`
                     : ""
                 }
@@ -4108,8 +4227,7 @@
                                 <small>
                                     Valor pendente:
                                     ${formatarMoeda(
-                        nota
-                            .valorPendente
+                        nota.valorPendente
                     )}
                                 </small>
                             `
@@ -4190,28 +4308,23 @@
                 nota.alocacaoManual = {
                     idAtividade:
                         criarIdAtividade(
-                            interpretada
-                                .grupo,
-                            interpretada
-                                .atividade
+                            interpretada.grupo,
+                            interpretada.atividade
                         ),
 
                     grupo:
                         interpretada.grupo,
 
                     atividade:
-                        interpretada
-                            .atividade,
+                        interpretada.atividade,
 
                     nomeAtividade:
-                        interpretada
-                            .nomeAtividade,
+                        interpretada.nomeAtividade,
 
                     valor:
                         Math.max(
                             0,
-                            nota
-                                .valorPendente
+                            nota.valorPendente
                         ),
 
                     automatico:
@@ -4220,10 +4333,8 @@
 
                 garantirAtividade(
                     interpretada.grupo,
-                    interpretada
-                        .atividade,
-                    interpretada
-                        .nomeAtividade,
+                    interpretada.atividade,
+                    interpretada.nomeAtividade,
                     false
                 );
 
@@ -4242,6 +4353,31 @@
     function obterStatusNota(
         nota
     ) {
+        if (
+            nota.incluidaCalculo ===
+            false
+        ) {
+            return {
+                texto:
+                    "Desconsiderada do cálculo",
+
+                classe:
+                    "notas-status-atencao"
+            };
+        }
+
+        if (
+            nota.requerConferenciaElegibilidade
+        ) {
+            return {
+                texto:
+                    "Conferir operação",
+
+                classe:
+                    "notas-status-atencao"
+            };
+        }
+
         if (
             !nota.documentoCompleto
         ) {
@@ -4288,7 +4424,7 @@
     }
 
     /* =========================================================
-       CÁLCULO POR ATIVIDADE
+       CÁLCULO
        ========================================================= */
 
     function calcularRendaAtividade(
@@ -4302,15 +4438,15 @@
             periodosNotas
                 .filter(
                     item =>
-                        item
-                            .atividadeId ===
+                        item.atividadeId ===
                         atividade.id
                 )
                 .filter(
                     item =>
                         Number(
                             item.valor
-                        ) > 0
+                        ) >
+                        0
                 );
 
         const total =
@@ -4324,77 +4460,124 @@
                         (
                             Number(
                                 item.valor
-                            ) || 0
+                            ) ||
+                            0
                         )
                     );
                 },
                 0
             );
 
+        const mesesComNotas =
+            new Set(
+                periodos
+                    .map(
+                        item =>
+                            item.competencia
+                    )
+                    .filter(Boolean)
+            ).size;
+
+        const mesesIntervalo =
+            calcularMesesIntervalo(
+                periodos
+            );
+
         let meses = 0;
+        let valido = false;
+        let mensagem = "";
 
         switch (
         atividade.criterio
         ) {
-            case CRITERIOS_APURACAO
-                .INFORMADO:
+            case CRITERIOS_APURACAO.INFORMADO:
 
                 meses =
                     Math.max(
-                        1,
-                        Number(
-                            atividade
-                                .mesesInformados
+                        0,
+                        parseInt(
+                            atividade.mesesInformados,
+                            10
                         ) ||
-                        atividade
-                            .mesesOriginais
+                        0
                     );
+
+                valido =
+                    total <=
+                    0 ||
+                    meses >
+                    0;
+
+                mensagem =
+                    valido
+                        ? "Período econômico informado pelo usuário."
+                        : "Informe a quantidade de meses economicamente representados pela atividade.";
 
                 break;
 
-            case CRITERIOS_APURACAO
-                .INTERVALO:
+            case CRITERIOS_APURACAO.MOVIMENTACAO:
 
-                /*
-                 * O valor digitado em Meses Informados
-                 * não interfere no intervalo completo.
-                 */
                 meses =
-                    calcularMesesIntervalo(
-                        periodos
-                    );
+                    mesesComNotas;
+
+                valido =
+                    total <=
+                    0 ||
+                    meses >
+                    0;
+
+                mensagem =
+                    "Utilizando as competências efetivamente comprovadas pelas notas.";
 
                 break;
 
-            case CRITERIOS_APURACAO
-                .MOVIMENTACAO:
+            case CRITERIOS_APURACAO.INTERVALO:
+
+                meses =
+                    mesesIntervalo;
+
+                valido =
+                    total <=
+                    0 ||
+                    meses >
+                    0;
+
+                mensagem =
+                    "Utilizando o intervalo entre a primeira e a última competência.";
+
+                break;
 
             default:
 
-                /*
-                 * O valor digitado em Meses Informados
-                 * não interfere em meses com movimentação.
-                 */
                 meses =
-                    new Set(
-                        periodos.map(
-                            item =>
-                                item.competencia
-                        )
-                    ).size;
+                    0;
+
+                valido =
+                    total <=
+                    0;
+
+                mensagem =
+                    "Defina a forma de apuração conforme o período econômico representado pela documentação.";
 
                 break;
         }
 
         const rendaMensal =
-            meses > 0
-                ? total / meses
+            valido &&
+                meses >
+                0
+                ? total /
+                meses
                 : 0;
 
         return {
             total,
             meses,
-            rendaMensal
+            rendaMensal,
+            valido,
+            mensagem,
+            mesesComNotas,
+            mesesIntervalo
         };
     }
 
@@ -4452,7 +4635,7 @@
     }
 
     /* =========================================================
-       RESULTADO GERAL
+       RESULTADOS
        ========================================================= */
 
     function atualizarResultados() {
@@ -4469,20 +4652,35 @@
                 }
             );
 
-        const rendaMensal =
-            resultados.reduce(
-                function (
-                    total,
-                    item
-                ) {
-                    return (
-                        total +
-                        item
-                            .rendaMensal
-                    );
-                },
-                0
+        const atividadesComMovimento =
+            resultados.filter(
+                item =>
+                    item.total >
+                    0
             );
+
+        const atividadesPendentes =
+            atividadesComMovimento.filter(
+                item =>
+                    !item.valido
+            );
+
+        const rendaMensal =
+            atividadesPendentes.length >
+                0
+                ? 0
+                : resultados.reduce(
+                    function (
+                        total,
+                        item
+                    ) {
+                        return (
+                            total +
+                            item.rendaMensal
+                        );
+                    },
+                    0
+                );
 
         const rendaAnual =
             rendaMensal *
@@ -4494,9 +4692,12 @@
         const notasComValor =
             notasProcessadas.filter(
                 nota =>
+                    nota.incluidaCalculo !==
+                    false &&
                     Number(
                         nota.valor
-                    ) > 0
+                    ) >
+                    0
             );
 
         const quantidadeManual =
@@ -4522,25 +4723,24 @@
             notasComValor.length +
             quantidadeManual;
 
-        const atividadesComMovimento =
-            resultados.filter(
-                item =>
-                    item.total >
-                    0
-            );
-
         definirTexto(
             "resultadoRendaMensalNotas",
-            formatarMoeda(
-                rendaMensal
-            )
+            atividadesPendentes.length >
+                0
+                ? "Pendente"
+                : formatarMoeda(
+                    rendaMensal
+                )
         );
 
         definirTexto(
             "resultadoRendaAnualNotas",
-            formatarMoeda(
-                rendaAnual
-            )
+            atividadesPendentes.length >
+                0
+                ? "Pendente"
+                : formatarMoeda(
+                    rendaAnual
+                )
         );
 
         definirTexto(
@@ -4553,8 +4753,7 @@
         definirTexto(
             "resultadoQuantidadeAtividades",
             String(
-                atividadesComMovimento
-                    .length
+                atividadesComMovimento.length
             )
         );
 
@@ -4580,12 +4779,20 @@
                     total,
                     nota
                 ) {
+                    if (
+                        nota.incluidaCalculo ===
+                        false
+                    ) {
+                        return total;
+                    }
+
                     return (
                         total +
                         (
                             Number(
                                 nota.valor
-                            ) || 0
+                            ) ||
+                            0
                         )
                     );
                 },
@@ -4603,7 +4810,8 @@
                         (
                             Number(
                                 item.valor
-                            ) || 0
+                            ) ||
+                            0
                         )
                     );
                 },
@@ -4617,7 +4825,7 @@
     }
 
     /* =========================================================
-       RESUMO DOS CRITÉRIOS
+       RESUMO CRITÉRIOS
        ========================================================= */
 
     function atualizarResumoCriterios(
@@ -4656,10 +4864,38 @@
             return;
         }
 
+        const pendentes =
+            comMovimento.filter(
+                item =>
+                    !item.valido
+            );
+
         container.innerHTML = `
             <strong>
                 Critérios de apuração
             </strong>
+
+            ${pendentes.length >
+                0
+                ? `
+                    <span>
+                        <strong>
+                            Atenção:
+                        </strong>
+
+                        ${pendentes.length}
+                        atividade(s) possuem valores, mas ainda não tiveram
+                        o período econômico definido. A renda permanece
+                        pendente até a definição do critério.
+                    </span>
+                `
+                : `
+                    <span>
+                        Todas as atividades com movimentação possuem
+                        período econômico definido.
+                    </span>
+                `
+            }
 
             ${comMovimento
                 .map(
@@ -4668,19 +4904,18 @@
                             <span>
                                 <strong>
                                     ${escaparHtml(
-                            item
-                                .atividade
-                                .nomeAtividade
+                            item.atividade.nomeAtividade
                         )}
                                 </strong>
                                 —
-                                ${item.meses}
-                                mês(es)
-                                —
-                                ${formatarMoeda(
-                            item
-                                .rendaMensal
-                        )}/mês
+                                ${item.valido
+                                ? `${item.meses} mês(es) — ${formatarMoeda(
+                                    item.rendaMensal
+                                )}/mês`
+                                : escaparHtml(
+                                    item.mensagem
+                                )
+                            }
                             </span>
                         `;
                     }
@@ -4690,7 +4925,7 @@
     }
 
     /* =========================================================
-       SELECT ATIVIDADE DO PERÍODO
+       SELECT PERÍODO
        ========================================================= */
 
     function atualizarSelectAtividadePeriodo() {
@@ -4713,8 +4948,7 @@
             function (atividade) {
                 const option =
                     new Option(
-                        atividade
-                            .nomeAtividade,
+                        atividade.nomeAtividade,
                         atividade.id
                     );
 
@@ -4732,10 +4966,6 @@
             }
         );
     }
-
-    /* =========================================================
-       BUSCA DE ATIVIDADE
-       ========================================================= */
 
     function obterAtividadePorId(
         id
@@ -4838,22 +5068,19 @@
 
         if (meses) {
             meses.value =
-                String(
-                    MESES_PADRAO_ATIVIDADE
-                );
+                "";
         }
 
         if (criterio) {
             criterio.value =
-                CRITERIOS_APURACAO
-                    .MOVIMENTACAO;
+                "";
         }
 
         inicializarSeletoresAtividade();
     }
 
     /* =========================================================
-       STATUS DE PROCESSAMENTO
+       STATUS
        ========================================================= */
 
     function mostrarStatusProcessamento(
@@ -4970,8 +5197,10 @@
                 );
 
             if (
-                mes >= 1 &&
-                mes <= 12
+                mes >=
+                1 &&
+                mes <=
+                12
             ) {
                 const competencia =
                     `${ano}-${String(
@@ -5009,8 +5238,10 @@
                 );
 
             if (
-                mes >= 1 &&
-                mes <= 12
+                mes >=
+                1 &&
+                mes <=
+                12
             ) {
                 const competencia =
                     `${ano}-${String(
@@ -5127,7 +5358,8 @@
 
         return (
             `${nomes[
-            parsed.mes - 1
+            parsed.mes -
+            1
             ]}/${parsed.ano}`
         );
     }
@@ -5157,8 +5389,10 @@
             );
 
         if (
-            mes < 1 ||
-            mes > 12
+            mes <
+            1 ||
+            mes >
+            12
         ) {
             return null;
         }
@@ -5318,7 +5552,8 @@
 
         if (
             tamanho <
-            1024 * 1024
+            1024 *
+            1024
         ) {
             return (
                 `${(
@@ -5384,14 +5619,10 @@
     function gerarId() {
         if (
             window.crypto &&
-            typeof window
-                .crypto
-                .randomUUID ===
+            typeof window.crypto.randomUUID ===
             "function"
         ) {
-            return window
-                .crypto
-                .randomUUID();
+            return window.crypto.randomUUID();
         }
 
         return (

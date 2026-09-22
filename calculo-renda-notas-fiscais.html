@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
@@ -11,7 +10,6 @@
     </title>
 
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -90,6 +88,73 @@
                     A intervenção humana fica reservada para documentos
                     antigos, ilegíveis ou quando os dados do próprio
                     documento não forem suficientes.
+                </span>
+
+            </div>
+        </section>
+
+        <!-- =================================================
+             REGRAS IC-36787
+             ================================================= -->
+
+        <section class="notas-card notas-card-largura-total" id="cardRegrasCalculoNotas">
+
+            <div class="notas-titulo-secao">
+
+                <span class="categoria-etiqueta">
+                    Orientações
+                </span>
+
+                <h2>
+                    Regras para Apuração da Renda
+                </h2>
+
+                <p>
+                    A apuração segue a metodologia orientativa da IC-36787
+                    para comprovação de renda agropecuária por notas fiscais.
+                </p>
+
+            </div>
+
+            <div class="notas-aviso-info">
+
+                <strong>
+                    O resultado deve representar a renda mensal
+                </strong>
+
+                <span>
+                    O valor informado no cadastro deve representar a renda mensal
+                    do produtor. A renda anual corresponde à renda mensal multiplicada
+                    por 12.
+                </span>
+
+                <span>
+                    A quantidade de notas fiscais apresentadas não corresponde,
+                    necessariamente, à quantidade de meses utilizados no cálculo.
+                </span>
+
+                <span>
+                    Para cada atividade, deve ser identificado o período econômico
+                    efetivamente representado pela documentação, considerando a atividade,
+                    o ciclo produtivo e a forma habitual de comercialização.
+                </span>
+
+                <span>
+                    Cada atividade econômica deve ser apurada separadamente.
+                    Ao final, as rendas mensais apuradas para todas as atividades
+                    são somadas.
+                </span>
+
+                <span>
+                    Culturas anuais ou safras podem representar 12 meses mesmo quando
+                    a comercialização ocorrer em uma única nota. Atividades recorrentes
+                    podem utilizar a média dos meses efetivamente comprovados.
+                </span>
+
+                <span>
+                    Notas de devolução, documentos sem dados suficientes e situações
+                    fiscais que exijam conferência não são incluídos automaticamente
+                    no cálculo sem revisão.
                 </span>
 
             </div>
@@ -222,26 +287,40 @@
                     </label>
 
                     <select id="criterioAtividadeNotas">
-                        <option value="movimentacao">
-                            Meses com movimentação
-                        </option>
-
-                        <option value="intervalo">
-                            Intervalo completo
+                        <option value="" selected>
+                            Selecione a forma de apuração
                         </option>
 
                         <option value="informado">
-                            Período econômico informado
+                            Período econômico representado
+                        </option>
+
+                        <option value="movimentacao">
+                            Meses comprovados pelas notas
+                        </option>
+
+                        <option value="intervalo">
+                            Intervalo entre primeira e última competência
                         </option>
                     </select>
+
+                    <small>
+                        O divisor deve representar o período econômico da atividade.
+                        Não utilize automaticamente a quantidade de notas como quantidade de meses.
+                    </small>
                 </div>
 
                 <div class="notas-campo" id="campoMesesAtividadeNotas" hidden>
                     <label for="mesesAtividadeNotas">
-                        Meses
+                        Meses representados
                     </label>
 
-                    <input id="mesesAtividadeNotas" type="number" min="1" max="120" value="12">
+                    <input id="mesesAtividadeNotas" type="number" min="1" max="120" value="" placeholder="Ex.: 12">
+
+                    <small>
+                        Informe a quantidade de meses economicamente representados
+                        pela documentação da atividade.
+                    </small>
                 </div>
 
             </div>
@@ -524,13 +603,6 @@
 
             </div>
 
-            <!--
-                ESTE AVISO COMEÇA OCULTO.
-
-                O JS só exibe quando realmente existe
-                documento antigo/ilegível/incompleto.
-            -->
-
             <div id="avisoRevisaoHumanaNotas" class="notas-aviso-info" hidden>
                 <strong>
                     Revisão humana necessária
@@ -551,15 +623,17 @@
                             <th>Data</th>
                             <th>Número</th>
                             <th>Emitente</th>
+                            <th>Natureza da Operação</th>
                             <th>Valor</th>
                             <th>Atividade</th>
+                            <th>Incluir no Cálculo</th>
                             <th>Status</th>
                         </tr>
                     </thead>
 
                     <tbody id="tabelaDetalhamentoNotas">
                         <tr class="notas-linha-vazia">
-                            <td colspan="7">
+                            <td colspan="9">
                                 Nenhuma nota fiscal processada.
                             </td>
                         </tr>

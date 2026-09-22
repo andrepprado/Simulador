@@ -49,18 +49,29 @@
        ========================================================= */
 
     function identificarModelo(texto) {
-        const t = comparacao(texto);
+        const t =
+            comparacao(
+                texto
+            );
 
         if (
-            t.includes("NOTA FISCAL DE PRODUTOR")
+            t.includes(
+                "NOTA FISCAL DE PRODUTOR"
+            )
         ) {
             return MODELOS.PRODUTOR_ANTIGA;
         }
 
         if (
-            t.includes("DANFE") ||
-            t.includes("D A N F E") ||
-            t.includes("CHAVE DE ACESSO") ||
+            t.includes(
+                "DANFE"
+            ) ||
+            t.includes(
+                "D A N F E"
+            ) ||
+            t.includes(
+                "CHAVE DE ACESSO"
+            ) ||
             t.includes(
                 "DOCUMENTO AUXILIAR DA NOTA FISCAL ELETRONICA"
             )
@@ -69,8 +80,12 @@
         }
 
         if (
-            t.includes("NFS-E") ||
-            t.includes("NFSE") ||
+            t.includes(
+                "NFS-E"
+            ) ||
+            t.includes(
+                "NFSE"
+            ) ||
             t.includes(
                 "NOTA FISCAL DE SERVICOS ELETRONICA"
             )
@@ -82,11 +97,14 @@
     }
 
     /* =========================================================
-       QUALIDADE DO TEXTO
+       QUALIDADE
        ========================================================= */
 
     function avaliarQualidadeTexto(texto) {
-        const t = comparacao(texto);
+        const t =
+            comparacao(
+                texto
+            );
 
         if (!t) {
             return 0;
@@ -117,28 +135,39 @@
                         item[0]
                     )
                 ) {
-                    score += item[1];
+                    score +=
+                        item[1];
                 }
             }
         );
 
         if (
-            extrairChave(texto)
-                .length ===
+            extrairChave(
+                texto
+            ).length ===
             TAMANHO_CHAVE_NFE
         ) {
             score += 18;
         }
 
-        if (t.length > 300) {
+        if (
+            t.length >
+            300
+        ) {
             score += 5;
         }
 
-        if (t.length > 800) {
+        if (
+            t.length >
+            800
+        ) {
             score += 5;
         }
 
-        if (t.length > 1500) {
+        if (
+            t.length >
+            1500
+        ) {
             score += 5;
         }
 
@@ -149,7 +178,7 @@
     }
 
     /* =========================================================
-       XML - HELPERS
+       XML HELPERS
        ========================================================= */
 
     function locais(
@@ -158,16 +187,14 @@
     ) {
         if (
             !elemento ||
-            typeof elemento
-                .getElementsByTagName !==
+            typeof elemento.getElementsByTagName !==
             "function"
         ) {
             return [];
         }
 
         return Array.from(
-            elemento
-                .getElementsByTagName("*")
+            elemento.getElementsByTagName("*")
         ).filter(
             function (item) {
                 return (
@@ -175,7 +202,8 @@
                     item.nodeName
                         .split(":")
                         .pop()
-                ) === nome;
+                ) ===
+                    nome;
             }
         );
     }
@@ -209,7 +237,7 @@
     }
 
     /* =========================================================
-       XML - INTERPRETAÇÃO NF-E
+       XML NF-E
        ========================================================= */
 
     function interpretarXmlNfe(
@@ -226,7 +254,8 @@
         if (
             doc.getElementsByTagName(
                 "parsererror"
-            ).length > 0
+            ).length >
+            0
         ) {
             throw new Error(
                 "XML inválido."
@@ -370,6 +399,12 @@
                 "xMotivo"
             );
 
+        const naturezaOperacao =
+            xmlTexto(
+                ide,
+                "natOp"
+            );
+
         const itens =
             locais(
                 infNFe,
@@ -481,6 +516,9 @@
             motivoStatus:
                 motivoStatus,
 
+            naturezaOperacao:
+                naturezaOperacao,
+
             data:
                 data,
 
@@ -507,10 +545,6 @@
         });
     }
 
-    /* =========================================================
-       DATA XML
-       ========================================================= */
-
     function converterDataXml(
         valor
     ) {
@@ -536,7 +570,7 @@
     }
 
     /* =========================================================
-       INTERPRETAÇÃO TEXTO / DANFE / OCR
+       INTERPRETAÇÃO TEXTO
        ========================================================= */
 
     function interpretar(
@@ -584,6 +618,11 @@
                 texto
             );
 
+        const naturezaOperacao =
+            extrairNaturezaOperacao(
+                texto
+            );
+
         const itens =
             extrairItens(
                 texto,
@@ -620,6 +659,9 @@
             motivoStatus:
                 "",
 
+            naturezaOperacao:
+                naturezaOperacao,
+
             data:
                 data,
 
@@ -647,7 +689,186 @@
     }
 
     /* =========================================================
-       MONTA RESULTADO
+       NATUREZA
+       ========================================================= */
+
+    function extrairNaturezaOperacao(
+        texto
+    ) {
+        const linhas =
+            String(
+                texto || ""
+            )
+                .replace(/\r\n/g, "\n")
+                .replace(/\r/g, "\n")
+                .split("\n")
+                .map(
+                    function (linha) {
+                        return linha
+                            .replace(
+                                /\s+/g,
+                                " "
+                            )
+                            .trim();
+                    }
+                );
+
+        function candidatoValido(
+            valor
+        ) {
+            const bruto =
+                String(
+                    valor || ""
+                ).trim();
+
+            const normalizado =
+                comparacao(
+                    bruto
+                );
+
+            if (
+                !bruto ||
+                !normalizado ||
+                /^\d+$/.test(
+                    normalizado.replace(
+                        /\s+/g,
+                        ""
+                    )
+                )
+            ) {
+                return "";
+            }
+
+            if (
+                normalizado.includes(
+                    "NATUREZA DA OPERACAO"
+                ) ||
+                normalizado.includes(
+                    "PROTOCOLO DE AUTORIZACAO"
+                ) ||
+                normalizado.includes(
+                    "INSCRICAO ESTADUAL"
+                ) ||
+                normalizado.includes(
+                    "CNPJ CPF"
+                ) ||
+                normalizado.includes(
+                    "CHAVE DE ACESSO"
+                )
+            ) {
+                return "";
+            }
+
+            return bruto;
+        }
+
+        for (
+            let i = 0;
+            i <
+            linhas.length;
+            i++
+        ) {
+            const normalizada =
+                comparacao(
+                    linhas[i]
+                );
+
+            if (
+                !normalizada.includes(
+                    "NATUREZA DA OPERACAO"
+                )
+            ) {
+                continue;
+            }
+
+            const mesmaLinha =
+                linhas[i]
+                    .replace(
+                        /NATUREZA\s+DA\s+OPERA[CÇ][AÃ]O\s*[:\-]?/i,
+                        ""
+                    )
+                    .trim();
+
+            const candidatoMesmaLinha =
+                candidatoValido(
+                    mesmaLinha
+                );
+
+            if (candidatoMesmaLinha) {
+                return candidatoMesmaLinha;
+            }
+
+            const anteriores = [
+                linhas[i - 1],
+                linhas[i - 2]
+            ];
+
+            const posteriores = [
+                linhas[i + 1],
+                linhas[i + 2]
+            ];
+
+            const candidatos =
+                anteriores
+                    .concat(
+                        posteriores
+                    )
+                    .map(
+                        candidatoValido
+                    )
+                    .filter(Boolean);
+
+            const prioritario =
+                candidatos.find(
+                    function (item) {
+                        const c =
+                            comparacao(
+                                item
+                            );
+
+                        return (
+                            c.includes(
+                                "VENDA"
+                            ) ||
+                            c.includes(
+                                "DEVOLUCAO"
+                            ) ||
+                            c.includes(
+                                "REMESSA"
+                            ) ||
+                            c.includes(
+                                "RETORNO"
+                            ) ||
+                            c.includes(
+                                "TRANSFERENCIA"
+                            ) ||
+                            c.includes(
+                                "ENTRADA"
+                            ) ||
+                            c.includes(
+                                "SAIDA"
+                            )
+                        );
+                    }
+                );
+
+            if (prioritario) {
+                return prioritario;
+            }
+
+            if (
+                candidatos.length >
+                0
+            ) {
+                return candidatos[0];
+            }
+        }
+
+        return "";
+    }
+
+    /* =========================================================
+       RESULTADO
        ========================================================= */
 
     function montarResultado(
@@ -684,7 +905,8 @@
         const possuiValor =
             Number(
                 dados.valor
-            ) > 0;
+            ) >
+            0;
 
         const chave =
             normalizarChaveAcesso(
@@ -770,12 +992,6 @@
             atividadesAutomaticas.length >
             0;
 
-        /*
-         * Só atividades automáticas são efetivamente
-         * utilizadas na alocação automática.
-         *
-         * Sugestões continuam em atividadesSugeridas.
-         */
         const atividadesParaAlocacao =
             atividades.filter(
                 function (item) {
@@ -795,6 +1011,37 @@
                 itens,
                 dados.valor
             );
+
+        const naturezaOperacao =
+            String(
+                dados.naturezaOperacao ||
+                ""
+            ).trim();
+
+        const elegibilidade =
+            analisarElegibilidadeCalculo({
+                naturezaOperacao:
+                    naturezaOperacao,
+
+                statusAutorizacao:
+                    dados.statusAutorizacao ||
+                    "",
+
+                motivoStatus:
+                    dados.motivoStatus ||
+                    "",
+
+                documentoCompleto:
+                    documentoCompleto,
+
+                modelo:
+                    dados.modelo,
+
+                origemEstruturada:
+                    Boolean(
+                        dados.origemEstruturada
+                    )
+            });
 
         const status =
             definirStatusDocumento({
@@ -848,6 +1095,18 @@
             motivoStatus:
                 dados.motivoStatus ||
                 "",
+
+            naturezaOperacao:
+                naturezaOperacao,
+
+            elegivelCalculo:
+                elegibilidade.elegivel,
+
+            requerConferenciaElegibilidade:
+                elegibilidade.requerConferencia,
+
+            motivoElegibilidade:
+                elegibilidade.motivo,
 
             data:
                 possuiData
@@ -903,9 +1162,6 @@
             requerConferenciaDocumento:
                 requerConferenciaDocumento,
 
-            /*
-             * Compatibilidade com versões anteriores.
-             */
             requerConferencia:
                 requerConferenciaDocumento,
 
@@ -921,11 +1177,158 @@
             qualidadeTexto:
                 Number(
                     dados.qualidadeTexto
-                ) || 0,
+                ) ||
+                0,
 
             texto:
                 dados.texto ||
                 ""
+        };
+    }
+
+    /* =========================================================
+       ELEGIBILIDADE
+       ========================================================= */
+
+    function analisarElegibilidadeCalculo(
+        dados
+    ) {
+        const natureza =
+            comparacao(
+                dados.naturezaOperacao ||
+                ""
+            );
+
+        const motivoStatus =
+            comparacao(
+                dados.motivoStatus ||
+                ""
+            );
+
+        const statusAutorizacao =
+            String(
+                dados.statusAutorizacao ||
+                ""
+            ).trim();
+
+        if (
+            natureza.includes(
+                "DEVOLUCAO"
+            )
+        ) {
+            return {
+                elegivel:
+                    false,
+
+                requerConferencia:
+                    true,
+
+                motivo:
+                    "Nota fiscal de devolução. Documento excluído do cálculo por padrão."
+            };
+        }
+
+        if (
+            natureza.includes(
+                "REMESSA"
+            ) ||
+            natureza.includes(
+                "RETORNO"
+            ) ||
+            natureza.includes(
+                "TRANSFERENCIA"
+            )
+        ) {
+            return {
+                elegivel:
+                    false,
+
+                requerConferencia:
+                    true,
+
+                motivo:
+                    "Operação sem caracterização automática de venda da produção. Documento excluído do cálculo por padrão e disponível para revisão manual."
+            };
+        }
+
+        if (
+            motivoStatus.includes(
+                "CANCEL"
+            ) ||
+            motivoStatus.includes(
+                "DENEG"
+            ) ||
+            motivoStatus.includes(
+                "INUTIL"
+            )
+        ) {
+            return {
+                elegivel:
+                    false,
+
+                requerConferencia:
+                    true,
+
+                motivo:
+                    "Situação fiscal incompatível com inclusão automática no cálculo."
+            };
+        }
+
+        if (
+            dados.origemEstruturada &&
+            statusAutorizacao &&
+            statusAutorizacao !==
+            "100"
+        ) {
+            return {
+                elegivel:
+                    false,
+
+                requerConferencia:
+                    true,
+
+                motivo:
+                    `NF-e com status de autorização ${statusAutorizacao}. Conferência necessária antes da inclusão.`
+            };
+        }
+
+        if (
+            !dados.documentoCompleto
+        ) {
+            return {
+                elegivel:
+                    false,
+
+                requerConferencia:
+                    true,
+
+                motivo:
+                    "Documento com data, número ou valor incompleto. Conferência necessária."
+            };
+        }
+
+        if (!natureza) {
+            return {
+                elegivel:
+                    true,
+
+                requerConferencia:
+                    true,
+
+                motivo:
+                    "Natureza da operação não identificada automaticamente. Conferir o documento."
+            };
+        }
+
+        return {
+            elegivel:
+                true,
+
+            requerConferencia:
+                false,
+
+            motivo:
+                "Documento disponível para apuração."
         };
     }
 
@@ -937,8 +1340,7 @@
         dados
     ) {
         if (
-            dados
-                .requerConferenciaDocumento
+            dados.requerConferenciaDocumento
         ) {
             return "Revisar documento";
         }
@@ -969,7 +1371,7 @@
     }
 
     /* =========================================================
-       ALOCAÇÃO AUTOMÁTICA
+       ALOCAÇÃO
        ========================================================= */
 
     function montarAlocacoesAtividade(
@@ -981,7 +1383,8 @@
             !Array.isArray(
                 atividades
             ) ||
-            atividades.length === 0
+            atividades.length ===
+            0
         ) {
             return [];
         }
@@ -989,66 +1392,53 @@
         const valorTotalNota =
             Number(
                 valorNota
-            ) || 0;
+            ) ||
+            0;
 
-        /*
-         * Uma única atividade:
-         * recebe o valor integral da NF.
-         */
         if (
-            atividades.length === 1
+            atividades.length ===
+            1
         ) {
             return [{
                 grupo:
                     atividades[0].grupo,
 
                 atividade:
-                    atividades[0]
-                        .atividade,
+                    atividades[0].atividade,
 
                 nomeAtividade:
-                    atividades[0]
-                        .nomeAtividade,
+                    atividades[0].nomeAtividade,
 
                 valor:
                     valorTotalNota,
 
                 valorProdutos:
                     Number(
-                        atividades[0]
-                            .valorProdutos
-                    ) || 0,
+                        atividades[0].valorProdutos
+                    ) ||
+                    0,
 
                 confianca:
                     Number(
-                        atividades[0]
-                            .confianca
-                    ) || 0,
+                        atividades[0].confianca
+                    ) ||
+                    0,
 
                 automatico:
-                    atividades[0]
-                        .automatico ===
+                    atividades[0].automatico ===
                     true,
 
                 evidencias:
                     Array.isArray(
-                        atividades[0]
-                            .evidencias
+                        atividades[0].evidencias
                     )
                         ? [
-                            ...atividades[0]
-                                .evidencias
+                            ...atividades[0].evidencias
                         ]
                         : []
             }];
         }
 
-        /*
-         * Mais de uma atividade:
-         *
-         * Usa os valores dos produtos para preservar
-         * o rateio real entre as atividades.
-         */
         const totalProdutos =
             atividades.reduce(
                 function (
@@ -1060,26 +1450,25 @@
                         (
                             Number(
                                 item.valorProdutos
-                            ) || 0
+                            ) ||
+                            0
                         )
                     );
                 },
                 0
             );
 
-        /*
-         * Se todos os valores de produto foram extraídos
-         * corretamente, rateia usando-os.
-         */
         if (
-            totalProdutos > 0
+            totalProdutos >
+            0
         ) {
             return atividades.map(
                 function (item) {
                     const valorProdutos =
                         Number(
                             item.valorProdutos
-                        ) || 0;
+                        ) ||
+                        0;
 
                     return {
                         grupo:
@@ -1104,7 +1493,8 @@
                         confianca:
                             Number(
                                 item.confianca
-                            ) || 0,
+                            ) ||
+                            0,
 
                         automatico:
                             item.automatico ===
@@ -1115,8 +1505,7 @@
                                 item.evidencias
                             )
                                 ? [
-                                    ...item
-                                        .evidencias
+                                    ...item.evidencias
                                 ]
                                 : []
                     };
@@ -1124,15 +1513,11 @@
             );
         }
 
-        /*
-         * Sem valorProduto confiável não divide a nota
-         * arbitrariamente.
-         */
         return [];
     }
 
     /* =========================================================
-       EXTRAÇÃO DO NÚMERO DA NF
+       NÚMERO
        ========================================================= */
 
     function extrairNumero(
@@ -1152,22 +1537,8 @@
                     /\bN[º°]\s*[:.-]?\s*0*(\d{1,12})\b/i
                 ]
                 : [
-                    /*
-                     * Exemplo:
-                     * Nº 10 - FL 1/1
-                     */
                     /N[º°O.]?\s*0*(\d{1,12})\s*-\s*FL\b/i,
-
-                    /*
-                     * Exemplo:
-                     * Nº 000000010
-                     * SÉRIE 1
-                     */
                     /N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})[\s\S]{0,40}?S[ÉE]RIE/i,
-
-                    /*
-                     * NF-e Nº ...
-                     */
                     /NF-?E[\s\S]{0,80}?N[º°O.]?\s*[:.-]?\s*0*(\d{1,12})/i
                 ];
 
@@ -1252,7 +1623,7 @@
     }
 
     /* =========================================================
-       CHAVE DE ACESSO
+       CHAVE
        ========================================================= */
 
     function extrairChave(
@@ -1263,10 +1634,6 @@
                 texto || ""
             );
 
-        /*
-         * Prioridade:
-         * chave próxima ao rótulo oficial.
-         */
         const proximaRotulo =
             fonte.match(
                 /CHAVE\s+DE\s+ACESSO[\s\S]{0,180}?((?:\d[\s.\-]*){44})/i
@@ -1288,10 +1655,6 @@
             }
         }
 
-        /*
-         * Fallback:
-         * procura qualquer grupo com 44 dígitos.
-         */
         const candidatos =
             fonte.match(
                 /(?:\d[\s.\-]*){44}/g
@@ -1336,7 +1699,7 @@
     }
 
     /* =========================================================
-       DATA DE EMISSÃO
+       DATA
        ========================================================= */
 
     function extrairData(
@@ -1347,16 +1710,9 @@
                 texto || ""
             );
 
-        /*
-         * Exemplo real:
-         *
-         * Emissão: 09/04/2026 Destinatário: ...
-         */
         const padroes = [
             /\bEMISS[AÃ]O\s*:\s*(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
-
             /DATA\s+(?:DA|DE)\s+EMISS[AÃ]O[\s:.-]{0,20}(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i,
-
             /DATA\s+(?:DA|DE)\s+EMISS[AÃ]O[\s\S]{0,60}?(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})/i
         ];
 
@@ -1387,12 +1743,6 @@
             }
         }
 
-        /*
-         * No texto extraído pelo PDF.js pode ocorrer:
-         *
-         * 09/04/2026
-         * Data da Emissão
-         */
         const valorAntesRotulo =
             fonte.match(
                 /(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})[\s\S]{0,50}?DATA\s+(?:DA|DE)\s+EMISS[AÃ]O/i
@@ -1415,10 +1765,6 @@
             }
         }
 
-        /*
-         * Último fallback:
-         * primeira data realmente válida.
-         */
         const datas =
             fonte.match(
                 /\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g
@@ -1458,12 +1804,6 @@
                 texto || ""
             );
 
-        /*
-         * Exemplo real:
-         *
-         * Recebemos de CASSIO FERREIRA DA CRUZ VIEIRA
-         * os produtos da Nota Fiscal...
-         */
         const recebido =
             fonte.match(
                 /RECEBEMOS\s+DE\s+(.+?)\s+OS\s+PRODUTOS/i
@@ -1503,11 +1843,6 @@
             );
         }
 
-        /*
-         * DANFE frequentemente coloca a razão social
-         * imediatamente antes do endereço/fone.
-         * Não tentamos inferir além disso para evitar falso positivo.
-         */
         return "";
     }
 
@@ -1533,7 +1868,7 @@
     }
 
     /* =========================================================
-       VALOR TOTAL DA NOTA
+       VALOR
        ========================================================= */
 
     function extrairValor(
@@ -1543,20 +1878,6 @@
             String(
                 texto || ""
             );
-
-        /*
-         * =====================================================
-         * 1. CABEÇALHO DO DANFE
-         *
-         * Exemplo real dos PDFs:
-         *
-         * Emissão: 09/04/2026
-         * Destinatário: ...
-         * Valor: R$81.505,56
-         *
-         * É a fonte preferencial.
-         * =====================================================
-         */
 
         const valorCabecalho =
             fonte.match(
@@ -1572,30 +1893,18 @@
                 );
 
             if (
-                valor > 0
+                valor >
+                0
             ) {
                 return valor;
             }
         }
 
-        /*
-         * =====================================================
-         * 2. RÓTULO ANTES DO VALOR
-         *
-         * Valor Total da Nota
-         * 81.505,56
-         * =====================================================
-         */
-
         const padroesRotuloAntes = [
             /VALOR\s+TOTAL\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
-
             /VALOR\s+TOTAL\s+(?:DA\s+)?NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
-
             /TOTAL\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
-
             /VALOR\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i,
-
             /V\.?\s*TOTAL\s+DA\s+NOTA[\s\S]{0,120}?(?:R\$\s*)?([\d.]+,\d{2})/i
         ];
 
@@ -1617,29 +1926,17 @@
                     );
 
                 if (
-                    valor > 0
+                    valor >
+                    0
                 ) {
                     return valor;
                 }
             }
         }
 
-        /*
-         * =====================================================
-         * 3. VALOR ANTES DO RÓTULO
-         *
-         * Formato real do PDF.js:
-         *
-         * 81.505,56
-         * Valor Total da Nota
-         * =====================================================
-         */
-
         const padroesValorAntes = [
             /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?VALOR\s+TOTAL\s+DA\s+NOTA/i,
-
             /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?VALOR\s+TOTAL\s+(?:DA\s+)?NOTA/i,
-
             /(?:R\$\s*)?([\d.]+,\d{2})[\s\S]{0,60}?TOTAL\s+DA\s+NOTA/i
         ];
 
@@ -1661,20 +1958,13 @@
                     );
 
                 if (
-                    valor > 0
+                    valor >
+                    0
                 ) {
                     return valor;
                 }
             }
         }
-
-        /*
-         * =====================================================
-         * 4. VALOR TOTAL DOS PRODUTOS
-         *
-         * Fallback.
-         * =====================================================
-         */
 
         const produtoRotuloAntes =
             fonte.match(
@@ -1690,7 +1980,8 @@
                 );
 
             if (
-                valor > 0
+                valor >
+                0
             ) {
                 return valor;
             }
@@ -1710,7 +2001,8 @@
                 );
 
             if (
-                valor > 0
+                valor >
+                0
             ) {
                 return valor;
             }
@@ -1720,7 +2012,7 @@
     }
 
     /* =========================================================
-       ITENS DO DANFE / OCR
+       ITENS
        ========================================================= */
 
     function extrairItens(
@@ -1755,14 +2047,6 @@
 
         const itens = [];
 
-        /*
-         * Primeiro tenta interpretar linhas completas,
-         * que é exatamente o formato dos PDFs enviados:
-         *
-         * 013 BOVINO FEMEA DE 9 A 12 MESES
-         * 01022990 040 5101 CB 31,0000
-         * 1.771,86000 54.927,66 ...
-         */
         linhas.forEach(
             function (linha) {
                 const item =
@@ -1778,21 +2062,15 @@
             }
         );
 
-        /*
-         * Se as linhas já trouxeram itens completos,
-         * não usa a varredura genérica.
-         */
         if (
-            itens.length > 0
+            itens.length >
+            0
         ) {
             return removerItensDuplicados(
                 itens
             );
         }
 
-        /*
-         * Fallback para OCR/texto fragmentado.
-         */
         for (
             let i = 0;
             i <
@@ -1850,10 +2128,6 @@
         );
     }
 
-    /* =========================================================
-       LINHA COMPLETA DO DANFE
-       ========================================================= */
-
     function interpretarLinhaProdutoDanfe(
         linhaOriginal
     ) {
@@ -1866,21 +2140,6 @@
                     " "
                 )
                 .trim();
-
-        /*
-         * Estrutura típica:
-         *
-         * código
-         * descrição
-         * NCM
-         * CST
-         * CFOP
-         * unidade
-         * quantidade
-         * valor unitário
-         * valor total
-         * impostos...
-         */
 
         const match =
             linha.match(
@@ -1979,10 +2238,6 @@
         };
     }
 
-    /* =========================================================
-       BLOCO FRAGMENTADO DO DANFE
-       ========================================================= */
-
     function interpretarBlocoProdutoDanfe(
         bloco,
         ncm
@@ -1998,9 +2253,7 @@
                 ncm
             );
 
-        if (
-            !descricao
-        ) {
+        if (!descricao) {
             return null;
         }
 
@@ -2082,7 +2335,8 @@
                 regex.exec(
                     linha
                 )
-            ) !== null
+            ) !==
+            null
         ) {
             const candidato =
                 normalizarNcm(
@@ -2140,8 +2394,10 @@
             );
 
         return (
-            capitulo >= 1 &&
-            capitulo <= 97
+            capitulo >=
+            1 &&
+            capitulo <=
+            97
         );
     }
 
@@ -2163,7 +2419,7 @@
     }
 
     /* =========================================================
-       CONFIRMA REGIÃO DE PRODUTO
+       REGIÃO DE PRODUTO
        ========================================================= */
 
     function pareceLinhaProdutoNfe(
@@ -2224,9 +2480,7 @@
                 ) {
                     return true;
                 }
-            } catch (
-            erro
-            ) {
+            } catch (erro) {
                 console.warn(
                     "Falha ao validar NCM.",
                     erro
@@ -2237,10 +2491,6 @@
         return false;
     }
 
-    /* =========================================================
-       BLOCO DE ITEM
-       ========================================================= */
-
     function obterBlocoItem(
         linhas,
         indice
@@ -2248,13 +2498,15 @@
         const inicio =
             Math.max(
                 0,
-                indice - 2
+                indice -
+                2
             );
 
         const fim =
             Math.min(
                 linhas.length,
-                indice + 3
+                indice +
+                3
             );
 
         return linhas
@@ -2266,7 +2518,7 @@
     }
 
     /* =========================================================
-       DESCRIÇÃO DO ITEM
+       DESCRIÇÃO
        ========================================================= */
 
     function extrairDescricaoItem(
@@ -2289,7 +2541,8 @@
             );
 
         if (
-            indiceNcm <= 0
+            indiceNcm <=
+            0
         ) {
             return "";
         }
@@ -2317,11 +2570,6 @@
         texto =
             texto.trim();
 
-        /*
-         * Remove código inicial:
-         *
-         * 013 BOVINO FEMEA...
-         */
         texto =
             texto.replace(
                 /^[A-Z0-9._/-]{1,20}\s+(?=[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ])/i,
@@ -2337,7 +2585,8 @@
                 .trim();
 
         if (
-            texto.length < 2
+            texto.length <
+            2
         ) {
             return "";
         }
@@ -2396,7 +2645,7 @@
     }
 
     /* =========================================================
-       VALORES DO ITEM
+       VALORES ITEM
        ========================================================= */
 
     function extrairValoresMonetarios(
@@ -2419,7 +2668,8 @@
                         Number.isFinite(
                             valor
                         ) &&
-                        valor >= 0
+                        valor >=
+                        0
                     );
                 }
             );
@@ -2457,7 +2707,8 @@
                     );
 
                 if (
-                    valor > 0
+                    valor >
+                    0
                 ) {
                     return valor;
                 }
@@ -2481,10 +2732,6 @@
         );
     }
 
-    /* =========================================================
-       IDENTIFICA QUANTIDADE x UNITÁRIO = TOTAL
-       ========================================================= */
-
     function identificarRelacaoQuantidadeValor(
         bloco,
         valores
@@ -2505,10 +2752,6 @@
                 bloco || ""
             );
 
-        /*
-         * Prioriza estrutura típica após:
-         * NCM CST CFOP UN
-         */
         const matchEstruturado =
             texto.match(
                 /\b\d{8}\b\s+\d{2,4}\s+[12567]\d{3}\s+[A-Z]{1,5}\s+([\d.]+,\d{2,6})\s+([\d.]+,\d{2,6})\s+([\d.]+,\d{2})(?:\s|$)/i
@@ -2533,9 +2776,12 @@
                 );
 
             if (
-                quantidade > 0 &&
-                unitario > 0 &&
-                total > 0
+                quantidade >
+                0 &&
+                unitario >
+                0 &&
+                total >
+                0
             ) {
                 return {
                     quantidade:
@@ -2550,9 +2796,6 @@
             }
         }
 
-        /*
-         * Fallback matemático.
-         */
         const numeros =
             texto.match(
                 /\b\d+(?:[.,]\d+)?\b/g
@@ -2570,7 +2813,8 @@
                             Number.isFinite(
                                 numero
                             ) &&
-                            numero > 0
+                            numero >
+                            0
                         );
                     }
                 );
@@ -2594,7 +2838,8 @@
                     k++
                 ) {
                     if (
-                        j === k
+                        j ===
+                        k
                     ) {
                         continue;
                     }
@@ -2609,9 +2854,12 @@
                         valores[k];
 
                     if (
-                        quantidade <= 0 ||
-                        unitario <= 0 ||
-                        total <= 0
+                        quantidade <=
+                        0 ||
+                        unitario <=
+                        0 ||
+                        total <=
+                        0
                     ) {
                         continue;
                     }
@@ -2673,7 +2921,8 @@
                 : -1;
 
         if (
-            indiceDescricao > 0
+            indiceDescricao >
+            0
         ) {
             const anterior =
                 texto
@@ -2746,7 +2995,7 @@
     }
 
     /* =========================================================
-       REMOVE DUPLICIDADES DE EXTRAÇÃO
+       DUPLICIDADES
        ========================================================= */
 
     function removerItensDuplicados(
@@ -2757,24 +3006,24 @@
 
         itens.forEach(
             function (item) {
-                /*
-                 * Não usamos apenas descrição/NCM porque
-                 * uma mesma NF pode conter dois itens iguais
-                 * com códigos ou valores diferentes.
-                 */
                 const chave = [
-                    item.codigoProduto || "",
-                    item.ncm || "",
+                    item.codigoProduto ||
+                    "",
+                    item.ncm ||
+                    "",
                     comparacao(
                         item.descricao
                     ),
-                    item.cfop || "",
+                    item.cfop ||
+                    "",
                     Number(
                         item.quantidade
-                    ) || 0,
+                    ) ||
+                    0,
                     Number(
                         item.valorProduto
-                    ) || 0
+                    ) ||
+                    0
                 ].join("|");
 
                 if (
@@ -2802,7 +3051,8 @@
 
                     numeroItem:
                         String(
-                            indice + 1
+                            indice +
+                            1
                         )
                 };
             }
@@ -2849,10 +3099,12 @@
             );
 
         if (
-            ano < 100
+            ano <
+            100
         ) {
             ano +=
-                ano >= 50
+                ano >=
+                    50
                     ? 1900
                     : 2000;
         }
@@ -2907,12 +3159,18 @@
             );
 
         if (
-            ano < 1900 ||
-            ano > 2200 ||
-            mes < 1 ||
-            mes > 12 ||
-            dia < 1 ||
-            dia > 31
+            ano <
+            1900 ||
+            ano >
+            2200 ||
+            mes <
+            1 ||
+            mes >
+            12 ||
+            dia <
+            1 ||
+            dia >
+            31
         ) {
             return false;
         }
@@ -2920,7 +3178,8 @@
         const dataJs =
             new Date(
                 ano,
-                mes - 1,
+                mes -
+                1,
                 dia,
                 12,
                 0,
@@ -2932,15 +3191,12 @@
             dataJs.getFullYear() ===
             ano &&
             dataJs.getMonth() ===
-            mes - 1 &&
+            mes -
+            1 &&
             dataJs.getDate() ===
             dia
         );
     }
-
-    /* =========================================================
-       COMPETÊNCIA
-       ========================================================= */
 
     function competencia(
         data
@@ -3052,20 +3308,12 @@
         let texto =
             String(
                 valor || ""
-            )
-                .trim();
+            ).trim();
 
         if (!texto) {
             return NaN;
         }
 
-        /*
-         * Exemplos:
-         *
-         * 31,0000
-         * 1.771,86000
-         * 54.927,66
-         */
         if (
             texto.includes(",")
         ) {
@@ -3097,7 +3345,7 @@
     }
 
     /* =========================================================
-       DESCRIÇÃO DO MODELO
+       MODELO
        ========================================================= */
 
     function descricaoModelo(
@@ -3124,7 +3372,7 @@
     }
 
     /* =========================================================
-       API PÚBLICA
+       API
        ========================================================= */
 
     window.CreditoRuralNotasFiscais = {
@@ -3165,6 +3413,9 @@
             extrairValor,
 
         extrairData:
-            extrairData
+            extrairData,
+
+        extrairNaturezaOperacao:
+            extrairNaturezaOperacao
     };
 })();
