@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const condominioParceria = document.getElementById("condominioParceria");
     const tabelaRendasPorte = document.getElementById("tabelaRendasPorte");
     const btnLimparPorte = document.getElementById("btnLimparPorte");
+    const containerPorte = document.querySelector(".porte-produtor-container");
 
     const resultadoPorteFinal = document.getElementById("resultadoPorteFinal");
     const resultadoRba = document.getElementById("resultadoRba");
@@ -155,14 +156,22 @@ document.addEventListener("DOMContentLoaded", () => {
         "PARCEIRO"
     ];
 
+    let calculoAgendado = false;
+
     function numeroSeguro(valor) {
         const numero = Number(valor);
-        return Number.isFinite(numero) ? numero : 0;
+
+        return Number.isFinite(numero)
+            ? numero
+            : 0;
     }
 
     function arredondar(valor, casas = 2) {
         const fator = 10 ** casas;
-        return Math.round((numeroSeguro(valor) + Number.EPSILON) * fator) / fator;
+
+        return Math.round(
+            (numeroSeguro(valor) + Number.EPSILON) * fator
+        ) / fator;
     }
 
     function formatarMoeda(valor) {
@@ -196,7 +205,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function formatarInputMoeda(input) {
-        if (!input.value.trim()) {
+        if (!input) {
+            return;
+        }
+
+        if (!String(input.value || "").trim()) {
             input.value = "";
             return;
         }
@@ -207,6 +220,133 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace("R$", "")
             .trim();
     }
+
+    /* =========================================================
+       GATILHO CENTRAL DE RECÁLCULO
+       ========================================================= */
+
+    function agendarCalculoPorte() {
+        if (calculoAgendado) {
+            return;
+        }
+
+        calculoAgendado = true;
+
+        requestAnimationFrame(() => {
+            calculoAgendado = false;
+            calcularPorte();
+        });
+    }
+
+    function elementoGeraCalculo(elemento) {
+        if (!elemento) {
+            return false;
+        }
+
+        if (
+            elemento.classList &&
+            elemento.classList.contains("porte-produtor-renda")
+        ) {
+            return true;
+        }
+
+        return [
+            "cafPronaf",
+            "condicaoTerra",
+            "anoBasePorte",
+            "condominioParceria"
+        ].includes(elemento.id);
+    }
+
+    function configurarGatilhosAutomaticos() {
+        if (!containerPorte) {
+            return;
+        }
+
+        /*
+         * INPUT
+         *
+         * Disparado durante:
+         * - digitação;
+         * - colagem;
+         * - exclusão de conteúdo;
+         * - alteração do ano-base;
+         * - qualquer modificação nos campos de renda.
+         */
+        containerPorte.addEventListener("input", evento => {
+            const elemento = evento.target;
+
+            if (!elementoGeraCalculo(elemento)) {
+                return;
+            }
+
+            if (
+                elemento.classList &&
+                elemento.classList.contains("porte-produtor-renda")
+            ) {
+                formatarInputMoeda(elemento);
+            }
+
+            agendarCalculoPorte();
+        });
+
+        /*
+         * CHANGE
+         *
+         * Garante o recálculo principalmente em:
+         * - CAF / Pronaf;
+         * - condição da terra;
+         * - condomínio / parceria;
+         * - ano-base;
+         * - campos alterados por seleção.
+         */
+        containerPorte.addEventListener("change", evento => {
+            const elemento = evento.target;
+
+            if (!elementoGeraCalculo(elemento)) {
+                return;
+            }
+
+            if (
+                elemento.classList &&
+                elemento.classList.contains("porte-produtor-renda")
+            ) {
+                formatarInputMoeda(elemento);
+            }
+
+            agendarCalculoPorte();
+        });
+
+        /*
+         * BLUR
+         *
+         * Ao sair de um campo monetário:
+         * - garante a máscara monetária;
+         * - garante o recálculo final.
+         */
+        containerPorte.addEventListener(
+            "blur",
+            evento => {
+                const elemento = evento.target;
+
+                if (
+                    !elemento ||
+                    !elemento.classList ||
+                    !elemento.classList.contains("porte-produtor-renda")
+                ) {
+                    return;
+                }
+
+                formatarInputMoeda(elemento);
+                agendarCalculoPorte();
+            },
+            true
+        );
+    }
+
+    /* =========================================================
+       TABELA DE RENDAS
+       ========================================================= */
 
     function criarTabelaRendas() {
         tabelaRendasPorte.innerHTML = "";
@@ -220,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tdClassificacao = document.createElement("td");
 
             const tag = document.createElement("span");
+
             tag.className = tipo.integraRegra20
                 ? "porte-produtor-tag porte-produtor-tag-nao-rural"
                 : "porte-produtor-tag porte-produtor-tag-rural";
@@ -237,17 +378,13 @@ document.addEventListener("DOMContentLoaded", () => {
             prefixo.textContent = "R$";
 
             const input = document.createElement("input");
+
             input.type = "text";
             input.inputMode = "numeric";
             input.autocomplete = "off";
             input.placeholder = "0,00";
             input.dataset.tipoRenda = tipo.id;
             input.className = "porte-produtor-renda";
-
-            input.addEventListener("input", () => {
-                formatarInputMoeda(input);
-                calcularPorte();
-            });
 
             wrapper.appendChild(prefixo);
             wrapper.appendChild(input);
@@ -261,6 +398,10 @@ document.addEventListener("DOMContentLoaded", () => {
             tabelaRendasPorte.appendChild(tr);
         });
     }
+
+    /* =========================================================
+       OBTENÇÃO DAS RENDAS
+       ========================================================= */
 
     function obterValorRenda(tipoId) {
         const input = tabelaRendasPorte.querySelector(
@@ -335,6 +476,10 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    /* =========================================================
+       PORTE BASE
+       ========================================================= */
+
     function obterPorteBase(rba, receitaBrutaTotal) {
         if (receitaBrutaTotal <= 0) {
             return "PREENCHER RENDAS";
@@ -351,6 +496,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return "GRANDE";
     }
 
+    /* =========================================================
+       PRONAMP
+       ========================================================= */
+
     function obterPronamp(totais) {
         if (totais.receitaBrutaTotal <= 0) {
             return "NÃO APLICÁVEL";
@@ -360,9 +509,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return "INFORMAR CONDIÇÃO DA TERRA";
         }
 
-        const condicaoAdmitida = CONDICOES_TERRA_PRONAMP.includes(
-            condicaoTerra.value
-        );
+        const condicaoAdmitida =
+            CONDICOES_TERRA_PRONAMP.includes(
+                condicaoTerra.value
+            );
 
         const receitaDentroLimite =
             totais.receitaBrutaTotal <= 3500000;
@@ -379,6 +529,10 @@ document.addEventListener("DOMContentLoaded", () => {
             : "NÃO";
     }
 
+    /* =========================================================
+       REGRA DOS 20%
+       ========================================================= */
+
     function obterRegra20(totais) {
         if (totais.receitaBrutaTotal <= 0) {
             return "NÃO APLICÁVEL";
@@ -389,7 +543,16 @@ document.addEventListener("DOMContentLoaded", () => {
             : "NÃO";
     }
 
-    function obterPorteFinal(totais, porteBase, pronamp, regra20) {
+    /* =========================================================
+       PORTE FINAL
+       ========================================================= */
+
+    function obterPorteFinal(
+        totais,
+        porteBase,
+        pronamp,
+        regra20
+    ) {
         if (cafPronaf.value === "SIM") {
             return "PEQUENO PRODUTOR";
         }
@@ -421,7 +584,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return "GRANDE PRODUTOR";
     }
 
-    function obterBaseNormativa(porteFinal, porteBase, pronamp, regra20) {
+    /* =========================================================
+       BASE NORMATIVA
+       ========================================================= */
+
+    function obterBaseNormativa(
+        porteFinal,
+        porteBase,
+        pronamp,
+        regra20
+    ) {
         if (porteFinal === "PREENCHER RENDAS") {
             return "-";
         }
@@ -452,6 +624,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return "MCR 1-2-3(c)";
     }
+
+    /* =========================================================
+       JUSTIFICATIVA
+       ========================================================= */
 
     function obterJustificativa(
         totais,
@@ -514,6 +690,10 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
+    /* =========================================================
+       CLASSE VISUAL DO PORTE
+       ========================================================= */
+
     function atualizarClassePorte(porteFinal) {
         resultadoPorteFinal.classList.remove(
             "porte-pequeno",
@@ -523,22 +703,34 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         if (porteFinal === "PEQUENO PRODUTOR") {
-            resultadoPorteFinal.classList.add("porte-pequeno");
+            resultadoPorteFinal.classList.add(
+                "porte-pequeno"
+            );
             return;
         }
 
         if (porteFinal === "MÉDIO PRODUTOR") {
-            resultadoPorteFinal.classList.add("porte-medio");
+            resultadoPorteFinal.classList.add(
+                "porte-medio"
+            );
             return;
         }
 
         if (porteFinal === "GRANDE PRODUTOR") {
-            resultadoPorteFinal.classList.add("porte-grande");
+            resultadoPorteFinal.classList.add(
+                "porte-grande"
+            );
             return;
         }
 
-        resultadoPorteFinal.classList.add("porte-pendente");
+        resultadoPorteFinal.classList.add(
+            "porte-pendente"
+        );
     }
+
+    /* =========================================================
+       CÁLCULO PRINCIPAL
+       ========================================================= */
 
     function calcularPorte() {
         const totais = obterTotais();
@@ -548,70 +740,125 @@ document.addEventListener("DOMContentLoaded", () => {
             totais.receitaBrutaTotal
         );
 
-        const pronamp = obterPronamp(totais);
-        const regra20 = obterRegra20(totais);
+        const pronamp =
+            obterPronamp(
+                totais
+            );
 
-        const porteFinal = obterPorteFinal(
-            totais,
-            porteBase,
-            pronamp,
-            regra20
+        const regra20 =
+            obterRegra20(
+                totais
+            );
+
+        const porteFinal =
+            obterPorteFinal(
+                totais,
+                porteBase,
+                pronamp,
+                regra20
+            );
+
+        const baseNormativa =
+            obterBaseNormativa(
+                porteFinal,
+                porteBase,
+                pronamp,
+                regra20
+            );
+
+        const justificativa =
+            obterJustificativa(
+                totais,
+                porteFinal,
+                porteBase,
+                pronamp,
+                regra20
+            );
+
+        resultadoPorteFinal.textContent =
+            porteFinal;
+
+        resultadoRba.textContent =
+            formatarMoeda(
+                totais.rba
+            );
+
+        resultadoReceitaBruta.textContent =
+            formatarMoeda(
+                totais.receitaBrutaTotal
+            );
+
+        resultadoPercentualAgro.textContent =
+            formatarPercentual(
+                totais.percentualAgro
+            );
+
+        resultadoPercentualNaoRural.textContent =
+            formatarPercentual(
+                totais.percentualNaoRural
+            );
+
+        resultadoPorteBase.textContent =
+            porteBase;
+
+        resultadoPronamp.textContent =
+            pronamp;
+
+        resultadoRegra20.textContent =
+            regra20;
+
+        resultadoCaf.textContent =
+            cafPronaf.value === "SIM"
+                ? "ENQUADRADO"
+                : "NÃO INFORMADO / NÃO ENQUADRADO";
+
+        resultadoJustificativa.textContent =
+            justificativa;
+
+        resultadoBaseNormativa.textContent =
+            baseNormativa;
+
+        resultadoRendaAgroPronamp.textContent =
+            formatarMoeda(
+                totais.agroPronamp
+            );
+
+        resultadoDemaisRendas.textContent =
+            formatarMoeda(
+                totais.demaisRendasNaoAgro
+            );
+
+        resultadoRendasNaoRurais.textContent =
+            formatarMoeda(
+                totais.rendimentosNaoRurais
+            );
+
+        atualizarClassePorte(
+            porteFinal
         );
-
-        const baseNormativa = obterBaseNormativa(
-            porteFinal,
-            porteBase,
-            pronamp,
-            regra20
-        );
-
-        const justificativa = obterJustificativa(
-            totais,
-            porteFinal,
-            porteBase,
-            pronamp,
-            regra20
-        );
-
-        resultadoPorteFinal.textContent = porteFinal;
-        resultadoRba.textContent = formatarMoeda(totais.rba);
-        resultadoReceitaBruta.textContent = formatarMoeda(totais.receitaBrutaTotal);
-        resultadoPercentualAgro.textContent = formatarPercentual(totais.percentualAgro);
-        resultadoPercentualNaoRural.textContent = formatarPercentual(totais.percentualNaoRural);
-        resultadoPorteBase.textContent = porteBase;
-        resultadoPronamp.textContent = pronamp;
-        resultadoRegra20.textContent = regra20;
-
-        resultadoCaf.textContent = cafPronaf.value === "SIM"
-            ? "ENQUADRADO"
-            : "NÃO INFORMADO / NÃO ENQUADRADO";
-
-        resultadoJustificativa.textContent = justificativa;
-        resultadoBaseNormativa.textContent = baseNormativa;
-
-        resultadoRendaAgroPronamp.textContent = formatarMoeda(
-            totais.agroPronamp
-        );
-
-        resultadoDemaisRendas.textContent = formatarMoeda(
-            totais.demaisRendasNaoAgro
-        );
-
-        resultadoRendasNaoRurais.textContent = formatarMoeda(
-            totais.rendimentosNaoRurais
-        );
-
-        atualizarClassePorte(porteFinal);
     }
 
+    /* =========================================================
+       LIMPAR
+       ========================================================= */
+
     function limparPorte() {
-        cafPronaf.value = "NAO";
-        condicaoTerra.value = "SELECIONAR";
-        condominioParceria.value = "NAO";
-        anoBasePorte.value = new Date().getFullYear();
+        cafPronaf.value =
+            "NAO";
+
+        condicaoTerra.value =
+            "SELECIONAR";
+
+        condominioParceria.value =
+            "NAO";
+
+        anoBasePorte.value =
+            new Date().getFullYear();
 
         tabelaRendasPorte
-            .querySelectorAll(".porte-produtor-renda")
+            .querySelectorAll(
+                ".porte-produtor-renda"
+            )
             .forEach(input => {
                 input.value = "";
             });
@@ -619,14 +866,25 @@ document.addEventListener("DOMContentLoaded", () => {
         calcularPorte();
     }
 
-    cafPronaf.addEventListener("change", calcularPorte);
-    condicaoTerra.addEventListener("change", calcularPorte);
-    anoBasePorte.addEventListener("input", calcularPorte);
-    condominioParceria.addEventListener("change", calcularPorte);
-    btnLimparPorte.addEventListener("click", limparPorte);
+    /* =========================================================
+       INICIALIZAÇÃO
+       ========================================================= */
 
-    anoBasePorte.value = new Date().getFullYear();
+    btnLimparPorte.addEventListener(
+        "click",
+        limparPorte
+    );
+
+    anoBasePorte.value =
+        new Date().getFullYear();
 
     criarTabelaRendas();
+
+    /*
+     * Um único controlador monitora todos os campos
+     * que podem alterar o resultado da simulação.
+     */
+    configurarGatilhosAutomaticos();
+
     calcularPorte();
 });
