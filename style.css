@@ -1125,7 +1125,7 @@ input.bloqueado {
 }
 
 .btn-principal,
-#btnSimular,
+.btnSimular,
 .btn-primario {
     background: var(--turquesa);
     color: var(--branco);
@@ -1133,7 +1133,7 @@ input.bloqueado {
 }
 
 .btn-principal:hover,
-#btnSimular:hover,
+.btnSimular:hover,
 .btn-primario:hover {
     background: var(--verde-escuro);
     border-color: var(--verde-escuro);
