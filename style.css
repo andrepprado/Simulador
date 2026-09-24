@@ -4836,373 +4836,6 @@ footer p,
     }
 }
 
-
-/* =========================================================
-   CREDITO-RURAL.HTML - MATERIAL DE APOIO
-   ========================================================= */
-
-.material-apoio-card {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    width: 100%;
-    min-width: 0;
-    padding: 28px;
-}
-
-.material-apoio-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    width: 100%;
-    min-width: 0;
-}
-
-.material-apoio-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    min-width: 0;
-    min-height: 138px;
-    padding: 18px;
-    background: #FBFCFC;
-    color: inherit;
-    border: 1px solid var(--borda);
-    border-radius: 12px;
-    text-decoration: none;
-    transition:
-        transform .2s ease,
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
-}
-
-.material-apoio-item:hover {
-    transform: translateY(-2px);
-    background: rgba(0, 160, 145, .035);
-    border-color: var(--turquesa-claro);
-    box-shadow: 0 8px 22px rgba(0, 54, 64, .08);
-}
-
-.material-apoio-icone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 58px;
-    width: 58px;
-    height: 58px;
-    background:
-        linear-gradient(135deg,
-            var(--turquesa),
-            var(--verde-escuro));
-    color: var(--branco);
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: .03em;
-    box-shadow: 0 5px 13px rgba(0, 54, 64, .14);
-}
-
-.material-apoio-conteudo {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.material-apoio-tipo {
-    display: inline-block;
-    margin-bottom: 4px;
-    color: var(--turquesa);
-    font-size: 9px;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-}
-
-.material-apoio-conteudo strong {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--verde-escuro);
-    font-size: 15px;
-    line-height: 1.3;
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: normal;
-}
-
-.material-apoio-conteudo p {
-    margin: 0 0 8px;
-    color: var(--texto-secundario);
-    font-size: 11px;
-    line-height: 1.45;
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: normal;
-}
-
-.material-apoio-download {
-    display: inline-flex;
-    align-items: center;
-    color: var(--turquesa);
-    font-size: 11px;
-    font-weight: 800;
-    line-height: 1.2;
-}
-
-.material-apoio-observacao {
-    width: 100%;
-    min-width: 0;
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(0, 160, 145, .07);
-    color: var(--texto-secundario);
-    border-left: 4px solid var(--turquesa);
-    border-radius: 8px;
-    font-size: 10px;
-    line-height: 1.45;
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: normal;
-}
-
-.material-apoio-observacao strong {
-    color: var(--verde-escuro);
-}
-
-/* =========================================================
-   CREDITO-RURAL.HTML - MATERIAL DE APOIO - TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-    .simulador-grid .material-apoio-card {
-        grid-column: 1;
-        grid-row: auto;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .material-apoio-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-}
-
-/* =========================================================
-   CREDITO-RURAL.HTML - MATERIAL DE APOIO - MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-    .simulador-grid .material-apoio-card {
-        grid-column: 1;
-        grid-row: auto;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        padding: 15px;
-        border-radius: 11px;
-    }
-
-    .material-apoio-card .titulo-secao {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 15px;
-    }
-
-    .material-apoio-card .titulo-secao h2 {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        margin: 0 0 4px;
-        color: var(--verde-escuro);
-        font-size: 17px;
-        font-weight: 700;
-        line-height: 1.22;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .material-apoio-card .titulo-secao p {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        color: var(--texto-secundario);
-        font-size: 10px;
-        line-height: 1.42;
-        white-space: normal;
-        word-break: normal;
-        overflow-wrap: normal;
-    }
-
-    .material-apoio-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 8px;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .material-apoio-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        min-width: 0;
-        min-height: 0;
-        padding: 11px;
-        border-radius: 8px;
-    }
-
-    .material-apoio-item:hover {
-        transform: none;
-    }
-
-    .material-apoio-icone {
-        flex: 0 0 42px;
-        width: 42px;
-        height: 42px;
-        border-radius: 8px;
-        font-size: 8px;
-    }
-
-    .material-apoio-conteudo {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    .material-apoio-tipo {
-        margin-bottom: 2px;
-        font-size: 7px;
-        line-height: 1.2;
-    }
-
-    .material-apoio-conteudo strong {
-        margin-bottom: 3px;
-        font-size: 10px;
-        line-height: 1.25;
-    }
-
-    .material-apoio-conteudo p {
-        margin: 0 0 5px;
-        font-size: 8px;
-        line-height: 1.35;
-    }
-
-    .material-apoio-download {
-        font-size: 8px;
-        line-height: 1.2;
-    }
-
-    .material-apoio-observacao {
-        margin-top: 10px;
-        padding: 9px 10px;
-        border-left-width: 3px;
-        border-radius: 7px;
-        font-size: 8px;
-        line-height: 1.4;
-    }
-}
-
-/* =========================================================
-   CREDITO-RURAL.HTML - MATERIAL DE APOIO - MOBILE PEQUENO
-   ========================================================= */
-
-@media (max-width: 480px) {
-    .simulador-grid .material-apoio-card {
-        padding: 13px;
-        border-radius: 10px;
-    }
-
-    .material-apoio-card .titulo-secao {
-        margin-bottom: 13px;
-    }
-
-    .material-apoio-card .titulo-secao h2 {
-        font-size: 16px;
-    }
-
-    .material-apoio-card .titulo-secao p {
-        font-size: 9px;
-    }
-
-    .material-apoio-item {
-        gap: 9px;
-        padding: 10px;
-    }
-
-    .material-apoio-icone {
-        flex: 0 0 38px;
-        width: 38px;
-        height: 38px;
-        font-size: 7px;
-    }
-
-    .material-apoio-tipo {
-        font-size: 6px;
-    }
-
-    .material-apoio-conteudo strong {
-        font-size: 9px;
-    }
-
-    .material-apoio-conteudo p {
-        font-size: 7px;
-    }
-
-    .material-apoio-download {
-        font-size: 7px;
-    }
-
-    .material-apoio-observacao {
-        font-size: 7px;
-    }
-}
-
-/* =========================================================
-   CREDITO-RURAL.HTML - MATERIAL DE APOIO - MOBILE MUITO PEQUENO
-   ========================================================= */
-
-@media (max-width: 360px) {
-    .simulador-grid .material-apoio-card {
-        padding: 11px;
-    }
-
-    .material-apoio-card .titulo-secao h2 {
-        font-size: 15px;
-    }
-
-    .material-apoio-card .titulo-secao p {
-        font-size: 8px;
-    }
-
-    .material-apoio-item {
-        align-items: flex-start;
-        gap: 8px;
-        padding: 9px;
-    }
-
-    .material-apoio-icone {
-        flex: 0 0 35px;
-        width: 35px;
-        height: 35px;
-        font-size: 6px;
-    }
-
-    .material-apoio-conteudo strong {
-        font-size: 9px;
-    }
-
-    .material-apoio-conteudo p,
-    .material-apoio-download,
-    .material-apoio-observacao {
-        font-size: 7px;
-    }
-}
-
-
 /* =========================================================
    PÁGINAS EXPERIMENTAIS - CRÉDITO RURAL
    ========================================================= */
@@ -9163,5 +8796,1566 @@ footer p,
     .notas-fiscais-container * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+    }
+}
+
+/* =========================================================
+   CRÉDITO RURAL
+   credito-rural.html
+   ========================================================= */
+
+/* =========================================================
+   ESTRUTURA PRINCIPAL
+   ========================================================= */
+
+.pagina-credito-rural .simulador-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.55fr) minmax(340px, .85fr);
+    gap: 24px;
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    min-width: 0;
+    margin: 0 auto;
+    padding-top: 30px;
+    padding-bottom: 44px;
+    align-items: start;
+}
+
+.pagina-credito-rural .simulador-grid>* {
+    min-width: 0;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.pagina-credito-rural .simulador-grid .card {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+    overflow: hidden;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+}
+
+.pagina-credito-rural .formulario-card {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.pagina-credito-rural .resultado-card {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.pagina-credito-rural .tabela-card {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.pagina-credito-rural .documentos-card {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.pagina-credito-rural .material-apoio-card {
+    grid-column: 1 / -1;
+    grid-row: 3;
+}
+
+/* Barra superior dos cards */
+
+.pagina-credito-rural .formulario-card::before,
+.pagina-credito-rural .resultado-card::before,
+.pagina-credito-rural .tabela-card::before,
+.pagina-credito-rural .documentos-card::before,
+.pagina-credito-rural .material-apoio-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+.pagina-credito-rural .titulo-secao {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 22px;
+}
+
+.pagina-credito-rural .titulo-secao h2 {
+    margin: 0 0 5px;
+    color: var(--verde-escuro);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.pagina-credito-rural .titulo-secao p {
+    max-width: 900px;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.pagina-credito-rural .grid-form {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 17px 18px;
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-credito-rural .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-credito-rural .campo label {
+    display: block;
+    min-width: 0;
+    color: var(--verde-escuro);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.pagina-credito-rural .campo small,
+.pagina-credito-rural .campo-ajuda {
+    display: block;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.pagina-credito-rural .campo input,
+.pagina-credito-rural .campo select,
+.pagina-credito-rural .campo textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 12px;
+    background: var(--branco);
+    color: var(--texto);
+    border: 1px solid var(--borda-forte);
+    border-radius: 8px;
+    outline: none;
+    font-size: 12px;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.pagina-credito-rural .campo textarea {
+    min-height: 90px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    resize: vertical;
+}
+
+.pagina-credito-rural .campo select {
+    cursor: pointer;
+}
+
+.pagina-credito-rural .campo input:hover:not(:disabled):not([readonly]),
+.pagina-credito-rural .campo select:hover:not(:disabled),
+.pagina-credito-rural .campo textarea:hover:not(:disabled):not([readonly]) {
+    border-color: var(--turquesa-claro);
+}
+
+.pagina-credito-rural .campo input:focus:not(:disabled):not([readonly]),
+.pagina-credito-rural .campo select:focus:not(:disabled),
+.pagina-credito-rural .campo textarea:focus:not(:disabled):not([readonly]) {
+    border-color: var(--turquesa);
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .10);
+}
+
+.pagina-credito-rural .campo input[readonly],
+.pagina-credito-rural .campo input:disabled,
+.pagina-credito-rural .campo select:disabled,
+.pagina-credito-rural .campo textarea:disabled {
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    border-color: var(--borda);
+    cursor: default;
+    opacity: 1;
+}
+
+.pagina-credito-rural #fonteRecursos,
+.pagina-credito-rural #aplicabilidade,
+.pagina-credito-rural #prazoMaximo,
+.pagina-credito-rural #taxa,
+.pagina-credito-rural #valorFinanciado {
+    color: var(--verde-escuro);
+    font-weight: 700;
+}
+
+/* =========================================================
+   INPUT COM PREFIXO / SUFIXO
+   ========================================================= */
+
+.pagina-credito-rural .input-prefixo,
+.pagina-credito-rural .input-sufixo {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-credito-rural .input-prefixo>span,
+.pagina-credito-rural .input-sufixo>span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 45px;
+    padding: 0 10px;
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    border: 1px solid var(--borda-forte);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.pagina-credito-rural .input-prefixo>span {
+    border-right: 0;
+    border-radius: 8px 0 0 8px;
+}
+
+.pagina-credito-rural .input-sufixo>span {
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.pagina-credito-rural .input-prefixo input,
+.pagina-credito-rural .input-sufixo input {
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    box-shadow: none;
+}
+
+.pagina-credito-rural .input-prefixo input {
+    border-radius: 0 8px 8px 0;
+}
+
+.pagina-credito-rural .input-sufixo input {
+    border-radius: 8px 0 0 8px;
+}
+
+.pagina-credito-rural .input-prefixo:focus-within>span,
+.pagina-credito-rural .input-sufixo:focus-within>span {
+    border-color: var(--turquesa);
+}
+
+.pagina-credito-rural .input-prefixo.bloqueado>span,
+.pagina-credito-rural .input-sufixo.bloqueado>span {
+    background: #E5ECEC;
+    color: var(--texto-secundario);
+}
+
+/* =========================================================
+   CONDIÇÃO / OBSERVAÇÃO DA LINHA
+   ========================================================= */
+
+.pagina-credito-rural #condicaoLinha {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    margin-top: 22px;
+    padding: 14px 16px 14px 40px;
+    background: rgba(0, 160, 145, .055);
+    color: var(--texto-secundario);
+    border: 1px solid rgba(0, 160, 145, .16);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 9px;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.pagina-credito-rural #condicaoLinha::before {
+    content: "";
+    position: absolute;
+    top: 19px;
+    left: 17px;
+    width: 8px;
+    height: 8px;
+    background: var(--verde-claro);
+    border-radius: 50%;
+}
+
+.pagina-credito-rural #condicaoLinha strong {
+    color: var(--verde-escuro);
+}
+
+.pagina-credito-rural #condicaoLinha code {
+    padding: 2px 5px;
+    background: rgba(0, 54, 64, .07);
+    color: var(--verde-escuro);
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 10px;
+}
+
+/* =========================================================
+   AVISO
+   ========================================================= */
+
+.pagina-credito-rural .formulario-card>.aviso:not(#condicaoLinha) {
+    width: 100%;
+    min-width: 0;
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: var(--atencao-fundo);
+    color: #665416;
+    border: 1px solid rgba(166, 106, 0, .12);
+    border-left: 4px solid var(--atencao);
+    border-radius: 8px;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.pagina-credito-rural .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.pagina-credito-rural .acoes button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 42px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.pagina-credito-rural #btnSimular {
+    background: var(--turquesa);
+    color: var(--branco);
+    border: 1px solid var(--turquesa);
+}
+
+.pagina-credito-rural #btnSimular:hover {
+    transform: translateY(-1px);
+    background: var(--verde-escuro);
+    border-color: var(--verde-escuro);
+    box-shadow:
+        0 5px 14px rgba(0, 54, 64, .12);
+}
+
+.pagina-credito-rural #btnLimpar {
+    background: var(--branco);
+    color: var(--turquesa);
+    border: 1px solid var(--turquesa);
+}
+
+.pagina-credito-rural #btnLimpar:hover {
+    transform: translateY(-1px);
+    background: rgba(0, 160, 145, .06);
+}
+
+.pagina-credito-rural .acoes button:disabled {
+    cursor: not-allowed;
+    opacity: .55;
+    transform: none;
+    box-shadow: none;
+}
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
+.pagina-credito-rural .resultado-card {
+    overflow: hidden;
+}
+
+.pagina-credito-rural .resultado-destaque {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+    min-height: 95px;
+    margin-bottom: 18px;
+    padding: 18px 20px;
+    overflow: hidden;
+    background:
+        linear-gradient(115deg,
+            var(--turquesa),
+            var(--verde-escuro));
+    color: var(--branco);
+    border-radius: 12px;
+}
+
+.pagina-credito-rural .resultado-destaque span {
+    display: block;
+    color: rgba(255, 255, 255, .86);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.pagina-credito-rural .resultado-destaque strong {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    color: var(--verde-claro);
+    font-size: clamp(22px, 2.2vw, 29px);
+    font-weight: 800;
+    line-height: 1.1;
+    overflow-wrap: break-word;
+}
+
+/* =========================================================
+   GRID DE RESULTADOS
+   ========================================================= */
+
+.pagina-credito-rural .resultados-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-credito-rural .resultado-item {
+    position: relative;
+    min-width: 0;
+    min-height: 72px;
+    padding: 12px;
+    overflow: hidden;
+    background: var(--fundo-secundario);
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+}
+
+.pagina-credito-rural .resultado-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--turquesa);
+}
+
+.pagina-credito-rural .resultado-item span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.3;
+}
+
+.pagina-credito-rural .resultado-item strong {
+    display: block;
+    min-width: 0;
+    color: var(--verde-escuro);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+/* Alguns resultados principais */
+
+.pagina-credito-rural #resultadoJuros {
+    color: var(--atencao);
+}
+
+.pagina-credito-rural #resultadoTotal {
+    color: var(--sucesso);
+}
+
+.pagina-credito-rural #resultadoAplicabilidade {
+    color: var(--turquesa);
+}
+
+/* =========================================================
+   LINHA SELECIONADA
+   ========================================================= */
+
+.pagina-credito-rural .linha-selecionada {
+    width: 100%;
+    min-width: 0;
+    margin-top: 12px;
+    padding: 12px 14px;
+    overflow: hidden;
+    background: var(--verde-escuro);
+    border-left: 4px solid var(--verde-claro);
+    border-radius: 9px;
+}
+
+.pagina-credito-rural .linha-selecionada span {
+    display: block;
+    margin-bottom: 4px;
+    color: rgba(255, 255, 255, .76);
+    font-size: 8px;
+    line-height: 1.35;
+}
+
+.pagina-credito-rural .linha-selecionada strong {
+    display: block;
+    min-width: 0;
+    color: var(--branco);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   TABELA DE PARCELAS
+   ========================================================= */
+
+.pagina-credito-rural .tabela-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color:
+        var(--turquesa-claro) var(--fundo-secundario);
+}
+
+.pagina-credito-rural .tabela-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.pagina-credito-rural .tabela-wrapper::-webkit-scrollbar-track {
+    background: var(--fundo-secundario);
+}
+
+.pagina-credito-rural .tabela-wrapper::-webkit-scrollbar-thumb {
+    background: var(--turquesa-claro);
+    border-radius: 999px;
+}
+
+.pagina-credito-rural .tabela-card table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: var(--branco);
+}
+
+.pagina-credito-rural .tabela-card th,
+.pagina-credito-rural .tabela-card td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--borda);
+    font-size: 10px;
+    line-height: 1.35;
+    vertical-align: middle;
+}
+
+.pagina-credito-rural .tabela-card th {
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-size: 9px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.pagina-credito-rural .tabela-card td {
+    color: var(--texto-secundario);
+}
+
+.pagina-credito-rural .tabela-card th:first-child,
+.pagina-credito-rural .tabela-card td:first-child {
+    width: 70px;
+    text-align: center;
+}
+
+.pagina-credito-rural .tabela-card th:not(:first-child),
+.pagina-credito-rural .tabela-card td:not(:first-child) {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.pagina-credito-rural .tabela-card tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.pagina-credito-rural .tabela-card tbody tr:not(:has(.sem-dados)):hover {
+    background: rgba(0, 160, 145, .035);
+}
+
+.pagina-credito-rural .tabela-card .sem-dados {
+    padding: 28px 14px;
+    color: var(--texto-secundario);
+    background: #FBFCFC;
+    font-size: 9px;
+    font-style: italic;
+    text-align: center !important;
+}
+
+/* =========================================================
+   INFORMAÇÕES DA OPERAÇÃO
+   ========================================================= */
+
+.pagina-credito-rural .documentos-card {
+    overflow: hidden;
+}
+
+.pagina-credito-rural .lista-documentos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-credito-rural .documento-grupo {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    background: #FBFCFC;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+}
+
+.pagina-credito-rural .documento-grupo-titulo {
+    padding: 10px 12px;
+    background: var(--verde-escuro);
+    color: var(--branco);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.pagina-credito-rural .documento-lista {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pagina-credito-rural .documento-item {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px 10px 29px;
+    color: var(--texto-secundario);
+    border-bottom: 1px solid var(--borda);
+    font-size: 9px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.pagina-credito-rural .documento-item:last-child {
+    border-bottom: 0;
+}
+
+.pagina-credito-rural .documento-item::before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    width: 6px;
+    height: 6px;
+    background: var(--verde-claro);
+    border-radius: 50%;
+}
+
+.pagina-credito-rural .documentos-observacao {
+    width: 100%;
+    min-width: 0;
+    margin-top: 16px;
+    padding: 11px 12px;
+    background: rgba(0, 160, 145, .06);
+    color: var(--texto-secundario);
+    border: 1px solid rgba(0, 160, 145, .13);
+    border-left: 4px solid var(--turquesa);
+    border-radius: 8px;
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+.pagina-credito-rural .documentos-observacao strong {
+    color: var(--verde-escuro);
+}
+
+/* =========================================================
+   MATERIAL DE APOIO
+   ========================================================= */
+
+.pagina-credito-rural .material-apoio-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-credito-rural .material-apoio-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    padding: 18px;
+    overflow: hidden;
+    background: #FBFCFC;
+    color: inherit;
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    text-decoration: none;
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.pagina-credito-rural .material-apoio-item:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 160, 145, .025);
+    border-color: var(--turquesa-claro);
+    box-shadow:
+        0 7px 18px rgba(0, 54, 64, .08);
+}
+
+.pagina-credito-rural .material-apoio-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 58px;
+    width: 58px;
+    height: 58px;
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .12),
+            rgba(0, 54, 64, .08));
+    color: var(--turquesa);
+    border: 1px solid rgba(0, 160, 145, .15);
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.pagina-credito-rural .material-apoio-conteudo {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.pagina-credito-rural .material-apoio-tipo {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--turquesa);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-transform: uppercase;
+}
+
+.pagina-credito-rural .material-apoio-conteudo strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.pagina-credito-rural .material-apoio-conteudo p {
+    margin: 0 0 7px;
+    color: var(--texto-secundario);
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.pagina-credito-rural .material-apoio-download {
+    display: inline-block;
+    color: var(--turquesa);
+    font-size: 9px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ESTADOS DA APLICABILIDADE
+   ========================================================= */
+
+.pagina-credito-rural #aplicabilidade[value="DIRETA"] {
+    color: var(--sucesso);
+}
+
+.pagina-credito-rural #aplicabilidade[value="CONDICIONAL"] {
+    color: var(--atencao);
+}
+
+.pagina-credito-rural #aplicabilidade[value="REVISAR"],
+.pagina-credito-rural #aplicabilidade[value="SEM VÍNCULO AUTOMÁTICO"] {
+    color: var(--erro);
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .pagina-credito-rural .simulador-grid {
+        grid-template-columns:
+            minmax(0, 1.35fr) minmax(300px, .65fr);
+        gap: 18px;
+    }
+
+    .pagina-credito-rural .simulador-grid .card {
+        padding: 22px;
+    }
+
+    .pagina-credito-rural .grid-form {
+        gap: 14px;
+    }
+
+    .pagina-credito-rural .resultado-destaque strong {
+        font-size: 23px;
+    }
+
+    .pagina-credito-rural .resultado-item {
+        min-height: 68px;
+        padding: 10px;
+    }
+}
+
+/* =========================================================
+   TABLET VERTICAL
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .pagina-credito-rural .simulador-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+        width: calc(100% - 32px);
+        gap: 18px;
+        padding-top: 18px;
+        padding-bottom: 32px;
+    }
+
+    .pagina-credito-rural .formulario-card,
+    .pagina-credito-rural .resultado-card,
+    .pagina-credito-rural .tabela-card,
+    .pagina-credito-rural .documentos-card,
+    .pagina-credito-rural .material-apoio-card {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .pagina-credito-rural .formulario-card {
+        order: 1;
+    }
+
+    .pagina-credito-rural .resultado-card {
+        order: 2;
+    }
+
+    .pagina-credito-rural .tabela-card {
+        order: 3;
+    }
+
+    .pagina-credito-rural .documentos-card {
+        order: 4;
+    }
+
+    .pagina-credito-rural .material-apoio-card {
+        order: 5;
+    }
+
+    .pagina-credito-rural .resultados-grid {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+    .pagina-credito-rural .material-apoio-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .pagina-credito-rural .simulador-grid {
+        width: calc(100% - 24px);
+        max-width: none;
+        grid-template-columns:
+            minmax(0, 1fr);
+        gap: 14px;
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .pagina-credito-rural .simulador-grid .card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 15px;
+        border-radius: 11px;
+    }
+
+    .pagina-credito-rural .formulario-card::before,
+    .pagina-credito-rural .resultado-card::before,
+    .pagina-credito-rural .tabela-card::before,
+    .pagina-credito-rural .documentos-card::before,
+    .pagina-credito-rural .material-apoio-card::before {
+        height: 3px;
+    }
+
+    /* Títulos */
+
+    .pagina-credito-rural .titulo-secao {
+        margin-bottom: 14px;
+    }
+
+    .pagina-credito-rural .titulo-secao h2 {
+        font-size: 17px;
+        line-height: 1.22;
+    }
+
+    .pagina-credito-rural .titulo-secao p {
+        font-size: 9px;
+        line-height: 1.45;
+    }
+
+    /* Formulário */
+
+    .pagina-credito-rural .grid-form {
+        grid-template-columns:
+            minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .pagina-credito-rural .campo {
+        gap: 4px;
+    }
+
+    .pagina-credito-rural .campo label {
+        font-size: 9px;
+        line-height: 1.3;
+    }
+
+    .pagina-credito-rural .campo small,
+    .pagina-credito-rural .campo-ajuda {
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .campo input,
+    .pagina-credito-rural .campo select,
+    .pagina-credito-rural .campo textarea {
+        min-height: 40px;
+        height: 40px;
+        padding-right: 10px;
+        padding-left: 10px;
+        font-size: 12px;
+        border-radius: 7px;
+    }
+
+    .pagina-credito-rural .campo textarea {
+        min-height: 75px;
+        height: auto;
+    }
+
+    .pagina-credito-rural .input-prefixo>span,
+    .pagina-credito-rural .input-sufixo>span {
+        min-width: 39px;
+        padding: 0 7px;
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .input-prefixo>span {
+        border-radius: 7px 0 0 7px;
+    }
+
+    .pagina-credito-rural .input-sufixo>span {
+        border-radius: 0 7px 7px 0;
+    }
+
+    .pagina-credito-rural .input-prefixo input {
+        border-radius: 0 7px 7px 0;
+    }
+
+    .pagina-credito-rural .input-sufixo input {
+        border-radius: 7px 0 0 7px;
+    }
+
+    /* Condição */
+
+    .pagina-credito-rural #condicaoLinha {
+        margin-top: 14px;
+        padding: 10px 11px 10px 31px;
+        border-left-width: 3px;
+        border-radius: 7px;
+        font-size: 8px;
+        line-height: 1.5;
+    }
+
+    .pagina-credito-rural #condicaoLinha::before {
+        top: 15px;
+        left: 12px;
+        width: 6px;
+        height: 6px;
+    }
+
+    .pagina-credito-rural #condicaoLinha code {
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .formulario-card>.aviso:not(#condicaoLinha) {
+        margin-top: 12px;
+        padding: 10px;
+        border-left-width: 3px;
+        font-size: 8px;
+    }
+
+    /* Botões */
+
+    .pagina-credito-rural .acoes {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr);
+        gap: 7px;
+        margin-top: 15px;
+    }
+
+    .pagina-credito-rural .acoes button {
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        font-size: 9px;
+    }
+
+    /* Resultado */
+
+    .pagina-credito-rural .resultado-destaque {
+        min-height: 0;
+        margin-bottom: 12px;
+        padding: 13px;
+        border-radius: 9px;
+    }
+
+    .pagina-credito-rural .resultado-destaque span {
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .resultado-destaque strong {
+        font-size: 18px;
+    }
+
+    .pagina-credito-rural .resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .pagina-credito-rural .resultado-item {
+        min-height: 58px;
+        padding: 9px 9px 9px 11px;
+        border-radius: 7px;
+    }
+
+    .pagina-credito-rural .resultado-item span {
+        margin-bottom: 3px;
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .resultado-item strong {
+        font-size: 10px;
+    }
+
+    .pagina-credito-rural .linha-selecionada {
+        margin-top: 8px;
+        padding: 9px 10px;
+        border-left-width: 3px;
+        border-radius: 7px;
+    }
+
+    .pagina-credito-rural .linha-selecionada span {
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .linha-selecionada strong {
+        font-size: 9px;
+    }
+
+    /* Tabela */
+
+    .pagina-credito-rural .tabela-card table {
+        min-width: 650px;
+    }
+
+    .pagina-credito-rural .tabela-card th,
+    .pagina-credito-rural .tabela-card td {
+        padding: 8px 9px;
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .tabela-card th {
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .tabela-card .sem-dados {
+        padding: 20px 10px;
+        font-size: 8px;
+    }
+
+    /* Informações */
+
+    .pagina-credito-rural .documento-grupo-titulo {
+        padding: 8px 10px;
+        font-size: 9px;
+    }
+
+    .pagina-credito-rural .documento-item {
+        padding: 8px 9px 8px 25px;
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .documento-item::before {
+        top: 13px;
+        left: 10px;
+        width: 5px;
+        height: 5px;
+    }
+
+    .pagina-credito-rural .documentos-observacao {
+        margin-top: 12px;
+        padding: 9px 10px;
+        border-left-width: 3px;
+        font-size: 7px;
+    }
+
+    /* Material de apoio */
+
+    .pagina-credito-rural .material-apoio-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .pagina-credito-rural .material-apoio-item {
+        gap: 11px;
+        padding: 12px;
+        border-radius: 9px;
+    }
+
+    .pagina-credito-rural .material-apoio-icone {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+        border-radius: 9px;
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .material-apoio-tipo {
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .material-apoio-conteudo strong {
+        margin-bottom: 3px;
+        font-size: 10px;
+    }
+
+    .pagina-credito-rural .material-apoio-conteudo p {
+        margin-bottom: 5px;
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .material-apoio-download {
+        font-size: 8px;
+    }
+}
+
+/* =========================================================
+   MOBILE PEQUENO
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .pagina-credito-rural .simulador-grid {
+        width: calc(100% - 20px);
+        padding-top: 6px;
+        padding-bottom: 20px;
+    }
+
+    .pagina-credito-rural .simulador-grid .card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .pagina-credito-rural .titulo-secao h2 {
+        font-size: 16px;
+    }
+
+    .pagina-credito-rural .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .campo label {
+        font-size: 8px;
+    }
+
+    .pagina-credito-rural .campo input,
+    .pagina-credito-rural .campo select,
+    .pagina-credito-rural .campo textarea {
+        min-height: 38px;
+        height: 38px;
+        font-size: 11px;
+    }
+
+    .pagina-credito-rural .campo textarea {
+        height: auto;
+        min-height: 70px;
+    }
+
+    .pagina-credito-rural #condicaoLinha {
+        font-size: 7px;
+    }
+
+    .pagina-credito-rural .resultado-destaque strong {
+        font-size: 17px;
+    }
+
+    .pagina-credito-rural .resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .pagina-credito-rural .resultado-item {
+        min-height: 54px;
+        padding: 8px 8px 8px 10px;
+    }
+
+    .pagina-credito-rural .resultado-item span {
+        font-size: 6px;
+    }
+
+    .pagina-credito-rural .resultado-item strong {
+        font-size: 9px;
+    }
+
+    .pagina-credito-rural .tabela-card table {
+        min-width: 610px;
+    }
+
+    .pagina-credito-rural .material-apoio-conteudo strong {
+        font-size: 9px;
+    }
+}
+
+/* =========================================================
+   MOBILE MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .pagina-credito-rural .simulador-grid {
+        width: calc(100% - 16px);
+    }
+
+    .pagina-credito-rural .simulador-grid .card {
+        padding: 11px;
+    }
+
+    .pagina-credito-rural .titulo-secao h2 {
+        font-size: 15px;
+    }
+
+    .pagina-credito-rural .campo input,
+    .pagina-credito-rural .campo select,
+    .pagina-credito-rural .campo textarea {
+        font-size: 10px;
+    }
+
+    .pagina-credito-rural .resultados-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .pagina-credito-rural .resultado-destaque strong {
+        font-size: 16px;
+    }
+
+    .pagina-credito-rural .tabela-card table {
+        min-width: 580px;
+    }
+}
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .pagina-credito-rural #btnSimular:hover,
+    .pagina-credito-rural #btnLimpar:hover,
+    .pagina-credito-rural .material-apoio-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* =========================================================
+   IMPRESSÃO
+   ========================================================= */
+
+@media print {
+
+    .pagina-credito-rural .simulador-grid {
+        display: grid !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 10px !important;
+        overflow: visible !important;
+    }
+
+    .pagina-credito-rural .simulador-grid .card {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 14px !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pagina-credito-rural .formulario-card {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+    }
+
+    .pagina-credito-rural .resultado-card {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+    }
+
+    .pagina-credito-rural .tabela-card {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+    }
+
+    .pagina-credito-rural .documentos-card {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+    }
+
+    .pagina-credito-rural .material-apoio-card {
+        display: none !important;
+    }
+
+    .pagina-credito-rural .acoes {
+        display: none !important;
+    }
+
+    .pagina-credito-rural .formulario-card>.aviso:not(#condicaoLinha) {
+        display: none !important;
+    }
+
+    .pagina-credito-rural .grid-form {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .pagina-credito-rural .campo label {
+        font-size: 7px !important;
+    }
+
+    .pagina-credito-rural .campo input,
+    .pagina-credito-rural .campo select {
+        min-height: 30px !important;
+        height: 30px !important;
+        padding: 0 7px !important;
+        font-size: 8px !important;
+    }
+
+    .pagina-credito-rural .input-prefixo>span,
+    .pagina-credito-rural .input-sufixo>span {
+        min-width: 32px !important;
+        padding: 0 5px !important;
+        font-size: 7px !important;
+    }
+
+    .pagina-credito-rural #condicaoLinha {
+        margin-top: 10px !important;
+        padding: 8px 9px 8px 26px !important;
+        font-size: 7px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pagina-credito-rural #condicaoLinha::before {
+        top: 12px !important;
+        left: 10px !important;
+    }
+
+    .pagina-credito-rural .resultado-destaque {
+        min-height: 68px !important;
+        padding: 12px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .pagina-credito-rural .resultado-destaque span {
+        font-size: 8px !important;
+    }
+
+    .pagina-credito-rural .resultado-destaque strong {
+        font-size: 18px !important;
+    }
+
+    .pagina-credito-rural .resultados-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    .pagina-credito-rural .resultado-item {
+        min-height: 50px !important;
+        padding: 7px !important;
+    }
+
+    .pagina-credito-rural .resultado-item span {
+        font-size: 6px !important;
+    }
+
+    .pagina-credito-rural .resultado-item strong {
+        font-size: 8px !important;
+    }
+
+    .pagina-credito-rural .linha-selecionada {
+        padding: 8px !important;
+        margin-top: 7px !important;
+    }
+
+    .pagina-credito-rural .linha-selecionada span {
+        font-size: 6px !important;
+    }
+
+    .pagina-credito-rural .linha-selecionada strong {
+        font-size: 8px !important;
+    }
+
+    .pagina-credito-rural .tabela-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        overflow: visible !important;
+    }
+
+    .pagina-credito-rural .tabela-card table {
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: auto !important;
+    }
+
+    .pagina-credito-rural .tabela-card th,
+    .pagina-credito-rural .tabela-card td {
+        padding: 5px 6px !important;
+        font-size: 7px !important;
+        white-space: normal !important;
+    }
+
+    .pagina-credito-rural .tabela-card th {
+        font-size: 6px !important;
+    }
+
+    .pagina-credito-rural .documento-grupo {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pagina-credito-rural .documento-grupo-titulo {
+        padding: 7px 8px !important;
+        font-size: 7px !important;
+    }
+
+    .pagina-credito-rural .documento-item {
+        padding: 6px 7px 6px 20px !important;
+        font-size: 7px !important;
+    }
+
+    .pagina-credito-rural .documento-item::before {
+        top: 10px !important;
+        left: 8px !important;
+        width: 4px !important;
+        height: 4px !important;
+    }
+
+    .pagina-credito-rural .documentos-observacao {
+        font-size: 7px !important;
+    }
+
+    .pagina-credito-rural .simulador-grid,
+    .pagina-credito-rural .simulador-grid * {
+        -webkit-print-color-adjust:
+            exact !important;
+        print-color-adjust:
+            exact !important;
     }
 }
