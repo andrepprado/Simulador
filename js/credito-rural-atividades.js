@@ -752,47 +752,123 @@
             );
         }
 
-        const binario =
-            atob(
-                BASE_DADOS_GZIP_BASE64
-            );
-
-        const bytes =
-            new Uint8Array(
-                binario.length
-            );
-
-        for (
-            let i = 0;
-            i < binario.length;
-            i++
-        ) {
-            bytes[i] =
-                binario.charCodeAt(i);
-        }
-
-        const fluxo =
-            new Blob([
-                bytes
-            ])
-                .stream()
-                .pipeThrough(
-                    new DecompressionStream(
-                        "gzip"
-                    )
+        try {
+            const binario =
+                atob(
+                    BASE_DADOS_GZIP_BASE64
                 );
 
-        const texto =
-            await new Response(
-                fluxo
-            ).text();
+            const bytes =
+                new Uint8Array(
+                    binario.length
+                );
 
-        dadosInternos =
-            JSON.parse(
-                texto
+            for (
+                let i = 0;
+                i < binario.length;
+                i++
+            ) {
+                bytes[i] =
+                    binario.charCodeAt(i);
+            }
+
+            const fluxoCompactado =
+                new Blob(
+                    [
+                        bytes
+                    ],
+                    {
+                        type: "application/gzip"
+                    }
+                )
+                    .stream();
+
+            const fluxoDescompactado =
+                fluxoCompactado
+                    .pipeThrough(
+                        new DecompressionStream(
+                            "gzip"
+                        )
+                    );
+
+            const leitor =
+                fluxoDescompactado
+                    .getReader();
+
+            const decodificador =
+                new TextDecoder(
+                    "utf-8"
+                );
+
+            let texto =
+                "";
+
+            while (true) {
+                const {
+                    value,
+                    done
+                } =
+                    await leitor.read();
+
+                if (done) {
+                    break;
+                }
+
+                texto +=
+                    decodificador.decode(
+                        value,
+                        {
+                            stream: true
+                        }
+                    );
+            }
+
+            texto +=
+                decodificador.decode();
+
+            if (
+                !texto ||
+                !texto.trim()
+            ) {
+                throw new Error(
+                    "A base de Crédito Rural foi descompactada, mas não retornou conteúdo."
+                );
+            }
+
+            dadosInternos =
+                JSON.parse(
+                    texto
+                );
+
+            if (
+                !dadosInternos ||
+                typeof dadosInternos !==
+                "object"
+            ) {
+                throw new Error(
+                    "A base de Crédito Rural descompactada possui formato inválido."
+                );
+            }
+
+            return dadosInternos;
+        } catch (
+        erro
+        ) {
+            console.error(
+                "[Crédito Rural] Erro ao descompactar a base ASTEC:",
+                erro
             );
 
-        return dadosInternos;
+            throw new Error(
+                `Falha ao descompactar a base interna de Crédito Rural: ${erro &&
+                    erro.message
+                    ? erro.message
+                    : String(
+                        erro
+                    )
+                }`
+            );
+        }
     }
 
     /* =========================================================
