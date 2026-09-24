@@ -1,434 +1,874 @@
 (function () {
     "use strict";
 
-    const ATIVIDADES_CREDITO_RURAL = Object.freeze({
-        agricola: {
-            nome: "Agrícola",
-            atividades: [
-                "Arroz",
-                "Milho",
-                "Sorgo",
-                "Trigo",
-                "Aveia",
-                "Cevada",
-                "Centeio",
-                "Triticale",
-                "Canola",
-                "Soja",
-                "Amendoim",
-                "Mamona",
-                "Algodão",
-                "Batata-doce",
-                "Batata-inglesa",
-                "Beterraba",
-                "Cará",
-                "Cenoura",
-                "Gengibre",
-                "Inhame",
-                "Mandioca",
-                "Mandioquinha salsa (batata-baroa)",
-                "Nabo",
-                "Rabanete",
-                "Acelga",
-                "Agrião",
-                "Alface",
-                "Almeirão",
-                "Chicória",
-                "Couve",
-                "Escarola",
-                "Espinafre",
-                "Rúcula",
-                "Serralha",
-                "Taioba",
-                "Abóbora-moranga",
-                "Abobrinha",
-                "Berinjela",
-                "Bucha Vegetal",
-                "Chuchu",
-                "Jiló",
-                "Maxixe",
-                "Pepino",
-                "Pimenta",
-                "Pimentão",
-                "Quiabo",
-                "Tomate-cereja",
-                "Tomate mesa estaqueado",
-                "Tomate mesa rasteiro",
-                "Vagem",
-                "Ervilha (vagem verde)",
-                "Feijão-caupi (macaçar-vagem verde)",
-                "Alho",
-                "Alho-poró",
-                "Alcachofra",
-                "Aspargo",
-                "Brócolis",
-                "Cebola",
-                "Cebolinha Verde",
-                "Couve-Flor",
-                "Abacaxi",
-                "Açaí cultivado",
-                "Banana",
-                "Cacau cultivado",
-                "Laranja",
-                "Tangerina",
-                "Outras frutas",
-                "Cafeicultura",
-                "Cana-de-açúcar",
-                "Floricultura",
-                "Olivicultura",
-                "Palmáceas",
-                "Plantas medicinais",
-                "Plantas aromáticas",
-                "Plantas condimentares"
-            ]
-        },
+    const URL_BASE_CREDITO_RURAL =
+        "arquivos/credito-rural/RELACAO_UNIFICADA_HORIZONTAL.tsv";
 
-        pecuaria: {
-            nome: "Pecuária",
-            atividades: [
-                "Bovinocultura Leite",
-                "Bovinocultura Corte - Cria",
-                "Bovinocultura Corte - Recria",
-                "Bovinocultura Corte - Recria/Engorda",
-                "Bovinocultura Corte - Engorda",
-                "Bovinocultura Corte - Cria/Recria/Engorda",
-                "Bovinocultura Corte - Confinamento",
-                "Bubalinocultura Leite",
-                "Bubalinocultura Corte",
-                "Suinocultura Integrada",
-                "Suinocultura Não Integrada",
-                "Avicultura Corte",
-                "Avicultura Postura",
-                "Ovinocultura",
-                "Caprinocultura",
-                "Apicultura",
-                "Meliponicultura",
-                "Cunicultura",
-                "Chinchilicultura",
-                "Ranicultura",
-                "Sericicultura",
-                "Aquicultura - Piscicultura",
-                "Aquicultura - Carcinicultura",
-                "Aquicultura - Outras espécies",
-                "Aquicultura - Pesca Comercial",
-                "Aquicultura - Pesca Artesanal",
-                "Aquicultura - Pesca Industrial"
-            ]
-        },
-
-        extrativismo: {
-            nome: "Extrativismo",
-            atividades: [
-                "Extrativismo vegetal sustentável",
-                "Manejo florestal",
-                "Produtos da socio biodiversidade",
-                "Pirarucu de manejo"
-            ]
-        },
-
-        florestal_agroflorestal: {
-            nome: "Florestal / Agroflorestal",
-            atividades: [
-                "Florestas comerciais",
-                "Manejo florestal sustentável",
-                "Sistemas agroflorestais",
-                "ILF",
-                "IPF",
-                "ILPF"
-            ]
-        }
-    });
+    let registros = [];
+    let carregada = false;
+    let carregando = null;
 
     function normalizarTexto(valor) {
         return String(valor || "")
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "_")
-            .replace(/^_+|_+$/g, "");
+            .replace(/\s+/g, " ")
+            .trim();
     }
 
-    function normalizarIdentificadorAtividade(valor) {
-        return normalizarTexto(valor);
+    function limparValor(valor) {
+        return String(valor ?? "")
+            .replace(/\r/g, "")
+            .trim();
     }
 
-    function obterGrupo(chaveGrupo) {
-        return ATIVIDADES_CREDITO_RURAL[chaveGrupo] || null;
-    }
+    function parseTsv(texto) {
+        const linhas = [];
 
-    function obterNomeGrupo(chaveGrupo) {
-        return obterGrupo(chaveGrupo)?.nome || chaveGrupo || "";
-    }
+        let linha = [];
+        let campo = "";
+        let dentroAspas = false;
 
-    function obterAtividades(chaveGrupo) {
-        return [...(obterGrupo(chaveGrupo)?.atividades || [])];
-    }
+        for (
+            let i = 0;
+            i < texto.length;
+            i++
+        ) {
+            const caractere =
+                texto[i];
 
-    function localizarAtividadePorNome(nome, grupoPreferencial = null) {
-        const procurado = normalizarTexto(nome);
-
-        const grupos = grupoPreferencial
-            ? [grupoPreferencial]
-            : Object.keys(ATIVIDADES_CREDITO_RURAL);
-
-        for (const grupo of grupos) {
-            const atividades = obterAtividades(grupo);
-
-            for (const atividade of atividades) {
-                if (normalizarTexto(atividade) === procurado) {
-                    return {
-                        grupo,
-                        atividade: normalizarTexto(atividade),
-                        nomeAtividade: atividade
-                    };
-                }
-            }
-        }
-
-        return null;
-    }
-
-    function obterNomeAtividade(valorAtividade, chaveGrupo = null) {
-        const procurado = normalizarTexto(valorAtividade);
-
-        const grupos = chaveGrupo
-            ? [chaveGrupo]
-            : Object.keys(ATIVIDADES_CREDITO_RURAL);
-
-        for (const grupo of grupos) {
-            const atividade = obterAtividades(grupo).find(
-                item => normalizarTexto(item) === procurado
-            );
-
-            if (atividade) {
-                return atividade;
-            }
-        }
-
-        return valorAtividade || "";
-    }
-
-    function obterGrupoPorAtividade(valorAtividade) {
-        const procurado = normalizarTexto(valorAtividade);
-
-        for (const grupo of Object.keys(ATIVIDADES_CREDITO_RURAL)) {
-            const encontrou = obterAtividades(grupo).some(
-                item => normalizarTexto(item) === procurado
-            );
-
-            if (encontrou) {
-                return grupo;
-            }
-        }
-
-        return null;
-    }
-
-    function preencherGruposEmSelect(
-        select,
-        selecionado = "",
-        incluirVazio = false
-    ) {
-        if (!select) {
-            return;
-        }
-
-        select.innerHTML = "";
-
-        if (incluirVazio) {
-            select.appendChild(new Option("Selecione", ""));
-        }
-
-        Object.entries(ATIVIDADES_CREDITO_RURAL).forEach(
-            ([chave, grupo]) => {
-                const option = new Option(grupo.nome, chave);
-
-                if (chave === selecionado) {
-                    option.selected = true;
-                }
-
-                select.appendChild(option);
-            }
-        );
-    }
-
-    function preencherAtividadesEmSelect(
-        select,
-        chaveGrupo,
-        selecionada = "",
-        incluirVazio = false
-    ) {
-        if (!select) {
-            return;
-        }
-
-        select.innerHTML = "";
-
-        if (incluirVazio) {
-            select.appendChild(new Option("Selecione", ""));
-        }
-
-        obterAtividades(chaveGrupo).forEach(nome => {
-            const valor = normalizarTexto(nome);
-            const option = new Option(nome, valor);
+            const proximo =
+                texto[i + 1];
 
             if (
-                valor === selecionada ||
-                nome === selecionada
+                caractere === '"'
             ) {
-                option.selected = true;
+                if (
+                    dentroAspas &&
+                    proximo === '"'
+                ) {
+                    campo += '"';
+                    i++;
+                    continue;
+                }
+
+                dentroAspas =
+                    !dentroAspas;
+
+                continue;
             }
 
-            select.appendChild(option);
-        });
+            if (
+                caractere === "\t" &&
+                !dentroAspas
+            ) {
+                linha.push(
+                    campo
+                );
+
+                campo = "";
+
+                continue;
+            }
+
+            if (
+                (
+                    caractere === "\n" ||
+                    caractere === "\r"
+                ) &&
+                !dentroAspas
+            ) {
+                if (
+                    caractere === "\r" &&
+                    proximo === "\n"
+                ) {
+                    i++;
+                }
+
+                linha.push(
+                    campo
+                );
+
+                campo = "";
+
+                if (
+                    linha.length > 1 ||
+                    linha.some(
+                        valor =>
+                            limparValor(
+                                valor
+                            )
+                    )
+                ) {
+                    linhas.push(
+                        linha
+                    );
+                }
+
+                linha = [];
+
+                continue;
+            }
+
+            campo += caractere;
+        }
+
+        if (
+            campo.length ||
+            linha.length
+        ) {
+            linha.push(
+                campo
+            );
+
+            if (
+                linha.length > 1 ||
+                linha.some(
+                    valor =>
+                        limparValor(
+                            valor
+                        )
+                )
+            ) {
+                linhas.push(
+                    linha
+                );
+            }
+        }
+
+        return linhas;
     }
 
-    function preencherTodasAtividadesAgrupadas(
-        select,
-        selecionada = "",
-        incluirVazio = true
+    function percentualParaNumero(
+        valor
     ) {
-        if (!select) {
-            return;
-        }
+        const texto =
+            limparValor(
+                valor
+            )
+                .replace(
+                    "%",
+                    ""
+                )
+                .replace(
+                    /\./g,
+                    ""
+                )
+                .replace(
+                    ",",
+                    "."
+                );
 
-        select.innerHTML = "";
-
-        if (incluirVazio) {
-            select.appendChild(
-                new Option("Selecione a atividade", "")
+        const numero =
+            Number(
+                texto
             );
-        }
 
-        Object.entries(ATIVIDADES_CREDITO_RURAL).forEach(
-            ([chaveGrupo, grupo]) => {
-                const optgroup = document.createElement("optgroup");
+        return Number.isFinite(
+            numero
+        )
+            ? numero
+            : null;
+    }
 
-                optgroup.label = grupo.nome;
+    function inteiroOuNull(
+        valor
+    ) {
+        const numero =
+            Number(
+                limparValor(
+                    valor
+                )
+                    .replace(
+                        /\D/g,
+                        ""
+                    )
+            );
 
-                grupo.atividades.forEach(nome => {
-                    const atividade = normalizarTexto(nome);
-                    const valor = `${chaveGrupo}|${atividade}`;
-                    const option = new Option(nome, valor);
+        return (
+            Number.isFinite(
+                numero
+            ) &&
+            numero > 0
+        )
+            ? numero
+            : null;
+    }
 
-                    if (
-                        selecionada === valor ||
-                        selecionada === atividade ||
-                        selecionada === nome
-                    ) {
-                        option.selected = true;
-                    }
+    function mapearRegistro(
+        cabecalhos,
+        valores,
+        indice
+    ) {
+        const objeto = {};
 
-                    optgroup.appendChild(option);
-                });
-
-                select.appendChild(optgroup);
+        cabecalhos.forEach(
+            (
+                cabecalho,
+                posicao
+            ) => {
+                objeto[
+                    cabecalho
+                ] =
+                    limparValor(
+                        valores[
+                        posicao
+                        ]
+                    );
             }
         );
-    }
 
-    function interpretarValorAtividadeAgrupada(valor) {
-        const texto = String(valor || "");
+        const linhas = [];
 
-        if (!texto.includes("|")) {
-            return null;
-        }
+        for (
+            let i = 1;
+            i <= 7;
+            i++
+        ) {
+            const chave =
+                objeto[
+                `Chave Regra ${i}`
+                ];
 
-        const [grupo, atividade] = texto.split("|");
+            const linha =
+                objeto[
+                `Linha ${i}`
+                ];
 
-        if (!grupo || !atividade) {
-            return null;
+            if (
+                !chave &&
+                !linha
+            ) {
+                continue;
+            }
+
+            linhas.push({
+                numero:
+                    i,
+
+                chave:
+                    chave,
+
+                beneficiario:
+                    objeto[
+                    `Beneficiário ${i}`
+                    ],
+
+                linha:
+                    linha,
+
+                finalidade:
+                    objeto[
+                    `Finalidade da Linha ${i}`
+                    ],
+
+                fonte:
+                    objeto[
+                    `Fonte de Recursos ${i}`
+                    ],
+
+                prazo:
+                    inteiroOuNull(
+                        objeto[
+                        `Prazo Máx. Meses ${i}`
+                        ]
+                    ),
+
+                taxaSingularTexto:
+                    objeto[
+                    `Taxa Singular ${i}`
+                    ],
+
+                taxaAssociadoTexto:
+                    objeto[
+                    `Taxa Associado ${i}`
+                    ],
+
+                taxaSingular:
+                    percentualParaNumero(
+                        objeto[
+                        `Taxa Singular ${i}`
+                        ]
+                    ),
+
+                taxaAssociado:
+                    percentualParaNumero(
+                        objeto[
+                        `Taxa Associado ${i}`
+                        ]
+                    ),
+
+                aplicabilidade:
+                    objeto[
+                    `Aplicabilidade ${i}`
+                    ],
+
+                condicao:
+                    objeto[
+                    `Condição / Observação ${i}`
+                    ],
+
+                fonteRegra:
+                    objeto[
+                    `Fonte Regra ${i}`
+                    ]
+            });
         }
 
         return {
-            grupo,
-            atividade,
-            nomeGrupo: obterNomeGrupo(grupo),
-            nomeAtividade: obterNomeAtividade(atividade, grupo)
+            id:
+                String(
+                    indice
+                ),
+
+            codigo:
+                objeto[
+                "Código"
+                ],
+
+            produto:
+                objeto[
+                "Produto"
+                ],
+
+            finalidade:
+                objeto[
+                "Finalidade"
+                ],
+
+            modalidade:
+                objeto[
+                "Modalidade"
+                ],
+
+            variedade:
+                objeto[
+                "Variedade"
+                ],
+
+            cesta:
+                objeto[
+                "Cesta"
+                ],
+
+            consorcio:
+                objeto[
+                "Consórcio"
+                ],
+
+            unidadeProducao:
+                objeto[
+                "U.M. Produção"
+                ],
+
+            zoneamento:
+                objeto[
+                "Zoneamento"
+                ],
+
+            abaOrigem:
+                objeto[
+                "Aba Origem"
+                ],
+
+            linhas:
+                linhas
         };
     }
 
-    /* =====================================================
-       COMPATIBILIDADE COM CREDITO-RURAL.HTML
-       ===================================================== */
-
-    function preencherGruposAtividadeCreditoRural() {
-        const select = document.getElementById("grupoAtividade");
-
-        if (!select) {
-            return;
+    async function carregar() {
+        if (
+            carregada
+        ) {
+            return registros;
         }
 
-        preencherGruposEmSelect(
-            select,
-            select.value || "agricola",
-            false
+        if (
+            carregando
+        ) {
+            return carregando;
+        }
+
+        carregando =
+            (
+                async () => {
+                    const resposta =
+                        await fetch(
+                            URL_BASE_CREDITO_RURAL,
+                            {
+                                cache:
+                                    "no-store"
+                            }
+                        );
+
+                    if (
+                        !resposta.ok
+                    ) {
+                        throw new Error(
+                            `Não foi possível carregar a base de Crédito Rural. HTTP ${resposta.status}.`
+                        );
+                    }
+
+                    const texto =
+                        await resposta.text();
+
+                    const tabela =
+                        parseTsv(
+                            texto
+                        );
+
+                    if (
+                        tabela.length <
+                        2
+                    ) {
+                        throw new Error(
+                            "A base de Crédito Rural está vazia ou em formato inválido."
+                        );
+                    }
+
+                    const cabecalhos =
+                        tabela[0]
+                            .map(
+                                limparValor
+                            );
+
+                    registros =
+                        tabela
+                            .slice(
+                                1
+                            )
+                            .filter(
+                                linha =>
+                                    limparValor(
+                                        linha[0]
+                                    )
+                            )
+                            .map(
+                                (
+                                    linha,
+                                    indice
+                                ) =>
+                                    mapearRegistro(
+                                        cabecalhos,
+                                        linha,
+                                        indice
+                                    )
+                            );
+
+                    carregada =
+                        true;
+
+                    return registros;
+                }
+            )();
+
+        try {
+            return await carregando;
+        } finally {
+            carregando =
+                null;
+        }
+    }
+
+    function garantirCarregada() {
+        if (
+            !carregada
+        ) {
+            throw new Error(
+                "A base de Crédito Rural ainda não foi carregada."
+            );
+        }
+    }
+
+    function listarFinalidades() {
+        garantirCarregada();
+
+        const ordemPreferencial = [
+            "Custeio Agrícola",
+            "Custeio Pecuário",
+            "Investimento"
+        ];
+
+        const existentes =
+            [
+                ...new Set(
+                    registros.map(
+                        item =>
+                            item.finalidade
+                    )
+                )
+            ];
+
+        return existentes.sort(
+            (
+                a,
+                b
+            ) => {
+                const ia =
+                    ordemPreferencial.indexOf(
+                        a
+                    );
+
+                const ib =
+                    ordemPreferencial.indexOf(
+                        b
+                    );
+
+                if (
+                    ia !== -1 ||
+                    ib !== -1
+                ) {
+                    if (
+                        ia === -1
+                    ) {
+                        return 1;
+                    }
+
+                    if (
+                        ib === -1
+                    ) {
+                        return -1;
+                    }
+
+                    return ia - ib;
+                }
+
+                return a.localeCompare(
+                    b,
+                    "pt-BR"
+                );
+            }
         );
     }
 
-    function preencherAtividadesCreditoRural() {
-        const grupo = document.getElementById("grupoAtividade");
-        const atividade = document.getElementById("atividade");
+    function listarProdutos(
+        finalidade
+    ) {
+        garantirCarregada();
 
-        if (!grupo || !atividade) {
-            return;
-        }
-
-        preencherAtividadesEmSelect(
-            atividade,
-            grupo.value || "agricola",
-            atividade.value,
-            false
+        return [
+            ...new Set(
+                registros
+                    .filter(
+                        item =>
+                            item.finalidade ===
+                            finalidade
+                    )
+                    .map(
+                        item =>
+                            item.produto
+                    )
+            )
+        ].sort(
+            (
+                a,
+                b
+            ) =>
+                a.localeCompare(
+                    b,
+                    "pt-BR"
+                )
         );
     }
 
-    function inicializar() {
-        const grupo = document.getElementById("grupoAtividade");
-        const atividade = document.getElementById("atividade");
+    function listarEnquadramentos(
+        finalidade,
+        produto
+    ) {
+        garantirCarregada();
 
-        if (!grupo || !atividade) {
-            return;
-        }
-
-        preencherGruposAtividadeCreditoRural();
-        preencherAtividadesCreditoRural();
-
-        grupo.addEventListener(
-            "change",
-            preencherAtividadesCreditoRural
+        return registros.filter(
+            item =>
+                item.finalidade ===
+                finalidade &&
+                item.produto ===
+                produto
         );
     }
 
-    window.ATIVIDADES_CREDITO_RURAL =
-        ATIVIDADES_CREDITO_RURAL;
+    function obterEnquadramento(
+        id
+    ) {
+        garantirCarregada();
 
-    window.CreditoRuralAtividades = {
-        dados: ATIVIDADES_CREDITO_RURAL,
-        normalizarIdentificadorAtividade,
-        obterGrupo,
-        obterNomeGrupo,
-        obterAtividades,
-        obterNomeAtividade,
-        obterGrupoPorAtividade,
-        localizarAtividadePorNome,
-        preencherGruposEmSelect,
-        preencherAtividadesEmSelect,
-        preencherTodasAtividadesAgrupadas,
-        interpretarValorAtividadeAgrupada,
-        inicializar
-    };
+        return registros.find(
+            item =>
+                item.id ===
+                String(
+                    id
+                )
+        ) || null;
+    }
 
-    window.preencherGruposAtividadeCreditoRural =
-        preencherGruposAtividadeCreditoRural;
+    function obterLinha(
+        enquadramentoId,
+        indiceLinha
+    ) {
+        const enquadramento =
+            obterEnquadramento(
+                enquadramentoId
+            );
 
-    window.preencherAtividadesCreditoRural =
-        preencherAtividadesCreditoRural;
+        if (
+            !enquadramento
+        ) {
+            return null;
+        }
 
-    window.preencherTodasAtividadesAgrupadasCreditoRural =
-        preencherTodasAtividadesAgrupadas;
+        return enquadramento
+            .linhas[
+            Number(
+                indiceLinha
+            )
+        ] || null;
+    }
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        inicializar
-    );
+    function resumirTexto(
+        texto,
+        tamanho = 70
+    ) {
+        const valor =
+            limparValor(
+                texto
+            );
+
+        if (
+            valor.length <=
+            tamanho
+        ) {
+            return valor;
+        }
+
+        return (
+            valor.slice(
+                0,
+                tamanho - 3
+            ) +
+            "..."
+        );
+    }
+
+    function montarDescricaoEnquadramento(
+        item,
+        mostrarCodigo = true
+    ) {
+        const partes = [];
+
+        if (
+            mostrarCodigo &&
+            item.codigo
+        ) {
+            partes.push(
+                `Código ${item.codigo}`
+            );
+        }
+
+        if (
+            item.modalidade
+        ) {
+            partes.push(
+                resumirTexto(
+                    item.modalidade,
+                    55
+                )
+            );
+        }
+
+        if (
+            item.variedade &&
+            ![
+                "não se aplica",
+                "não é aplicável"
+            ].includes(
+                normalizarTexto(
+                    item.variedade
+                )
+            )
+        ) {
+            partes.push(
+                resumirTexto(
+                    item.variedade,
+                    70
+                )
+            );
+        }
+
+        if (
+            item.consorcio &&
+            normalizarTexto(
+                item.consorcio
+            ) !==
+            "não se aplica"
+        ) {
+            partes.push(
+                item.consorcio
+            );
+        }
+
+        if (
+            item.zoneamento &&
+            normalizarTexto(
+                item.zoneamento
+            ) !==
+            "não se aplica"
+        ) {
+            partes.push(
+                item.zoneamento
+            );
+        }
+
+        return partes.join(
+            " | "
+        );
+    }
+
+    function preencherFinalidades(
+        select,
+        selecionada = ""
+    ) {
+        if (
+            !select
+        ) {
+            return;
+        }
+
+        select.innerHTML =
+            "";
+
+        listarFinalidades()
+            .forEach(
+                nome => {
+                    const option =
+                        new Option(
+                            nome,
+                            nome
+                        );
+
+                    if (
+                        nome ===
+                        selecionada
+                    ) {
+                        option.selected =
+                            true;
+                    }
+
+                    select.appendChild(
+                        option
+                    );
+                }
+            );
+    }
+
+    function preencherProdutos(
+        select,
+        finalidade,
+        selecionado = ""
+    ) {
+        if (
+            !select
+        ) {
+            return;
+        }
+
+        select.innerHTML =
+            "";
+
+        listarProdutos(
+            finalidade
+        ).forEach(
+            nome => {
+                const option =
+                    new Option(
+                        nome,
+                        nome
+                    );
+
+                if (
+                    nome ===
+                    selecionado
+                ) {
+                    option.selected =
+                        true;
+                }
+
+                select.appendChild(
+                    option
+                );
+            }
+        );
+    }
+
+    function preencherEnquadramentos(
+        select,
+        finalidade,
+        produto,
+        selecionado = ""
+    ) {
+        if (
+            !select
+        ) {
+            return [];
+        }
+
+        const lista =
+            listarEnquadramentos(
+                finalidade,
+                produto
+            );
+
+        select.innerHTML =
+            "";
+
+        lista.forEach(
+            item => {
+                const option =
+                    new Option(
+                        montarDescricaoEnquadramento(
+                            item,
+                            true
+                        ),
+                        item.id
+                    );
+
+                if (
+                    item.id ===
+                    selecionado
+                ) {
+                    option.selected =
+                        true;
+                }
+
+                select.appendChild(
+                    option
+                );
+            }
+        );
+
+        select.disabled =
+            lista.length <= 1;
+
+        return lista;
+    }
+
+    function obterUrlBase() {
+        return URL_BASE_CREDITO_RURAL;
+    }
+
+    window.CreditoRuralBase =
+        Object.freeze({
+            carregar,
+            listarFinalidades,
+            listarProdutos,
+            listarEnquadramentos,
+            obterEnquadramento,
+            obterLinha,
+            preencherFinalidades,
+            preencherProdutos,
+            preencherEnquadramentos,
+            montarDescricaoEnquadramento,
+            normalizarTexto,
+            obterUrlBase
+        });
+
 })();

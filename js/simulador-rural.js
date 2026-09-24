@@ -1,183 +1,248 @@
-const LIMITE_VALOR_MONETARIO_CENTAVOS = 999999999999n;
+const LIMITE_VALOR_MONETARIO_CENTAVOS =
+    999999999999n;
 
-const LINHAS_CREDITO = {
-    custeio: [
-        {
-            id: "custeio_agro",
-            nome: "Custeio Agropecuário",
-            taxa: 8.50,
-            prazo: 12,
-            carencia: 0
-        },
-        {
-            id: "custeio_pronamp",
-            nome: "Custeio PRONAMP - Demonstrativo",
-            taxa: 8.00,
-            prazo: 12,
-            carencia: 0
-        },
-        {
-            id: "custeio_pronaf",
-            nome: "Custeio PRONAF - Demonstrativo",
-            taxa: 6.00,
-            prazo: 12,
-            carencia: 0
-        }
+const DOCUMENTOS_BASE = {
+    "Custeio Agrícola": [
+        "Documentação da atividade e da área de cultivo.",
+        "Orçamento, estimativa ou comprovação dos itens de custeio.",
+        "Documentação complementar conforme cultura, zoneamento e enquadramento."
     ],
-    investimento: [
-        {
-            id: "investimento_rural",
-            nome: "Investimento Agropecuário",
-            taxa: 9.50,
-            prazo: 60,
-            carencia: 12
-        },
-        {
-            id: "moderfrota_demo",
-            nome: "Máquinas e Equipamentos - Demonstrativo",
-            taxa: 10.50,
-            prazo: 84,
-            carencia: 12
-        },
-        {
-            id: "pronamp_investimento",
-            nome: "PRONAMP Investimento - Demonstrativo",
-            taxa: 8.50,
-            prazo: 96,
-            carencia: 24
-        }
+
+    "Custeio Pecuário": [
+        "Documentação da exploração pecuária e do rebanho/criação.",
+        "Orçamento, estimativa ou comprovação dos itens de custeio.",
+        "Documentação complementar conforme espécie, sistema produtivo e enquadramento."
     ],
-    comercializacao: [
-        {
-            id: "comercializacao",
-            nome: "Comercialização Rural",
-            taxa: 9.00,
-            prazo: 12,
-            carencia: 0
-        }
-    ],
-    industrializacao: [
-        {
-            id: "industrializacao",
-            nome: "Industrialização Rural",
-            taxa: 9.50,
-            prazo: 24,
-            carencia: 3
-        }
+
+    "Investimento": [
+        "Documentação da propriedade ou área rural.",
+        "Orçamento ou proposta comercial dos bens, serviços ou investimentos.",
+        "Documentos técnicos e licenças aplicáveis ao investimento."
     ]
 };
 
-const DOCUMENTOS = {
-    gerais: [
-        "Documento de identificação do proponente.",
-        "Comprovante de endereço atualizado.",
-        "Documentos cadastrais necessários para análise da operação."
-    ],
-    custeio: [
-        "Documentação relacionada à atividade rural.",
-        "Comprovação ou documentação da área onde será realizada a atividade.",
-        "Orçamentos, estimativas ou informações relacionadas aos itens financiados.",
-        "Documentação complementar conforme cultura, atividade e enquadramento da operação."
-    ],
-    investimento: [
-        "Documentação relacionada à propriedade ou área rural.",
-        "Orçamento ou proposta comercial do bem ou investimento.",
-        "Documentos técnicos relacionados ao investimento.",
-        "Documentação complementar conforme o tipo de bem ou finalidade financiada."
-    ],
-    comercializacao: [
-        "Documentação relacionada aos produtos objeto da comercialização.",
-        "Comprovação da produção ou origem dos produtos.",
-        "Documentos comerciais relacionados à operação."
-    ],
-    industrializacao: [
-        "Documentação relacionada à atividade de industrialização.",
-        "Documentação dos produtos ou matérias-primas envolvidos.",
-        "Orçamentos ou informações referentes aos custos da operação."
-    ],
-    agricola: [
-        "Informações da cultura ou produção agrícola envolvida.",
-        "Informações referentes à área de cultivo.",
-        "Documentação relacionada à produção e à atividade agrícola."
-    ],
-    pecuaria: [
-        "Informações relacionadas ao rebanho ou à criação.",
-        "Informações referentes à estrutura utilizada na atividade pecuária.",
-        "Documentação relacionada à exploração pecuária."
-    ],
-    extrativismo: [
-        "Informações relacionadas à atividade extrativista.",
-        "Documentação referente à origem e à exploração dos produtos.",
-        "Autorizações, licenças ou documentos aplicáveis à atividade, quando necessários."
-    ],
-    florestal_agroflorestal: [
-        "Informações relacionadas à atividade florestal ou agroflorestal.",
-        "Documentação referente à área utilizada na atividade.",
-        "Projetos, autorizações, licenças ou documentos técnicos aplicáveis, quando necessários."
-    ]
-};
+const finalidade =
+    document.getElementById(
+        "finalidade"
+    );
 
-const TITULOS_DOCUMENTOS_FINALIDADE = {
-    custeio: "Documentação para Custeio",
-    investimento: "Documentação para Investimento",
-    comercializacao: "Documentação para Comercialização",
-    industrializacao: "Documentação para Industrialização"
-};
+const atividade =
+    document.getElementById(
+        "atividade"
+    );
 
-const TITULOS_DOCUMENTOS_GRUPO = {
-    agricola: "Documentação da Atividade - Agrícola",
-    pecuaria: "Documentação da Atividade - Pecuária",
-    extrativismo: "Documentação da Atividade - Extrativismo",
-    florestal_agroflorestal: "Documentação da Atividade - Florestal / Agroflorestal"
-};
+const enquadramentoAtividade =
+    document.getElementById(
+        "enquadramentoAtividade"
+    );
 
-const finalidade = document.getElementById("finalidade");
-const linhaCredito = document.getElementById("linhaCredito");
-const grupoAtividade = document.getElementById("grupoAtividade");
-const atividade = document.getElementById("atividade");
-const valorProjeto = document.getElementById("valorProjeto");
-const recursosProprios = document.getElementById("recursosProprios");
-const valorFinanciado = document.getElementById("valorFinanciado");
-const prazo = document.getElementById("prazo");
-const carencia = document.getElementById("carencia");
-const taxa = document.getElementById("taxa");
-const periodicidade = document.getElementById("periodicidade");
-const sistema = document.getElementById("sistema");
-const btnSimular = document.getElementById("btnSimular");
-const btnLimpar = document.getElementById("btnLimpar");
+const linhaCredito =
+    document.getElementById(
+        "linhaCredito"
+    );
 
-const resultadoValorFinanciado = document.getElementById("resultadoValorFinanciado");
-const resultadoTaxa = document.getElementById("resultadoTaxa");
-const resultadoPrazo = document.getElementById("resultadoPrazo");
-const resultadoCarencia = document.getElementById("resultadoCarencia");
-const resultadoParcelas = document.getElementById("resultadoParcelas");
-const resultadoPrimeiraParcela = document.getElementById("resultadoPrimeiraParcela");
-const resultadoUltimaParcela = document.getElementById("resultadoUltimaParcela");
-const resultadoJuros = document.getElementById("resultadoJuros");
-const resultadoTotal = document.getElementById("resultadoTotal");
-const resultadoLinha = document.getElementById("resultadoLinha");
-const tabelaParcelas = document.getElementById("tabelaParcelas");
-const listaDocumentos = document.getElementById("listaDocumentos");
+const fonteRecursos =
+    document.getElementById(
+        "fonteRecursos"
+    );
 
-function limitarCentavos(valor) {
+const aplicabilidade =
+    document.getElementById(
+        "aplicabilidade"
+    );
+
+const tipoTaxa =
+    document.getElementById(
+        "tipoTaxa"
+    );
+
+const taxa =
+    document.getElementById(
+        "taxa"
+    );
+
+const valorProjeto =
+    document.getElementById(
+        "valorProjeto"
+    );
+
+const recursosProprios =
+    document.getElementById(
+        "recursosProprios"
+    );
+
+const valorFinanciado =
+    document.getElementById(
+        "valorFinanciado"
+    );
+
+const prazo =
+    document.getElementById(
+        "prazo"
+    );
+
+const prazoMaximo =
+    document.getElementById(
+        "prazoMaximo"
+    );
+
+const carencia =
+    document.getElementById(
+        "carencia"
+    );
+
+const periodicidade =
+    document.getElementById(
+        "periodicidade"
+    );
+
+const sistema =
+    document.getElementById(
+        "sistema"
+    );
+
+const condicaoLinha =
+    document.getElementById(
+        "condicaoLinha"
+    );
+
+const btnSimular =
+    document.getElementById(
+        "btnSimular"
+    );
+
+const btnLimpar =
+    document.getElementById(
+        "btnLimpar"
+    );
+
+const resultadoValorFinanciado =
+    document.getElementById(
+        "resultadoValorFinanciado"
+    );
+
+const resultadoTaxa =
+    document.getElementById(
+        "resultadoTaxa"
+    );
+
+const resultadoPrazo =
+    document.getElementById(
+        "resultadoPrazo"
+    );
+
+const resultadoCarencia =
+    document.getElementById(
+        "resultadoCarencia"
+    );
+
+const resultadoParcelas =
+    document.getElementById(
+        "resultadoParcelas"
+    );
+
+const resultadoPrimeiraParcela =
+    document.getElementById(
+        "resultadoPrimeiraParcela"
+    );
+
+const resultadoUltimaParcela =
+    document.getElementById(
+        "resultadoUltimaParcela"
+    );
+
+const resultadoJuros =
+    document.getElementById(
+        "resultadoJuros"
+    );
+
+const resultadoTotal =
+    document.getElementById(
+        "resultadoTotal"
+    );
+
+const resultadoFonte =
+    document.getElementById(
+        "resultadoFonte"
+    );
+
+const resultadoAplicabilidade =
+    document.getElementById(
+        "resultadoAplicabilidade"
+    );
+
+const resultadoLinha =
+    document.getElementById(
+        "resultadoLinha"
+    );
+
+const resultadoCodigosAstec =
+    document.getElementById(
+        "resultadoCodigosAstec"
+    );
+
+const tabelaParcelas =
+    document.getElementById(
+        "tabelaParcelas"
+    );
+
+const listaDocumentos =
+    document.getElementById(
+        "listaDocumentos"
+    );
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+function obterBase() {
+    if (
+        !window.CreditoRuralBase
+    ) {
+        throw new Error(
+            "O arquivo credito-rural-atividades.js não foi carregado."
+        );
+    }
+
+    return window
+        .CreditoRuralBase;
+}
+
+/* =========================================================
+   MOEDA
+   ========================================================= */
+
+function limitarCentavos(
+    valor
+) {
     let centavos;
 
     try {
-        centavos = BigInt(valor);
+        centavos =
+            BigInt(
+                valor
+            );
     } catch {
         return 0n;
     }
 
-    if (centavos < 0n) {
+    if (
+        centavos < 0n
+    ) {
         return 0n;
     }
 
-    return centavos > LIMITE_VALOR_MONETARIO_CENTAVOS
+    return (
+        centavos >
+        LIMITE_VALOR_MONETARIO_CENTAVOS
+    )
         ? LIMITE_VALOR_MONETARIO_CENTAVOS
         : centavos;
 }
 
-function moedaParaCentavos(valor) {
+function moedaParaCentavos(
+    valor
+) {
     if (
         valor === null ||
         valor === undefined ||
@@ -186,89 +251,176 @@ function moedaParaCentavos(valor) {
         return 0n;
     }
 
-    let texto = String(valor)
-        .trim()
-        .replace(/R\$/gi, "")
-        .replace(/\s/g, "");
+    let texto =
+        String(
+            valor
+        )
+            .trim()
+            .replace(
+                /R\$/gi,
+                ""
+            )
+            .replace(
+                /\s/g,
+                ""
+            );
 
-    if (!texto) {
+    if (
+        !texto
+    ) {
         return 0n;
     }
 
-    let parteInteira = "0";
-    let parteDecimal = "00";
+    let parteInteira =
+        "0";
 
-    if (texto.includes(",")) {
-        const partes = texto.split(",");
+    let parteDecimal =
+        "00";
 
-        parteInteira = partes[0]
-            .replace(/\./g, "")
-            .replace(/\D/g, "");
+    if (
+        texto.includes(
+            ","
+        )
+    ) {
+        const partes =
+            texto.split(
+                ","
+            );
 
-        parteDecimal = String(partes[1] || "")
-            .replace(/\D/g, "")
-            .padEnd(2, "0")
-            .slice(0, 2);
+        parteInteira =
+            partes[0]
+                .replace(
+                    /\./g,
+                    ""
+                )
+                .replace(
+                    /\D/g,
+                    ""
+                );
+
+        parteDecimal =
+            String(
+                partes[1] ||
+                ""
+            )
+                .replace(
+                    /\D/g,
+                    ""
+                )
+                .padEnd(
+                    2,
+                    "0"
+                )
+                .slice(
+                    0,
+                    2
+                );
     } else {
-        parteInteira = texto
-            .replace(/\./g, "")
-            .replace(/\D/g, "");
+        parteInteira =
+            texto
+                .replace(
+                    /\./g,
+                    ""
+                )
+                .replace(
+                    /\D/g,
+                    ""
+                );
     }
 
-    if (!parteInteira) {
-        parteInteira = "0";
+    if (
+        !parteInteira
+    ) {
+        parteInteira =
+            "0";
     }
 
     try {
-        const centavos =
-            BigInt(parteInteira) * 100n +
-            BigInt(parteDecimal || "0");
-
-        return limitarCentavos(centavos);
+        return limitarCentavos(
+            BigInt(
+                parteInteira
+            ) *
+            100n +
+            BigInt(
+                parteDecimal ||
+                "0"
+            )
+        );
     } catch {
         return 0n;
     }
 }
 
-function digitosParaCentavos(valor) {
-    const digitos = String(valor || "")
-        .replace(/\D/g, "");
+function digitosParaCentavos(
+    valor
+) {
+    const digitos =
+        String(
+            valor ||
+            ""
+        )
+            .replace(
+                /\D/g,
+                ""
+            );
 
-    if (!digitos) {
+    if (
+        !digitos
+    ) {
         return 0n;
     }
 
     try {
         return limitarCentavos(
-            BigInt(digitos)
+            BigInt(
+                digitos
+            )
         );
     } catch {
         return 0n;
     }
 }
 
-function centavosParaNumero(centavos) {
+function centavosParaNumero(
+    centavos
+) {
     return Number(
-        limitarCentavos(centavos)
+        limitarCentavos(
+            centavos
+        )
     ) / 100;
 }
 
-function formatarCentavos(centavos, incluirSimbolo = false) {
-    const valor = limitarCentavos(centavos);
-
-    const inteiro = valor / 100n;
-    const decimal = valor % 100n;
-
-    const inteiroFormatado = inteiro
-        .toString()
-        .replace(
-            /\B(?=(\d{3})+(?!\d))/g,
-            "."
+function formatarCentavos(
+    centavos,
+    incluirSimbolo = false
+) {
+    const valor =
+        limitarCentavos(
+            centavos
         );
 
-    const decimalFormatado = decimal
-        .toString()
-        .padStart(2, "0");
+    const inteiro =
+        valor / 100n;
+
+    const decimal =
+        valor % 100n;
+
+    const inteiroFormatado =
+        inteiro
+            .toString()
+            .replace(
+                /\B(?=(\d{3})+(?!\d))/g,
+                "."
+            );
+
+    const decimalFormatado =
+        decimal
+            .toString()
+            .padStart(
+                2,
+                "0"
+            );
 
     const resultado =
         `${inteiroFormatado},${decimalFormatado}`;
@@ -278,109 +430,87 @@ function formatarCentavos(centavos, incluirSimbolo = false) {
         : resultado;
 }
 
-function formatarNumeroComoMoeda(valor) {
-    const numero = Number(valor);
+function formatarNumeroComoMoeda(
+    valor
+) {
+    const numero =
+        Number(
+            valor
+        ) || 0;
 
-    if (!Number.isFinite(numero)) {
-        return "R$ 0,00";
-    }
+    return numero
+        .toLocaleString(
+            "pt-BR",
+            {
+                style:
+                    "currency",
 
-    return numero.toLocaleString(
-        "pt-BR",
-        {
-            style: "currency",
-            currency: "BRL",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    );
+                currency:
+                    "BRL",
+
+                minimumFractionDigits:
+                    2,
+
+                maximumFractionDigits:
+                    2
+            }
+        );
 }
 
-function formatarPercentual(valor) {
-    return Number(valor || 0).toLocaleString(
-        "pt-BR",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    ) + "%";
+function formatarPercentual(
+    valor
+) {
+    return (
+        Number(
+            valor
+        ) || 0
+    )
+        .toLocaleString(
+            "pt-BR",
+            {
+                minimumFractionDigits:
+                    2,
+
+                maximumFractionDigits:
+                    2
+            }
+        ) +
+        "%";
 }
 
-function aplicarMascaraMoeda(input) {
-    const centavos = digitosParaCentavos(
-        input.value
-    );
+function aplicarMascaraMoeda(
+    input
+) {
+    const centavos =
+        digitosParaCentavos(
+            input.value
+        );
 
-    input.value = formatarCentavos(
-        centavos,
-        false
-    );
+    input.value =
+        formatarCentavos(
+            centavos,
+            false
+        );
 }
 
-function normalizarCampoMonetario(input) {
-    const centavos = moedaParaCentavos(
-        input.value
-    );
+function normalizarCampoMonetario(
+    input
+) {
+    const centavos =
+        moedaParaCentavos(
+            input.value
+        );
 
-    input.value = formatarCentavos(
-        centavos,
-        false
-    );
+    input.value =
+        formatarCentavos(
+            centavos,
+            false
+        );
 }
 
-function carregarLinhasCredito() {
-    const lista =
-        LINHAS_CREDITO[
-        finalidade.value
-        ] || [];
-
-    linhaCredito.innerHTML = "";
-
-    lista.forEach(item => {
-        const option = document.createElement("option");
-
-        option.value = item.id;
-        option.textContent = item.nome;
-
-        linhaCredito.appendChild(option);
-    });
-
-    aplicarParametrosLinha();
-}
-
-function obterLinhaSelecionada() {
-    const lista =
-        LINHAS_CREDITO[
-        finalidade.value
-        ] || [];
-
-    return lista.find(
-        item =>
-            item.id ===
-            linhaCredito.value
-    );
-}
-
-function aplicarParametrosLinha() {
-    const linha =
-        obterLinhaSelecionada();
-
-    if (!linha) {
-        return;
-    }
-
-    taxa.value =
-        linha.taxa.toFixed(2);
-
-    prazo.value =
-        linha.prazo;
-
-    carencia.value =
-        linha.carencia;
-
-    calcularValorFinanciado();
-    simularAutomaticamente();
-}
+/* =========================================================
+   VALOR FINANCIADO
+   ========================================================= */
 
 function calcularValorFinanciadoCentavos() {
     const projeto =
@@ -397,8 +527,11 @@ function calcularValorFinanciadoCentavos() {
         projeto -
         recursos;
 
-    if (financiado < 0n) {
-        financiado = 0n;
+    if (
+        financiado < 0n
+    ) {
+        financiado =
+            0n;
     }
 
     financiado =
@@ -421,6 +554,444 @@ function calcularValorFinanciado() {
     );
 }
 
+/* =========================================================
+   ENQUADRAMENTO
+   ========================================================= */
+
+function obterEnquadramentoSelecionado() {
+    if (
+        !enquadramentoAtividade.value
+    ) {
+        return null;
+    }
+
+    return obterBase()
+        .obterEnquadramento(
+            enquadramentoAtividade.value
+        );
+}
+
+function obterLinhaSelecionada() {
+    const enquadramento =
+        obterEnquadramentoSelecionado();
+
+    if (
+        !enquadramento ||
+        linhaCredito.value ===
+        ""
+    ) {
+        return null;
+    }
+
+    return enquadramento
+        .linhas[
+        Number(
+            linhaCredito.value
+        )
+    ] || null;
+}
+
+function definirEstadoCarregamento(
+    carregando,
+    mensagem = ""
+) {
+    [
+        finalidade,
+        atividade,
+        enquadramentoAtividade,
+        linhaCredito,
+        tipoTaxa,
+        prazo,
+        carencia,
+        periodicidade,
+        sistema,
+        btnSimular,
+        btnLimpar
+    ].forEach(
+        elemento => {
+            if (
+                elemento
+            ) {
+                elemento.disabled =
+                    carregando;
+            }
+        }
+    );
+
+    if (
+        carregando &&
+        mensagem
+    ) {
+        condicaoLinha.textContent =
+            mensagem;
+    }
+}
+
+/* =========================================================
+   FINALIDADES
+   ========================================================= */
+
+function carregarFinalidades() {
+    const base =
+        obterBase();
+
+    base.preencherFinalidades(
+        finalidade,
+        finalidade.value ||
+        "Custeio Agrícola"
+    );
+
+    if (
+        !finalidade.value &&
+        finalidade.options.length
+    ) {
+        finalidade.selectedIndex =
+            0;
+    }
+
+    carregarAtividades();
+}
+
+/* =========================================================
+   PRODUTOS / ATIVIDADES
+   ========================================================= */
+
+function carregarAtividades() {
+    const base =
+        obterBase();
+
+    const produtoAnterior =
+        atividade.value;
+
+    base.preencherProdutos(
+        atividade,
+        finalidade.value,
+        produtoAnterior
+    );
+
+    if (
+        !atividade.value &&
+        atividade.options.length
+    ) {
+        atividade.selectedIndex =
+            0;
+    }
+
+    carregarEnquadramentos();
+}
+
+/* =========================================================
+   ENQUADRAMENTOS ASTEC
+   ========================================================= */
+
+function carregarEnquadramentos() {
+    const base =
+        obterBase();
+
+    const anterior =
+        enquadramentoAtividade.value;
+
+    const lista =
+        base.preencherEnquadramentos(
+            enquadramentoAtividade,
+            finalidade.value,
+            atividade.value,
+            anterior
+        );
+
+    if (
+        !enquadramentoAtividade.value &&
+        lista.length
+    ) {
+        enquadramentoAtividade.value =
+            lista[0].id;
+    }
+
+    carregarLinhasCredito();
+}
+
+/* =========================================================
+   LINHAS DE CRÉDITO
+   ========================================================= */
+
+function montarNomeLinha(
+    linha
+) {
+    const taxaExibida =
+        linha.taxaAssociadoTexto ||
+        linha.taxaSingularTexto ||
+        "-";
+
+    const status =
+        (
+            linha.aplicabilidade &&
+            linha.aplicabilidade !==
+            "DIRETA"
+        )
+            ? ` [${linha.aplicabilidade}]`
+            : "";
+
+    return (
+        `${linha.linha || "Linha não identificada"} - ` +
+        `${linha.finalidade || "Finalidade não identificada"} - ` +
+        `${taxaExibida || "-"} a.a.${status}`
+    );
+}
+
+function carregarLinhasCredito() {
+    const enquadramento =
+        obterEnquadramentoSelecionado();
+
+    linhaCredito.innerHTML =
+        "";
+
+    if (
+        !enquadramento ||
+        !enquadramento
+            .linhas
+            .length
+    ) {
+        aplicarParametrosLinha();
+        return;
+    }
+
+    enquadramento
+        .linhas
+        .forEach(
+            (
+                linha,
+                indice
+            ) => {
+                linhaCredito
+                    .appendChild(
+                        new Option(
+                            montarNomeLinha(
+                                linha
+                            ),
+                            String(
+                                indice
+                            )
+                        )
+                    );
+            }
+        );
+
+    linhaCredito.selectedIndex =
+        0;
+
+    aplicarParametrosLinha();
+}
+
+/* =========================================================
+   TAXAS
+   ========================================================= */
+
+function obterTaxaDaLinha(
+    linha
+) {
+    if (
+        !linha
+    ) {
+        return null;
+    }
+
+    if (
+        tipoTaxa.value ===
+        "singular"
+    ) {
+        return linha
+            .taxaSingular;
+    }
+
+    return (
+        linha.taxaAssociado ??
+        linha.taxaSingular
+    );
+}
+
+/* =========================================================
+   PARÂMETROS DA LINHA
+   ========================================================= */
+
+function aplicarParametrosLinha() {
+    const linha =
+        obterLinhaSelecionada();
+
+    const enquadramento =
+        obterEnquadramentoSelecionado();
+
+    if (
+        !linha
+    ) {
+        fonteRecursos.value =
+            "";
+
+        aplicabilidade.value =
+            "";
+
+        prazoMaximo.value =
+            "";
+
+        taxa.value =
+            "";
+
+        condicaoLinha.innerHTML =
+            "Nenhuma linha disponível para o enquadramento selecionado.";
+
+        atualizarResultadoIdentificacao();
+        limparResultadosInvalidos();
+        atualizarDocumentos();
+
+        return;
+    }
+
+    fonteRecursos.value =
+        linha.fonte ||
+        "-";
+
+    aplicabilidade.value =
+        linha.aplicabilidade ||
+        "-";
+
+    prazoMaximo.value =
+        linha.prazo ||
+        "";
+
+    if (
+        linha.prazo
+    ) {
+        prazo.max =
+            String(
+                linha.prazo
+            );
+
+        const prazoAtual =
+            Number(
+                prazo.value
+            ) || 0;
+
+        if (
+            prazoAtual <= 0 ||
+            prazoAtual >
+            linha.prazo
+        ) {
+            prazo.value =
+                String(
+                    linha.prazo
+                );
+        }
+    } else {
+        prazo.removeAttribute(
+            "max"
+        );
+    }
+
+    if (
+        (
+            Number(
+                carencia.value
+            ) || 0
+        ) >=
+        (
+            Number(
+                prazo.value
+            ) || 0
+        )
+    ) {
+        carencia.value =
+            "0";
+    }
+
+    const taxaSelecionada =
+        obterTaxaDaLinha(
+            linha
+        );
+
+    taxa.value =
+        (
+            taxaSelecionada === null ||
+            taxaSelecionada === undefined
+        )
+            ? ""
+            : Number(
+                taxaSelecionada
+            )
+                .toFixed(
+                    2
+                );
+
+    const descricaoEnquadramento =
+        enquadramento
+            ? obterBase()
+                .montarDescricaoEnquadramento(
+                    enquadramento,
+                    true
+                )
+            : "-";
+
+    condicaoLinha.innerHTML = `
+        <strong>
+            ${linha.aplicabilidade || "SEM CLASSIFICAÇÃO"}:
+        </strong>
+
+        ${linha.condicao || "Sem observação adicional."}
+
+        <br>
+
+        <strong>
+            Referência:
+        </strong>
+
+        ${linha.fonteRegra || "-"}
+
+        <br>
+
+        <strong>
+            Enquadramento ASTEC:
+        </strong>
+
+        ${descricaoEnquadramento}
+    `;
+
+    calcularValorFinanciado();
+    atualizarResultadoIdentificacao();
+    atualizarDocumentos();
+    simularAutomaticamente();
+}
+
+/* =========================================================
+   IDENTIFICAÇÃO DO RESULTADO
+   ========================================================= */
+
+function atualizarResultadoIdentificacao() {
+    const linha =
+        obterLinhaSelecionada();
+
+    const enquadramento =
+        obterEnquadramentoSelecionado();
+
+    resultadoLinha.textContent =
+        linha
+            ? `${linha.linha} - ${linha.finalidade}`
+            : "-";
+
+    resultadoFonte.textContent =
+        linha?.fonte ||
+        "-";
+
+    resultadoAplicabilidade.textContent =
+        linha?.aplicabilidade ||
+        "-";
+
+    resultadoCodigosAstec.textContent =
+        enquadramento?.codigo ||
+        "-";
+}
+
+/* =========================================================
+   PARCELAS
+   ========================================================= */
+
 function obterQuantidadeParcelas(
     prazoMeses,
     carenciaMeses,
@@ -434,11 +1005,20 @@ function obterQuantidadeParcelas(
         );
 
     const divisor = {
-        mensal: 1,
-        trimestral: 3,
-        semestral: 6,
-        anual: 12
-    }[tipoPeriodicidade] || 1;
+        mensal:
+            1,
+
+        trimestral:
+            3,
+
+        semestral:
+            6,
+
+        anual:
+            12
+    }[
+        tipoPeriodicidade
+    ] || 1;
 
     return Math.max(
         Math.ceil(
@@ -453,11 +1033,20 @@ function obterPeriodosPorAno(
     tipoPeriodicidade
 ) {
     return {
-        mensal: 12,
-        trimestral: 4,
-        semestral: 2,
-        anual: 1
-    }[tipoPeriodicidade] || 12;
+        mensal:
+            12,
+
+        trimestral:
+            4,
+
+        semestral:
+            2,
+
+        anual:
+            1
+    }[
+        tipoPeriodicidade
+    ] || 12;
 }
 
 function calcularTaxaPeriodo(
@@ -474,10 +1063,16 @@ function calcularTaxaPeriodo(
         100;
 
     return Math.pow(
-        1 + taxaDecimal,
-        1 / periodosAno
+        1 +
+        taxaDecimal,
+        1 /
+        periodosAno
     ) - 1;
 }
+
+/* =========================================================
+   PRICE
+   ========================================================= */
 
 function calcularPrice(
     valor,
@@ -560,17 +1155,32 @@ function calcularPrice(
             );
 
         parcelas.push({
-            numero: i,
-            saldoInicial,
-            amortizacao,
-            juros,
-            valorParcela,
-            saldoFinal: saldo
+            numero:
+                i,
+
+            saldoInicial:
+                saldoInicial,
+
+            amortizacao:
+                amortizacao,
+
+            juros:
+                juros,
+
+            valorParcela:
+                valorParcela,
+
+            saldoFinal:
+                saldo
         });
     }
 
     return parcelas;
 }
+
+/* =========================================================
+   SAC
+   ========================================================= */
 
 function calcularSac(
     valor,
@@ -627,17 +1237,32 @@ function calcularSac(
             );
 
         parcelas.push({
-            numero: i,
-            saldoInicial,
-            amortizacao,
-            juros,
-            valorParcela,
-            saldoFinal: saldo
+            numero:
+                i,
+
+            saldoInicial:
+                saldoInicial,
+
+            amortizacao:
+                amortizacao,
+
+            juros:
+                juros,
+
+            valorParcela:
+                valorParcela,
+
+            saldoFinal:
+                saldo
         });
     }
 
     return parcelas;
 }
+
+/* =========================================================
+   CARÊNCIA
+   ========================================================= */
 
 function calcularCarenciaCapitalizada(
     valor,
@@ -652,11 +1277,20 @@ function calcularCarenciaCapitalizada(
     }
 
     const divisor = {
-        mensal: 1,
-        trimestral: 3,
-        semestral: 6,
-        anual: 12
-    }[tipoPeriodicidade] || 1;
+        mensal:
+            1,
+
+        trimestral:
+            3,
+
+        semestral:
+            6,
+
+        anual:
+            12
+    }[
+        tipoPeriodicidade
+    ] || 1;
 
     const periodosCarencia =
         carenciaMeses /
@@ -670,9 +1304,16 @@ function calcularCarenciaCapitalizada(
         );
 }
 
+/* =========================================================
+   VALIDAÇÃO
+   ========================================================= */
+
 function validarSimulacao(
     mostrarAlerta = false
 ) {
+    const linha =
+        obterLinhaSelecionada();
+
     const valorCentavos =
         calcularValorFinanciadoCentavos();
 
@@ -686,65 +1327,110 @@ function validarSimulacao(
             carencia.value
         ) || 0;
 
-    if (
-        valorCentavos <= 0n
+    const taxaAnual =
+        Number(
+            taxa.value
+        );
+
+    function falhar(
+        mensagem
     ) {
         if (
             mostrarAlerta
         ) {
             alert(
-                "Informe um valor financiado maior que zero."
+                mensagem
             );
         }
 
         return false;
+    }
+
+    if (
+        !linha
+    ) {
+        return falhar(
+            "Selecione uma linha de crédito válida."
+        );
+    }
+
+    if (
+        linha.aplicabilidade ===
+        "SEM VÍNCULO AUTOMÁTICO"
+    ) {
+        return falhar(
+            "O item selecionado não possui vínculo automático com uma linha de crédito."
+        );
+    }
+
+    if (
+        linha.aplicabilidade ===
+        "REVISAR"
+    ) {
+        return falhar(
+            "O enquadramento selecionado exige revisão manual antes da simulação."
+        );
+    }
+
+    if (
+        !Number.isFinite(
+            taxaAnual
+        )
+    ) {
+        return falhar(
+            "A linha selecionada não possui taxa definida para simulação."
+        );
+    }
+
+    if (
+        valorCentavos <= 0n
+    ) {
+        return falhar(
+            "Informe um valor financiado maior que zero."
+        );
     }
 
     if (
         prazoMeses <= 0
     ) {
-        if (
-            mostrarAlerta
-        ) {
-            alert(
-                "Informe um prazo válido."
-            );
-        }
+        return falhar(
+            "Informe um prazo válido."
+        );
+    }
 
-        return false;
+    if (
+        linha.prazo &&
+        prazoMeses >
+        linha.prazo
+    ) {
+        return falhar(
+            `O prazo informado supera o máximo de ${linha.prazo} meses da linha selecionada.`
+        );
     }
 
     if (
         carenciaMeses < 0
     ) {
-        if (
-            mostrarAlerta
-        ) {
-            alert(
-                "Informe uma carência válida."
-            );
-        }
-
-        return false;
+        return falhar(
+            "Informe uma carência válida."
+        );
     }
 
     if (
         carenciaMeses >=
         prazoMeses
     ) {
-        if (
-            mostrarAlerta
-        ) {
-            alert(
-                "A carência deve ser menor que o prazo total."
-            );
-        }
-
-        return false;
+        return falhar(
+            "A carência deve ser menor que o prazo total."
+        );
     }
 
     return true;
 }
+
+/* =========================================================
+   SIMULAÇÃO
+   ========================================================= */
 
 function simular(
     mostrarAlerta = true
@@ -756,6 +1442,7 @@ function simular(
     ) {
         limparResultadosInvalidos();
         atualizarDocumentos();
+
         return;
     }
 
@@ -785,12 +1472,6 @@ function simular(
     const tipoPeriodicidade =
         periodicidade.value;
 
-    const sistemaSelecionado =
-        sistema.value;
-
-    const linha =
-        obterLinhaSelecionada();
-
     const quantidadeParcelas =
         obterQuantidadeParcelas(
             prazoMeses,
@@ -812,26 +1493,19 @@ function simular(
             tipoPeriodicidade
         );
 
-    let parcelas;
-
-    if (
-        sistemaSelecionado ===
-        "sac"
-    ) {
-        parcelas =
-            calcularSac(
+    const parcelas =
+        sistema.value ===
+            "sac"
+            ? calcularSac(
+                saldoAposCarencia,
+                taxaPeriodo,
+                quantidadeParcelas
+            )
+            : calcularPrice(
                 saldoAposCarencia,
                 taxaPeriodo,
                 quantidadeParcelas
             );
-    } else {
-        parcelas =
-            calcularPrice(
-                saldoAposCarencia,
-                taxaPeriodo,
-                quantidadeParcelas
-            );
-    }
 
     const totalPago =
         parcelas.reduce(
@@ -848,19 +1522,6 @@ function simular(
         totalPago -
         valor;
 
-    const primeiraParcela =
-        parcelas.length
-            ? parcelas[0]
-                .valorParcela
-            : 0;
-
-    const ultimaParcela =
-        parcelas.length
-            ? parcelas[
-                parcelas.length - 1
-            ].valorParcela
-            : 0;
-
     resultadoValorFinanciado.textContent =
         formatarCentavos(
             valorCentavos,
@@ -868,31 +1529,36 @@ function simular(
         );
 
     resultadoTaxa.textContent =
-        formatarPercentual(
-            taxaAnual
-        ) +
-        " a.a.";
+        `${formatarPercentual(taxaAnual)} a.a.`;
 
     resultadoPrazo.textContent =
-        prazoMeses +
-        " meses";
+        `${prazoMeses} meses`;
 
     resultadoCarencia.textContent =
-        carenciaMeses +
-        " meses";
+        `${carenciaMeses} meses`;
 
     resultadoParcelas.textContent =
-        quantidadeParcelas;
+        String(
+            quantidadeParcelas
+        );
 
     resultadoPrimeiraParcela.textContent =
-        formatarNumeroComoMoeda(
-            primeiraParcela
-        );
+        parcelas.length
+            ? formatarNumeroComoMoeda(
+                parcelas[0]
+                    .valorParcela
+            )
+            : "R$ 0,00";
 
     resultadoUltimaParcela.textContent =
-        formatarNumeroComoMoeda(
-            ultimaParcela
-        );
+        parcelas.length
+            ? formatarNumeroComoMoeda(
+                parcelas[
+                    parcelas.length -
+                    1
+                ].valorParcela
+            )
+            : "R$ 0,00";
 
     resultadoJuros.textContent =
         formatarNumeroComoMoeda(
@@ -904,10 +1570,7 @@ function simular(
             totalPago
         );
 
-    resultadoLinha.textContent =
-        linha
-            ? linha.nome
-            : "-";
+    atualizarResultadoIdentificacao();
 
     preencherTabela(
         parcelas
@@ -917,8 +1580,14 @@ function simular(
 }
 
 function simularAutomaticamente() {
-    simular(false);
+    simular(
+        false
+    );
 }
+
+/* =========================================================
+   RESULTADO INVÁLIDO
+   ========================================================= */
 
 function limparResultadosInvalidos() {
     const valorCentavos =
@@ -937,10 +1606,7 @@ function limparResultadosInvalidos() {
     const taxaAnual =
         Number(
             taxa.value
-        ) || 0;
-
-    const linha =
-        obterLinhaSelecionada();
+        );
 
     resultadoValorFinanciado.textContent =
         formatarCentavos(
@@ -949,18 +1615,17 @@ function limparResultadosInvalidos() {
         );
 
     resultadoTaxa.textContent =
-        formatarPercentual(
+        Number.isFinite(
             taxaAnual
-        ) +
-        " a.a.";
+        )
+            ? `${formatarPercentual(taxaAnual)} a.a.`
+            : "-";
 
     resultadoPrazo.textContent =
-        prazoMeses +
-        " meses";
+        `${prazoMeses} meses`;
 
     resultadoCarencia.textContent =
-        carenciaMeses +
-        " meses";
+        `${carenciaMeses} meses`;
 
     resultadoParcelas.textContent =
         "0";
@@ -977,19 +1642,23 @@ function limparResultadosInvalidos() {
     resultadoTotal.textContent =
         "R$ 0,00";
 
-    resultadoLinha.textContent =
-        linha
-            ? linha.nome
-            : "-";
+    atualizarResultadoIdentificacao();
 
     tabelaParcelas.innerHTML = `
         <tr>
-            <td colspan="6" class="sem-dados">
+            <td
+                colspan="6"
+                class="sem-dados"
+            >
                 Informe dados válidos para visualizar as parcelas.
             </td>
         </tr>
     `;
 }
+
+/* =========================================================
+   TABELA
+   ========================================================= */
 
 function preencherTabela(
     parcelas
@@ -1002,7 +1671,10 @@ function preencherTabela(
     ) {
         tabelaParcelas.innerHTML = `
             <tr>
-                <td colspan="6" class="sem-dados">
+                <td
+                    colspan="6"
+                    class="sem-dados"
+                >
                     Nenhuma parcela calculada.
                 </td>
             </tr>
@@ -1011,26 +1683,50 @@ function preencherTabela(
         return;
     }
 
-    parcelas.forEach(item => {
-        const tr =
-            document.createElement(
-                "tr"
-            );
+    parcelas.forEach(
+        item => {
+            const tr =
+                document.createElement(
+                    "tr"
+                );
 
-        tr.innerHTML = `
-            <td>${item.numero}</td>
-            <td>${formatarNumeroComoMoeda(item.saldoInicial)}</td>
-            <td>${formatarNumeroComoMoeda(item.amortizacao)}</td>
-            <td>${formatarNumeroComoMoeda(item.juros)}</td>
-            <td>${formatarNumeroComoMoeda(item.valorParcela)}</td>
-            <td>${formatarNumeroComoMoeda(item.saldoFinal)}</td>
-        `;
+            tr.innerHTML = `
+                <td>
+                    ${item.numero}
+                </td>
 
-        tabelaParcelas.appendChild(
-            tr
-        );
-    });
+                <td>
+                    ${formatarNumeroComoMoeda(item.saldoInicial)}
+                </td>
+
+                <td>
+                    ${formatarNumeroComoMoeda(item.amortizacao)}
+                </td>
+
+                <td>
+                    ${formatarNumeroComoMoeda(item.juros)}
+                </td>
+
+                <td>
+                    ${formatarNumeroComoMoeda(item.valorParcela)}
+                </td>
+
+                <td>
+                    ${formatarNumeroComoMoeda(item.saldoFinal)}
+                </td>
+            `;
+
+            tabelaParcelas
+                .appendChild(
+                    tr
+                );
+        }
+    );
 }
+
+/* =========================================================
+   INFORMAÇÕES DA OPERAÇÃO
+   ========================================================= */
 
 function criarGrupoDocumentos(
     titulo,
@@ -1045,164 +1741,129 @@ function criarGrupoDocumentos(
 
     const itens =
         documentos
+            .filter(
+                Boolean
+            )
             .map(
                 documento =>
                     `<li class="documento-item">${documento}</li>`
             )
-            .join("");
+            .join(
+                ""
+            );
 
     return `
         <div class="documento-grupo">
+
             <div class="documento-grupo-titulo">
                 ${titulo}
             </div>
+
             <ul class="documento-lista">
                 ${itens}
             </ul>
+
         </div>
     `;
 }
 
-function obterNomeAtividadeSelecionada() {
-    if (
-        window.CreditoRuralAtividades &&
-        typeof window.CreditoRuralAtividades.obterNomeAtividade === "function"
-    ) {
-        return window.CreditoRuralAtividades.obterNomeAtividade(
-            atividade.value,
-            grupoAtividade.value
-        );
-    }
-
-    const optionSelecionada =
-        atividade.options[
-        atividade.selectedIndex
-        ];
-
-    return optionSelecionada
-        ? optionSelecionada.textContent
-        : "";
-}
-
-function obterNomeGrupoAtividadeSelecionado() {
-    if (
-        window.CreditoRuralAtividades &&
-        typeof window.CreditoRuralAtividades.obterNomeGrupo === "function"
-    ) {
-        return window.CreditoRuralAtividades.obterNomeGrupo(
-            grupoAtividade.value
-        );
-    }
-
-    const optionSelecionada =
-        grupoAtividade.options[
-        grupoAtividade.selectedIndex
-        ];
-
-    return optionSelecionada
-        ? optionSelecionada.textContent
-        : "";
-}
-
 function atualizarDocumentos() {
-    const finalidadeSelecionada =
-        finalidade.value;
+    const linha =
+        obterLinhaSelecionada();
 
-    const grupoSelecionado =
-        grupoAtividade.value;
+    const enquadramento =
+        obterEnquadramentoSelecionado();
 
-    const nomeGrupoSelecionado =
-        obterNomeGrupoAtividadeSelecionado();
+    let html =
+        "";
 
-    const nomeAtividadeSelecionada =
-        obterNomeAtividadeSelecionada();
+    if (
+        enquadramento
+    ) {
+        html +=
+            criarGrupoDocumentos(
+                "Enquadramento ASTEC",
+                [
+                    `Código: ${enquadramento.codigo || "-"}.`,
 
-    let html = "";
+                    `Produto: ${enquadramento.produto || "-"}.`,
+
+                    `Finalidade: ${enquadramento.finalidade || "-"}.`,
+
+                    `Modalidade: ${enquadramento.modalidade || "-"}.`,
+
+                    `Variedade: ${enquadramento.variedade || "-"}.`,
+
+                    `Cesta: ${enquadramento.cesta || "-"}.`,
+
+                    `Consórcio: ${enquadramento.consorcio || "-"}.`,
+
+                    `U.M. Produção: ${enquadramento.unidadeProducao || "-"}.`,
+
+                    `Zoneamento: ${enquadramento.zoneamento || "-"}.`
+                ]
+            );
+    }
+
+    if (
+        linha
+    ) {
+        html +=
+            criarGrupoDocumentos(
+                "Linha de Crédito",
+                [
+                    `Beneficiário: ${linha.beneficiario || "-"}.`,
+
+                    `Linha: ${linha.linha || "-"}.`,
+
+                    `Finalidade da linha: ${linha.finalidade || "-"}.`,
+
+                    `Fonte de recursos: ${linha.fonte || "-"}.`,
+
+                    linha.prazo
+                        ? `Prazo máximo: ${linha.prazo} meses.`
+                        : "Prazo máximo: não definido na relação.",
+
+                    linha.taxaSingularTexto
+                        ? `Taxa da cooperativa singular: ${linha.taxaSingularTexto} a.a.`
+                        : "",
+
+                    linha.taxaAssociadoTexto
+                        ? `Taxa do cooperado/associado: ${linha.taxaAssociadoTexto} a.a.`
+                        : "",
+
+                    `Aplicabilidade: ${linha.aplicabilidade || "-"}.`,
+
+                    linha.condicao
+                        ? `Condição: ${linha.condicao}`
+                        : "",
+
+                    linha.fonteRegra
+                        ? `Referência da regra: ${linha.fonteRegra}`
+                        : ""
+                ]
+            );
+    }
 
     html +=
         criarGrupoDocumentos(
-            "Documentação Geral",
-            DOCUMENTOS.gerais
+            "Documentação orientativa",
+            DOCUMENTOS_BASE[
+            finalidade.value
+            ] || []
         );
-
-    if (
-        DOCUMENTOS[
-        finalidadeSelecionada
-        ]
-    ) {
-        html +=
-            criarGrupoDocumentos(
-                TITULOS_DOCUMENTOS_FINALIDADE[
-                finalidadeSelecionada
-                ],
-                DOCUMENTOS[
-                finalidadeSelecionada
-                ]
-            );
-    }
-
-    if (
-        DOCUMENTOS[
-        grupoSelecionado
-        ]
-    ) {
-        html +=
-            criarGrupoDocumentos(
-                TITULOS_DOCUMENTOS_GRUPO[
-                grupoSelecionado
-                ] ||
-                `Documentação da Atividade - ${nomeGrupoSelecionado}`,
-                DOCUMENTOS[
-                grupoSelecionado
-                ]
-            );
-    }
-
-    if (
-        nomeAtividadeSelecionada
-    ) {
-        html +=
-            criarGrupoDocumentos(
-                "Atividade Selecionada",
-                [
-                    `Atividade: ${nomeAtividadeSelecionada}.`
-                ]
-            );
-    }
 
     listaDocumentos.innerHTML =
         html;
 }
 
-function redefinirAtividadeRural() {
-    if (
-        window.CreditoRuralAtividades &&
-        typeof window.CreditoRuralAtividades.preencherGrupos === "function" &&
-        typeof window.CreditoRuralAtividades.preencherAtividades === "function"
-    ) {
-        window.CreditoRuralAtividades.preencherGrupos(
-            "agricola"
-        );
-
-        window.CreditoRuralAtividades.preencherAtividades(
-            "agricola",
-            window.CreditoRuralAtividades.normalizarIdentificadorAtividade(
-                "Arroz"
-            )
-        );
-
-        return;
-    }
-
-    grupoAtividade.value =
-        "agricola";
-}
+/* =========================================================
+   LIMPAR
+   ========================================================= */
 
 function limparSimulacao() {
     finalidade.value =
-        "custeio";
-
-    redefinirAtividadeRural();
+        "Custeio Agrícola";
 
     valorProjeto.value =
         "100.000,00";
@@ -1210,18 +1871,31 @@ function limparSimulacao() {
     recursosProprios.value =
         "20.000,00";
 
+    carencia.value =
+        "0";
+
     periodicidade.value =
         "mensal";
 
     sistema.value =
         "price";
 
-    carregarLinhasCredito();
+    tipoTaxa.value =
+        "associado";
+
+    carregarAtividades();
+
     calcularValorFinanciado();
+
     atualizarDocumentos();
+
     simularAutomaticamente();
 }
 
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+
 valorProjeto.addEventListener(
     "input",
     () => {
@@ -1230,6 +1904,7 @@ valorProjeto.addEventListener(
         );
 
         calcularValorFinanciado();
+
         simularAutomaticamente();
     }
 );
@@ -1242,6 +1917,7 @@ recursosProprios.addEventListener(
         );
 
         calcularValorFinanciado();
+
         simularAutomaticamente();
     }
 );
@@ -1254,6 +1930,7 @@ valorProjeto.addEventListener(
         );
 
         calcularValorFinanciado();
+
         simularAutomaticamente();
     }
 );
@@ -1266,98 +1943,143 @@ recursosProprios.addEventListener(
         );
 
         calcularValorFinanciado();
+
         simularAutomaticamente();
     }
 );
 
 finalidade.addEventListener(
     "change",
-    () => {
-        carregarLinhasCredito();
-    }
-);
-
-linhaCredito.addEventListener(
-    "change",
-    () => {
-        aplicarParametrosLinha();
-    }
-);
-
-grupoAtividade.addEventListener(
-    "change",
-    () => {
-        atualizarDocumentos();
-        simularAutomaticamente();
-    }
+    carregarAtividades
 );
 
 atividade.addEventListener(
     "change",
-    () => {
-        atualizarDocumentos();
-        simularAutomaticamente();
-    }
+    carregarEnquadramentos
+);
+
+enquadramentoAtividade.addEventListener(
+    "change",
+    carregarLinhasCredito
+);
+
+linhaCredito.addEventListener(
+    "change",
+    aplicarParametrosLinha
+);
+
+tipoTaxa.addEventListener(
+    "change",
+    aplicarParametrosLinha
 );
 
 prazo.addEventListener(
     "input",
-    () => {
-        simularAutomaticamente();
-    }
+    simularAutomaticamente
 );
 
 carencia.addEventListener(
     "input",
-    () => {
-        simularAutomaticamente();
-    }
-);
-
-taxa.addEventListener(
-    "input",
-    () => {
-        simularAutomaticamente();
-    }
+    simularAutomaticamente
 );
 
 periodicidade.addEventListener(
     "change",
-    () => {
-        simularAutomaticamente();
-    }
+    simularAutomaticamente
 );
 
 sistema.addEventListener(
     "change",
-    () => {
-        simularAutomaticamente();
-    }
+    simularAutomaticamente
 );
 
 btnSimular.addEventListener(
     "click",
     () => {
-        simular(true);
+        simular(
+            true
+        );
     }
 );
 
 btnLimpar.addEventListener(
     "click",
-    () => {
-        limparSimulacao();
+    limparSimulacao
+);
+
+/* =========================================================
+   INICIALIZAÇÃO
+   ========================================================= */
+
+async function inicializar() {
+    definirEstadoCarregamento(
+        true,
+        "Carregando a base unificada de Crédito Rural..."
+    );
+
+    aplicarMascaraMoeda(
+        valorProjeto
+    );
+
+    aplicarMascaraMoeda(
+        recursosProprios
+    );
+
+    try {
+        await obterBase()
+            .carregar();
+
+        definirEstadoCarregamento(
+            false
+        );
+
+        carregarFinalidades();
+
+        calcularValorFinanciado();
+
+        atualizarDocumentos();
+
+        simularAutomaticamente();
+    } catch (
+    erro
+    ) {
+        console.error(
+            "Erro ao carregar a base de Crédito Rural:",
+            erro
+        );
+
+        condicaoLinha.innerHTML = `
+            <strong>
+                Erro:
+            </strong>
+
+            ${erro.message}
+
+            <br>
+
+            Verifique se o arquivo
+
+            <code>
+                ${obterBase().obterUrlBase()}
+            </code>
+
+            existe no caminho informado.
+        `;
+
+        tabelaParcelas.innerHTML = `
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="sem-dados"
+                >
+                    Não foi possível carregar
+                    a base de Crédito Rural.
+                </td>
+
+            </tr>
+        `;
     }
-);
+}
 
-aplicarMascaraMoeda(
-    valorProjeto
-);
-
-aplicarMascaraMoeda(
-    recursosProprios
-);
-
-carregarLinhasCredito();
-calcularValorFinanciado();
-atualizarDocumentos();
-simularAutomaticamente();
+inicializar();
