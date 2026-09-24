@@ -2,97 +2,166 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Simulador de Cobrança | Caixa de Ferramentas</title>
+
+    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
                 <h1>Simulador de Cobrança</h1>
-                <p>Simule receitas financeiras, custos operacionais, tarifas e resultado da carteira de cobrança.</p>
+                <p>
+                    Simule receitas financeiras, custos operacionais,
+                    tarifas e resultado da carteira de cobrança.
+                </p>
             </div>
+
             <div class="topo-logo">
-                <img src="img/logoBranco.png" alt="Sicoob">
+                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
+
         </div>
     </header>
 
+    <!-- =====================================================
+         MENU PRINCIPAL
+         ===================================================== -->
+
     <div id="menuPrincipal"></div>
 
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
+
     <main class="container cobranca-grid">
+
+        <!-- =================================================
+             DADOS DA CARTEIRA
+             ================================================= -->
+
         <section class="card cobranca-card cobranca-card-principal">
+
             <div class="titulo-secao">
-                <h2>Dados da Carteira</h2>
-                <p>Informe os dados da carteira de cobrança para realizar a simulação.</p>
+                <div>
+                    <h2>Dados da Carteira</h2>
+                    <p>
+                        Informe os dados da carteira de cobrança para
+                        realizar a simulação.
+                    </p>
+                </div>
             </div>
 
             <div class="grid-form">
+
                 <div class="campo">
-                    <label for="quantidadeBoletos">Quantidade de Boletos Emitidos Mensalmente</label>
-                    <input type="number" id="quantidadeBoletos" min="0" step="1" value="0">
+                    <label for="quantidadeBoletos">
+                        Quantidade de Boletos Emitidos Mensalmente
+                    </label>
+
+                    <input type="number" id="quantidadeBoletos" min="0" step="1" value="0" inputmode="numeric">
                 </div>
 
                 <div class="campo">
-                    <label for="percentualLiquidados">% dos Títulos Emitidos Liquidados</label>
+                    <label for="percentualLiquidados">
+                        % dos Títulos Emitidos Liquidados
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentualLiquidados" min="0" max="100" step="0.01" value="100">
+                        <input type="number" id="percentualLiquidados" min="0" max="100" step="0.01" value="100"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="ticketMedio">Ticket Médio da Carteira</label>
+                    <label for="ticketMedio">
+                        Ticket Médio da Carteira
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="ticketMedio" value="0,00" autocomplete="off">
+
+                        <input type="text" id="ticketMedio" value="0,00" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
+
             </div>
 
             <div class="separador"></div>
 
+            <!-- =============================================
+                 DISTRIBUIÇÃO DOS TÍTULOS
+                 ============================================= -->
+
             <div class="titulo-subsecao">
                 <h3>Distribuição dos Títulos Liquidados</h3>
-                <p>Distribuição percentual por canal de liquidação.</p>
+                <p>
+                    Distribuição percentual por canal de liquidação.
+                </p>
             </div>
 
             <div class="grid-form-4">
+
                 <div class="campo">
-                    <label for="percentRedeBancaria">Rede Bancária</label>
+                    <label for="percentRedeBancaria">
+                        Rede Bancária
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentRedeBancaria" min="0" max="100" step="0.01" value="46.08">
+                        <input type="number" id="percentRedeBancaria" min="0" max="100" step="0.01" value="46.08"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="percentRedeSicoob">Rede Sicoob</label>
+                    <label for="percentRedeSicoob">
+                        Rede Sicoob
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentRedeSicoob" min="0" max="100" step="0.01" value="5.18">
+                        <input type="number" id="percentRedeSicoob" min="0" max="100" step="0.01" value="5.18"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="percentLiqPropria">Liq. Própria Cooperativa</label>
+                    <label for="percentLiqPropria">
+                        Liq. Própria Cooperativa
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentLiqPropria" min="0" max="100" step="0.01" value="2.70">
+                        <input type="number" id="percentLiqPropria" min="0" max="100" step="0.01" value="2.70"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="percentCorrespondente">Correspondente Bancário</label>
+                    <label for="percentCorrespondente">
+                        Correspondente Bancário
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentCorrespondente" min="0" max="100" step="0.01" value="46.06">
+                        <input type="number" id="percentCorrespondente" min="0" max="100" step="0.01" value="46.06"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
+
             </div>
 
             <div class="indicador-total">
@@ -102,176 +171,285 @@
 
             <div class="separador"></div>
 
+            <!-- =============================================
+                 TÍTULOS BAIXADOS
+                 ============================================= -->
+
             <div class="titulo-subsecao">
                 <h3>Títulos Baixados</h3>
             </div>
 
             <div class="grid-form">
+
                 <div class="campo">
-                    <label for="percentBaixaCedente">% Baixados por Pedido do Cedente</label>
+                    <label for="percentBaixaCedente">
+                        % Baixados por Pedido do Cedente
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentBaixaCedente" min="0" max="100" step="0.01" value="0">
+                        <input type="number" id="percentBaixaCedente" min="0" max="100" step="0.01" value="0"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="percentBaixaDecurso">% Baixados por Decurso de Prazo</label>
+                    <label for="percentBaixaDecurso">
+                        % Baixados por Decurso de Prazo
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentBaixaDecurso" min="0" max="100" step="0.01" value="0">
+                        <input type="number" id="percentBaixaDecurso" min="0" max="100" step="0.01" value="0"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             FUNDING
+             ================================================= -->
+
         <section class="card cobranca-card">
+
             <div class="titulo-secao">
-                <h2>Funding</h2>
-                <p>Direcionadores utilizados na estimativa das receitas financeiras.</p>
+                <div>
+                    <h2>Funding</h2>
+                    <p>
+                        Direcionadores utilizados na estimativa das
+                        receitas financeiras.
+                    </p>
+                </div>
             </div>
 
             <div class="grid-form">
+
                 <div class="campo">
-                    <label for="centralizacaoFinanceira">Centralização Financeira</label>
+                    <label for="centralizacaoFinanceira">
+                        Centralização Financeira
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="centralizacaoFinanceira" min="0" max="100" step="0.01" value="100">
+                        <input type="number" id="centralizacaoFinanceira" min="0" max="100" step="0.01" value="100"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="percentualSaldoMedio">% de Saldo Médio</label>
+                    <label for="percentualSaldoMedio">
+                        % de Saldo Médio
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="percentualSaldoMedio" min="0" max="100" step="0.01" value="0">
+                        <input type="number" id="percentualSaldoMedio" min="0" max="100" step="0.01" value="0"
+                            inputmode="decimal">
                         <span>%</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="taxaCdiAno">Taxa CDI no Ano</label>
+                    <label for="taxaCdiAno">
+                        Taxa CDI no Ano
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="taxaCdiAno" min="0" step="0.01" value="15">
+                        <input type="number" id="taxaCdiAno" min="0" step="0.01" value="15" inputmode="decimal">
                         <span>% a.a.</span>
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="diasFloat">Dias de Float</label>
+                    <label for="diasFloat">
+                        Dias de Float
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="diasFloat" min="0" step="1" value="0">
+                        <input type="number" id="diasFloat" min="0" step="1" value="0" inputmode="numeric">
                         <span>dias</span>
                     </div>
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             CUSTOS GERAIS
+             ================================================= -->
+
         <section class="card cobranca-card">
+
             <div class="titulo-secao">
-                <h2>Custos Gerais</h2>
-                <p>Valores praticados por boleto utilizados na composição dos custos operacionais.</p>
+                <div>
+                    <h2>Custos Gerais</h2>
+                    <p>
+                        Valores praticados por boleto utilizados na
+                        composição dos custos operacionais.
+                    </p>
+                </div>
             </div>
 
             <div class="grid-form">
+
                 <div class="campo">
-                    <label for="custoRedeBancaria">Canais Físicos</label>
+                    <label for="custoRedeBancaria">
+                        Canais Físicos
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="custoRedeBancaria" value="0,31" autocomplete="off">
+                        <input type="text" id="custoRedeBancaria" value="0,31" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="custoRedeSicoob">Canais Digitais</label>
+                    <label for="custoRedeSicoob">
+                        Canais Digitais
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="custoRedeSicoob" value="0,20" autocomplete="off">
+                        <input type="text" id="custoRedeSicoob" value="0,20" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="custoLiqPropria">Liquidação Própria Cooperativa</label>
+                    <label for="custoLiqPropria">
+                        Liquidação Própria Cooperativa
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="custoLiqPropria" value="0,09" autocomplete="off">
+                        <input type="text" id="custoLiqPropria" value="0,09" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="custoCorrespondente">Liquidação Correspondente Bancário</label>
+                    <label for="custoCorrespondente">
+                        Liquidação Correspondente Bancário
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="custoCorrespondente" value="1,83" autocomplete="off">
+                        <input type="text" id="custoCorrespondente" value="1,83" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="custoProcessamento">Custo de Processamento por Boleto</label>
+                    <label for="custoProcessamento">
+                        Custo de Processamento por Boleto
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="custoProcessamento" value="0,05" autocomplete="off">
+                        <input type="text" id="custoProcessamento" value="0,05" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="custoTarifaNova">Custo Tarifa Nova Cobrança</label>
+                    <label for="custoTarifaNova">
+                        Custo Tarifa Nova Cobrança
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="custoTarifaNova" value="0,10" autocomplete="off">
+                        <input type="text" id="custoTarifaNova" value="0,10" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
+
             </div>
 
             <div class="aviso-info">
-                (*) Custos gerais disponíveis nas condições operacionais básicas do Sicoob, sujeitos a alterações.
+                (*) Custos gerais disponíveis nas condições operacionais
+                básicas do Sicoob, sujeitos a alterações.
             </div>
+
         </section>
 
+        <!-- =================================================
+             TARIFAS PRATICADAS
+             ================================================= -->
+
         <section class="card cobranca-card cobranca-card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Tarifas Praticadas</h2>
-                <p>Informe as tarifas cobradas do cooperado para cada evento da carteira.</p>
+                <div>
+                    <h2>Tarifas Praticadas</h2>
+                    <p>
+                        Informe as tarifas cobradas do cooperado para
+                        cada evento da carteira.
+                    </p>
+                </div>
             </div>
 
             <div class="grid-form-4">
+
                 <div class="campo">
-                    <label for="tarifaDecurso">Tarifa por Decurso de Prazo</label>
+                    <label for="tarifaDecurso">
+                        Tarifa por Decurso de Prazo
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="tarifaDecurso" value="0,00" autocomplete="off">
+                        <input type="text" id="tarifaDecurso" value="0,00" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="tarifaBaixaCedente">Tarifa Baixa Pedido Cedente</label>
+                    <label for="tarifaBaixaCedente">
+                        Tarifa Baixa Pedido Cedente
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="tarifaBaixaCedente" value="0,00" autocomplete="off">
+                        <input type="text" id="tarifaBaixaCedente" value="0,00" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="tarifaLiquidacao">Tarifa Liquidação do Título</label>
+                    <label for="tarifaLiquidacao">
+                        Tarifa Liquidação do Título
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="tarifaLiquidacao" value="0,00" autocomplete="off">
+                        <input type="text" id="tarifaLiquidacao" value="0,00" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
-                    <label for="tarifaEntrada">Tarifa Entrada do Título</label>
+                    <label for="tarifaEntrada">
+                        Tarifa Entrada do Título
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="tarifaEntrada" value="0,00" autocomplete="off">
+                        <input type="text" id="tarifaEntrada" value="0,00" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             RESULTADO DA SIMULAÇÃO
+             ================================================= -->
+
         <section class="card cobranca-card cobranca-card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Resultado da Simulação</h2>
-                <p>Resumo financeiro mensal e anual da carteira de cobrança.</p>
+                <div>
+                    <h2>Resultado da Simulação</h2>
+                    <p>
+                        Resumo financeiro mensal e anual da carteira
+                        de cobrança.
+                    </p>
+                </div>
             </div>
 
             <div class="resultado-destaque">
@@ -280,6 +458,7 @@
             </div>
 
             <div class="resultados-grid-4">
+
                 <div class="resultado-item">
                     <span>Receita Financeira</span>
                     <strong id="receitaFinanceira">R$ 0,00</strong>
@@ -299,6 +478,7 @@
                     <span>Resultado Anual</span>
                     <strong id="resultadoAnual">R$ 0,00</strong>
                 </div>
+
             </div>
 
             <div class="separador"></div>
@@ -308,6 +488,7 @@
             </div>
 
             <div class="resultados-grid-4">
+
                 <div class="resultado-item resultado-item-neutro">
                     <span>Boletos Liquidados</span>
                     <strong id="qtdLiquidados">0</strong>
@@ -347,26 +528,42 @@
                     <span>Custo Médio por Boleto Emitido</span>
                     <strong id="custoMedioBoleto">R$ 0,00</strong>
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             CUSTOS POR CANAL
+             ================================================= -->
+
         <section class="card cobranca-card cobranca-card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Custos por Canal</h2>
-                <p>Detalhamento das quantidades, custos unitários e custos totais da carteira.</p>
+                <div>
+                    <h2>Custos por Canal</h2>
+                    <p>
+                        Detalhamento das quantidades, custos unitários
+                        e custos totais da carteira.
+                    </p>
+                </div>
             </div>
 
             <div class="tabela-wrapper">
+
                 <table class="tabela-cobranca">
+
                     <thead>
                         <tr>
-                            <th>Evento / Canal</th>
-                            <th>Quantidade</th>
-                            <th>Custo Unitário</th>
-                            <th>Custo Total</th>
+                            <th scope="col">Evento / Canal</th>
+                            <th scope="col">Quantidade</th>
+                            <th scope="col">Custo Unitário</th>
+                            <th scope="col">Custo Total</th>
                         </tr>
                     </thead>
+
                     <tbody>
+
                         <tr>
                             <td>Rede Bancária / Canais Físicos</td>
                             <td id="qtdRedeBancaria">0</td>
@@ -408,34 +605,57 @@
                             <td id="unitTarifaNova">R$ 0,10</td>
                             <td id="totalTarifaNova">R$ 0,00</td>
                         </tr>
+
                     </tbody>
+
                     <tfoot>
                         <tr>
-                            <td colspan="3">Custos Operacionais Totais</td>
-                            <td id="totalCustosTabela">R$ 0,00</td>
+                            <td colspan="3">
+                                Custos Operacionais Totais
+                            </td>
+                            <td id="totalCustosTabela">
+                                R$ 0,00
+                            </td>
                         </tr>
                     </tfoot>
+
                 </table>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             RECEITAS DE TARIFAS
+             ================================================= -->
+
         <section class="card cobranca-card cobranca-card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Receitas de Tarifas</h2>
-                <p>Detalhamento das tarifas cobradas conforme ocorrência dos eventos.</p>
+                <div>
+                    <h2>Receitas de Tarifas</h2>
+                    <p>
+                        Detalhamento das tarifas cobradas conforme
+                        ocorrência dos eventos.
+                    </p>
+                </div>
             </div>
 
             <div class="tabela-wrapper">
+
                 <table class="tabela-cobranca">
+
                     <thead>
                         <tr>
-                            <th>Tarifa</th>
-                            <th>Quantidade / Base</th>
-                            <th>Tarifa Unitária</th>
-                            <th>Receita Total</th>
+                            <th scope="col">Tarifa</th>
+                            <th scope="col">Quantidade / Base</th>
+                            <th scope="col">Tarifa Unitária</th>
+                            <th scope="col">Receita Total</th>
                         </tr>
                     </thead>
+
                     <tbody>
+
                         <tr>
                             <td>Decurso de Prazo</td>
                             <td id="baseTarifaDecurso">0</td>
@@ -463,30 +683,59 @@
                             <td id="unitTarifaEntrada">R$ 0,00</td>
                             <td id="totalTarifaEntrada">R$ 0,00</td>
                         </tr>
+
                     </tbody>
+
                     <tfoot>
                         <tr>
-                            <td colspan="3">Receitas Totais de Tarifas</td>
-                            <td id="totalReceitaTarifasTabela">R$ 0,00</td>
+                            <td colspan="3">
+                                Receitas Totais de Tarifas
+                            </td>
+                            <td id="totalReceitaTarifasTabela">
+                                R$ 0,00
+                            </td>
                         </tr>
                     </tfoot>
+
                 </table>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             AÇÕES
+             ================================================= -->
+
         <div class="acoes cobranca-acoes">
-            <button type="button" class="botao-secundario" id="btnLimpar">Limpar Simulação</button>
+
+            <button type="button" class="btn btn-secundario" id="btnLimpar">
+                Limpar Simulação
+            </button>
+
         </div>
+
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
         <div class="container">
-            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvido pela Área de Processos</p>
+            <p>
+                Caixa de Ferramentas | Sicoob Mantiqueira |
+                Desenvolvimento e Gestão: Área de Processos
+            </p>
         </div>
     </footer>
 
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
+
     <script src="js/cobranca.js"></script>
-    <script src="./js/impressao-pdf.js"></script>
+    <script src="js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
 

@@ -4,46 +4,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Porte do Produtor Rural | Sicoob Mantiqueira</title>
+
+    <title>Porte do Produtor Rural | Caixa de Ferramentas</title>
+
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
                 <h1>Porte do Produtor Rural</h1>
-                <p>Simulação orientativa para classificação do porte com base nas rendas e regras de enquadramento.</p>
+                <p>
+                    Simulação orientativa para classificação do porte
+                    com base nas rendas e regras de enquadramento.
+                </p>
             </div>
+
             <div class="topo-logo">
                 <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
+
         </div>
     </header>
 
+    <!-- =====================================================
+         MENU PRINCIPAL
+         ===================================================== -->
+
     <div id="menuPrincipal"></div>
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
 
     <main class="container simulador-grid-igual porte-produtor-container">
 
+        <!-- =================================================
+             INFORMAÇÕES DO PRODUTOR
+             ================================================= -->
+
         <section class="card configuracao-card card-largura-total">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Crédito Rural</span>
-                <h2>Informações do Produtor</h2>
-                <p>Informe as condições utilizadas para análise das regras especiais de enquadramento.</p>
+
+                <span class="categoria-etiqueta">
+                    Crédito Rural
+                </span>
+
+                <h2>
+                    Informações do Produtor
+                </h2>
+
+                <p>
+                    Informe as condições utilizadas para análise das
+                    regras especiais de enquadramento.
+                </p>
+
             </div>
 
             <div class="grid-form-4">
+
+                <!-- CAF / PRONAF -->
+
                 <div class="campo">
-                    <label for="cafPronaf">CAF válida com enquadramento no Pronaf?</label>
+
+                    <label for="cafPronaf">
+                        CAF válida com enquadramento no Pronaf?
+                    </label>
+
                     <select id="cafPronaf">
                         <option value="NAO">Não</option>
                         <option value="SIM">Sim</option>
                     </select>
+
                 </div>
 
+                <!-- Condição da Terra -->
+
                 <div class="campo">
-                    <label for="condicaoTerra">Condição de Exploração da Terra</label>
+
+                    <label for="condicaoTerra">
+                        Condição de Exploração da Terra
+                    </label>
+
                     <select id="condicaoTerra">
                         <option value="SELECIONAR">Selecione</option>
                         <option value="PROPRIETÁRIO RURAL">Proprietário Rural</option>
@@ -52,159 +103,372 @@
                         <option value="PARCEIRO">Parceiro</option>
                         <option value="OUTRA">Outra condição</option>
                     </select>
+
                 </div>
 
-                <div class="campo">
-                    <label for="anoBasePorte">Ano-base</label>
-                    <input type="number" id="anoBasePorte" min="2000" max="2100">
-                </div>
+                <!-- Ano-base -->
 
                 <div class="campo">
-                    <label for="condominioParceria">Condomínio / parceria?</label>
+
+                    <label for="anoBasePorte">
+                        Ano-base
+                    </label>
+
+                    <input type="number" id="anoBasePorte" min="2000" max="2100" step="1" inputmode="numeric">
+
+                </div>
+
+                <!-- Condomínio / Parceria -->
+
+                <div class="campo">
+
+                    <label for="condominioParceria">
+                        Condomínio / parceria?
+                    </label>
+
                     <select id="condominioParceria">
                         <option value="NAO">Não</option>
                         <option value="SIM">Sim</option>
                     </select>
+
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             RENDAS ANUAIS
+             ================================================= -->
+
         <section class="card configuracao-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Rendas Anuais</h2>
-                <p>Informe o valor anual correspondente a cada origem de renda aplicável ao produtor.</p>
+
+                <span class="categoria-etiqueta">
+                    Rendas
+                </span>
+
+                <h2>
+                    Rendas Anuais
+                </h2>
+
+                <p>
+                    Informe o valor anual correspondente a cada origem
+                    de renda aplicável ao produtor.
+                </p>
+
             </div>
 
             <div class="tabela-wrapper">
+
                 <table class="porte-produtor-tabela">
+
                     <thead>
                         <tr>
-                            <th>Tipo de Renda</th>
-                            <th>Classificação</th>
-                            <th>Valor Anual</th>
+                            <th scope="col">Tipo de Renda</th>
+                            <th scope="col">Classificação</th>
+                            <th scope="col">Valor Anual</th>
                         </tr>
                     </thead>
+
                     <tbody id="tabelaRendasPorte"></tbody>
+
                 </table>
+
             </div>
+
         </section>
+
+        <!-- =================================================
+             RESULTADO DA CLASSIFICAÇÃO
+             ================================================= -->
 
         <section class="card resumo-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Resultado da Classificação</h2>
-                <p>Resultado obtido pela aplicação da matriz de regras do simulador.</p>
+
+                <span class="categoria-etiqueta">
+                    Resultado
+                </span>
+
+                <h2>
+                    Resultado da Classificação
+                </h2>
+
+                <p>
+                    Resultado obtido pela aplicação da matriz de regras
+                    do simulador.
+                </p>
+
             </div>
+
+            <!-- Porte Final -->
 
             <div class="resultado-destaque">
-                <span>Porte Final</span>
-                <strong id="resultadoPorteFinal">PREENCHER RENDAS</strong>
+
+                <span>
+                    Porte Final
+                </span>
+
+                <strong id="resultadoPorteFinal">
+                    PREENCHER RENDAS
+                </strong>
+
             </div>
+
+            <!-- Indicadores -->
 
             <div class="resultados-grid-4">
+
                 <div class="resultado-item">
-                    <span>RBA</span>
-                    <strong id="resultadoRba">R$ 0,00</strong>
+
+                    <span>
+                        RBA
+                    </span>
+
+                    <strong id="resultadoRba">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Receita Bruta Total</span>
-                    <strong id="resultadoReceitaBruta">R$ 0,00</strong>
+
+                    <span>
+                        Receita Bruta Total
+                    </span>
+
+                    <strong id="resultadoReceitaBruta">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>% Atividade Agropecuária</span>
-                    <strong id="resultadoPercentualAgro">0,00%</strong>
+
+                    <span>
+                        % Atividade Agropecuária
+                    </span>
+
+                    <strong id="resultadoPercentualAgro">
+                        0,00%
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>% Atividades Não Rurais</span>
-                    <strong id="resultadoPercentualNaoRural">0,00%</strong>
+
+                    <span>
+                        % Atividades Não Rurais
+                    </span>
+
+                    <strong id="resultadoPercentualNaoRural">
+                        0,00%
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Porte-base</span>
-                    <strong id="resultadoPorteBase">PREENCHER RENDAS</strong>
+
+                    <span>
+                        Porte-base
+                    </span>
+
+                    <strong id="resultadoPorteBase">
+                        PREENCHER RENDAS
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Atende Pronamp?</span>
-                    <strong id="resultadoPronamp">NÃO APLICÁVEL</strong>
+
+                    <span>
+                        Atende Pronamp?
+                    </span>
+
+                    <strong id="resultadoPronamp">
+                        NÃO APLICÁVEL
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Regra dos 20%?</span>
-                    <strong id="resultadoRegra20">NÃO APLICÁVEL</strong>
+
+                    <span>
+                        Regra dos 20%?
+                    </span>
+
+                    <strong id="resultadoRegra20">
+                        NÃO APLICÁVEL
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>CAF / Pronaf</span>
-                    <strong id="resultadoCaf">NÃO INFORMADO / NÃO ENQUADRADO</strong>
+
+                    <span>
+                        CAF / Pronaf
+                    </span>
+
+                    <strong id="resultadoCaf">
+                        NÃO INFORMADO / NÃO ENQUADRADO
+                    </strong>
+
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             JUSTIFICATIVA
+             ================================================= -->
+
         <section class="card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Justificativa</h2>
-                <p>Descrição da regra que determinou o porte final.</p>
+
+                <span class="categoria-etiqueta">
+                    Enquadramento
+                </span>
+
+                <h2>
+                    Justificativa
+                </h2>
+
+                <p>
+                    Descrição da regra que determinou o porte final.
+                </p>
+
             </div>
 
             <div class="porte-produtor-justificativa">
+
                 <p id="resultadoJustificativa">
-                    Informe pelo menos uma renda anual para realizar a classificação.
+                    Informe pelo menos uma renda anual para realizar
+                    a classificação.
                 </p>
+
             </div>
 
             <div class="linha-selecionada">
-                <span>Base normativa</span>
-                <strong id="resultadoBaseNormativa">-</strong>
+
+                <span>
+                    Base normativa
+                </span>
+
+                <strong id="resultadoBaseNormativa">
+                    -
+                </strong>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             MEMÓRIA DE CÁLCULO
+             ================================================= -->
+
         <section class="card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Memória de Cálculo</h2>
-                <p>Valores intermediários utilizados pelo motor de regras.</p>
+
+                <span class="categoria-etiqueta">
+                    Cálculo
+                </span>
+
+                <h2>
+                    Memória de Cálculo
+                </h2>
+
+                <p>
+                    Valores intermediários utilizados pelo motor de regras.
+                </p>
+
             </div>
 
             <div class="resultados-grid-3">
+
                 <div class="resultado-item">
-                    <span>Renda para cálculo dos 80% agropecuários</span>
-                    <strong id="resultadoRendaAgroPronamp">R$ 0,00</strong>
+
+                    <span>
+                        Renda para cálculo dos 80% agropecuários
+                    </span>
+
+                    <strong id="resultadoRendaAgroPronamp">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Demais rendas não agropecuárias</span>
-                    <strong id="resultadoDemaisRendas">R$ 0,00</strong>
+
+                    <span>
+                        Demais rendas não agropecuárias
+                    </span>
+
+                    <strong id="resultadoDemaisRendas">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Rendimentos de atividades não rurais</span>
-                    <strong id="resultadoRendasNaoRurais">R$ 0,00</strong>
+
+                    <span>
+                        Rendimentos de atividades não rurais
+                    </span>
+
+                    <strong id="resultadoRendasNaoRurais">
+                        R$ 0,00
+                    </strong>
+
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             AÇÕES
+             ================================================= -->
+
         <div class="acoes card-largura-total">
+
             <button type="button" id="btnLimparPorte" class="btn btn-secundario">
                 Limpar
             </button>
+
         </div>
 
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
+
         <div class="container">
+
             <p>
                 Caixa de Ferramentas | Sicoob Mantiqueira |
                 Desenvolvimento e Gestão: Área de Processos
             </p>
+
         </div>
+
     </footer>
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
 
     <script src="js/porte-produtor-rural.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
+
 </body>
 
 </html>

@@ -2,275 +2,680 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Precificação Sipag 2.0 | Caixa de Ferramentas</title>
+
+    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
                 <h1>Simulador de Precificação Sipag 2.0</h1>
-                <p>Simule condições comerciais, MDR, antecipação, equipamentos e resultado financeiro.</p>
+                <p>
+                    Simule condições comerciais, MDR, antecipação,
+                    equipamentos e resultado financeiro.
+                </p>
             </div>
+
             <div class="topo-logo">
-                <img src="img/logoBranco.png" alt="Sicoob">
+                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
+
         </div>
     </header>
 
+    <!-- =====================================================
+         MENU PRINCIPAL
+         ===================================================== -->
+
     <div id="menuPrincipal"></div>
 
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
+
     <main class="container simulador-grid-igual">
+
+        <!-- =================================================
+             DADOS DA NEGOCIAÇÃO
+             ================================================= -->
+
         <section class="card configuracao-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Dados da Negociação</h2>
-                <p>Informe os dados utilizados para enquadramento e cálculo da negociação.</p>
+
+                <span class="categoria-etiqueta">
+                    Sipag 2.0
+                </span>
+
+                <h2>
+                    Dados da Negociação
+                </h2>
+
+                <p>
+                    Informe os dados utilizados para enquadramento
+                    e cálculo da negociação.
+                </p>
+
             </div>
+
+            <!-- Status do Motor -->
 
             <div id="statusMotorSipag" class="status-carregamento">
                 Carregando motor de regras da Precificação Sipag...
             </div>
 
             <div class="grid-form-4">
-                <div class="campo">
-                    <label for="cnaeSipag">CNAE</label>
-                    <input type="text" id="cnaeSipag" placeholder="Ex.: 4711302" inputmode="numeric">
-                </div>
+
+                <!-- CNAE -->
 
                 <div class="campo">
-                    <label for="mccSipag">MCC</label>
-                    <input type="text" id="mccSipag" placeholder="Ex.: 5411" inputmode="numeric">
+
+                    <label for="cnaeSipag">
+                        CNAE
+                    </label>
+
+                    <input type="text" id="cnaeSipag" placeholder="Ex.: 4711302" inputmode="numeric" autocomplete="off">
+
                 </div>
 
+                <!-- MCC -->
+
                 <div class="campo">
-                    <label for="segmentoSipag">Segmento</label>
+
+                    <label for="mccSipag">
+                        MCC
+                    </label>
+
+                    <input type="text" id="mccSipag" placeholder="Ex.: 5411" inputmode="numeric" autocomplete="off">
+
+                </div>
+
+                <!-- Segmento -->
+
+                <div class="campo">
+
+                    <label for="segmentoSipag">
+                        Segmento
+                    </label>
+
                     <input type="text" id="segmentoSipag" readonly>
+
                 </div>
 
+                <!-- Tipo de Precificação -->
+
                 <div class="campo">
-                    <label for="tipoPrecificacao">Tipo de Precificação</label>
+
+                    <label for="tipoPrecificacao">
+                        Tipo de Precificação
+                    </label>
+
                     <select id="tipoPrecificacao">
-                        <option value="FD">Sipag 2.0 / FD</option>
-                        <option value="Sipaguinha">Sipaguinha</option>
+
+                        <option value="FD">
+                            Sipag 2.0 / FD
+                        </option>
+
+                        <option value="Sipaguinha">
+                            Sipaguinha
+                        </option>
+
                     </select>
+
                 </div>
 
+                <!-- Faturamento Mensal -->
+
                 <div class="campo">
-                    <label for="faturamentoMensal">Faturamento Mensal</label>
+
+                    <label for="faturamentoMensal">
+                        Faturamento Mensal
+                    </label>
+
                     <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="faturamentoMensal" value="100.000,00" autocomplete="off">
+
+                        <span>
+                            R$
+                        </span>
+
+                        <input type="text" id="faturamentoMensal" value="100.000,00" inputmode="decimal"
+                            autocomplete="off">
+
                     </div>
+
                 </div>
 
+                <!-- Faturamento Anual -->
+
                 <div class="campo">
-                    <label for="faturamentoAnual">Faturamento Anual</label>
+
+                    <label for="faturamentoAnual">
+                        Faturamento Anual
+                    </label>
+
                     <div class="input-prefixo bloqueado">
-                        <span>R$</span>
+
+                        <span>
+                            R$
+                        </span>
+
                         <input type="text" id="faturamentoAnual" readonly>
+
                     </div>
+
                 </div>
+
             </div>
+
         </section>
 
-        <section class="card card-largura-total configuracao-card">
+        <!-- =================================================
+             PERCENTUAIS DE FATURAMENTO
+             ================================================= -->
+
+        <section class="card configuracao-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Percentuais de Faturamento</h2>
-                <p>Informe o percentual de faturamento por bandeira e modalidade. A soma total deve corresponder a 100%.
+
+                <span class="categoria-etiqueta">
+                    Mix de Faturamento
+                </span>
+
+                <h2>
+                    Percentuais de Faturamento
+                </h2>
+
+                <p>
+                    Informe o percentual de faturamento por bandeira
+                    e modalidade. A soma total deve corresponder a 100%.
                 </p>
+
             </div>
 
             <div class="tabela-wrapper">
+
                 <table class="tabela-mix">
+
                     <thead>
+
                         <tr>
-                            <th>Bandeira</th>
-                            <th>Débito</th>
-                            <th>Crédito à Vista</th>
-                            <th>Parcelado 2 a 6</th>
-                            <th>Parcelado 7 a 21</th>
+                            <th scope="col">Bandeira</th>
+                            <th scope="col">Débito</th>
+                            <th scope="col">Crédito à Vista</th>
+                            <th scope="col">Parcelado 2 a 6</th>
+                            <th scope="col">Parcelado 7 a 21</th>
                         </tr>
+
                     </thead>
+
                     <tbody id="tabelaMixSipag"></tbody>
+
                 </table>
+
             </div>
 
             <div class="linha-selecionada">
-                <span>Total do Mix de Faturamento</span>
-                <strong id="totalMixSipag">0,00%</strong>
+
+                <span>
+                    Total do Mix de Faturamento
+                </span>
+
+                <strong id="totalMixSipag">
+                    0,00%
+                </strong>
+
             </div>
+
         </section>
 
-        <section class="card card-largura-total configuracao-card">
+        <!-- =================================================
+             TAXAS SOLICITADAS
+             ================================================= -->
+
+        <section class="card configuracao-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Taxas Solicitadas</h2>
-                <p>Informe as taxas MDR negociadas por bandeira e modalidade.</p>
+
+                <span class="categoria-etiqueta">
+                    MDR
+                </span>
+
+                <h2>
+                    Taxas Solicitadas
+                </h2>
+
+                <p>
+                    Informe as taxas MDR negociadas por bandeira
+                    e modalidade.
+                </p>
+
             </div>
 
             <div id="blocosTaxasSipag"></div>
+
         </section>
 
+        <!-- =================================================
+             ANTECIPAÇÃO
+             ================================================= -->
+
         <section class="card configuracao-card">
+
             <div class="titulo-secao">
-                <h2>Antecipação</h2>
-                <p>Informe as condições esperadas para antecipação de recebíveis.</p>
+
+                <span class="categoria-etiqueta">
+                    Recebíveis
+                </span>
+
+                <h2>
+                    Antecipação
+                </h2>
+
+                <p>
+                    Informe as condições esperadas para antecipação
+                    de recebíveis.
+                </p>
+
             </div>
 
             <div class="grid-form">
+
+                <!-- Volume Antecipado -->
+
                 <div class="campo">
-                    <label for="volumeAntecipado">Volume Antecipado</label>
+
+                    <label for="volumeAntecipado">
+                        Volume Antecipado
+                    </label>
+
                     <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="volumeAntecipado" value="0,00" autocomplete="off">
+
+                        <span>
+                            R$
+                        </span>
+
+                        <input type="text" id="volumeAntecipado" value="0,00" inputmode="decimal" autocomplete="off">
+
                     </div>
+
                 </div>
 
-                <div class="campo">
-                    <label for="taxaAntecipacaoPrecificacao">Taxa</label>
-                    <div class="input-sufixo">
-                        <input type="number" id="taxaAntecipacaoPrecificacao" value="0" min="0" step="0.01">
-                        <span>% a.m.</span>
-                    </div>
-                </div>
+                <!-- Taxa -->
 
                 <div class="campo">
-                    <label for="durationAntecipacao">Duration</label>
+
+                    <label for="taxaAntecipacaoPrecificacao">
+                        Taxa
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="durationAntecipacao" value="0" min="0">
-                        <span>dias</span>
+
+                        <input type="number" id="taxaAntecipacaoPrecificacao" value="0" min="0" step="0.01"
+                            inputmode="decimal">
+
+                        <span>
+                            % a.m.
+                        </span>
+
                     </div>
+
                 </div>
+
+                <!-- Duration -->
+
+                <div class="campo">
+
+                    <label for="durationAntecipacao">
+                        Duration
+                    </label>
+
+                    <div class="input-sufixo">
+
+                        <input type="number" id="durationAntecipacao" value="0" min="0" step="1" inputmode="numeric">
+
+                        <span>
+                            dias
+                        </span>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             EQUIPAMENTOS
+             ================================================= -->
+
         <section class="card configuracao-card">
+
             <div class="titulo-secao">
-                <h2>Equipamentos</h2>
-                <p>Informe quantidades e condições propostas de aluguel.</p>
+
+                <span class="categoria-etiqueta">
+                    Equipamentos
+                </span>
+
+                <h2>
+                    Equipamentos
+                </h2>
+
+                <p>
+                    Informe quantidades e condições propostas
+                    de aluguel.
+                </p>
+
             </div>
 
             <div class="grid-form">
-                <div class="campo">
-                    <label for="qtdSmartPos">Smart POS - Quantidade</label>
-                    <input type="number" id="qtdSmartPos" min="0" value="0">
-                </div>
+
+                <!-- Smart POS - Quantidade -->
 
                 <div class="campo">
-                    <label for="valorSmartPos">Smart POS - Valor Proposto</label>
+
+                    <label for="qtdSmartPos">
+                        Smart POS - Quantidade
+                    </label>
+
+                    <input type="number" id="qtdSmartPos" min="0" step="1" value="0" inputmode="numeric">
+
+                </div>
+
+                <!-- Smart POS - Valor -->
+
+                <div class="campo">
+
+                    <label for="valorSmartPos">
+                        Smart POS - Valor Proposto
+                    </label>
+
                     <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="valorSmartPos" value="0,00" autocomplete="off">
+
+                        <span>
+                            R$
+                        </span>
+
+                        <input type="text" id="valorSmartPos" value="0,00" inputmode="decimal" autocomplete="off">
+
                     </div>
+
                 </div>
 
+                <!-- Smart POS - Período -->
+
                 <div class="campo">
-                    <label for="mesesSmartPos">Smart POS - Período</label>
+
+                    <label for="mesesSmartPos">
+                        Smart POS - Período
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="mesesSmartPos" min="0" value="0">
-                        <span>meses</span>
+
+                        <input type="number" id="mesesSmartPos" min="0" step="1" value="0" inputmode="numeric">
+
+                        <span>
+                            meses
+                        </span>
+
                     </div>
+
                 </div>
 
-                <div class="campo">
-                    <label for="qtdPinPad">PinPad - Quantidade</label>
-                    <input type="number" id="qtdPinPad" min="0" value="0">
-                </div>
+                <!-- PinPad - Quantidade -->
 
                 <div class="campo">
-                    <label for="valorPinPad">PinPad - Valor Proposto</label>
+
+                    <label for="qtdPinPad">
+                        PinPad - Quantidade
+                    </label>
+
+                    <input type="number" id="qtdPinPad" min="0" step="1" value="0" inputmode="numeric">
+
+                </div>
+
+                <!-- PinPad - Valor -->
+
+                <div class="campo">
+
+                    <label for="valorPinPad">
+                        PinPad - Valor Proposto
+                    </label>
+
                     <div class="input-prefixo">
-                        <span>R$</span>
-                        <input type="text" id="valorPinPad" value="0,00" autocomplete="off">
+
+                        <span>
+                            R$
+                        </span>
+
+                        <input type="text" id="valorPinPad" value="0,00" inputmode="decimal" autocomplete="off">
+
                     </div>
+
                 </div>
 
+                <!-- PinPad - Período -->
+
                 <div class="campo">
-                    <label for="mesesPinPad">PinPad - Período</label>
+
+                    <label for="mesesPinPad">
+                        PinPad - Período
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="mesesPinPad" min="0" value="0">
-                        <span>meses</span>
+
+                        <input type="number" id="mesesPinPad" min="0" step="1" value="0" inputmode="numeric">
+
+                        <span>
+                            meses
+                        </span>
+
                     </div>
+
                 </div>
+
             </div>
+
         </section>
+
+        <!-- =================================================
+             RESULTADO FINANCEIRO
+             ================================================= -->
 
         <section class="card resumo-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Resultado Financeiro</h2>
-                <p>Resultado consolidado da negociação simulada.</p>
+
+                <span class="categoria-etiqueta">
+                    Resultado
+                </span>
+
+                <h2>
+                    Resultado Financeiro
+                </h2>
+
+                <p>
+                    Resultado consolidado da negociação simulada.
+                </p>
+
             </div>
+
+            <!-- Resultado Principal -->
 
             <div class="resultado-destaque">
-                <span>Resultado Final Mensal</span>
-                <strong id="resultadoFinalMensal">R$ 0,00</strong>
+
+                <span>
+                    Resultado Final Mensal
+                </span>
+
+                <strong id="resultadoFinalMensal">
+                    R$ 0,00
+                </strong>
+
             </div>
+
+            <!-- Indicadores -->
 
             <div class="resultados-grid-3">
+
                 <div class="resultado-item">
-                    <span>NET MDR Mensal</span>
-                    <strong id="resultadoNetMdr">R$ 0,00</strong>
+
+                    <span>
+                        NET MDR Mensal
+                    </span>
+
+                    <strong id="resultadoNetMdr">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Antecipação Mensal</span>
-                    <strong id="resultadoAntecipacao">R$ 0,00</strong>
+
+                    <span>
+                        Antecipação Mensal
+                    </span>
+
+                    <strong id="resultadoAntecipacao">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Impacto Equipamentos</span>
-                    <strong id="resultadoEquipamentos">R$ 0,00</strong>
+
+                    <span>
+                        Impacto Equipamentos
+                    </span>
+
+                    <strong id="resultadoEquipamentos">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Resultado Anual</span>
-                    <strong id="resultadoFinalAnual">R$ 0,00</strong>
+
+                    <span>
+                        Resultado Anual
+                    </span>
+
+                    <strong id="resultadoFinalAnual">
+                        R$ 0,00
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Payback</span>
-                    <strong id="resultadoPayback">-</strong>
+
+                    <span>
+                        Payback
+                    </span>
+
+                    <strong id="resultadoPayback">
+                        -
+                    </strong>
+
                 </div>
 
                 <div class="resultado-item">
-                    <span>Custo Operacional</span>
-                    <strong id="resultadoCustoOperacional">0,0000%</strong>
+
+                    <span>
+                        Custo Operacional
+                    </span>
+
+                    <strong id="resultadoCustoOperacional">
+                        0,0000%
+                    </strong>
+
                 </div>
+
             </div>
+
         </section>
 
-        <section class="card card-largura-total tabela-card">
+        <!-- =================================================
+             RESULTADO POR BANDEIRA
+             ================================================= -->
+
+        <section class="card tabela-card card-largura-total">
+
             <div class="titulo-secao">
-                <h2>Resultado por Bandeira</h2>
-                <p>Detalhamento do NET MDR estimado por modalidade.</p>
+
+                <span class="categoria-etiqueta">
+                    Detalhamento
+                </span>
+
+                <h2>
+                    Resultado por Bandeira
+                </h2>
+
+                <p>
+                    Detalhamento do NET MDR estimado por modalidade.
+                </p>
+
             </div>
 
             <div class="tabela-wrapper">
+
                 <table>
+
                     <thead>
+
                         <tr>
-                            <th>Bandeira</th>
-                            <th>Débito</th>
-                            <th>Crédito à Vista</th>
-                            <th>2 a 6</th>
-                            <th>7 a 21</th>
-                            <th>Resultado Mensal</th>
+                            <th scope="col">Bandeira</th>
+                            <th scope="col">Débito</th>
+                            <th scope="col">Crédito à Vista</th>
+                            <th scope="col">2 a 6</th>
+                            <th scope="col">7 a 21</th>
+                            <th scope="col">Resultado Mensal</th>
                         </tr>
+
                     </thead>
+
                     <tbody id="tabelaResultadoBandeiras"></tbody>
+
                 </table>
+
             </div>
+
         </section>
+
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
+
         <div class="container">
-            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvido pela Área de Processos</p>
+
+            <p>
+                Caixa de Ferramentas | Sicoob Mantiqueira |
+                Desenvolvimento e Gestão: Área de Processos
+            </p>
+
         </div>
+
     </footer>
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
+
     <script src="./js/precificacao-sipag.js"></script>
     <script src="./js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>

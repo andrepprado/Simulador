@@ -4,37 +4,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Informações e Benefícios Sicoob Card | Caixa de Ferramentas</title>
+
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
                 <h1>Informações e Benefícios Sicoob Card</h1>
-                <p>Consulte as principais informações, características e benefícios dos cartões Sicoobcard.</p>
+                <p>
+                    Consulte as principais informações, características
+                    e benefícios dos cartões Sicoobcard.
+                </p>
             </div>
 
             <div class="topo-logo">
                 <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
+
         </div>
     </header>
 
+    <!-- =====================================================
+         MENU PRINCIPAL
+         ===================================================== -->
+
     <div id="menuPrincipal"></div>
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
 
     <main class="container sicoobcard-container">
 
+        <!-- =================================================
+             SELEÇÃO DO CARTÃO
+             ================================================= -->
+
         <section class="card sicoobcard-selecao-card">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Sicoobcard</span>
-                <h2>Escolha o cartão</h2>
-                <p>Selecione uma categoria para consultar suas informações e benefícios.</p>
+
+                <span class="categoria-etiqueta">
+                    Sicoobcard
+                </span>
+
+                <h2>
+                    Escolha o cartão
+                </h2>
+
+                <p>
+                    Selecione uma categoria para consultar suas
+                    informações e benefícios.
+                </p>
+
             </div>
 
             <div class="sicoobcard-seletor" id="seletorCartoes">
+
                 <button type="button" class="sicoobcard-opcao ativo" data-cartao="gold">
                     Gold
                 </button>
@@ -66,84 +103,196 @@
                 <button type="button" class="sicoobcard-opcao" data-cartao="visaEmpresarial">
                     Visa Emp.
                 </button>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             DETALHES DO CARTÃO
+             ================================================= -->
+
         <section class="sicoobcard-detalhes-grid">
+
+            <!-- =============================================
+                 CARTÃO / IMAGEM
+                 ============================================= -->
 
             <div class="card sicoobcard-cartao-card">
 
                 <div class="sicoobcard-cartao-topo">
+
                     <div>
-                        <span class="categoria-etiqueta" id="cartaoCategoria">Cartão</span>
-                        <h2 id="cartaoNome">Gold</h2>
-                        <p id="cartaoDescricao">Cartão de entrada do portfólio Sicoobcard.</p>
+
+                        <span class="categoria-etiqueta" id="cartaoCategoria">
+                            Cartão
+                        </span>
+
+                        <h2 id="cartaoNome">
+                            Gold
+                        </h2>
+
+                        <p id="cartaoDescricao">
+                            Cartão de entrada do portfólio Sicoobcard.
+                        </p>
+
                     </div>
 
                     <div class="sicoobcard-bandeiras" id="cartaoBandeiras"></div>
+
                 </div>
 
                 <div class="sicoobcard-imagem-area">
+
                     <img id="imagemCartao" src="img/NEW_CARD_GOLD_a.png" alt="Cartão Sicoobcard Gold"
                         class="sicoobcard-imagem">
+
                 </div>
 
                 <div class="sicoobcard-nome-imagem">
-                    <strong id="nomeCartaoImagem">Sicoobcard Gold</strong>
-                    <span id="segmentoCartaoImagem">Entrada</span>
+
+                    <strong id="nomeCartaoImagem">
+                        Sicoobcard Gold
+                    </strong>
+
+                    <span id="segmentoCartaoImagem">
+                        Entrada
+                    </span>
+
                 </div>
 
             </div>
+
+            <!-- =============================================
+                 INFORMAÇÕES
+                 ============================================= -->
 
             <div class="card sicoobcard-informacoes-card">
 
                 <div class="titulo-secao">
-                    <h2>Informações do cartão</h2>
-                    <p>Principais características da categoria selecionada.</p>
+
+                    <h2>
+                        Informações do cartão
+                    </h2>
+
+                    <p>
+                        Principais características da categoria
+                        selecionada.
+                    </p>
+
                 </div>
 
                 <div class="sicoobcard-informacoes-grid">
 
-                    <div class="sicoobcard-info-item">
-                        <span>Segmento</span>
-                        <strong id="infoSegmento">Entrada</strong>
-                    </div>
+                    <!-- Segmento -->
 
                     <div class="sicoobcard-info-item">
-                        <span>Pontuação</span>
-                        <strong id="infoPontuacao">—</strong>
+
+                        <span>
+                            Segmento
+                        </span>
+
+                        <strong id="infoSegmento">
+                            Entrada
+                        </strong>
+
                     </div>
 
-                    <div class="sicoobcard-info-item">
-                        <span>Sala VIP</span>
-                        <strong id="infoSalaVip">—</strong>
-                    </div>
+                    <!-- Pontuação -->
 
                     <div class="sicoobcard-info-item">
-                        <span>Limite mínimo</span>
-                        <strong id="infoLimite">R$ 500,00</strong>
+
+                        <span>
+                            Pontuação
+                        </span>
+
+                        <strong id="infoPontuacao">
+                            —
+                        </strong>
+
                     </div>
 
+                    <!-- Sala VIP -->
+
                     <div class="sicoobcard-info-item">
-                        <span>Anuidade</span>
-                        <strong id="infoAnuidade">Isento</strong>
+
+                        <span>
+                            Sala VIP
+                        </span>
+
+                        <strong id="infoSalaVip">
+                            —
+                        </strong>
+
                     </div>
+
+                    <!-- Limite -->
+
+                    <div class="sicoobcard-info-item">
+
+                        <span>
+                            Limite mínimo
+                        </span>
+
+                        <strong id="infoLimite">
+                            R$ 500,00
+                        </strong>
+
+                    </div>
+
+                    <!-- Anuidade -->
+
+                    <div class="sicoobcard-info-item">
+
+                        <span>
+                            Anuidade
+                        </span>
+
+                        <strong id="infoAnuidade">
+                            Isento
+                        </strong>
+
+                    </div>
+
+                    <!-- Benefícios -->
 
                     <div class="sicoobcard-info-item sicoobcard-info-destaque">
-                        <span>Benefícios distintos</span>
-                        <strong id="infoQuantidadeBeneficios">3</strong>
+
+                        <span>
+                            Benefícios distintos
+                        </span>
+
+                        <strong id="infoQuantidadeBeneficios">
+                            3
+                        </strong>
+
                     </div>
 
+                    <!-- Faixa de Renda -->
+
                     <div class="sicoobcard-faixa-renda">
-                        <div class="sicoobcard-faixa-renda-icone">
+
+                        <div class="sicoobcard-faixa-renda-icone" aria-hidden="true">
                             R$
                         </div>
 
                         <div class="sicoobcard-faixa-renda-conteudo">
-                            <span>Faixa de renda</span>
-                            <strong id="infoFaixaRenda">Até um salário mínimo</strong>
-                            <small>Faixa de renda indicada para enquadramento do cartão selecionado.</small>
+
+                            <span>
+                                Faixa de renda
+                            </span>
+
+                            <strong id="infoFaixaRenda">
+                                Até um salário mínimo
+                            </strong>
+
+                            <small>
+                                Faixa de renda indicada para enquadramento
+                                do cartão selecionado.
+                            </small>
+
                         </div>
+
                     </div>
 
                 </div>
@@ -151,86 +300,173 @@
             </div>
 
         </section>
+
+        <!-- =================================================
+             BENEFÍCIOS
+             ================================================= -->
 
         <section class="card sicoobcard-beneficios-card">
 
             <div class="sicoobcard-beneficios-cabecalho">
+
                 <div class="titulo-secao">
-                    <span class="categoria-etiqueta">Benefícios</span>
-                    <h2>Benefícios disponíveis</h2>
+
+                    <span class="categoria-etiqueta">
+                        Benefícios
+                    </span>
+
+                    <h2>
+                        Benefícios disponíveis
+                    </h2>
+
                     <p id="textoBeneficios">
                         Benefícios disponíveis para o Sicoobcard Gold.
                     </p>
+
                 </div>
+
+                <!-- =========================================
+                     LEGENDA DAS BANDEIRAS
+                     ========================================= -->
 
                 <div class="sicoobcard-legenda">
+
                     <div>
-                        <span class="beneficio-bandeira beneficio-master">M</span>
-                        <span>Mastercard</span>
+
+                        <span class="beneficio-bandeira beneficio-master" aria-hidden="true">
+                            M
+                        </span>
+
+                        <span>
+                            Mastercard
+                        </span>
+
                     </div>
 
                     <div>
-                        <span class="beneficio-bandeira beneficio-visa">V</span>
-                        <span>Visa</span>
+
+                        <span class="beneficio-bandeira beneficio-visa" aria-hidden="true">
+                            V
+                        </span>
+
+                        <span>
+                            Visa
+                        </span>
+
                     </div>
 
                     <div>
-                        <span class="beneficio-bandeira beneficio-ambas">V+M</span>
-                        <span>Visa e Mastercard</span>
+
+                        <span class="beneficio-bandeira beneficio-ambas" aria-hidden="true">
+                            V+M
+                        </span>
+
+                        <span>
+                            Visa e Mastercard
+                        </span>
+
                     </div>
+
                 </div>
+
             </div>
+
+            <!-- Lista dinâmica de benefícios -->
 
             <div id="listaBeneficios" class="sicoobcard-beneficios-grid"></div>
 
+            <!-- Sem benefícios -->
+
             <div id="mensagemSemBeneficios" class="sicoobcard-sem-beneficios hide">
-                <strong>Benefícios não detalhados no material de referência.</strong>
+
+                <strong>
+                    Benefícios não detalhados no material de referência.
+                </strong>
+
                 <span>
-                    As informações disponíveis para esta categoria estão apresentadas acima.
+                    As informações disponíveis para esta categoria
+                    estão apresentadas acima.
                 </span>
+
             </div>
 
         </section>
 
+        <!-- =================================================
+             COMPARATIVO
+             ================================================= -->
+
         <section class="card sicoobcard-comparativo-card">
 
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Portfólio</span>
-                <h2>Comparativo das categorias</h2>
-                <p>Visão resumida da evolução do portfólio Sicoobcard.</p>
+
+                <span class="categoria-etiqueta">
+                    Portfólio
+                </span>
+
+                <h2>
+                    Comparativo das categorias
+                </h2>
+
+                <p>
+                    Visão resumida da evolução do portfólio Sicoobcard.
+                </p>
+
             </div>
 
             <div class="tabela-wrapper">
+
                 <table class="tabela-sicoobcard">
+
                     <thead>
+
                         <tr>
-                            <th>Categoria</th>
-                            <th>Segmento</th>
-                            <th>Pontuação</th>
-                            <th>Sala VIP</th>
-                            <th>Limite mínimo</th>
-                            <th>Anuidade</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Segmento</th>
+                            <th scope="col">Pontuação</th>
+                            <th scope="col">Sala VIP</th>
+                            <th scope="col">Limite mínimo</th>
+                            <th scope="col">Anuidade</th>
                         </tr>
+
                     </thead>
 
                     <tbody id="tabelaComparativo"></tbody>
+
                 </table>
+
             </div>
 
         </section>
 
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
+
         <div class="container">
-            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvimento e Gestão: Área de Processos</p>
+
+            <p>
+                Caixa de Ferramentas | Sicoob Mantiqueira |
+                Desenvolvimento e Gestão: Área de Processos
+            </p>
+
         </div>
+
     </footer>
 
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
+
     <script src="js/informacoes-beneficios-sicoobcard.js"></script>
-    <script src="./js/impressao-pdf.js"></script>
+    <script src="js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
+
 </body>
 
 </html>

@@ -2,40 +2,83 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Simulador de Condições de Crédito | Caixa de Ferramentas</title>
+
+    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
                 <h1>Simulador de Condições de Crédito</h1>
-                <p>Simule condições financeiras, taxas, alçadas, garantias e regras aplicáveis à operação.</p>
+                <p>
+                    Simule condições financeiras, taxas, alçadas,
+                    garantias e regras aplicáveis à operação.
+                </p>
             </div>
+
             <div class="topo-logo">
                 <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
+
         </div>
     </header>
 
+    <!-- =====================================================
+         MENU PRINCIPAL
+         ===================================================== -->
+
     <div id="menuPrincipal"></div>
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
 
     <main class="container simulador-grid-igual">
 
+        <!-- =================================================
+             DADOS DA OPERAÇÃO
+             ================================================= -->
+
         <section class="card formulario-card card-largura-total">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Crédito</span>
-                <h2>Dados da Operação</h2>
-                <p>Informe os dados principais para identificar as condições e regras da linha de crédito.</p>
+
+                <span class="categoria-etiqueta">
+                    Crédito
+                </span>
+
+                <h2>
+                    Dados da Operação
+                </h2>
+
+                <p>
+                    Informe os dados principais para identificar as
+                    condições e regras da linha de crédito.
+                </p>
+
             </div>
 
             <div class="grid-form-4">
+
+                <!-- Tipo de Pessoa -->
+
                 <div class="campo">
-                    <label for="tipoPessoaCredito">Tipo de Pessoa</label>
+                    <label for="tipoPessoaCredito">
+                        Tipo de Pessoa
+                    </label>
+
                     <select id="tipoPessoaCredito">
                         <option value="">Selecione</option>
                         <option value="PF">Pessoa Física</option>
@@ -43,47 +86,83 @@
                     </select>
                 </div>
 
+                <!-- Linha de Crédito -->
+
                 <div class="campo">
-                    <label for="linhaCreditoCondicoes">Linha de Crédito</label>
+                    <label for="linhaCreditoCondicoes">
+                        Linha de Crédito
+                    </label>
+
                     <select id="linhaCreditoCondicoes" disabled>
-                        <option value="">Selecione primeiro o tipo de pessoa</option>
+                        <option value="">
+                            Selecione primeiro o tipo de pessoa
+                        </option>
                     </select>
                 </div>
 
+                <!-- Valor da Operação -->
+
                 <div class="campo">
-                    <label for="valorOperacaoCredito">Valor da Operação</label>
+                    <label for="valorOperacaoCredito">
+                        Valor da Operação
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="valorOperacaoCredito" value="0,00" autocomplete="off">
+
+                        <input type="text" id="valorOperacaoCredito" value="0,00" inputmode="decimal"
+                            autocomplete="off">
                     </div>
                 </div>
 
+                <!-- Prazo -->
+
                 <div class="campo">
-                    <label for="prazoOperacaoCredito">Prazo da Operação</label>
+                    <label for="prazoOperacaoCredito">
+                        Prazo da Operação
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="prazoOperacaoCredito" min="1" step="1" value="12">
+                        <input type="number" id="prazoOperacaoCredito" min="1" step="1" value="12" inputmode="numeric">
+
                         <span>meses</span>
                     </div>
                 </div>
 
+                <!-- Sistema de Amortização -->
+
                 <div class="campo">
-                    <label for="sistemaAmortizacaoCredito">Sistema de Amortização</label>
+                    <label for="sistemaAmortizacaoCredito">
+                        Sistema de Amortização
+                    </label>
+
                     <select id="sistemaAmortizacaoCredito">
                         <option value="PRICE">PRICE</option>
                         <option value="SAC">SAC / SACD / SACC</option>
                     </select>
                 </div>
 
+                <!-- Taxa -->
+
                 <div class="campo">
-                    <label for="taxaOperacaoCredito">Taxa da Operação</label>
+                    <label for="taxaOperacaoCredito">
+                        Taxa da Operação
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="taxaOperacaoCredito" min="0" step="0.01">
+                        <input type="number" id="taxaOperacaoCredito" min="0" step="0.01" inputmode="decimal">
+
                         <span>% a.m.</span>
                     </div>
                 </div>
 
+                <!-- Risco -->
+
                 <div class="campo">
-                    <label for="riscoOperacaoCredito">Risco da Operação</label>
+                    <label for="riscoOperacaoCredito">
+                        Risco da Operação
+                    </label>
+
                     <select id="riscoOperacaoCredito">
                         <option value="">Não informado</option>
                         <option value="R1">R1</option>
@@ -99,34 +178,70 @@
                     </select>
                 </div>
 
+                <!-- Perda Esperada -->
+
                 <div class="campo">
-                    <label for="perdaEsperadaCredito">Perda Esperada</label>
+                    <label for="perdaEsperadaCredito">
+                        Perda Esperada
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="perdaEsperadaCredito" min="0" step="0.01">
+                        <input type="number" id="perdaEsperadaCredito" min="0" step="0.01" inputmode="decimal">
+
                         <span>%</span>
                     </div>
                 </div>
+
             </div>
+
+            <!-- Ações -->
 
             <div class="acoes">
-                <button type="button" class="btn-principal" id="btnSimularCondicoesCredito">Simular Condições</button>
-                <button type="button" class="botao-secundario" id="btnLimparCondicoesCredito">Limpar</button>
+
+                <button type="button" class="btn btn-primario" id="btnSimularCondicoesCredito">
+                    Simular Condições
+                </button>
+
+                <button type="button" class="btn btn-secundario" id="btnLimparCondicoesCredito">
+                    Limpar
+                </button>
+
             </div>
+
+            <!-- Aviso -->
 
             <div class="aviso">
-                <strong>Atenção:</strong> esta ferramenta possui caráter orientativo e não representa aprovação,
-                proposta ou condição definitiva de crédito.
+                <strong>Atenção:</strong>
+                esta ferramenta possui caráter orientativo e não representa
+                aprovação, proposta ou condição definitiva de crédito.
             </div>
+
         </section>
 
+        <!-- =================================================
+             MATRIZ DE TAXAS E ALÇADAS
+             ================================================= -->
+
         <section class="card card-largura-total" id="cardTaxasCredito">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Taxas</span>
-                <h2>Matriz de Taxas e Alçadas</h2>
-                <p>Referências cadastradas para a linha selecionada.</p>
+
+                <span class="categoria-etiqueta">
+                    Taxas
+                </span>
+
+                <h2>
+                    Matriz de Taxas e Alçadas
+                </h2>
+
+                <p>
+                    Referências cadastradas para a linha selecionada.
+                </p>
+
             </div>
 
             <div class="resultados-grid">
+
                 <div class="resultado-item">
                     <span>Taxa Balcão</span>
                     <strong id="resultadoTaxaBalcao">-</strong>
@@ -146,31 +261,61 @@
                     <span>Diretor / Superintendente</span>
                     <strong id="resultadoTaxaDiretor">-</strong>
                 </div>
+
             </div>
 
             <div class="separador"></div>
 
             <div class="resultado-destaque">
-                <span>Alçada para a taxa informada</span>
-                <strong id="resultadoAlcadaTaxa">Aguardando seleção da linha</strong>
+
+                <span>
+                    Alçada para a taxa informada
+                </span>
+
+                <strong id="resultadoAlcadaTaxa">
+                    Aguardando seleção da linha
+                </strong>
+
             </div>
 
             <div id="mensagemTaxaCredito" class="aviso">
                 Selecione uma linha para consultar as taxas.
             </div>
+
         </section>
 
+        <!-- =================================================
+             CONDIÇÕES DA PROPOSTA
+             ================================================= -->
+
         <section class="card card-largura-total" id="cardCondicoesLinha">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Condições</span>
-                <h2>Condições da Proposta</h2>
-                <p>Os campos abaixo são exibidos conforme as regras da linha selecionada.</p>
+
+                <span class="categoria-etiqueta">
+                    Condições
+                </span>
+
+                <h2>
+                    Condições da Proposta
+                </h2>
+
+                <p>
+                    Os campos abaixo são exibidos conforme as regras
+                    da linha selecionada.
+                </p>
+
             </div>
 
             <div class="grid-form-4">
 
+                <!-- Flexibilização -->
+
                 <div class="campo" id="blocoFlexCredito" hidden>
-                    <label for="flexCredito">A Taxa de Crédito será Flexibilizada?</label>
+                    <label for="flexCredito">
+                        A Taxa de Crédito será Flexibilizada?
+                    </label>
+
                     <select id="flexCredito">
                         <option value="">Selecione</option>
                         <option value="SIM">Sim</option>
@@ -178,8 +323,13 @@
                     </select>
                 </div>
 
+                <!-- REPAC -->
+
                 <div class="campo" id="blocoRepacTroco" hidden>
-                    <label for="repacTroco">REPAC com Troco?</label>
+                    <label for="repacTroco">
+                        REPAC com Troco?
+                    </label>
+
                     <select id="repacTroco">
                         <option value="">Selecione</option>
                         <option value="SIM">Sim</option>
@@ -187,29 +337,51 @@
                     </select>
                 </div>
 
+                <!-- Justificativa REPAC -->
+
                 <div class="campo" id="blocoJustRepac" hidden>
-                    <label for="justRepac">Justificativa - REPAC com Troco</label>
+                    <label for="justRepac">
+                        Justificativa - REPAC com Troco
+                    </label>
+
                     <textarea id="justRepac"></textarea>
                 </div>
 
+                <!-- Percentual à Vista -->
+
                 <div class="campo" id="blocoPorcVista" hidden>
-                    <label for="porcVista">% de Recebimento à Vista</label>
+                    <label for="porcVista">
+                        % de Recebimento à Vista
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="porcVista" min="0" max="100" step="0.01">
+                        <input type="number" id="porcVista" min="0" max="100" step="0.01" inputmode="decimal">
+
                         <span>%</span>
                     </div>
                 </div>
 
+                <!-- Prazo Médio -->
+
                 <div class="campo" id="blocoPrazoMedio" hidden>
-                    <label for="prazoMedio">Prazo Médio de Recebimento</label>
+                    <label for="prazoMedio">
+                        Prazo Médio de Recebimento
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="prazoMedio" min="0" step="1">
+                        <input type="number" id="prazoMedio" min="0" step="1" inputmode="numeric">
+
                         <span>dias</span>
                     </div>
                 </div>
 
+                <!-- Alteração de Limite -->
+
                 <div class="campo" id="blocoAlteraLimite" hidden>
-                    <label for="alteraLimite">O limite será alterado?</label>
+                    <label for="alteraLimite">
+                        O limite será alterado?
+                    </label>
+
                     <select id="alteraLimite">
                         <option value="">Selecione</option>
                         <option value="SIM">Sim</option>
@@ -217,16 +389,27 @@
                     </select>
                 </div>
 
+                <!-- Limite Anterior -->
+
                 <div class="campo" id="blocoValorLimiteAnterior" hidden>
-                    <label for="valorLimiteAnterior">Valor do Limite Anterior</label>
+                    <label for="valorLimiteAnterior">
+                        Valor do Limite Anterior
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="valorLimiteAnterior" value="0,00" autocomplete="off">
+
+                        <input type="text" id="valorLimiteAnterior" value="0,00" inputmode="decimal" autocomplete="off">
                     </div>
                 </div>
 
+                <!-- PIX -->
+
                 <div class="campo" id="blocoPix" hidden>
-                    <label for="possuiPix">Cooperado possui PIX cadastrado?</label>
+                    <label for="possuiPix">
+                        Cooperado possui PIX cadastrado?
+                    </label>
+
                     <select id="possuiPix">
                         <option value="">Selecione</option>
                         <option value="SIM">Sim</option>
@@ -234,13 +417,23 @@
                     </select>
                 </div>
 
+                <!-- Justificativa PIX -->
+
                 <div class="campo" id="blocoJustPix" hidden>
-                    <label for="justPix">Justificativa - Cooperado sem PIX</label>
+                    <label for="justPix">
+                        Justificativa - Cooperado sem PIX
+                    </label>
+
                     <textarea id="justPix"></textarea>
                 </div>
 
+                <!-- Cotas -->
+
                 <div class="campo" id="blocoCotas" hidden>
-                    <label for="cotasAtraso">Cooperado possui cotas de capital em atraso?</label>
+                    <label for="cotasAtraso">
+                        Cooperado possui cotas de capital em atraso?
+                    </label>
+
                     <select id="cotasAtraso">
                         <option value="">Selecione</option>
                         <option value="NAO">Não</option>
@@ -248,8 +441,13 @@
                     </select>
                 </div>
 
+                <!-- CRL -->
+
                 <div class="campo" id="blocoCrl" hidden>
-                    <label for="crlAtivo">CRL Ativo e Limites (Tomadores e Avais)?</label>
+                    <label for="crlAtivo">
+                        CRL Ativo e Limites (Tomadores e Avais)?
+                    </label>
+
                     <select id="crlAtivo">
                         <option value="">Selecione</option>
                         <option value="SIM">Sim</option>
@@ -257,8 +455,13 @@
                     </select>
                 </div>
 
+                <!-- SERASA -->
+
                 <div class="campo" id="blocoSerasa" hidden>
-                    <label for="possuiSerasa">Possui anotação SERASA?</label>
+                    <label for="possuiSerasa">
+                        Possui anotação SERASA?
+                    </label>
+
                     <select id="possuiSerasa">
                         <option value="">Selecione</option>
                         <option value="NAO">Não</option>
@@ -266,13 +469,23 @@
                     </select>
                 </div>
 
+                <!-- Justificativa SERASA -->
+
                 <div class="campo" id="blocoJustSerasa" hidden>
-                    <label for="justSerasa">Justificativa - Anotação SERASA</label>
+                    <label for="justSerasa">
+                        Justificativa - Anotação SERASA
+                    </label>
+
                     <textarea id="justSerasa"></textarea>
                 </div>
 
+                <!-- BACEN -->
+
                 <div class="campo" id="blocoBacen" hidden>
-                    <label for="possuiBacen">Possui anotação BACEN?</label>
+                    <label for="possuiBacen">
+                        Possui anotação BACEN?
+                    </label>
+
                     <select id="possuiBacen">
                         <option value="">Selecione</option>
                         <option value="NAO">Não</option>
@@ -280,26 +493,48 @@
                     </select>
                 </div>
 
+                <!-- Justificativa BACEN -->
+
                 <div class="campo" id="blocoJustBacen" hidden>
-                    <label for="justBacen">Justificativa - Anotação BACEN</label>
+                    <label for="justBacen">
+                        Justificativa - Anotação BACEN
+                    </label>
+
                     <textarea id="justBacen"></textarea>
                 </div>
 
+                <!-- Faturamento -->
+
                 <div class="campo" id="blocoFaturamento" hidden>
-                    <label for="faturamentoAnualCredito">Faturamento Anual</label>
+                    <label for="faturamentoAnualCredito">
+                        Faturamento Anual
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="faturamentoAnualCredito" value="0,00" autocomplete="off">
+
+                        <input type="text" id="faturamentoAnualCredito" value="0,00" inputmode="decimal"
+                            autocomplete="off">
                     </div>
                 </div>
 
+                <!-- Documentação Contábil -->
+
                 <div class="campo" id="blocoBalanco" hidden>
-                    <label>Documentação Contábil Aplicável</label>
+                    <label for="documentacaoContabilCredito">
+                        Documentação Contábil Aplicável
+                    </label>
+
                     <input type="text" id="documentacaoContabilCredito" readonly>
                 </div>
 
+                <!-- Emitentes -->
+
                 <div class="campo" id="blocoEmitente" hidden>
-                    <label for="maisEmitente">Será incluído mais de um emitente?</label>
+                    <label for="maisEmitente">
+                        Será incluído mais de um emitente?
+                    </label>
+
                     <select id="maisEmitente">
                         <option value="">Selecione</option>
                         <option value="NAO">Não</option>
@@ -310,156 +545,297 @@
             </div>
 
             <div id="avisoCondicoesCredito" class="aviso" hidden></div>
+
         </section>
 
+        <!-- =================================================
+             GARANTIAS
+             ================================================= -->
+
         <section class="card card-largura-total" id="cardGarantiasCredito">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Garantias</span>
-                <h2>Garantias da Operação</h2>
-                <p>As opções são habilitadas conforme a matriz da linha de crédito.</p>
+
+                <span class="categoria-etiqueta">
+                    Garantias
+                </span>
+
+                <h2>
+                    Garantias da Operação
+                </h2>
+
+                <p>
+                    As opções são habilitadas conforme a matriz da
+                    linha de crédito.
+                </p>
+
             </div>
 
             <div class="grid-form-4">
 
+                <!-- Avalista -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaAvalista">
+
                         <input type="checkbox" id="garantiaAvalista" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Avalista</strong>
                             <small id="descGarantiaAvalista"></small>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Veículo -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaVeiculo">
+
                         <input type="checkbox" id="garantiaVeiculo" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Veículo</strong>
                             <small id="descGarantiaVeiculo"></small>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Recebíveis -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaRecebiveis">
+
                         <input type="checkbox" id="garantiaRecebiveis" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Cessão de Direitos</strong>
                             <small>Produtos / Serviços</small>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Aplicação -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaAplicacao">
+
                         <input type="checkbox" id="garantiaAplicacao" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Aplicação Financeira</strong>
-                            <small>RDC / LCI / aplicações admitidas</small>
+                            <small>
+                                RDC / LCI / aplicações admitidas
+                            </small>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Maquininha -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaMaquininha">
+
                         <input type="checkbox" id="garantiaMaquininha" value="X" disabled>
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Maquininha</strong>
                             <small>Fora de operação</small>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Imóvel Urbano -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaUrbano">
+
                         <input type="checkbox" id="garantiaImovelUrbano" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Imóvel Urbano</strong>
                             <small id="descGarantiaUrbano"></small>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Imóvel Rural -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaRural">
+
                         <input type="checkbox" id="garantiaImovelRural" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Imóvel Rural</strong>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Guarda-Chuva -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelGarantiaGuarda">
+
                         <input type="checkbox" id="garantiaGuardaChuva" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Limite Guarda-Chuva</strong>
                         </span>
+
                     </label>
+
                 </div>
 
+                <!-- Sem Garantias -->
+
                 <div class="campo">
+
                     <label class="opcao-simulacao" id="labelSemGarantia">
+
                         <input type="checkbox" id="semGarantiaCredito" value="X">
+
                         <span class="opcao-simulacao-conteudo">
                             <strong>Sem Garantias</strong>
                         </span>
+
                     </label>
+
                 </div>
 
             </div>
 
             <div class="separador"></div>
 
+            <!-- Justificativa sem garantia -->
+
             <div class="grid-form" id="blocoJustSemGarantia" hidden>
+
                 <div class="campo">
-                    <label for="justSemGarantia">Justificativa - Sem Garantia</label>
+                    <label for="justSemGarantia">
+                        Justificativa - Sem Garantia
+                    </label>
+
                     <textarea id="justSemGarantia"></textarea>
                 </div>
+
             </div>
+
+            <!-- Contrato-Mãe -->
 
             <div class="grid-form" id="blocoContratoMae" hidden>
+
                 <div class="campo">
-                    <label for="contratoMae">Nº do Contrato-Mãe</label>
-                    <input type="number" id="contratoMae" min="1">
+                    <label for="contratoMae">
+                        Nº do Contrato-Mãe
+                    </label>
+
+                    <input type="number" id="contratoMae" min="1" inputmode="numeric">
                 </div>
+
             </div>
+
+            <!-- Dispensa de Garantia -->
 
             <div class="grid-form" id="blocoDispensaGarantia" hidden>
+
                 <div class="campo">
-                    <label for="justDispensaGarantia">Justificativa Técnica para Dispensa de Garantia Real</label>
+                    <label for="justDispensaGarantia">
+                        Justificativa Técnica para Dispensa de Garantia Real
+                    </label>
+
                     <textarea id="justDispensaGarantia"></textarea>
                 </div>
+
             </div>
+
+            <!-- Parecer -->
 
             <div class="grid-form" id="blocoParecerGerente" hidden>
+
                 <div class="campo">
-                    <label for="parecerGerente">Parecer Técnico do Gerente</label>
+                    <label for="parecerGerente">
+                        Parecer Técnico do Gerente
+                    </label>
+
                     <textarea id="parecerGerente"></textarea>
                 </div>
+
             </div>
 
+            <div class="separador"></div>
+
+            <!-- Documentos das Garantias -->
+
             <div class="titulo-secao">
-                <h3>Documentos e Condições das Garantias Selecionadas</h3>
-                <p>Resumo orientativo das informações previstas na matriz.</p>
+
+                <h3>
+                    Documentos e Condições das Garantias Selecionadas
+                </h3>
+
+                <p>
+                    Resumo orientativo das informações previstas na matriz.
+                </p>
+
             </div>
 
             <div id="regrasGarantiasCredito" class="lista-documentos">
+
                 <div class="documentos-observacao">
-                    Selecione uma linha e uma garantia para visualizar as exigências.
+                    Selecione uma linha e uma garantia para visualizar
+                    as exigências.
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             RESUMO DAS REGRAS
+             ================================================= -->
+
         <section class="card card-largura-total">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Linha</span>
-                <h2>Resumo das Regras da Linha</h2>
-                <p>Regras identificadas a partir da matriz do processo.</p>
+
+                <span class="categoria-etiqueta">
+                    Linha
+                </span>
+
+                <h2>
+                    Resumo das Regras da Linha
+                </h2>
+
+                <p>
+                    Regras identificadas a partir da matriz do processo.
+                </p>
+
             </div>
 
             <div class="resultados-grid">
+
                 <div class="resultado-item">
                     <span>Código</span>
                     <strong id="resultadoCodigoLinha">-</strong>
@@ -499,132 +875,250 @@
                     <span>Prazo Médio</span>
                     <strong id="resultadoPrazoMedio">-</strong>
                 </div>
+
             </div>
 
             <div class="linha-selecionada">
-                <span>Linha selecionada</span>
-                <strong id="resultadoNomeLinhaCredito">Nenhuma linha selecionada</strong>
+
+                <span>
+                    Linha selecionada
+                </span>
+
+                <strong id="resultadoNomeLinhaCredito">
+                    Nenhuma linha selecionada
+                </strong>
+
             </div>
 
             <div id="listaRegrasLinhaCredito" class="lista-documentos"></div>
+
         </section>
 
+        <!-- =================================================
+             ENQUADRAMENTO
+             ================================================= -->
+
         <section class="card card-largura-total">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Análise</span>
-                <h2>Enquadramento da Operação</h2>
-                <p>Resultado das validações aplicadas aos dados informados.</p>
+
+                <span class="categoria-etiqueta">
+                    Análise
+                </span>
+
+                <h2>
+                    Enquadramento da Operação
+                </h2>
+
+                <p>
+                    Resultado das validações aplicadas aos dados informados.
+                </p>
+
             </div>
 
             <div id="statusEnquadramentoCredito" class="resultado-destaque">
+
                 <span>Status</span>
-                <strong>Aguardando simulação</strong>
+
+                <strong>
+                    Aguardando simulação
+                </strong>
+
             </div>
 
             <div id="listaAlertasCredito" class="lista-documentos">
+
                 <div class="documentos-observacao">
                     Preencha os dados da operação para realizar a análise.
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             RESULTADO FINANCEIRO
+             ================================================= -->
+
         <section class="card card-largura-total">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Resultado</span>
-                <h2>Resultado Financeiro</h2>
-                <p>Estimativa calculada com base no valor, prazo, taxa e sistema de amortização.</p>
+
+                <span class="categoria-etiqueta">
+                    Resultado
+                </span>
+
+                <h2>
+                    Resultado Financeiro
+                </h2>
+
+                <p>
+                    Estimativa calculada com base no valor, prazo,
+                    taxa e sistema de amortização.
+                </p>
+
             </div>
 
             <div class="resultado-destaque">
-                <span>Parcela Inicial Estimada</span>
-                <strong id="resultadoParcelaCredito">R$ 0,00</strong>
+
+                <span>
+                    Parcela Inicial Estimada
+                </span>
+
+                <strong id="resultadoParcelaCredito">
+                    R$ 0,00
+                </strong>
+
             </div>
 
             <div class="resultados-grid">
+
                 <div class="resultado-item">
                     <span>Valor da Operação</span>
-                    <strong id="resultadoValorOperacaoCredito">R$ 0,00</strong>
+
+                    <strong id="resultadoValorOperacaoCredito">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Prazo</span>
-                    <strong id="resultadoPrazoCredito">0 meses</strong>
+
+                    <strong id="resultadoPrazoCredito">
+                        0 meses
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Taxa Mensal</span>
-                    <strong id="resultadoTaxaMensalCredito">0,00% a.m.</strong>
+
+                    <strong id="resultadoTaxaMensalCredito">
+                        0,00% a.m.
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Taxa Anual Equivalente</span>
-                    <strong id="resultadoTaxaAnualCredito">0,00% a.a.</strong>
+
+                    <strong id="resultadoTaxaAnualCredito">
+                        0,00% a.a.
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Primeira Parcela</span>
-                    <strong id="resultadoPrimeiraParcelaCredito">R$ 0,00</strong>
+
+                    <strong id="resultadoPrimeiraParcelaCredito">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Última Parcela</span>
-                    <strong id="resultadoUltimaParcelaCredito">R$ 0,00</strong>
+
+                    <strong id="resultadoUltimaParcelaCredito">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Total de Juros</span>
-                    <strong id="resultadoJurosCredito">R$ 0,00</strong>
+
+                    <strong id="resultadoJurosCredito">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Total Estimado</span>
-                    <strong id="resultadoTotalCredito">R$ 0,00</strong>
+
+                    <strong id="resultadoTotalCredito">
+                        R$ 0,00
+                    </strong>
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             DEMONSTRATIVO DAS PARCELAS
+             ================================================= -->
+
         <section class="card tabela-card card-largura-total">
+
             <div class="titulo-secao">
-                <span class="categoria-etiqueta">Fluxo Financeiro</span>
-                <h2>Demonstrativo das Parcelas</h2>
-                <p>Composição estimada das parcelas da operação.</p>
+
+                <span class="categoria-etiqueta">
+                    Fluxo Financeiro
+                </span>
+
+                <h2>
+                    Demonstrativo das Parcelas
+                </h2>
+
+                <p>
+                    Composição estimada das parcelas da operação.
+                </p>
+
             </div>
 
             <div class="tabela-wrapper">
+
                 <table>
+
                     <thead>
                         <tr>
-                            <th>Parcela</th>
-                            <th>Saldo Inicial</th>
-                            <th>Amortização</th>
-                            <th>Juros</th>
-                            <th>Valor da Parcela</th>
-                            <th>Saldo Final</th>
+                            <th scope="col">Parcela</th>
+                            <th scope="col">Saldo Inicial</th>
+                            <th scope="col">Amortização</th>
+                            <th scope="col">Juros</th>
+                            <th scope="col">Valor da Parcela</th>
+                            <th scope="col">Saldo Final</th>
                         </tr>
                     </thead>
+
                     <tbody id="tabelaParcelasCredito">
+
                         <tr>
                             <td colspan="6" class="sem-dados">
-                                Realize uma simulação para visualizar as parcelas.
+                                Realize uma simulação para visualizar
+                                as parcelas.
                             </td>
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </section>
 
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
         <div class="container">
-            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvido pela Área de Processos</p>
+            <p>
+                Caixa de Ferramentas | Sicoob Mantiqueira |
+                Desenvolvimento e Gestão: Área de Processos
+            </p>
         </div>
     </footer>
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
 
     <script src="js/simulador-condicoes-credito.js"></script>
     <script src="js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
+
 </body>
 
 </html>

@@ -2,184 +2,349 @@
 <html lang="pt-BR">
 
 <head>
-    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Antecipação Sipag 2.0 | Caixa de Ferramentas</title>
+
+    <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
                 <h1>Simulador de Antecipação Sipag 2.0</h1>
-                <p>Calcule o valor líquido da antecipação e a taxa final da operação.</p>
+                <p>
+                    Calcule o valor líquido da antecipação e a taxa final
+                    da operação.
+                </p>
             </div>
+
             <div class="topo-logo">
-                <img src="img/logoBranco.png" alt="Sicoob">
+                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
+
         </div>
     </header>
 
+    <!-- =====================================================
+         MENU PRINCIPAL
+         Conteúdo carregado pelo menu.js
+         ===================================================== -->
+
     <div id="menuPrincipal"></div>
 
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
+
     <main class="container antecipacao-grid">
-        <section class="card formulario-card antecipacao-formulario">
+
+        <!-- =================================================
+             DADOS DA SIMULAÇÃO
+             ================================================= -->
+
+        <section class="formulario-card antecipacao-formulario">
+
             <div class="titulo-secao">
-                <h2>Dados da Simulação</h2>
-                <p>Informe as condições da venda e da antecipação.</p>
+                <div>
+                    <h2>Dados da Simulação</h2>
+                    <p>
+                        Informe as condições da venda e da antecipação.
+                    </p>
+                </div>
             </div>
 
             <div class="grid-form">
+
+                <!-- Taxa de Antecipação -->
+
                 <div class="campo">
-                    <label for="taxaAntecipacao">Taxa de Antecipação</label>
+                    <label for="taxaAntecipacao">
+                        Taxa de Antecipação
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="taxaAntecipacao" min="0" step="0.01" value="1.55">
+                        <input type="number" id="taxaAntecipacao" min="0" step="0.01" value="1.55" inputmode="decimal">
+
                         <span>% a.m.</span>
                     </div>
                 </div>
 
+                <!-- Taxa MDR -->
+
                 <div class="campo">
-                    <label for="taxaMdr">Taxa MDR</label>
+                    <label for="taxaMdr">
+                        Taxa MDR
+                    </label>
+
                     <div class="input-sufixo">
-                        <input type="number" id="taxaMdr" min="0" step="0.01" value="2.23">
+                        <input type="number" id="taxaMdr" min="0" step="0.01" value="2.23" inputmode="decimal">
+
                         <span>%</span>
                     </div>
                 </div>
 
+                <!-- Data da Venda -->
+
                 <div class="campo">
-                    <label for="dataVenda">Data da Venda</label>
+                    <label for="dataVenda">
+                        Data da Venda
+                    </label>
+
                     <input type="date" id="dataVenda">
                 </div>
 
+                <!-- Quantidade de Parcelas -->
+
                 <div class="campo">
-                    <label for="parcelasAntecipacao">Quantidade de Parcelas</label>
+                    <label for="parcelasAntecipacao">
+                        Quantidade de Parcelas
+                    </label>
+
                     <select id="parcelasAntecipacao"></select>
                 </div>
 
+                <!-- Valor da Venda -->
+
                 <div class="campo">
-                    <label for="valorVenda">Valor da Venda</label>
+                    <label for="valorVenda">
+                        Valor da Venda
+                    </label>
+
                     <div class="input-prefixo">
                         <span>R$</span>
-                        <input type="text" id="valorVenda" value="48.000,00" autocomplete="off">
+
+                        <input type="text" id="valorVenda" value="48.000,00" inputmode="decimal" autocomplete="off">
                     </div>
+                </div>
+
+            </div>
+
+            <!-- Ações -->
+
+            <div class="acoes">
+
+                <button type="button" class="btn btn-primario" id="btnCalcularAntecipacao">
+                    Calcular
+                </button>
+
+                <button type="button" class="btn btn-secundario" id="btnLimparAntecipacao">
+                    Limpar
+                </button>
+
+            </div>
+
+            <!-- Aviso -->
+
+            <div class="aviso">
+                <strong>Atenção:</strong>
+                os valores calculados representam uma simulação.
+                O valor efetivamente liquidado poderá apresentar
+                diferenças em razão de arredondamentos e condições
+                da operação.
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             RESULTADO DA ANTECIPAÇÃO
+             ================================================= -->
+
+        <aside class="resultado-card antecipacao-resultado">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Resultado da Antecipação</h2>
+                    <p>
+                        Resumo financeiro da simulação.
+                    </p>
                 </div>
             </div>
 
-            <div class="acoes">
-                <button type="button" class="btn-principal" id="btnCalcularAntecipacao">Calcular</button>
-                <button type="button" class="botao-secundario" id="btnLimparAntecipacao">Limpar</button>
-            </div>
-
-            <div class="aviso">
-                <strong>Atenção:</strong> os valores calculados representam uma simulação. O valor efetivamente
-                liquidado poderá apresentar diferenças em razão de arredondamentos e condições da operação.
-            </div>
-        </section>
-
-        <aside class="card resultado-card antecipacao-resultado">
-            <div class="titulo-secao">
-                <h2>Resultado da Antecipação</h2>
-                <p>Resumo financeiro da simulação.</p>
-            </div>
+            <!-- Resultado Principal -->
 
             <div class="resultado-destaque">
-                <span>Valor Líquido Antecipado</span>
-                <strong id="resultadoLiquidoAntecipado">R$ 0,00</strong>
+
+                <span>
+                    Valor Líquido Antecipado
+                </span>
+
+                <strong id="resultadoLiquidoAntecipado">
+                    R$ 0,00
+                </strong>
+
             </div>
 
+            <!-- Resultados Secundários -->
+
             <div class="resultados-grid">
+
                 <div class="resultado-item">
                     <span>Valor da Venda</span>
-                    <strong id="resultadoValorVenda">R$ 0,00</strong>
+                    <strong id="resultadoValorVenda">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Parcelas</span>
-                    <strong id="resultadoQtdParcelas">0</strong>
+                    <strong id="resultadoQtdParcelas">
+                        0
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Total após MDR</span>
-                    <strong id="resultadoLiquidoMdr">R$ 0,00</strong>
+                    <strong id="resultadoLiquidoMdr">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Desconto Antecipação</span>
-                    <strong id="resultadoDescontoAntecipacao">R$ 0,00</strong>
+                    <strong id="resultadoDescontoAntecipacao">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Taxa MDR</span>
-                    <strong id="resultadoMdr">0,00%</strong>
+                    <strong id="resultadoMdr">
+                        0,00%
+                    </strong>
                 </div>
 
                 <div class="resultado-item">
                     <span>Taxa Antecipação</span>
-                    <strong id="resultadoTaxaAntecipacao">0,00%</strong>
+                    <strong id="resultadoTaxaAntecipacao">
+                        0,00%
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- Taxa Final -->
+
+            <div class="linha-selecionada">
+
+                <span>
+                    Taxa Final da Operação
+                </span>
+
+                <strong id="resultadoTaxaFinal">
+                    0,00%
+                </strong>
+
+            </div>
+
+        </aside>
+
+        <!-- =================================================
+             DETALHAMENTO DAS PARCELAS
+             ================================================= -->
+
+        <section class="tabela-card antecipacao-tabela">
+
+            <div class="titulo-secao">
+                <div>
+                    <h2>Detalhamento das Parcelas</h2>
+                    <p>
+                        Composição do MDR e do deságio de antecipação
+                        por parcela.
+                    </p>
                 </div>
             </div>
 
-            <div class="linha-selecionada">
-                <span>Taxa Final da Operação</span>
-                <strong id="resultadoTaxaFinal">0,00%</strong>
-            </div>
-        </aside>
-
-        <section class="card tabela-card antecipacao-tabela">
-            <div class="titulo-secao">
-                <h2>Detalhamento das Parcelas</h2>
-                <p>Composição do MDR e do deságio de antecipação por parcela.</p>
-            </div>
-
             <div class="tabela-wrapper">
+
                 <table>
+
                     <thead>
                         <tr>
-                            <th>Parcela</th>
-                            <th>Vencimento</th>
-                            <th>Prazo</th>
-                            <th>Parcela Bruta</th>
-                            <th>MDR</th>
-                            <th>Líquido MDR</th>
-                            <th>Deságio</th>
-                            <th>Taxa Final</th>
-                            <th>Desconto</th>
-                            <th>Líquido Antecipado</th>
+                            <th scope="col">Parcela</th>
+                            <th scope="col">Vencimento</th>
+                            <th scope="col">Prazo</th>
+                            <th scope="col">Parcela Bruta</th>
+                            <th scope="col">MDR</th>
+                            <th scope="col">Líquido MDR</th>
+                            <th scope="col">Deságio</th>
+                            <th scope="col">Taxa Final</th>
+                            <th scope="col">Desconto</th>
+                            <th scope="col">Líquido Antecipado</th>
                         </tr>
                     </thead>
+
                     <tbody id="tabelaAntecipacao"></tbody>
+
                 </table>
+
             </div>
+
         </section>
 
-        <section class="card documentos-card antecipacao-documentos">
+        <!-- =================================================
+             TAXA FINAL POR PARCELAMENTO
+             ================================================= -->
+
+        <section class="documentos-card antecipacao-documentos">
+
             <div class="titulo-secao">
-                <h2>Taxa Final por Parcelamento</h2>
-                <p>Referência da taxa final calculada para cada quantidade de parcelas.</p>
+                <div>
+                    <h2>Taxa Final por Parcelamento</h2>
+                    <p>
+                        Referência da taxa final calculada para cada
+                        quantidade de parcelas.
+                    </p>
+                </div>
             </div>
 
             <div class="tabela-wrapper">
+
                 <table>
+
                     <thead>
                         <tr>
-                            <th>Parcelas</th>
-                            <th>Taxa Final</th>
-                            <th>Valor Líquido</th>
+                            <th scope="col">Parcelas</th>
+                            <th scope="col">Taxa Final</th>
+                            <th scope="col">Valor Líquido</th>
                         </tr>
                     </thead>
+
                     <tbody id="tabelaTaxaFlex"></tbody>
+
                 </table>
+
             </div>
+
         </section>
+
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
         <div class="container">
-            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvido pela Área de Processos</p>
+            <p>
+                Caixa de Ferramentas | Sicoob Mantiqueira |
+                Desenvolvimento e Gestão: Área de Processos
+            </p>
         </div>
     </footer>
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
 
     <script src="js/antecipacao-sipag.js"></script>
     <script src="js/impressao-pdf.js"></script>

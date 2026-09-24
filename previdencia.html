@@ -4,41 +4,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Previdência | Caixa de Ferramentas</title>
+
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <header class="topo">
+
         <div class="container topo-conteudo">
+
             <div class="topo-textos">
-                <h1>Simulador de Previdência</h1>
-                <p>Projete sua reserva, contribuições e renda futura.</p>
+
+                <h1>
+                    Simulador de Previdência
+                </h1>
+
+                <p>
+                    Projete sua reserva, contribuições e renda futura.
+                </p>
+
             </div>
+
             <div class="topo-logo">
+
                 <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
+
             </div>
+
         </div>
+
     </header>
+
+    <!-- =====================================================
+         MENU PRINCIPAL
+         ===================================================== -->
 
     <div id="menuPrincipal"></div>
 
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+         ===================================================== -->
+
     <main class="container previdencia-container">
+
+        <!-- =================================================
+             PROGRESSO DA SIMULAÇÃO
+             ================================================= -->
+
         <section class="previdencia-progresso card">
+
             <div class="previdencia-progresso-topo">
+
                 <div>
-                    <span>Etapa atual</span>
-                    <strong id="textoEtapa">Você</strong>
+
+                    <span>
+                        Etapa atual
+                    </span>
+
+                    <strong id="textoEtapa">
+                        Você
+                    </strong>
+
                 </div>
-                <strong id="textoProgresso">25%</strong>
+
+                <strong id="textoProgresso">
+                    25%
+                </strong>
+
             </div>
 
             <div class="barra-progresso">
+
                 <div id="barraProgressoValor" class="barra-progresso-valor"></div>
+
             </div>
 
             <div class="previdencia-etapas">
+
                 <button type="button" class="previdencia-etapa ativo" data-etapa="1">
                     <span>1</span>
                     Você
@@ -58,169 +108,410 @@
                     <span>4</span>
                     Seu Futuro
                 </button>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             ETAPA 1 - VOCÊ
+             ================================================= -->
+
         <section id="etapa1" class="previdencia-painel ativo">
+
             <div class="card formulario-card">
+
                 <div class="titulo-secao">
-                    <span class="categoria-etiqueta">Você</span>
-                    <h2>Dados da simulação</h2>
-                    <p>Informe seus dados e escolha qual tipo de simulação deseja realizar.</p>
+
+                    <span class="categoria-etiqueta">
+                        Você
+                    </span>
+
+                    <h2>
+                        Dados da Simulação
+                    </h2>
+
+                    <p>
+                        Informe seus dados e escolha qual tipo
+                        de simulação deseja realizar.
+                    </p>
+
                 </div>
 
+                <!-- =========================================
+                     TIPO DE SIMULAÇÃO
+                     ========================================= -->
+
                 <div class="previdencia-escolhas">
+
                     <label class="opcao-simulacao ativo">
+
                         <input type="radio" name="tipoSimulacao" value="renda" checked>
+
                         <span class="opcao-simulacao-conteudo">
-                            <strong>Quero definir minha renda futura</strong>
-                            <small>Informe a renda desejada e descubra o quanto precisa contribuir.</small>
+
+                            <strong>
+                                Quero definir minha renda futura
+                            </strong>
+
+                            <small>
+                                Informe a renda desejada e descubra
+                                o quanto precisa contribuir.
+                            </small>
+
                         </span>
+
                     </label>
 
                     <label class="opcao-simulacao">
+
                         <input type="radio" name="tipoSimulacao" value="contribuicao">
+
                         <span class="opcao-simulacao-conteudo">
-                            <strong>Quero definir quanto posso investir</strong>
-                            <small>Informe sua contribuição e descubra a renda futura estimada.</small>
+
+                            <strong>
+                                Quero definir quanto posso investir
+                            </strong>
+
+                            <small>
+                                Informe sua contribuição e descubra
+                                a renda futura estimada.
+                            </small>
+
                         </span>
+
                     </label>
+
                 </div>
 
                 <div class="separador"></div>
 
+                <!-- =========================================
+                     DADOS PESSOAIS
+                     ========================================= -->
+
                 <div class="grid-form">
+
                     <div class="campo">
-                        <label for="sexo">Sexo</label>
+
+                        <label for="sexo">
+                            Sexo
+                        </label>
+
                         <select id="sexo">
-                            <option value="F">Feminino</option>
-                            <option value="M">Masculino</option>
+
+                            <option value="F">
+                                Feminino
+                            </option>
+
+                            <option value="M">
+                                Masculino
+                            </option>
+
                         </select>
+
                     </div>
 
                     <div class="campo">
-                        <label for="idadeAtual">Idade atual</label>
+
+                        <label for="idadeAtual">
+                            Idade atual
+                        </label>
+
                         <div class="input-sufixo">
-                            <input type="number" id="idadeAtual" min="18" max="80" value="30">
-                            <span>anos</span>
+
+                            <input type="number" id="idadeAtual" min="18" max="80" value="30" inputmode="numeric">
+
+                            <span>
+                                anos
+                            </span>
+
                         </div>
+
                     </div>
 
                     <div class="campo">
-                        <label for="idadeAposentadoria">Idade para começar a receber a renda</label>
+
+                        <label for="idadeAposentadoria">
+                            Idade para começar a receber a renda
+                        </label>
+
                         <div class="input-sufixo">
-                            <input type="number" id="idadeAposentadoria" min="19" max="100" value="65">
-                            <span>anos</span>
+
+                            <input type="number" id="idadeAposentadoria" min="19" max="100" value="65"
+                                inputmode="numeric">
+
+                            <span>
+                                anos
+                            </span>
+
                         </div>
+
                     </div>
 
                     <div class="campo">
-                        <label for="possuiBeneficiarios">Possui beneficiários?</label>
+
+                        <label for="possuiBeneficiarios">
+                            Possui beneficiários?
+                        </label>
+
                         <select id="possuiBeneficiarios">
-                            <option value="sim">Sim</option>
-                            <option value="nao">Não</option>
+
+                            <option value="sim">
+                                Sim
+                            </option>
+
+                            <option value="nao">
+                                Não
+                            </option>
+
                         </select>
+
                     </div>
+
                 </div>
 
+                <!-- =========================================
+                     BENEFICIÁRIO
+                     ========================================= -->
+
                 <div id="blocoBeneficiario">
+
                     <div class="separador"></div>
 
                     <div class="titulo-subsecao">
-                        <h3>Beneficiário mais jovem</h3>
-                        <p>Essas informações são utilizadas na estimativa de renda por prazo indeterminado.</p>
+
+                        <h3>
+                            Beneficiário mais jovem
+                        </h3>
+
+                        <p>
+                            Essas informações são utilizadas na estimativa
+                            de renda por prazo indeterminado.
+                        </p>
+
                     </div>
 
                     <div class="grid-form">
+
                         <div class="campo">
-                            <label for="idadeBeneficiario">Idade</label>
+
+                            <label for="idadeBeneficiario">
+                                Idade
+                            </label>
+
                             <div class="input-sufixo">
-                                <input type="number" id="idadeBeneficiario" min="0" max="100" value="30">
-                                <span>anos</span>
+
+                                <input type="number" id="idadeBeneficiario" min="0" max="100" value="30"
+                                    inputmode="numeric">
+
+                                <span>
+                                    anos
+                                </span>
+
                             </div>
+
                         </div>
 
                         <div class="campo">
-                            <label for="sexoBeneficiario">Sexo</label>
+
+                            <label for="sexoBeneficiario">
+                                Sexo
+                            </label>
+
                             <select id="sexoBeneficiario">
-                                <option value="F">Feminino</option>
-                                <option value="M">Masculino</option>
+
+                                <option value="F">
+                                    Feminino
+                                </option>
+
+                                <option value="M">
+                                    Masculino
+                                </option>
+
                             </select>
+
                         </div>
+
                     </div>
+
                 </div>
+
+                <!-- =========================================
+                     AÇÕES
+                     ========================================= -->
 
                 <div class="acoes previdencia-acoes">
-                    <button type="button" class="btn-principal" data-avancar="2">
+
+                    <button type="button" class="btn btn-primario btn-principal" data-avancar="2">
                         Continuar
                     </button>
+
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             ETAPA 2 - PLANEJAMENTO
+             ================================================= -->
+
         <section id="etapa2" class="previdencia-painel">
+
             <div class="card formulario-card">
+
                 <div class="titulo-secao">
-                    <span class="categoria-etiqueta">Planejamento</span>
-                    <h2>Planejando seu investimento</h2>
-                    <p>Informe os valores que serão considerados na projeção da sua previdência.</p>
+
+                    <span class="categoria-etiqueta">
+                        Planejamento
+                    </span>
+
+                    <h2>
+                        Planejando seu Investimento
+                    </h2>
+
+                    <p>
+                        Informe os valores que serão considerados
+                        na projeção da sua previdência.
+                    </p>
+
                 </div>
 
+                <!-- =========================================
+                     RENDA DESEJADA
+                     ========================================= -->
+
                 <div id="blocoRendaDesejada">
+
                     <div class="campo">
-                        <label for="rendaDesejada">Qual o valor da renda mensal que você pretende receber?</label>
+
+                        <label for="rendaDesejada">
+                            Qual o valor da renda mensal que você pretende receber?
+                        </label>
+
                         <div class="input-prefixo">
-                            <span>R$</span>
-                            <input type="text" id="rendaDesejada" class="campo-moeda" value="5.000,00">
+
+                            <span>
+                                R$
+                            </span>
+
+                            <input type="text" id="rendaDesejada" class="campo-moeda" value="5.000,00"
+                                inputmode="decimal" autocomplete="off">
+
                         </div>
+
                     </div>
 
                     <div class="separador"></div>
+
                 </div>
 
+                <!-- =========================================
+                     CONTRIBUIÇÃO MENSAL
+                     ========================================= -->
+
                 <div id="blocoContribuicaoMensal" class="hide">
+
                     <div class="grid-form">
+
                         <div class="campo">
-                            <label for="salario">Salário mensal</label>
+
+                            <label for="salario">
+                                Salário mensal
+                            </label>
+
                             <div class="input-prefixo">
-                                <span>R$</span>
-                                <input type="text" id="salario" class="campo-moeda" value="5.000,00">
+
+                                <span>
+                                    R$
+                                </span>
+
+                                <input type="text" id="salario" class="campo-moeda" value="5.000,00" inputmode="decimal"
+                                    autocomplete="off">
+
                             </div>
+
                         </div>
 
                         <div class="campo">
-                            <label for="tipoContribuicao">Forma da contribuição</label>
+
+                            <label for="tipoContribuicao">
+                                Forma da contribuição
+                            </label>
+
                             <select id="tipoContribuicao">
-                                <option value="valor">Valor em R$</option>
-                                <option value="percentual">Percentual do salário</option>
+
+                                <option value="valor">
+                                    Valor em R$
+                                </option>
+
+                                <option value="percentual">
+                                    Percentual do salário
+                                </option>
+
                             </select>
+
                         </div>
 
                         <div class="campo" id="campoContribuicaoValor">
-                            <label for="contribuicaoMensal">Contribuição mensal</label>
+
+                            <label for="contribuicaoMensal">
+                                Contribuição mensal
+                            </label>
+
                             <div class="input-prefixo">
-                                <span>R$</span>
-                                <input type="text" id="contribuicaoMensal" class="campo-moeda" value="500,00">
+
+                                <span>
+                                    R$
+                                </span>
+
+                                <input type="text" id="contribuicaoMensal" class="campo-moeda" value="500,00"
+                                    inputmode="decimal" autocomplete="off">
+
                             </div>
+
                         </div>
 
                         <div class="campo hide" id="campoContribuicaoPercentual">
-                            <label for="contribuicaoPercentual">Percentual do salário</label>
+
+                            <label for="contribuicaoPercentual">
+                                Percentual do salário
+                            </label>
+
                             <div class="input-sufixo">
-                                <input type="number" id="contribuicaoPercentual" min="0" max="100" step="0.1"
-                                    value="10">
-                                <span>%</span>
+
+                                <input type="number" id="contribuicaoPercentual" min="0" max="100" step="0.1" value="10"
+                                    inputmode="decimal">
+
+                                <span>
+                                    %
+                                </span>
+
                             </div>
+
                         </div>
+
                     </div>
 
                     <div class="separador"></div>
+
                 </div>
 
+                <!-- =========================================
+                     PARÂMETROS FINANCEIROS
+                     ========================================= -->
+
                 <div class="grid-form">
+
                     <div class="campo">
-                        <label for="taxaAnual">Taxa anual de retorno</label>
+
+                        <label for="taxaAnual">
+                            Taxa anual de retorno
+                        </label>
+
                         <select id="taxaAnual">
+
                             <option value="4">4%</option>
                             <option value="5" selected>5%</option>
                             <option value="6">6%</option>
@@ -230,305 +521,727 @@
                             <option value="10">10%</option>
                             <option value="11">11%</option>
                             <option value="12">12%</option>
+
                         </select>
+
                     </div>
 
                     <div class="campo">
-                        <label for="saldoInicial">Valor já acumulado</label>
+
+                        <label for="saldoInicial">
+                            Valor já acumulado
+                        </label>
+
                         <div class="input-prefixo">
-                            <span>R$</span>
-                            <input type="text" id="saldoInicial" class="campo-moeda" value="0,00">
+
+                            <span>
+                                R$
+                            </span>
+
+                            <input type="text" id="saldoInicial" class="campo-moeda" value="0,00" inputmode="decimal"
+                                autocomplete="off">
+
                         </div>
+
                     </div>
 
                     <div class="campo">
-                        <label for="aporteEsporadico">Contribuição esporádica</label>
+
+                        <label for="aporteEsporadico">
+                            Contribuição esporádica
+                        </label>
+
                         <div class="input-prefixo">
-                            <span>R$</span>
-                            <input type="text" id="aporteEsporadico" class="campo-moeda" value="0,00">
+
+                            <span>
+                                R$
+                            </span>
+
+                            <input type="text" id="aporteEsporadico" class="campo-moeda" value="0,00"
+                                inputmode="decimal" autocomplete="off">
+
                         </div>
+
                     </div>
 
                     <div class="campo">
-                        <label for="periodicidadeAporte">Periodicidade</label>
+
+                        <label for="periodicidadeAporte">
+                            Periodicidade
+                        </label>
+
                         <select id="periodicidadeAporte">
-                            <option value="2">Bimestral</option>
-                            <option value="3">Trimestral</option>
-                            <option value="4">Quadrimestral</option>
-                            <option value="6">Semestral</option>
-                            <option value="12">Anual</option>
+
+                            <option value="2">
+                                Bimestral
+                            </option>
+
+                            <option value="3">
+                                Trimestral
+                            </option>
+
+                            <option value="4">
+                                Quadrimestral
+                            </option>
+
+                            <option value="6">
+                                Semestral
+                            </option>
+
+                            <option value="12">
+                                Anual
+                            </option>
+
                         </select>
+
                     </div>
+
                 </div>
 
                 <div class="separador"></div>
 
+                <!-- =========================================
+                     CONTRAPARTIDA DO EMPREGADOR
+                     ========================================= -->
+
                 <div class="titulo-subsecao">
-                    <h3>Contribuição do empregador</h3>
-                    <p>Preencha somente quando houver contrapartida mensal.</p>
+
+                    <h3>
+                        Contribuição do Empregador
+                    </h3>
+
+                    <p>
+                        Preencha somente quando houver
+                        contrapartida mensal.
+                    </p>
+
                 </div>
 
                 <div class="grid-form">
+
                     <div class="campo">
-                        <label for="possuiContrapartida">Possui contrapartida?</label>
+
+                        <label for="possuiContrapartida">
+                            Possui contrapartida?
+                        </label>
+
                         <select id="possuiContrapartida">
-                            <option value="nao">Não</option>
-                            <option value="sim">Sim</option>
+
+                            <option value="nao">
+                                Não
+                            </option>
+
+                            <option value="sim">
+                                Sim
+                            </option>
+
                         </select>
+
                     </div>
 
                     <div class="campo hide" id="campoContrapartida">
-                        <label for="contrapartidaMensal">Valor mensal</label>
+
+                        <label for="contrapartidaMensal">
+                            Valor mensal
+                        </label>
+
                         <div class="input-prefixo">
-                            <span>R$</span>
-                            <input type="text" id="contrapartidaMensal" class="campo-moeda" value="0,00">
+
+                            <span>
+                                R$
+                            </span>
+
+                            <input type="text" id="contrapartidaMensal" class="campo-moeda" value="0,00"
+                                inputmode="decimal" autocomplete="off">
+
                         </div>
+
                     </div>
+
                 </div>
+
+                <!-- =========================================
+                     AVISO
+                     ========================================= -->
 
                 <div class="aviso-info">
-                    Projeções com taxas de retorno de até 5% tendem a representar cenários mais conservadores. Os
-                    valores apresentados são estimativas e não representam garantia de rentabilidade.
+
+                    Projeções com taxas de retorno de até 5% tendem
+                    a representar cenários mais conservadores.
+                    Os valores apresentados são estimativas e não
+                    representam garantia de rentabilidade.
+
                 </div>
+
+                <!-- =========================================
+                     AÇÕES
+                     ========================================= -->
 
                 <div class="acoes previdencia-acoes">
-                    <button type="button" class="botao-secundario" data-voltar="1">
+
+                    <button type="button" class="btn btn-secundario botao-secundario" data-voltar="1">
                         Voltar
                     </button>
-                    <button type="button" class="btn-principal" data-avancar="3">
+
+                    <button type="button" class="btn btn-primario btn-principal" data-avancar="3">
                         Continuar
                     </button>
+
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             ETAPA 3 - COBERTURAS
+             ================================================= -->
+
         <section id="etapa3" class="previdencia-painel">
+
             <div class="card formulario-card">
+
                 <div class="titulo-secao">
-                    <span class="categoria-etiqueta">Coberturas</span>
-                    <h2>Definindo as coberturas de risco</h2>
-                    <p>As coberturas são opcionais e possuem cálculo estimado.</p>
+
+                    <span class="categoria-etiqueta">
+                        Coberturas
+                    </span>
+
+                    <h2>
+                        Definindo as Coberturas de Risco
+                    </h2>
+
+                    <p>
+                        As coberturas são opcionais e possuem
+                        cálculo estimado.
+                    </p>
+
                 </div>
 
                 <div class="grid-form">
-                    <div class="campo">
-                        <label for="coberturaMorteContribuicao">Contribuição mensal para cobertura por morte</label>
-                        <div class="input-prefixo">
-                            <span>R$</span>
-                            <input type="text" id="coberturaMorteContribuicao" class="campo-moeda" value="0,00">
-                        </div>
-                        <small class="campo-ajuda">Valor mínimo, quando utilizado: R$ 9,00.</small>
-                    </div>
+
+                    <!-- Cobertura por Morte -->
 
                     <div class="campo">
-                        <label for="coberturaInvalidezContribuicao">Contribuição mensal para cobertura por
-                            invalidez</label>
+
+                        <label for="coberturaMorteContribuicao">
+                            Contribuição mensal para cobertura por morte
+                        </label>
+
                         <div class="input-prefixo">
-                            <span>R$</span>
-                            <input type="text" id="coberturaInvalidezContribuicao" class="campo-moeda" value="0,00">
+
+                            <span>
+                                R$
+                            </span>
+
+                            <input type="text" id="coberturaMorteContribuicao" class="campo-moeda" value="0,00"
+                                inputmode="decimal" autocomplete="off">
+
                         </div>
-                        <small class="campo-ajuda">Valor mínimo, quando utilizado: R$ 6,00.</small>
+
+                        <small class="campo-ajuda">
+                            Valor mínimo, quando utilizado: R$ 9,00.
+                        </small>
+
                     </div>
+
+                    <!-- Cobertura por Invalidez -->
+
+                    <div class="campo">
+
+                        <label for="coberturaInvalidezContribuicao">
+                            Contribuição mensal para cobertura por invalidez
+                        </label>
+
+                        <div class="input-prefixo">
+
+                            <span>
+                                R$
+                            </span>
+
+                            <input type="text" id="coberturaInvalidezContribuicao" class="campo-moeda" value="0,00"
+                                inputmode="decimal" autocomplete="off">
+
+                        </div>
+
+                        <small class="campo-ajuda">
+                            Valor mínimo, quando utilizado: R$ 6,00.
+                        </small>
+
+                    </div>
+
                 </div>
 
                 <div class="separador"></div>
 
+                <!-- =========================================
+                     RESULTADO DAS COBERTURAS
+                     ========================================= -->
+
                 <div class="resultados-grid">
+
                     <div class="resultado-item">
-                        <span>Cobertura estimada por morte</span>
-                        <strong id="resultadoCoberturaMorte">R$ 0,00</strong>
+
+                        <span>
+                            Cobertura estimada por morte
+                        </span>
+
+                        <strong id="resultadoCoberturaMorte">
+                            R$ 0,00
+                        </strong>
+
                     </div>
 
                     <div class="resultado-item">
-                        <span>Cobertura estimada por invalidez</span>
-                        <strong id="resultadoCoberturaInvalidez">R$ 0,00</strong>
+
+                        <span>
+                            Cobertura estimada por invalidez
+                        </span>
+
+                        <strong id="resultadoCoberturaInvalidez">
+                            R$ 0,00
+                        </strong>
+
                     </div>
+
                 </div>
 
                 <div class="aviso">
-                    As coberturas de risco dependem de fatores atuariais utilizados pelo produto. Nesta ferramenta, os
-                    valores são apresentados como estimativas de apoio à simulação.
+
+                    As coberturas de risco dependem de fatores atuariais
+                    utilizados pelo produto. Nesta ferramenta, os valores
+                    são apresentados como estimativas de apoio à simulação.
+
                 </div>
+
+                <!-- =========================================
+                     AÇÕES
+                     ========================================= -->
 
                 <div class="acoes previdencia-acoes">
-                    <button type="button" class="botao-secundario" data-voltar="2">
+
+                    <button type="button" class="btn btn-secundario botao-secundario" data-voltar="2">
                         Voltar
                     </button>
-                    <button type="button" class="btn-principal" data-avancar="4">
+
+                    <button type="button" class="btn btn-primario btn-principal" data-avancar="4">
                         Continuar
                     </button>
+
                 </div>
+
             </div>
+
         </section>
 
+        <!-- =================================================
+             ETAPA 4 - SEU FUTURO
+             ================================================= -->
+
         <section id="etapa4" class="previdencia-painel">
+
             <div class="simulador-grid-igual previdencia-resultado-grid">
+
+                <!-- =========================================
+                     PARÂMETROS DA RENDA
+                     ========================================= -->
+
                 <div class="card formulario-card">
+
                     <div class="titulo-secao">
-                        <span class="categoria-etiqueta">Seu Futuro</span>
-                        <h2>Parâmetros da renda</h2>
-                        <p>Ajuste as condições de recebimento e veja os impactos no resultado.</p>
+
+                        <span class="categoria-etiqueta">
+                            Seu Futuro
+                        </span>
+
+                        <h2>
+                            Parâmetros da Renda
+                        </h2>
+
+                        <p>
+                            Ajuste as condições de recebimento
+                            e veja os impactos no resultado.
+                        </p>
+
                     </div>
 
                     <div class="grid-form">
+
                         <div class="campo">
-                            <label for="prazoRenda">Prazo de recebimento</label>
+
+                            <label for="prazoRenda">
+                                Prazo de recebimento
+                            </label>
+
                             <div class="input-sufixo">
-                                <input type="number" id="prazoRenda" min="5" max="50" value="20">
-                                <span>anos</span>
+
+                                <input type="number" id="prazoRenda" min="5" max="50" value="20" inputmode="numeric">
+
+                                <span>
+                                    anos
+                                </span>
+
                             </div>
+
                         </div>
 
                         <div class="campo">
-                            <label for="percentualParcelaUnica">Parcela única do saldo</label>
+
+                            <label for="percentualParcelaUnica">
+                                Parcela única do saldo
+                            </label>
+
                             <div class="input-sufixo">
-                                <input type="number" id="percentualParcelaUnica" min="0" max="20" step="1" value="0">
-                                <span>%</span>
+
+                                <input type="number" id="percentualParcelaUnica" min="0" max="20" step="1" value="0"
+                                    inputmode="numeric">
+
+                                <span>
+                                    %
+                                </span>
+
                             </div>
+
                         </div>
+
                     </div>
 
                     <div class="separador"></div>
 
+                    <!-- =====================================
+                         RESUMO DOS PARÂMETROS
+                         ===================================== -->
+
                     <div class="previdencia-resumo-dados">
+
                         <div>
-                            <span>Período de acumulação</span>
-                            <strong id="resumoPeriodo">0 anos</strong>
+
+                            <span>
+                                Período de acumulação
+                            </span>
+
+                            <strong id="resumoPeriodo">
+                                0 anos
+                            </strong>
+
                         </div>
 
                         <div>
-                            <span>Taxa anual utilizada</span>
-                            <strong id="resumoTaxa">0%</strong>
+
+                            <span>
+                                Taxa anual utilizada
+                            </span>
+
+                            <strong id="resumoTaxa">
+                                0%
+                            </strong>
+
                         </div>
 
                         <div>
-                            <span>Taxa mensal equivalente</span>
-                            <strong id="resumoTaxaMensal">0%</strong>
+
+                            <span>
+                                Taxa mensal equivalente
+                            </span>
+
+                            <strong id="resumoTaxaMensal">
+                                0%
+                            </strong>
+
                         </div>
+
                     </div>
+
+                    <!-- =====================================
+                         AÇÕES
+                         ===================================== -->
 
                     <div class="acoes previdencia-acoes">
-                        <button type="button" class="botao-secundario" data-voltar="3">
+
+                        <button type="button" class="btn btn-secundario botao-secundario" data-voltar="3">
                             Voltar
                         </button>
-                        <button type="button" class="btn-principal" id="btnCalcularPrevidencia">
+
+                        <button type="button" class="btn btn-primario btn-principal" id="btnCalcularPrevidencia">
                             Calcular
                         </button>
+
                     </div>
+
                 </div>
 
+                <!-- =========================================
+                     RESULTADO DA SIMULAÇÃO
+                     ========================================= -->
+
                 <div class="card resultado-card previdencia-card-resultado">
+
                     <div class="titulo-secao">
-                        <h2>Resultado da simulação</h2>
-                        <p>Projeção calculada com os parâmetros informados.</p>
+
+                        <span class="categoria-etiqueta">
+                            Resultado
+                        </span>
+
+                        <h2>
+                            Resultado da Simulação
+                        </h2>
+
+                        <p>
+                            Projeção calculada com os parâmetros informados.
+                        </p>
+
                     </div>
 
                     <div class="resultado-destaque">
-                        <span>Reserva projetada na aposentadoria</span>
-                        <strong id="resultadoReservaProjetada">R$ 0,00</strong>
+
+                        <span>
+                            Reserva projetada na aposentadoria
+                        </span>
+
+                        <strong id="resultadoReservaProjetada">
+                            R$ 0,00
+                        </strong>
+
                     </div>
 
                     <div class="resultados-grid">
+
                         <div class="resultado-item">
-                            <span id="labelResultadoRenda">Renda mensal estimada</span>
-                            <strong id="resultadoRendaMensal">R$ 0,00</strong>
+
+                            <span id="labelResultadoRenda">
+                                Renda mensal estimada
+                            </span>
+
+                            <strong id="resultadoRendaMensal">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item">
-                            <span>Reserva necessária</span>
-                            <strong id="resultadoReservaNecessaria">R$ 0,00</strong>
+
+                            <span>
+                                Reserva necessária
+                            </span>
+
+                            <strong id="resultadoReservaNecessaria">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item">
-                            <span>Contribuição mensal necessária</span>
-                            <strong id="resultadoContribuicaoNecessaria">R$ 0,00</strong>
+
+                            <span>
+                                Contribuição mensal necessária
+                            </span>
+
+                            <strong id="resultadoContribuicaoNecessaria">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item">
-                            <span>Parcela única estimada</span>
-                            <strong id="resultadoParcelaUnica">R$ 0,00</strong>
+
+                            <span>
+                                Parcela única estimada
+                            </span>
+
+                            <strong id="resultadoParcelaUnica">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item">
-                            <span>Total estimado de rendimentos</span>
-                            <strong id="resultadoRendimentos">R$ 0,00</strong>
+
+                            <span>
+                                Total estimado de rendimentos
+                            </span>
+
+                            <strong id="resultadoRendimentos">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item">
-                            <span>Total de aportes esporádicos</span>
-                            <strong id="resultadoAportes">R$ 0,00</strong>
+
+                            <span>
+                                Total de aportes esporádicos
+                            </span>
+
+                            <strong id="resultadoAportes">
+                                R$ 0,00
+                            </strong>
+
                         </div>
+
                     </div>
 
                     <div id="mensagemObjetivo" class="previdencia-status hide"></div>
+
                 </div>
 
+                <!-- =========================================
+                     PROJEÇÃO ANUAL
+                     ========================================= -->
+
                 <div class="card tabela-card card-largura-total">
+
                     <div class="titulo-secao">
-                        <h2>Projeção anual da reserva</h2>
-                        <p>Evolução estimada do saldo até a idade prevista para início da renda.</p>
+
+                        <span class="categoria-etiqueta">
+                            Projeção
+                        </span>
+
+                        <h2>
+                            Projeção Anual da Reserva
+                        </h2>
+
+                        <p>
+                            Evolução estimada do saldo até a idade
+                            prevista para início da renda.
+                        </p>
+
                     </div>
 
                     <div class="tabela-wrapper">
+
                         <table class="tabela-previdencia">
+
                             <thead>
+
                                 <tr>
-                                    <th>Ano</th>
-                                    <th>Idade</th>
-                                    <th>Contribuições</th>
-                                    <th>Aportes</th>
-                                    <th>Rendimentos</th>
-                                    <th>Saldo projetado</th>
+                                    <th scope="col">Ano</th>
+                                    <th scope="col">Idade</th>
+                                    <th scope="col">Contribuições</th>
+                                    <th scope="col">Aportes</th>
+                                    <th scope="col">Rendimentos</th>
+                                    <th scope="col">Saldo projetado</th>
                                 </tr>
+
                             </thead>
+
                             <tbody id="tabelaProjecao">
+
                                 <tr>
+
                                     <td colspan="6" class="sem-dados">
                                         Preencha os dados e clique em Calcular.
                                     </td>
+
                                 </tr>
+
                             </tbody>
+
                         </table>
+
                     </div>
+
                 </div>
 
+                <!-- =========================================
+                     RENDA POR PRAZO INDETERMINADO
+                     ========================================= -->
+
                 <div class="card documentos-card card-largura-total">
+
                     <div class="titulo-secao">
-                        <h2>Renda por prazo indeterminado</h2>
-                        <p>Estimativa atuarial para comparação com a renda por prazo determinado.</p>
+
+                        <span class="categoria-etiqueta">
+                            Comparativo
+                        </span>
+
+                        <h2>
+                            Renda por Prazo Indeterminado
+                        </h2>
+
+                        <p>
+                            Estimativa atuarial para comparação
+                            com a renda por prazo determinado.
+                        </p>
+
                     </div>
 
                     <div class="resultados-grid-3">
+
                         <div class="resultado-item resultado-item-neutro">
-                            <span>Reserva estimada</span>
-                            <strong id="resultadoReservaIndeterminada">R$ 0,00</strong>
+
+                            <span>
+                                Reserva estimada
+                            </span>
+
+                            <strong id="resultadoReservaIndeterminada">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item resultado-item-neutro">
-                            <span>Renda mensal estimada</span>
-                            <strong id="resultadoRendaIndeterminada">R$ 0,00</strong>
+
+                            <span>
+                                Renda mensal estimada
+                            </span>
+
+                            <strong id="resultadoRendaIndeterminada">
+                                R$ 0,00
+                            </strong>
+
                         </div>
 
                         <div class="resultado-item resultado-item-neutro">
-                            <span>Fator atuarial estimado</span>
-                            <strong id="resultadoFatorAtuarial">0,000</strong>
+
+                            <span>
+                                Fator atuarial estimado
+                            </span>
+
+                            <strong id="resultadoFatorAtuarial">
+                                0,000
+                            </strong>
+
                         </div>
+
                     </div>
 
                     <div class="aviso-info">
-                        A renda por prazo indeterminado e as coberturas de risco dependem de premissas e tabelas
-                        atuariais mantidas pelo produto. Os valores apresentados nesta ferramenta são estimativos.
+
+                        A renda por prazo indeterminado e as coberturas
+                        de risco dependem de premissas e tabelas atuariais
+                        mantidas pelo produto. Os valores apresentados
+                        nesta ferramenta são estimativos.
+
                     </div>
+
                 </div>
+
             </div>
+
         </section>
+
     </main>
 
-    <footer>
+    <!-- =====================================================
+         RODAPÉ
+         ===================================================== -->
+
+    <footer class="rodape">
+
         <div class="container">
-            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvimento e Gestão: Área de Processos</p>
+
+            <p>
+                Caixa de Ferramentas | Sicoob Mantiqueira |
+                Desenvolvimento e Gestão: Área de Processos
+            </p>
+
         </div>
+
     </footer>
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
 
     <script src="js/previdencia.js"></script>
     <script src="./js/impressao-pdf.js"></script>
