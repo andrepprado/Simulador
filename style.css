@@ -15680,35 +15680,27 @@ body:has(#btnSimular) .simulador-grid .hide {
     }
 }
 
-
 /* =========================================================
-   COMPROMETIMENTO-RENDA.HTML   PADRÃO VISUAL DAS DEMAIS FERRAMENTAS
+   COMPROMETIMENTO-RENDA.HTML
    ========================================================= */
 
 /* =========================================================
    01. ESCOPO
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid,
-body:has(#tipoOperacao) .simulador-grid *,
-body:has(#tipoOperacao) .simulador-grid *::before,
-body:has(#tipoOperacao) .simulador-grid *::after,
-body:has(#tipoOperacao) .simulador-grid-igual,
-body:has(#tipoOperacao) .simulador-grid-igual *,
-body:has(#tipoOperacao) .simulador-grid-igual *::before,
-body:has(#tipoOperacao) .simulador-grid-igual *::after {
+.comprometimento-container,
+.comprometimento-container *,
+.comprometimento-container *::before,
+.comprometimento-container *::after {
     box-sizing: border-box;
 }
 
 /* =========================================================
-   02. ESTRUTURA PRINCIPAL
+   02. CONTAINER PRINCIPAL
    ========================================================= */
 
-body:has(#tipoOperacao) main.simulador-grid,
-body:has(#tipoOperacao) main.simulador-grid-igual {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
+main.comprometimento-container {
+    display: block;
 
     width: calc(100% - 48px);
     max-width: 1180px;
@@ -15716,21 +15708,36 @@ body:has(#tipoOperacao) main.simulador-grid-igual {
 
     margin: 0 auto;
     padding: 30px 0 48px;
+}
+
+/* =========================================================
+   03. GRID PRINCIPAL
+   ========================================================= */
+
+.comprometimento-container .comprometimento-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
 
     align-items: start;
 }
 
-body:has(#tipoOperacao) main.simulador-grid>*,
-body:has(#tipoOperacao) main.simulador-grid-igual>* {
+.comprometimento-container .comprometimento-grid>* {
     min-width: 0;
 }
 
 /* =========================================================
-   03. CARDS
+   04. CARDS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid>.card,
-body:has(#tipoOperacao) .simulador-grid-igual>.card {
+.comprometimento-container .comprometimento-grid>.card {
     position: relative;
 
     width: 100%;
@@ -15751,8 +15758,7 @@ body:has(#tipoOperacao) .simulador-grid-igual>.card {
         0 10px 28px rgba(0, 54, 64, .055);
 }
 
-body:has(#tipoOperacao) .simulador-grid>.card::before,
-body:has(#tipoOperacao) .simulador-grid-igual>.card::before {
+.comprometimento-container .comprometimento-grid>.card::before {
     content: "";
 
     position: absolute;
@@ -15762,26 +15768,27 @@ body:has(#tipoOperacao) .simulador-grid-igual>.card::before {
 
     height: 3px;
 
-    background: linear-gradient(90deg,
+    background:
+        linear-gradient(90deg,
             var(--verde-claro),
             var(--turquesa),
             var(--verde-escuro));
 }
 
-body:has(#tipoOperacao) .simulador-grid>.card-largura-total,
-body:has(#tipoOperacao) .simulador-grid-igual>.card-largura-total,
-body:has(#tipoOperacao) #cardDadosOperacao,
-body:has(#tipoOperacao) #cardEndividamentoSFN,
-body:has(#tipoOperacao) #cardResultadoSimulacao {
+/* cards desta página ocupam a largura completa */
+
+.comprometimento-container .comprometimento-dados,
+.comprometimento-container .comprometimento-sfn,
+.comprometimento-container .comprometimento-resultado,
+.comprometimento-container .comprometimento-resumo {
     grid-column: 1 / -1;
 }
 
 /* =========================================================
-   04. TÍTULOS
+   05. TÍTULOS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .titulo-secao,
-body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao {
+.comprometimento-container .titulo-secao {
     display: block;
 
     width: 100%;
@@ -15791,8 +15798,12 @@ body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao {
     padding: 0;
 }
 
-body:has(#tipoOperacao) .simulador-grid .titulo-secao h2,
-body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao h2 {
+.comprometimento-container .titulo-secao>div {
+    width: 100%;
+    min-width: 0;
+}
+
+.comprometimento-container .titulo-secao h2 {
     margin: 0 0 5px;
 
     color: var(--verde-escuro);
@@ -15803,19 +15814,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao h2 {
     letter-spacing: -.2px;
 }
 
-body:has(#tipoOperacao) .simulador-grid .titulo-secao h3,
-body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao h3 {
-    margin: 0 0 5px;
-
-    color: var(--verde-escuro);
-
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1.35;
-}
-
-body:has(#tipoOperacao) .simulador-grid .titulo-secao p,
-body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao p {
+.comprometimento-container .titulo-secao p {
     max-width: 850px;
 
     margin: 0;
@@ -15823,41 +15822,15 @@ body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao p {
     color: var(--texto-secundario);
 
     font-size: 9px;
-    line-height: 1.5;
-}
-
-/* fallback caso os h2 estejam diretamente no card */
-
-body:has(#tipoOperacao) .simulador-grid>.card>h2,
-body:has(#tipoOperacao) .simulador-grid-igual>.card>h2 {
-    margin: 0 0 5px;
-
-    color: var(--verde-escuro);
-
-    font-size: 18px;
-    font-weight: 800;
-    line-height: 1.3;
-    letter-spacing: -.2px;
-}
-
-body:has(#tipoOperacao) .simulador-grid>.card>h2+p,
-body:has(#tipoOperacao) .simulador-grid-igual>.card>h2+p {
-    margin: 0 0 18px;
-
-    color: var(--texto-secundario);
-
-    font-size: 9px;
+    font-weight: 400;
     line-height: 1.5;
 }
 
 /* =========================================================
-   05. GRID DE FORMULÁRIO
+   06. GRID DOS CAMPOS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .grid-form,
-body:has(#tipoOperacao) .simulador-grid-igual .grid-form,
-body:has(#tipoOperacao) .simulador-grid .grid-form-2,
-body:has(#tipoOperacao) .simulador-grid-igual .grid-form-2 {
+.comprometimento-container .grid-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
@@ -15870,40 +15843,11 @@ body:has(#tipoOperacao) .simulador-grid-igual .grid-form-2 {
     padding: 0;
 }
 
-body:has(#tipoOperacao) .simulador-grid .grid-form-3,
-body:has(#tipoOperacao) .simulador-grid-igual .grid-form-3 {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-
-    gap: 14px;
-
-    width: 100%;
-    min-width: 0;
-
-    margin: 0;
-    padding: 0;
-}
-
-body:has(#tipoOperacao) .simulador-grid .grid-form-4,
-body:has(#tipoOperacao) .simulador-grid-igual .grid-form-4 {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-
-    gap: 14px;
-
-    width: 100%;
-    min-width: 0;
-
-    margin: 0;
-    padding: 0;
-}
-
 /* =========================================================
-   06. CAMPOS
+   07. CAMPOS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .campo,
-body:has(#tipoOperacao) .simulador-grid-igual .campo {
+.comprometimento-container .campo {
     display: flex;
     flex-direction: column;
 
@@ -15916,17 +15860,19 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo {
     padding: 0;
 }
 
-body:has(#tipoOperacao) .simulador-grid .campo[hidden],
-body:has(#tipoOperacao) .simulador-grid-igual .campo[hidden] {
+.comprometimento-container .campo[hidden] {
     display: none !important;
 }
 
+.comprometimento-container .comprometimento-campo-largo {
+    grid-column: 1;
+}
+
 /* =========================================================
-   07. LABELS
+   08. LABELS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .campo>label,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>label {
+.comprometimento-container .campo>label {
     display: block;
 
     width: 100%;
@@ -15941,15 +15887,12 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo>label {
 }
 
 /* =========================================================
-   08. INPUTS, SELECTS E TEXTAREAS
+   09. INPUTS / SELECTS / TEXTAREAS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .campo>input,
-body:has(#tipoOperacao) .simulador-grid .campo>select,
-body:has(#tipoOperacao) .simulador-grid .campo>textarea,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>input,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>select,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea {
+.comprometimento-container .campo>input,
+.comprometimento-container .campo>select,
+.comprometimento-container .campo>textarea {
     display: block;
 
     width: 100%;
@@ -15974,10 +15917,8 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea {
         background .18s ease;
 }
 
-body:has(#tipoOperacao) .simulador-grid .campo>input,
-body:has(#tipoOperacao) .simulador-grid .campo>select,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>input,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>select {
+.comprometimento-container .campo>input,
+.comprometimento-container .campo>select {
     height: 38px;
     min-height: 38px;
 
@@ -15988,8 +15929,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo>select {
     line-height: 1.2;
 }
 
-body:has(#tipoOperacao) .simulador-grid .campo>textarea,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea {
+.comprometimento-container .campo>textarea {
     min-height: 82px;
 
     padding: 10px;
@@ -16000,21 +15940,15 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea {
     resize: vertical;
 }
 
-body:has(#tipoOperacao) .simulador-grid .campo>input:hover,
-body:has(#tipoOperacao) .simulador-grid .campo>select:hover,
-body:has(#tipoOperacao) .simulador-grid .campo>textarea:hover,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>input:hover,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>select:hover,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea:hover {
+.comprometimento-container .campo>input:hover,
+.comprometimento-container .campo>select:hover,
+.comprometimento-container .campo>textarea:hover {
     border-color: #B5C7C8;
 }
 
-body:has(#tipoOperacao) .simulador-grid .campo>input:focus,
-body:has(#tipoOperacao) .simulador-grid .campo>select:focus,
-body:has(#tipoOperacao) .simulador-grid .campo>textarea:focus,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>input:focus,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>select:focus,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea:focus {
+.comprometimento-container .campo>input:focus,
+.comprometimento-container .campo>select:focus,
+.comprometimento-container .campo>textarea:focus {
     border-color: var(--turquesa);
 
     background: #FEFFFF;
@@ -16024,69 +15958,63 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo>textarea:focus {
 }
 
 /* =========================================================
-   09. TEXTOS AUXILIARES
+   10. PREFIXO / SUFIXO DOS CAMPOS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .campo>small,
-body:has(#tipoOperacao) .simulador-grid-igual .campo>small,
-body:has(#tipoOperacao) .simulador-grid .campo .texto-auxiliar,
-body:has(#tipoOperacao) .simulador-grid-igual .campo .texto-auxiliar {
-    display: block;
-
-    margin: 0;
-
-    color: var(--texto-secundario);
-
-    font-size: 7px;
-    font-weight: 400;
-    line-height: 1.4;
-}
-
-/* =========================================================
-   10. PREFIXOS / SUFIXOS
-   ========================================================= */
-
-body:has(#tipoOperacao) .simulador-grid .input-prefixo,
-body:has(#tipoOperacao) .simulador-grid .input-sufixo,
-body:has(#tipoOperacao) .simulador-grid .input-unidade,
-body:has(#tipoOperacao) .simulador-grid .campo-input,
-body:has(#tipoOperacao) .simulador-grid .campo-moeda,
-body:has(#tipoOperacao) .simulador-grid-igual .input-prefixo,
-body:has(#tipoOperacao) .simulador-grid-igual .input-sufixo,
-body:has(#tipoOperacao) .simulador-grid-igual .input-unidade,
-body:has(#tipoOperacao) .simulador-grid-igual .campo-input,
-body:has(#tipoOperacao) .simulador-grid-igual .campo-moeda {
-    display: flex;
+.comprometimento-container .input-prefixo,
+.comprometimento-container .input-sufixo {
+    display: grid;
     align-items: center;
-
-    gap: 7px;
 
     width: 100%;
     min-width: 0;
 
     margin: 0;
     padding: 0;
+}
+
+.comprometimento-container .input-prefixo {
+    grid-template-columns: auto minmax(0, 1fr);
+}
+
+.comprometimento-container .input-sufixo {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.comprometimento-container .input-prefixo>span,
+.comprometimento-container .input-sufixo>span {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 38px;
+
+    margin: 0;
 
     color: var(--verde-escuro);
 
     font-size: 9px;
-    line-height: 1.2;
+    font-weight: 500;
+    line-height: 1;
+
+    white-space: nowrap;
 }
 
-body:has(#tipoOperacao) .simulador-grid .input-prefixo>input,
-body:has(#tipoOperacao) .simulador-grid .input-sufixo>input,
-body:has(#tipoOperacao) .simulador-grid .input-unidade>input,
-body:has(#tipoOperacao) .simulador-grid .campo-input>input,
-body:has(#tipoOperacao) .simulador-grid .campo-moeda>input,
-body:has(#tipoOperacao) .simulador-grid-igual .input-prefixo>input,
-body:has(#tipoOperacao) .simulador-grid-igual .input-sufixo>input,
-body:has(#tipoOperacao) .simulador-grid-igual .input-unidade>input,
-body:has(#tipoOperacao) .simulador-grid-igual .campo-input>input,
-body:has(#tipoOperacao) .simulador-grid-igual .campo-moeda>input {
-    flex: 1 1 auto;
+.comprometimento-container .input-prefixo>span {
+    padding-right: 7px;
+}
+
+.comprometimento-container .input-sufixo>span {
+    padding-left: 7px;
+}
+
+.comprometimento-container .input-prefixo>input,
+.comprometimento-container .input-sufixo>input {
+    display: block;
 
     width: 100%;
     min-width: 0;
+    max-width: 100%;
+
     height: 38px;
     min-height: 38px;
 
@@ -16103,41 +16031,59 @@ body:has(#tipoOperacao) .simulador-grid-igual .campo-moeda>input {
 
     font-family: inherit;
     font-size: 10px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
 }
 
-body:has(#tipoOperacao) .simulador-grid .input-prefixo>span,
-body:has(#tipoOperacao) .simulador-grid .input-sufixo>span,
-body:has(#tipoOperacao) .simulador-grid .input-unidade>span,
-body:has(#tipoOperacao) .simulador-grid .campo-input>span,
-body:has(#tipoOperacao) .simulador-grid .campo-moeda>span,
-body:has(#tipoOperacao) .simulador-grid-igual .input-prefixo>span,
-body:has(#tipoOperacao) .simulador-grid-igual .input-sufixo>span,
-body:has(#tipoOperacao) .simulador-grid-igual .input-unidade>span,
-body:has(#tipoOperacao) .simulador-grid-igual .campo-input>span,
-body:has(#tipoOperacao) .simulador-grid-igual .campo-moeda>span {
-    flex: 0 0 auto;
+.comprometimento-container .input-prefixo>input:hover,
+.comprometimento-container .input-sufixo>input:hover {
+    border-color: #B5C7C8;
+}
 
-    margin: 0;
+.comprometimento-container .input-prefixo>input:focus,
+.comprometimento-container .input-sufixo>input:focus {
+    border-color: var(--turquesa);
 
-    color: var(--verde-escuro);
+    background: #FEFFFF;
 
-    font-size: 9px;
-    font-weight: 500;
-    line-height: 1;
-    white-space: nowrap;
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .08);
 }
 
 /* =========================================================
-   11. AVISO / VALIDAÇÃO
+   11. TEXTO AUXILIAR
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .aviso,
-body:has(#tipoOperacao) .simulador-grid .aviso-info,
-body:has(#tipoOperacao) .simulador-grid-igual .aviso,
-body:has(#tipoOperacao) .simulador-grid-igual .aviso-info {
+.comprometimento-container .campo>small {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+
+    color: var(--texto-secundario);
+
+    font-size: 7px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   12. STATUS
+   ========================================================= */
+
+.comprometimento-container .comprometimento-status {
     position: relative;
 
-    display: block;
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
 
     width: 100%;
     min-width: 0;
@@ -16157,10 +16103,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .aviso-info {
     line-height: 1.5;
 }
 
-body:has(#tipoOperacao) .simulador-grid .aviso::before,
-body:has(#tipoOperacao) .simulador-grid .aviso-info::before,
-body:has(#tipoOperacao) .simulador-grid-igual .aviso::before,
-body:has(#tipoOperacao) .simulador-grid-igual .aviso-info::before {
+.comprometimento-container .comprometimento-status::before {
     content: "";
 
     position: absolute;
@@ -16173,20 +16116,116 @@ body:has(#tipoOperacao) .simulador-grid-igual .aviso-info::before {
     background: var(--turquesa);
 }
 
-body:has(#tipoOperacao) .simulador-grid .aviso strong,
-body:has(#tipoOperacao) .simulador-grid .aviso-info strong,
-body:has(#tipoOperacao) .simulador-grid-igual .aviso strong,
-body:has(#tipoOperacao) .simulador-grid-igual .aviso-info strong {
+.comprometimento-container .comprometimento-status strong {
+    display: block;
+
+    margin: 0;
+
     color: var(--verde-escuro);
+
+    font-size: 9px;
     font-weight: 800;
+    line-height: 1.4;
+}
+
+.comprometimento-container .comprometimento-status span {
+    display: block;
+
+    margin: 0;
+
+    color: var(--texto-secundario);
+
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+.comprometimento-container .comprometimento-status.status-atencao {
+    border-color: rgba(166, 106, 0, .20);
+
+    background: var(--atencao-fundo);
+}
+
+.comprometimento-container .comprometimento-status.status-atencao::before {
+    background: var(--atencao);
+}
+
+.comprometimento-container .comprometimento-status.status-atencao strong {
+    color: var(--atencao);
+}
+
+.comprometimento-container .comprometimento-status.status-sucesso {
+    border-color: rgba(71, 125, 13, .20);
+
+    background: var(--sucesso-fundo);
+}
+
+.comprometimento-container .comprometimento-status.status-sucesso::before {
+    background: var(--sucesso);
+}
+
+.comprometimento-container .comprometimento-status.status-sucesso strong {
+    color: var(--sucesso);
+}
+
+.comprometimento-container .comprometimento-status.status-erro {
+    border-color: rgba(199, 58, 58, .20);
+
+    background: var(--erro-fundo);
+}
+
+.comprometimento-container .comprometimento-status.status-erro::before {
+    background: var(--erro);
+}
+
+.comprometimento-container .comprometimento-status.status-erro strong {
+    color: var(--erro);
 }
 
 /* =========================================================
-   12. RESULTADO EM DESTAQUE
+   13. RESULTADO SFN
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .resultado-destaque,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque {
+.comprometimento-container .comprometimento-formula {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 16px 0 0;
+    padding: 11px 13px;
+
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+
+    background: var(--fundo-secundario);
+}
+
+.comprometimento-container .comprometimento-formula span {
+    color: var(--texto-secundario);
+
+    font-size: 8px;
+    line-height: 1.4;
+}
+
+.comprometimento-container .comprometimento-formula strong {
+    color: var(--verde-escuro);
+
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    text-align: right;
+}
+
+/* =========================================================
+   14. RESULTADO EM DESTAQUE
+   ========================================================= */
+
+.comprometimento-container .resultado-destaque {
     position: relative;
 
     display: flex;
@@ -16206,13 +16245,13 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque {
     border: 1px solid rgba(0, 160, 145, .18);
     border-radius: 10px;
 
-    background: linear-gradient(135deg,
+    background:
+        linear-gradient(135deg,
             rgba(0, 160, 145, .08),
             rgba(201, 210, 0, .06));
 }
 
-body:has(#tipoOperacao) .simulador-grid .resultado-destaque::after,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque::after {
+.comprometimento-container .resultado-destaque::after {
     content: "";
 
     position: absolute;
@@ -16229,8 +16268,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque::after {
     pointer-events: none;
 }
 
-body:has(#tipoOperacao) .simulador-grid .resultado-destaque span,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque span {
+.comprometimento-container .resultado-destaque span {
     position: relative;
     z-index: 1;
 
@@ -16241,8 +16279,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque span {
     line-height: 1.35;
 }
 
-body:has(#tipoOperacao) .simulador-grid .resultado-destaque strong,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque strong {
+.comprometimento-container .resultado-destaque strong {
     position: relative;
     z-index: 1;
 
@@ -16256,11 +16293,10 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque strong {
 }
 
 /* =========================================================
-   13. GRID DE RESULTADOS
+   15. GRID DE RESULTADOS
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .resultados-grid,
-body:has(#tipoOperacao) .simulador-grid-igual .resultados-grid {
+.comprometimento-container .resultados-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
@@ -16274,11 +16310,10 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultados-grid {
 }
 
 /* =========================================================
-   14. ITENS DO RESULTADO
+   16. ITENS DE RESULTADO
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .resultado-item,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-item {
+.comprometimento-container .resultado-item {
     display: flex;
     flex-direction: column;
 
@@ -16296,8 +16331,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-item {
     background: #FAFCFC;
 }
 
-body:has(#tipoOperacao) .simulador-grid .resultado-item span,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-item span {
+.comprometimento-container .resultado-item span {
     display: block;
 
     color: var(--texto-secundario);
@@ -16306,8 +16340,7 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-item span {
     line-height: 1.35;
 }
 
-body:has(#tipoOperacao) .simulador-grid .resultado-item strong,
-body:has(#tipoOperacao) .simulador-grid-igual .resultado-item strong {
+.comprometimento-container .resultado-item strong {
     display: block;
 
     color: var(--verde-escuro);
@@ -16320,35 +16353,74 @@ body:has(#tipoOperacao) .simulador-grid-igual .resultado-item strong {
 }
 
 /* =========================================================
-   15. ENDIVIDAMENTO TOTAL
+   17. TABELA
    ========================================================= */
 
-body:has(#tipoOperacao) #endividamentoMensalSFN,
-body:has(#tipoOperacao) .endividamento-total,
-body:has(#tipoOperacao) .indicador-total {
-    margin: 14px 0 0;
+.comprometimento-container .tabela-wrapper {
+    width: 100%;
+    min-width: 0;
 
-    color: var(--texto-secundario);
+    overflow-x: auto;
 
-    font-size: 9px;
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+
+    background: var(--branco);
+}
+
+.comprometimento-container .comprometimento-tabela {
+    width: 100%;
+    min-width: 620px;
+
+    margin: 0;
+
+    border-collapse: collapse;
+
+    background: var(--branco);
+}
+
+.comprometimento-container .comprometimento-tabela th {
+    padding: 9px 10px;
+
+    border-bottom: 1px solid var(--borda);
+
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    text-align: left;
+}
+
+.comprometimento-container .comprometimento-tabela td {
+    padding: 9px 10px;
+
+    border-bottom: 1px solid var(--borda);
+
+    color: var(--texto);
+
+    font-size: 8px;
     line-height: 1.4;
 }
 
-body:has(#tipoOperacao) #endividamentoMensalSFN strong,
-body:has(#tipoOperacao) .endividamento-total strong,
-body:has(#tipoOperacao) .indicador-total strong {
+.comprometimento-container .comprometimento-tabela tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.comprometimento-container .comprometimento-tabela-total td {
+    background: rgba(0, 160, 145, .045);
     color: var(--verde-escuro);
 
-    font-size: 11px;
     font-weight: 800;
 }
 
 /* =========================================================
-   16. AÇÕES
+   18. AÇÕES
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .acoes,
-body:has(#tipoOperacao) .simulador-grid-igual .acoes {
+.comprometimento-container .acoes {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -16364,11 +16436,10 @@ body:has(#tipoOperacao) .simulador-grid-igual .acoes {
 }
 
 /* =========================================================
-   17. BOTÕES
+   19. BOTÕES
    ========================================================= */
 
-body:has(#tipoOperacao) .simulador-grid .btn,
-body:has(#tipoOperacao) .simulador-grid-igual .btn {
+.comprometimento-container .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -16404,37 +16475,30 @@ body:has(#tipoOperacao) .simulador-grid-igual .btn {
         transform .18s ease;
 }
 
-body:has(#tipoOperacao) .simulador-grid .btn-primario,
-body:has(#tipoOperacao) .simulador-grid-igual .btn-primario,
-body:has(#tipoOperacao) .simulador-grid .btn-principal,
-body:has(#tipoOperacao) .simulador-grid-igual .btn-principal {
+.comprometimento-container .btn-primario {
     border-color: var(--turquesa);
 
     background: var(--turquesa);
     color: var(--branco);
 }
 
-body:has(#tipoOperacao) .simulador-grid .btn-primario:hover,
-body:has(#tipoOperacao) .simulador-grid-igual .btn-primario:hover,
-body:has(#tipoOperacao) .simulador-grid .btn-principal:hover,
-body:has(#tipoOperacao) .simulador-grid-igual .btn-principal:hover {
+.comprometimento-container .btn-primario:hover {
     border-color: var(--verde-escuro);
 
     background: var(--verde-escuro);
+    color: var(--branco);
 
     transform: translateY(-1px);
 }
 
-body:has(#tipoOperacao) .simulador-grid .btn-secundario,
-body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario {
+.comprometimento-container .btn-secundario {
     border-color: var(--borda-forte);
 
     background: var(--branco);
     color: var(--verde-escuro);
 }
 
-body:has(#tipoOperacao) .simulador-grid .btn-secundario:hover,
-body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario:hover {
+.comprometimento-container .btn-secundario:hover {
     border-color: var(--turquesa);
 
     background: rgba(0, 160, 145, .045);
@@ -16443,208 +16507,190 @@ body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario:hover {
     transform: translateY(-1px);
 }
 
+.comprometimento-container .btn:focus-visible {
+    outline: none;
+
+    border-color: var(--turquesa);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .10);
+}
+
 /* =========================================================
-   18. DESKTOP REDUZIDO
+   20. DESKTOP REDUZIDO
    ========================================================= */
 
 @media (max-width: 1050px) {
 
-    body:has(#tipoOperacao) main.simulador-grid,
-    body:has(#tipoOperacao) main.simulador-grid-igual {
+    main.comprometimento-container {
         width: calc(100% - 40px);
-    }
-
-    body:has(#tipoOperacao) .simulador-grid .grid-form-4,
-    body:has(#tipoOperacao) .simulador-grid-igual .grid-form-4 {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
     }
 }
 
 /* =========================================================
-   19. TABLET
+   21. TABLET
    ========================================================= */
 
 @media (max-width: 850px) {
 
-    body:has(#tipoOperacao) main.simulador-grid,
-    body:has(#tipoOperacao) main.simulador-grid-igual {
-        grid-template-columns: minmax(0, 1fr);
-
+    main.comprometimento-container {
         width: calc(100% - 32px);
-
-        gap: 15px;
 
         padding-top: 24px;
         padding-bottom: 38px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid>.card,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card {
-        grid-column: 1 !important;
+    .comprometimento-container .comprometimento-grid {
+        grid-template-columns: minmax(0, 1fr);
 
-        padding: 20px;
+        gap: 15px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .grid-form-3,
-    body:has(#tipoOperacao) .simulador-grid-igual .grid-form-3 {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+    .comprometimento-container .comprometimento-grid>.card {
+        grid-column: 1;
+
+        padding: 20px;
     }
 }
 
 /* =========================================================
-   20. MOBILE
+   22. MOBILE
    ========================================================= */
 
 @media (max-width: 650px) {
 
-    body:has(#tipoOperacao) main.simulador-grid,
-    body:has(#tipoOperacao) main.simulador-grid-igual {
+    main.comprometimento-container {
         width: calc(100% - 24px);
-
-        gap: 12px;
 
         padding-top: 18px;
         padding-bottom: 30px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid>.card,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card {
+    .comprometimento-container .comprometimento-grid {
+        gap: 12px;
+    }
+
+    .comprometimento-container .comprometimento-grid>.card {
         padding: 16px;
 
         border-radius: 11px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .titulo-secao,
-    body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao {
+    .comprometimento-container .titulo-secao {
         margin-bottom: 14px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .titulo-secao h2,
-    body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao h2,
-    body:has(#tipoOperacao) .simulador-grid>.card>h2,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card>h2 {
+    .comprometimento-container .titulo-secao h2 {
         font-size: 16px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .grid-form,
-    body:has(#tipoOperacao) .simulador-grid .grid-form-2,
-    body:has(#tipoOperacao) .simulador-grid .grid-form-3,
-    body:has(#tipoOperacao) .simulador-grid .grid-form-4,
-    body:has(#tipoOperacao) .simulador-grid-igual .grid-form,
-    body:has(#tipoOperacao) .simulador-grid-igual .grid-form-2,
-    body:has(#tipoOperacao) .simulador-grid-igual .grid-form-3,
-    body:has(#tipoOperacao) .simulador-grid-igual .grid-form-4 {
+    .comprometimento-container .grid-form {
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 11px;
+    }
+
+    .comprometimento-container .comprometimento-campo-largo {
+        grid-column: 1;
+    }
+
+    .comprometimento-container .resultados-grid {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    body:has(#tipoOperacao) .simulador-grid .resultados-grid,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultados-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    body:has(#tipoOperacao) .simulador-grid .resultado-destaque strong,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque strong {
+    .comprometimento-container .resultado-destaque strong {
         font-size: 18px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .acoes,
-    body:has(#tipoOperacao) .simulador-grid-igual .acoes {
+    .comprometimento-container .comprometimento-formula {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 4px;
+    }
+
+    .comprometimento-container .comprometimento-formula strong {
+        text-align: left;
+    }
+
+    .comprometimento-container .acoes {
         flex-direction: column;
         align-items: stretch;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .acoes .btn,
-    body:has(#tipoOperacao) .simulador-grid-igual .acoes .btn {
+    .comprometimento-container .acoes .btn {
         width: 100%;
         min-width: 0;
     }
 }
 
 /* =========================================================
-   21. MOBILE PEQUENO
+   23. MOBILE PEQUENO
    ========================================================= */
 
 @media (max-width: 480px) {
 
-    body:has(#tipoOperacao) main.simulador-grid,
-    body:has(#tipoOperacao) main.simulador-grid-igual {
+    main.comprometimento-container {
         width: calc(100% - 18px);
-
-        gap: 10px;
 
         padding-top: 15px;
         padding-bottom: 25px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid>.card,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card {
+    .comprometimento-container .comprometimento-grid {
+        gap: 10px;
+    }
+
+    .comprometimento-container .comprometimento-grid>.card {
         padding: 13px;
 
         border-radius: 10px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .titulo-secao h2,
-    body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao h2,
-    body:has(#tipoOperacao) .simulador-grid>.card>h2,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card>h2 {
+    .comprometimento-container .titulo-secao h2 {
         font-size: 15px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .titulo-secao p,
-    body:has(#tipoOperacao) .simulador-grid-igual .titulo-secao p,
-    body:has(#tipoOperacao) .simulador-grid>.card>h2+p,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card>h2+p {
+    .comprometimento-container .titulo-secao p {
         font-size: 8px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .resultado-destaque,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque {
+    .comprometimento-container .resultado-destaque {
         padding: 14px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .resultado-item,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-item {
+    .comprometimento-container .resultado-item {
         padding: 9px;
     }
 }
 
 /* =========================================================
-   22. TOUCH
+   24. TOUCH
    ========================================================= */
 
 @media (hover: none) and (pointer: coarse) {
 
-    body:has(#tipoOperacao) .simulador-grid .campo>input,
-    body:has(#tipoOperacao) .simulador-grid .campo>select,
-    body:has(#tipoOperacao) .simulador-grid-igual .campo>input,
-    body:has(#tipoOperacao) .simulador-grid-igual .campo>select,
-    body:has(#tipoOperacao) .simulador-grid .input-prefixo>input,
-    body:has(#tipoOperacao) .simulador-grid .input-sufixo>input,
-    body:has(#tipoOperacao) .simulador-grid-igual .input-prefixo>input,
-    body:has(#tipoOperacao) .simulador-grid-igual .input-sufixo>input {
+    .comprometimento-container .campo>input,
+    .comprometimento-container .campo>select,
+    .comprometimento-container .input-prefixo>input,
+    .comprometimento-container .input-sufixo>input {
         min-height: 44px;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .btn:hover,
-    body:has(#tipoOperacao) .simulador-grid-igual .btn:hover {
+    .comprometimento-container .btn:hover {
         transform: none;
     }
 }
 
 /* =========================================================
-   23. ACESSIBILIDADE
+   25. ACESSIBILIDADE
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
-    body:has(#tipoOperacao) .simulador-grid *,
-    body:has(#tipoOperacao) .simulador-grid *::before,
-    body:has(#tipoOperacao) .simulador-grid *::after,
-    body:has(#tipoOperacao) .simulador-grid-igual *,
-    body:has(#tipoOperacao) .simulador-grid-igual *::before,
-    body:has(#tipoOperacao) .simulador-grid-igual *::after {
+    .comprometimento-container *,
+    .comprometimento-container *::before,
+    .comprometimento-container *::after {
         scroll-behavior: auto !important;
         transition: none !important;
         animation: none !important;
@@ -16652,13 +16698,12 @@ body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario:hover {
 }
 
 /* =========================================================
-   24. IMPRESSÃO
+   26. IMPRESSÃO
    ========================================================= */
 
 @media print {
 
-    body:has(#tipoOperacao) main.simulador-grid,
-    body:has(#tipoOperacao) main.simulador-grid-igual {
+    main.comprometimento-container {
         display: block !important;
 
         width: 100% !important;
@@ -16668,8 +16713,11 @@ body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario:hover {
         padding: 10px 0 !important;
     }
 
-    body:has(#tipoOperacao) .simulador-grid>.card,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card {
+    .comprometimento-container .comprometimento-grid {
+        display: block !important;
+    }
+
+    .comprometimento-container .comprometimento-grid>.card {
         width: 100% !important;
 
         margin: 0 0 12px !important;
@@ -16688,20 +16736,18 @@ body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario:hover {
         page-break-inside: avoid;
     }
 
-    body:has(#tipoOperacao) .simulador-grid>.card::before,
-    body:has(#tipoOperacao) .simulador-grid-igual>.card::before {
+    .comprometimento-container .comprometimento-grid>.card::before {
         display: none !important;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .acoes,
-    body:has(#tipoOperacao) .simulador-grid-igual .acoes {
+    .comprometimento-container .acoes {
         display: none !important;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .resultado-destaque,
-    body:has(#tipoOperacao) .simulador-grid .resultado-item,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-item {
+    .comprometimento-container .resultado-destaque,
+    .comprometimento-container .resultado-item,
+    .comprometimento-container .comprometimento-formula,
+    .comprometimento-container .comprometimento-status {
         border-color: #CCCCCC !important;
 
         background: #FFFFFF !important;
@@ -16709,10 +16755,20 @@ body:has(#tipoOperacao) .simulador-grid-igual .btn-secundario:hover {
         box-shadow: none !important;
     }
 
-    body:has(#tipoOperacao) .simulador-grid .resultado-destaque strong,
-    body:has(#tipoOperacao) .simulador-grid .resultado-item strong,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-destaque strong,
-    body:has(#tipoOperacao) .simulador-grid-igual .resultado-item strong {
+    .comprometimento-container .resultado-destaque strong,
+    .comprometimento-container .resultado-item strong,
+    .comprometimento-container .comprometimento-formula strong,
+    .comprometimento-container .comprometimento-status strong {
         color: #000000 !important;
+    }
+
+    .comprometimento-container .tabela-wrapper {
+        overflow: visible !important;
+
+        border-radius: 0 !important;
+    }
+
+    .comprometimento-container .comprometimento-tabela {
+        min-width: 0 !important;
     }
 }
