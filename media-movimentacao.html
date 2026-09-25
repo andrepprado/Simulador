@@ -16,9 +16,7 @@
                 <h1>Média de Movimentação</h1>
                 <p>Analise extratos bancários e calcule a média mensal das movimentações de crédito consideradas.</p>
             </div>
-            <div class="topo-logo">
-                <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
-            </div>
+            <div class="topo-logo"><img src="img/logoBranco.png" alt="Sicoob Mantiqueira"></div>
         </div>
     </header>
 
@@ -26,17 +24,33 @@
 
     <main class="container media-movimentacao-container">
 
-        <!-- =====================================================
-         LEITURA OCR DE EXTRATOS
-    ====================================================== -->
+        <section class="card card-largura-total" id="cardModoEntrada">
+            <div class="titulo-secao">
+                <div>
+                    <span class="categoria-etiqueta">Início</span>
+                    <h2>Como deseja informar o extrato?</h2>
+                    <p>Escolha uma das opções abaixo para iniciar a análise da movimentação.</p>
+                </div>
+            </div>
 
-        <section class="card card-largura-total card-leitura-ocr" id="cardLeituraExtratos">
+            <div class="acoes" style="justify-content:flex-start;margin-top:0">
+                <button type="button" id="btnModoArquivo" class="btn btn-secundario">Enviar Arquivo</button>
+                <button type="button" id="btnModoTexto" class="btn btn-secundario">Copiar e Colar Texto</button>
+            </div>
+
+            <div id="statusModoMovimentacao" class="aviso-info" style="margin-top:16px">
+                <strong>Selecione uma forma de entrada</strong>
+                <span>Você poderá trocar de opção a qualquer momento.</span>
+            </div>
+        </section>
+
+        <section class="card card-largura-total card-leitura-ocr" id="cardLeituraExtratos" hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Leitura de Extratos</span>
-                    <h2>Leitura OCR e Consolidação de Extratos</h2>
-                    <p>Selecione um ou mais extratos. PDFs com texto são lidos diretamente pelo PDF.js. PDFs
-                        digitalizados e imagens são processados por OCR local.</p>
+                    <h2>Enviar Extratos Bancários</h2>
+                    <p>Selecione um ou mais arquivos. O sistema utiliza leitura direta sempre que possível e OCR quando
+                        necessário.</p>
                 </div>
             </div>
 
@@ -48,12 +62,12 @@
 
             <div class="area-upload-extrato" id="areaUploadExtrato">
                 <input type="file" id="arquivosExtrato"
-                    accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,application/pdf,image/png,image/jpeg,image/webp,text/plain,text/csv"
+                    accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.html,.htm,application/pdf,image/png,image/jpeg,image/webp,text/plain,text/csv,text/html"
                     multiple hidden>
                 <label for="arquivosExtrato" class="area-upload-extrato-conteudo">
                     <strong>Selecionar extratos bancários</strong>
                     <span>Clique para selecionar ou arraste os arquivos para esta área.</span>
-                    <small>Formatos aceitos: PDF, PNG, JPG, JPEG, WEBP, TXT e CSV.</small>
+                    <small>PDF, PNG, JPG, JPEG, WEBP, TXT, CSV, HTML e HTM.</small>
                 </label>
             </div>
 
@@ -69,22 +83,20 @@
                 <label for="observacaoLeituraExtrato">Observação</label>
                 <textarea id="observacaoLeituraExtrato" rows="3" spellcheck="true" autocomplete="off"
                     placeholder="Campo opcional para registrar observações sobre os extratos."></textarea>
-                <small>Campo apenas informativo. O conteúdo permanece no navegador.</small>
+                <small>Campo apenas informativo.</small>
             </div>
 
             <div class="acoes">
-                <button type="button" id="btnLerExtratos" class="btn btn-primario">Ler e Consolidar</button>
-                <button type="button" id="btnLimparArquivosExtrato" class="btn btn-secundario">Limpar Arquivos</button>
+                <button type="button" id="btnLerExtratos" class="btn btn-primario" disabled>Ler e Consolidar</button>
+                <button type="button" id="btnLimparArquivosExtrato" class="btn btn-secundario" disabled>Limpar
+                    Arquivos</button>
+                <button type="button" class="btn btn-secundario btnTrocarModoMovimentacao">Trocar Forma de
+                    Entrada</button>
             </div>
 
-            <div id="statusLeituraExtrato" class="status-leitura-ocr" aria-live="polite">
-                Selecione os extratos bancários.
-            </div>
+            <div id="statusLeituraExtrato" class="status-leitura-ocr status-info" aria-live="polite">Pronto para ler os
+                extratos.</div>
         </section>
-
-        <!-- =====================================================
-         RESULTADO DA LEITURA OCR
-    ====================================================== -->
 
         <section class="card card-largura-total card-resultado-leitura-ocr" id="cardResultadoLeituraExtratos" hidden>
             <div class="titulo-secao">
@@ -96,26 +108,16 @@
             </div>
 
             <div class="dados-gerais-leitura-ocr">
-                <div class="dado-leitura-ocr">
-                    <span>Titular</span>
-                    <strong id="ocrNomeTitular">Não identificado</strong>
+                <div class="dado-leitura-ocr"><span>Titular</span><strong id="ocrNomeTitular">Não identificado</strong>
                 </div>
-                <div class="dado-leitura-ocr">
-                    <span>CPF/CNPJ</span>
-                    <strong id="ocrDocumentoTitular">Não identificado</strong>
-                </div>
-                <div class="dado-leitura-ocr">
-                    <span>Período identificado</span>
-                    <strong id="ocrPeriodoLeitura">Não identificado</strong>
-                </div>
-                <div class="dado-leitura-ocr">
-                    <span>Instituições</span>
-                    <strong id="ocrInstituicoes">Não identificadas</strong>
-                </div>
-                <div class="dado-leitura-ocr">
-                    <span>Arquivos processados</span>
-                    <strong id="ocrQuantidadeArquivos">0</strong>
-                </div>
+                <div class="dado-leitura-ocr"><span>CPF/CNPJ</span><strong id="ocrDocumentoTitular">Não
+                        identificado</strong></div>
+                <div class="dado-leitura-ocr"><span>Período identificado</span><strong id="ocrPeriodoLeitura">Não
+                        identificado</strong></div>
+                <div class="dado-leitura-ocr"><span>Instituições</span><strong id="ocrInstituicoes">Não
+                        identificadas</strong></div>
+                <div class="dado-leitura-ocr"><span>Arquivos processados</span><strong
+                        id="ocrQuantidadeArquivos">0</strong></div>
             </div>
 
             <div class="separador"></div>
@@ -145,18 +147,12 @@
                 </div>
 
                 <div class="resultados-grid">
-                    <div class="resultado-item">
-                        <span>Total de créditos válidos</span>
-                        <strong id="ocrTotalCreditosValidos">R$ 0,00</strong>
-                    </div>
-                    <div class="resultado-item">
-                        <span>Meses considerados</span>
-                        <strong id="ocrMesesConsiderados">0</strong>
-                    </div>
-                    <div class="resultado-item">
-                        <span>Mês de maior movimentação</span>
-                        <strong id="ocrMaiorMes">-</strong>
-                    </div>
+                    <div class="resultado-item"><span>Total de créditos válidos</span><strong
+                            id="ocrTotalCreditosValidos">R$ 0,00</strong></div>
+                    <div class="resultado-item"><span>Meses considerados</span><strong
+                            id="ocrMesesConsiderados">0</strong></div>
+                    <div class="resultado-item"><span>Mês de maior movimentação</span><strong
+                            id="ocrMaiorMes">-</strong></div>
                 </div>
             </div>
 
@@ -212,21 +208,18 @@
                         <h3>Revisão das movimentações</h3>
                         <p>Confira cada lançamento reconhecido antes de aplicar a consolidação.</p>
                     </div>
-
                     <div class="acoes acoes-revisao-ocr">
-                        <button type="button" id="btnSelecionarTodosOCR" class="btn btn-secundario">
-                            Considerar Todos os Créditos
-                        </button>
-                        <button type="button" id="btnDesmarcarTodosOCR" class="btn btn-secundario">
-                            Desmarcar Todos
-                        </button>
+                        <button type="button" id="btnSelecionarTodosOCR" class="btn btn-secundario">Considerar Todos os
+                            Créditos</button>
+                        <button type="button" id="btnDesmarcarTodosOCR" class="btn btn-secundario">Desmarcar
+                            Todos</button>
                     </div>
                 </div>
 
                 <div class="aviso-info">
                     <strong>Conferência recomendada</strong>
-                    <span>OCR pode interpretar incorretamente caracteres, datas ou valores em documentos de baixa
-                        qualidade.</span>
+                    <span>Documentos digitalizados podem conter caracteres, datas ou valores interpretados
+                        incorretamente pelo OCR.</span>
                 </div>
 
                 <div class="tabela-wrapper tabela-revisao-ocr-wrapper">
@@ -256,54 +249,48 @@
 
             <div class="subsecao-leitura-ocr">
                 <h3>Resumo da leitura</h3>
-
                 <div class="campo">
                     <label for="resumoLeituraOCR">Resumo</label>
                     <textarea id="resumoLeituraOCR" rows="10" spellcheck="false" autocomplete="off"></textarea>
                 </div>
 
                 <div class="acoes">
-                    <button type="button" id="btnAplicarLeituraOCR" class="btn btn-primario">
-                        Aplicar ao Cálculo da Média
-                    </button>
-                    <button type="button" id="btnCopiarResumoOCR" class="btn btn-secundario">
-                        Copiar Resumo
-                    </button>
+                    <button type="button" id="btnAplicarLeituraOCR" class="btn btn-primario">Aplicar ao Cálculo da
+                        Média</button>
+                    <button type="button" id="btnCopiarResumoOCR" class="btn btn-secundario">Copiar Resumo</button>
+                    <button type="button" class="btn btn-secundario btnTrocarModoMovimentacao">Trocar Forma de
+                        Entrada</button>
                 </div>
             </div>
         </section>
 
-        <!-- =====================================================
-         EXTRATO MANUAL
-    ====================================================== -->
-
-        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao">
+        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao" hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Movimentação Financeira</span>
-                    <h2>Extrato da Conta Corrente</h2>
-                    <p>Cole manualmente um extrato ou utilize a leitura OCR acima.</p>
+                    <h2>Colar Extrato da Conta Corrente</h2>
+                    <p>Copie o conteúdo do extrato e cole no campo abaixo para realizar o cálculo diretamente pelo
+                        texto.</p>
                 </div>
             </div>
 
             <div class="campo">
-                <label for="textoExtratoMovimentacao">Extrato consolidado</label>
-                <textarea id="textoExtratoMovimentacao" rows="10" spellcheck="false" autocomplete="off"
-                    placeholder="Cole aqui o extrato da conta corrente ou utilize a leitura de arquivos acima..."></textarea>
-                <small>Linhas informativas de saldo não participam da identificação do período.</small>
+                <label for="textoExtratoMovimentacao">Extrato</label>
+                <textarea id="textoExtratoMovimentacao" rows="15" spellcheck="false" autocomplete="off"
+                    placeholder="Cole aqui o extrato da conta corrente..."></textarea>
+                <small>Linhas informativas de saldo, limites e resumos não participam do cálculo.</small>
             </div>
 
             <div class="acoes">
                 <button type="button" id="btnProcessarMovimentacao" class="btn btn-primario">Processar Extrato</button>
                 <button type="button" id="btnLimparMovimentacao" class="btn btn-secundario">Limpar</button>
+                <button type="button" class="btn btn-secundario btnTrocarModoMovimentacao">Trocar Forma de
+                    Entrada</button>
             </div>
         </section>
 
-        <!-- =====================================================
-         PERÍODO
-    ====================================================== -->
-
-        <section class="card configuracao-card" id="cardPeriodoMovimentacao">
+        <section class="card configuracao-card resultado-processamento-movimentacao" id="cardPeriodoMovimentacao"
+            hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Período</span>
@@ -319,24 +306,19 @@
                         autocomplete="off">
                     <small>Preenchida automaticamente.</small>
                 </div>
-
                 <div class="campo">
                     <label for="ultimaDataMovimentacao">Última movimentação</label>
                     <input type="text" id="ultimaDataMovimentacao" placeholder="DD/MM/AAAA" inputmode="numeric"
                         autocomplete="off">
                     <small>Preenchida automaticamente.</small>
                 </div>
-
                 <div class="campo">
                     <label for="mesesDetectadosMovimentacao">Meses detectados</label>
-                    <input type="number" id="mesesDetectadosMovimentacao" min="1" step="1" inputmode="numeric"
-                        placeholder="Ex.: 3">
+                    <input type="number" id="mesesDetectadosMovimentacao" min="1" step="1" inputmode="numeric">
                 </div>
-
                 <div class="campo">
                     <label for="mesesConsideradosMovimentacao">Meses considerados</label>
-                    <input type="number" id="mesesConsideradosMovimentacao" min="1" step="1" inputmode="numeric"
-                        placeholder="Ex.: 3">
+                    <input type="number" id="mesesConsideradosMovimentacao" min="1" step="1" inputmode="numeric">
                 </div>
             </div>
 
@@ -353,11 +335,7 @@
             </div>
         </section>
 
-        <!-- =====================================================
-         RESULTADO
-    ====================================================== -->
-
-        <aside class="card resultado-card" id="cardResultadoMovimentacao">
+        <aside class="card resultado-card resultado-processamento-movimentacao" id="cardResultadoMovimentacao" hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Resultado</span>
@@ -372,30 +350,19 @@
             </div>
 
             <div class="resultados-grid">
-                <div class="resultado-item">
-                    <span>Total considerado</span>
-                    <strong id="resultadoTotalMovimentacao">R$ 0,00</strong>
-                </div>
-                <div class="resultado-item">
-                    <span>Meses considerados</span>
-                    <strong id="resultadoMesesMovimentacao">0</strong>
-                </div>
-                <div class="resultado-item">
-                    <span>Créditos considerados</span>
-                    <strong id="resultadoQtdConsiderados">0</strong>
-                </div>
-                <div class="resultado-item">
-                    <span>Movimentações desconsideradas</span>
-                    <strong id="resultadoQtdExcluidos">0</strong>
-                </div>
+                <div class="resultado-item"><span>Total considerado</span><strong id="resultadoTotalMovimentacao">R$
+                        0,00</strong></div>
+                <div class="resultado-item"><span>Meses considerados</span><strong
+                        id="resultadoMesesMovimentacao">0</strong></div>
+                <div class="resultado-item"><span>Créditos considerados</span><strong
+                        id="resultadoQtdConsiderados">0</strong></div>
+                <div class="resultado-item"><span>Movimentações desconsideradas</span><strong
+                        id="resultadoQtdExcluidos">0</strong></div>
             </div>
         </aside>
 
-        <!-- =====================================================
-         HISTÓRICOS
-    ====================================================== -->
-
-        <section class="card card-largura-total" id="cardHistoricosMovimentacao">
+        <section class="card card-largura-total resultado-processamento-movimentacao" id="cardHistoricosMovimentacao"
+            hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Regras</span>
@@ -409,17 +376,13 @@
             </div>
 
             <div class="separador"></div>
-
             <div id="listaRegrasMovimentacao">
                 <div class="sem-dados">Nenhum histórico identificado.</div>
             </div>
         </section>
 
-        <!-- =====================================================
-         RESUMO MENSAL
-    ====================================================== -->
-
-        <section class="card card-largura-total" id="cardResumoMensalMovimentacao">
+        <section class="card card-largura-total resultado-processamento-movimentacao" id="cardResumoMensalMovimentacao"
+            hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Resumo Mensal</span>
@@ -446,11 +409,8 @@
             </div>
         </section>
 
-        <!-- =====================================================
-         CRÉDITOS CONSIDERADOS
-    ====================================================== -->
-
-        <section class="card card-largura-total" id="cardCreditosConsideradosMovimentacao">
+        <section class="card card-largura-total resultado-processamento-movimentacao"
+            id="cardCreditosConsideradosMovimentacao" hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Movimentações</span>
@@ -479,16 +439,14 @@
             </div>
         </section>
 
-        <!-- =====================================================
-         DESCONSIDERADAS
-    ====================================================== -->
-
-        <section class="card card-largura-total" id="cardMovimentacoesExcluidas">
+        <section class="card card-largura-total resultado-processamento-movimentacao" id="cardMovimentacoesExcluidas"
+            hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Exclusões</span>
                     <h2>Movimentações Desconsideradas</h2>
-                    <p>Débitos, exclusões automáticas ou movimentações excluídas manualmente.</p>
+                    <p>Débitos, saldos, estornos, empréstimos, limites e demais movimentações que não participam do
+                        cálculo.</p>
                 </div>
             </div>
 
@@ -514,7 +472,7 @@
 
     </main>
 
-    <footer>
+    <footer class="rodape">
         <div class="container">
             <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvimento e Gestão: Área de Processos</p>
         </div>
@@ -526,7 +484,6 @@
     <script src="js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
-
 </body>
 
 </html>
