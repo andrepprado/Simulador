@@ -11980,37 +11980,35 @@ main.sicoobcard-container {
    ========================================================= */
 
 
-
 /* =========================================================
    13. PORTE-PRODUTOR-RURAL.HTML
    ========================================================= */
 
 /* =========================================================
-   13.1 CONTAINER PRINCIPAL
+   13.1 ESTRUTURA PRINCIPAL
    ========================================================= */
 
 .porte-produtor-container,
 .porte-produtor-container *,
 .porte-produtor-container *::before,
 .porte-produtor-container *::after {
-    box-sizing: border-box;
+    box-sizing: border-box
 }
 
-.porte-produtor-container {
+main.porte-produtor-container {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
+    gap: 20px;
     width: calc(100% - 48px);
     max-width: 1180px;
     min-width: 0;
     margin: 0 auto;
-    padding-top: 28px;
-    padding-bottom: 44px;
-    align-items: start;
+    padding: 30px 0 48px;
+    align-items: start
 }
 
 .porte-produtor-container>* {
-    min-width: 0;
+    min-width: 0
 }
 
 /* =========================================================
@@ -12027,9 +12025,7 @@ main.sicoobcard-container {
     border: 1px solid var(--borda);
     border-radius: 14px;
     background: var(--branco);
-    box-shadow:
-        0 3px 8px rgba(0, 54, 64, .035),
-        0 10px 28px rgba(0, 54, 64, .055);
+    box-shadow: 0 3px 8px rgba(0, 54, 64, .035), 0 10px 28px rgba(0, 54, 64, .055)
 }
 
 .porte-produtor-container>.card::before {
@@ -12039,14 +12035,11 @@ main.sicoobcard-container {
     right: 0;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg,
-            var(--verde-claro),
-            var(--turquesa),
-            var(--verde-escuro));
+    background: linear-gradient(90deg, var(--verde-claro), var(--turquesa), var(--verde-escuro))
 }
 
 .porte-produtor-container>.card-largura-total {
-    grid-column: 1 / -1;
+    grid-column: 1/-1
 }
 
 /* =========================================================
@@ -12058,43 +12051,57 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     margin: 0 0 18px;
+    padding: 0
 }
 
 .porte-produtor-container .titulo-secao>div {
-    min-width: 0;
+    min-width: 0
 }
 
 .porte-produtor-container .titulo-secao .categoria-etiqueta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     width: fit-content;
     max-width: 100%;
+    min-height: 21px;
     margin: 0 0 7px;
+    padding: 4px 9px;
+    border: 1px solid rgba(0, 160, 145, .12);
+    border-radius: 5px;
+    background: rgba(0, 160, 145, .08);
+    color: var(--turquesa);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .3px;
+    text-transform: uppercase
 }
 
 .porte-produtor-container .titulo-secao h2 {
     margin: 0 0 5px;
     color: var(--verde-escuro);
-    font-size: 19px;
-    font-weight: 750;
-    line-height: 1.25;
-    letter-spacing: -.15px;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -.2px
 }
 
 .porte-produtor-container .titulo-secao p {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0;
     color: var(--texto-secundario);
-    font-size: 10px;
-    line-height: 1.5;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 1.5
 }
 
 .porte-produtor-container .titulo-subsecao {
     margin: 20px 0 10px;
     color: var(--verde-escuro);
     font-size: 12px;
-    font-weight: 750;
-    line-height: 1.35;
+    font-weight: 800;
+    line-height: 1.35
 }
 
 /* =========================================================
@@ -12104,25 +12111,31 @@ main.sicoobcard-container {
 .porte-produtor-container .grid-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 15px 16px;
+    gap: 14px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
 .porte-produtor-container .grid-form-3 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 15px 16px;
+    gap: 14px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
 .porte-produtor-container .grid-form-4 {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 15px 16px;
+    gap: 14px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
 /* =========================================================
@@ -12136,6 +12149,11 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     margin: 0;
+    padding: 0
+}
+
+.porte-produtor-container .campo[hidden] {
+    display: none !important
 }
 
 .porte-produtor-container .campo label {
@@ -12144,76 +12162,76 @@ main.sicoobcard-container {
     min-width: 0;
     margin: 0;
     color: var(--verde-escuro);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 750;
-    line-height: 1.35;
+    line-height: 1.4
 }
 
 .porte-produtor-container .campo input,
 .porte-produtor-container .campo select,
 .porte-produtor-container .campo textarea {
-    box-sizing: border-box;
     display: block;
     width: 100%;
     min-width: 0;
     max-width: 100%;
     margin: 0;
     border: 1px solid var(--borda-forte);
-    border-radius: 8px;
+    border-radius: 7px;
+    outline: none;
     background: var(--branco);
     color: var(--texto);
     font-family: inherit;
-    outline: none;
-    transition:
-        border-color .18s ease,
-        box-shadow .18s ease,
-        background .18s ease;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease
 }
 
 .porte-produtor-container .campo input,
 .porte-produtor-container .campo select {
-    height: 42px;
-    min-height: 42px;
-    padding: 0 11px;
-    font-size: 11px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.2
 }
 
 .porte-produtor-container .campo select {
-    padding-right: 34px;
+    padding-right: 32px
 }
 
 .porte-produtor-container .campo textarea {
-    min-height: 90px;
-    padding: 10px 11px;
-    font-size: 11px;
+    min-height: 82px;
+    padding: 10px;
+    font-size: 10px;
     line-height: 1.45;
-    resize: vertical;
+    resize: vertical
 }
 
 .porte-produtor-container .campo input:hover,
 .porte-produtor-container .campo select:hover,
 .porte-produtor-container .campo textarea:hover {
-    border-color: #AFC4C5;
+    border-color: #B5C7C8
 }
 
 .porte-produtor-container .campo input:focus,
 .porte-produtor-container .campo select:focus,
 .porte-produtor-container .campo textarea:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .09);
+    background: #FEFFFF;
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08)
 }
 
 .porte-produtor-container .campo input:disabled,
 .porte-produtor-container .campo select:disabled,
 .porte-produtor-container .campo textarea:disabled {
-    background: #F2F5F5;
-    color: #819194;
-    cursor: not-allowed;
+    border-color: var(--indisponivel-borda);
+    background: var(--indisponivel-fundo);
+    color: var(--indisponivel);
+    cursor: not-allowed
 }
 
 .porte-produtor-container .campo input[readonly],
 .porte-produtor-container .campo textarea[readonly] {
-    background: #F7F9F9;
+    background: #F7F9F9
 }
 
 .porte-produtor-container .campo small,
@@ -12223,8 +12241,8 @@ main.sicoobcard-container {
     min-width: 0;
     margin: 0;
     color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.45;
+    font-size: 7px;
+    line-height: 1.4
 }
 
 /* =========================================================
@@ -12233,86 +12251,73 @@ main.sicoobcard-container {
 
 .porte-produtor-container .input-prefixo,
 .porte-produtor-container .input-sufixo {
-    position: relative;
-    display: flex;
-    align-items: stretch;
+    display: grid;
+    align-items: center;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
+}
+
+.porte-produtor-container .input-prefixo {
+    grid-template-columns: auto minmax(0, 1fr)
+}
+
+.porte-produtor-container .input-sufixo {
+    grid-template-columns: minmax(0, 1fr) auto
 }
 
 .porte-produtor-container .input-prefixo>span,
 .porte-produtor-container .input-sufixo>span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
-    min-width: 40px;
-    padding: 0 10px;
-    border: 1px solid var(--borda-forte);
-    background: #F4F8F7;
+    min-height: 38px;
+    margin: 0;
     color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 750;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap
 }
 
 .porte-produtor-container .input-prefixo>span {
-    border-right: 0;
-    border-radius: 8px 0 0 8px;
-}
-
-.porte-produtor-container .input-prefixo input {
-    border-radius: 0 8px 8px 0;
-}
-
-.porte-produtor-container .input-sufixo input {
-    border-radius: 8px 0 0 8px;
+    padding-right: 7px
 }
 
 .porte-produtor-container .input-sufixo>span {
-    border-left: 0;
-    border-radius: 0 8px 8px 0;
+    padding-left: 7px
 }
 
-/* =========================================================
-   13.7 INPUT DE RENDA
-   ========================================================= */
-
-.porte-produtor-input-renda {
-    display: flex;
-    align-items: stretch;
-    width: 100%;
-    min-width: 140px;
-}
-
-.porte-produtor-input-renda input {
+.porte-produtor-container .input-prefixo>input,
+.porte-produtor-container .input-sufixo>input {
+    display: block;
     width: 100%;
     min-width: 0;
-    height: 36px;
-    min-height: 36px;
-    padding: 0 9px;
+    height: 38px;
+    min-height: 38px;
+    margin: 0;
+    padding: 0 10px;
     border: 1px solid var(--borda-forte);
     border-radius: 7px;
+    outline: none;
     background: var(--branco);
     color: var(--texto);
     font-family: inherit;
     font-size: 10px;
-    outline: none;
-    transition:
-        border-color .18s ease,
-        box-shadow .18s ease;
+    font-weight: 400;
+    line-height: 1.2;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease
 }
 
-.porte-produtor-input-renda input:hover {
-    border-color: #AFC4C5;
-}
-
-.porte-produtor-input-renda input:focus {
+.porte-produtor-container .input-prefixo>input:focus,
+.porte-produtor-container .input-sufixo>input:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 2px rgba(0, 160, 145, .08);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08)
 }
 
 /* =========================================================
-   13.8 TABELA DO PRODUTOR
+   13.7 TABELA DE RENDAS
    ========================================================= */
 
 .porte-produtor-container .tabela-wrapper,
@@ -12321,142 +12326,289 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     max-width: 100%;
+    margin: 0;
     overflow-x: auto;
     overflow-y: hidden;
     border: 1px solid var(--borda);
-    border-radius: 10px;
+    border-radius: 9px;
     background: var(--branco);
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--borda-forte) transparent
+}
+
+.porte-produtor-container .tabela-wrapper::-webkit-scrollbar,
+.porte-produtor-container .tabela-responsiva::-webkit-scrollbar {
+    height: 7px
+}
+
+.porte-produtor-container .tabela-wrapper::-webkit-scrollbar-thumb,
+.porte-produtor-container .tabela-responsiva::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--borda-forte)
 }
 
 .porte-produtor-tabela {
     width: 100%;
-    min-width: 760px;
+    min-width: 700px;
     margin: 0;
+    border: 0;
     border-collapse: collapse;
     border-spacing: 0;
-    background: var(--branco);
+    background: var(--branco)
 }
 
-.porte-produtor-tabela th,
-.porte-produtor-tabela td {
+.porte-produtor-tabela th {
     padding: 10px 11px;
+    border: 0;
     border-right: 1px solid var(--borda);
     border-bottom: 1px solid var(--borda);
-    color: var(--texto-secundario);
-    font-size: 9px;
-    line-height: 1.4;
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-size: 7px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: .15px;
     text-align: left;
     vertical-align: middle;
+    white-space: nowrap;
+    text-transform: uppercase
+}
+
+.porte-produtor-tabela td {
+    padding: 9px 11px;
+    border: 0;
+    border-right: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+    background: var(--branco);
+    color: var(--texto);
+    font-size: 8px;
+    line-height: 1.4;
+    text-align: left;
+    vertical-align: middle
 }
 
 .porte-produtor-tabela th:last-child,
 .porte-produtor-tabela td:last-child {
-    border-right: 0;
-}
-
-.porte-produtor-tabela th {
-    background: #F1F6F5;
-    color: var(--verde-escuro);
-    font-size: 8px;
-    font-weight: 800;
-    letter-spacing: .25px;
-    text-transform: uppercase;
-    white-space: nowrap;
+    border-right: 0
 }
 
 .porte-produtor-tabela tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-.porte-produtor-tabela tbody tr {
-    transition: background .15s ease;
+    border-bottom: 0
 }
 
 .porte-produtor-tabela tbody tr:hover td {
-    background: rgba(0, 160, 145, .025);
+    background: rgba(0, 160, 145, .025)
 }
 
-.porte-produtor-tabela th:first-child,
+.porte-produtor-tabela th:nth-child(1),
+.porte-produtor-tabela td:nth-child(1) {
+    width: 42%;
+    min-width: 240px;
+    text-align: left
+}
+
+.porte-produtor-tabela th:nth-child(2),
+.porte-produtor-tabela td:nth-child(2) {
+    width: 28%;
+    min-width: 175px;
+    text-align: left
+}
+
+.porte-produtor-tabela th:nth-child(3),
+.porte-produtor-tabela td:nth-child(3) {
+    width: 30%;
+    min-width: 190px;
+    text-align: right
+}
+
 .porte-produtor-tabela td:first-child {
-    min-width: 230px;
     color: var(--verde-escuro);
-    font-weight: 700;
+    font-weight: 700
 }
 
 /* =========================================================
-   13.9 TAGS
+   13.8 INPUT DE RENDA DA TABELA
+   ========================================================= */
+
+.porte-produtor-input-renda {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    width: 100%;
+    min-width: 150px;
+    margin: 0;
+    padding: 0
+}
+
+.porte-produtor-input-renda>span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 34px;
+    padding: 0 7px;
+    border: 1px solid var(--borda-forte);
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1
+}
+
+.porte-produtor-input-renda input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 34px;
+    min-height: 34px;
+    margin: 0;
+    padding: 0 8px;
+    border: 1px solid var(--borda-forte);
+    border-radius: 0 6px 6px 0;
+    outline: none;
+    background: var(--branco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-align: right;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease
+}
+
+.porte-produtor-input-renda input:hover {
+    border-color: #B5C7C8
+}
+
+.porte-produtor-input-renda input:focus {
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 2px rgba(0, 160, 145, .08)
+}
+
+/* =========================================================
+   13.9 TAGS DE CLASSIFICAÇÃO
    ========================================================= */
 
 .porte-produtor-tag {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 21px;
     max-width: 100%;
+    min-height: 21px;
     padding: 3px 8px;
     border: 1px solid transparent;
     border-radius: 999px;
     font-size: 7px;
     font-weight: 800;
     line-height: 1.2;
-    white-space: nowrap;
+    text-align: center;
+    white-space: normal
 }
 
 .porte-produtor-tag-rural {
-    border-color: rgba(0, 160, 145, .16);
+    border-color: rgba(0, 160, 145, .18);
     background: rgba(0, 160, 145, .08);
-    color: var(--turquesa);
+    color: var(--turquesa)
 }
 
 .porte-produtor-tag-nao-rural {
-    border-color: var(--borda);
-    background: #F4F7F7;
-    color: var(--texto-secundario);
+    border-color: rgba(73, 71, 157, .18);
+    background: rgba(73, 71, 157, .07);
+    color: var(--roxo)
 }
 
 /* =========================================================
-   13.10 PORTES
+   13.10 RESULTADO
    ========================================================= */
 
-.porte-produtor-container .porte-pequeno,
-.porte-produtor-container .porte-medio,
-.porte-produtor-container .porte-grande,
-.porte-produtor-container .porte-pendente {
+.porte-produtor-container .resultado-destaque {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 10px;
+    padding: 17px 18px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--verde-escuro), #005B64)
+}
+
+.porte-produtor-container .resultado-destaque::after {
+    content: "";
+    position: absolute;
+    top: -55px;
+    right: -45px;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background: rgba(0, 160, 145, .23);
+    pointer-events: none
+}
+
+.porte-produtor-container .resultado-destaque span,
+.porte-produtor-container .resultado-destaque strong {
+    position: relative;
+    z-index: 1;
+    min-width: 0
+}
+
+.porte-produtor-container .resultado-destaque span {
+    color: rgba(255, 255, 255, .78);
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1.35
+}
+
+.porte-produtor-container .resultado-destaque strong {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 22px;
-    padding: 4px 8px;
+    max-width: 70%;
+    min-height: 32px;
+    padding: 4px 10px;
     border-radius: 999px;
-    font-size: 7px;
-    font-weight: 800;
+    background: rgba(255, 255, 255, .96);
+    color: var(--verde-claro);
+    font-size: 18px;
+    font-weight: 850;
     line-height: 1.2;
-    white-space: nowrap;
+    text-align: right;
+    overflow-wrap: anywhere
 }
 
-.porte-produtor-container .porte-pequeno {
-    background: rgba(0, 160, 145, .08);
-    color: var(--turquesa);
+#resultadoPorteFinal {
+    transition: color .18s ease, background .18s ease, opacity .18s ease
 }
 
-.porte-produtor-container .porte-medio {
-    background: rgba(201, 210, 0, .14);
-    color: var(--verde-escuro);
+#resultadoPorteFinal.porte-pequeno {
+    background: rgba(255, 255, 255, .96);
+    color: var(--turquesa)
 }
 
-.porte-produtor-container .porte-grande {
-    background: rgba(73, 71, 157, .09);
-    color: var(--roxo);
+#resultadoPorteFinal.porte-medio {
+    background: #FFF9D8;
+    color: #8A7900
 }
 
-.porte-produtor-container .porte-pendente {
-    background: var(--atencao-fundo);
-    color: var(--atencao);
+#resultadoPorteFinal.porte-grande {
+    background: #FFF0F0;
+    color: var(--erro)
+}
+
+#resultadoPorteFinal.porte-pendente {
+    background: #FFF9E3;
+    color: var(--verde-claro)
 }
 
 /* =========================================================
-   13.11 RESULTADOS
+   13.11 GRIDS DE RESULTADOS
    ========================================================= */
 
 .porte-produtor-container .resultados-grid,
@@ -12466,6 +12618,8 @@ main.sicoobcard-container {
     gap: 9px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
 .porte-produtor-container .resultados-grid-3 {
@@ -12474,6 +12628,8 @@ main.sicoobcard-container {
     gap: 9px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
 .porte-produtor-container .resultados-grid-4 {
@@ -12482,107 +12638,60 @@ main.sicoobcard-container {
     gap: 9px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
 .porte-produtor-container .resultado-item {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 4px;
+    width: 100%;
     min-width: 0;
     min-height: 66px;
-    padding: 12px;
+    margin: 0;
+    padding: 11px 12px;
     border: 1px solid var(--borda);
-    border-radius: 9px;
-    background: #F8FAFA;
+    border-radius: 8px;
+    background: #FAFCFC
 }
 
 .porte-produtor-container .resultado-item span {
     display: block;
-    margin: 0 0 4px;
+    margin: 0;
     color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.35;
+    font-size: 7px;
+    font-weight: 400;
+    line-height: 1.35
 }
 
 .porte-produtor-container .resultado-item strong {
     display: block;
     min-width: 0;
+    margin: 0;
     color: var(--verde-escuro);
-    font-size: 13px;
-    font-weight: 750;
-    line-height: 1.3;
-    overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   13.12 RESULTADO DESTAQUE
-   ========================================================= */
-
-.porte-produtor-container .resultado-destaque {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    grid-column: 1 / -1;
-    width: 100%;
-    min-width: 0;
-    padding: 17px;
-    overflow: hidden;
-    border: 0;
-    border-radius: 10px;
-    background: linear-gradient(135deg,
-            var(--verde-escuro),
-            #005B64);
-}
-
-.porte-produtor-container .resultado-destaque::after {
-    content: "";
-    position: absolute;
-    top: -60px;
-    right: -35px;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: rgba(0, 160, 145, .23);
-}
-
-.porte-produtor-container .resultado-destaque span,
-.porte-produtor-container .resultado-destaque strong {
-    position: relative;
-    z-index: 1;
-    min-width: 0;
-}
-
-.porte-produtor-container .resultado-destaque span {
-    color: rgba(255, 255, 255, .78);
-    font-size: 9px;
-    line-height: 1.35;
-}
-
-.porte-produtor-container .resultado-destaque strong {
-    color: var(--verde-claro);
-    font-size: 20px;
+    font-size: 10px;
     font-weight: 800;
-    line-height: 1.2;
-    text-align: right;
-    overflow-wrap: anywhere;
+    line-height: 1.35;
+    overflow-wrap: anywhere
 }
 
 /* =========================================================
-   13.13 JUSTIFICATIVA
+   13.12 JUSTIFICATIVA
    ========================================================= */
 
 .porte-produtor-justificativa {
     position: relative;
+    display: block;
     width: 100%;
     min-width: 0;
-    margin-top: 14px;
-    padding: 13px 15px 13px 18px;
+    margin: 0;
+    padding: 12px 14px 12px 17px;
     overflow: hidden;
     border: 1px solid rgba(0, 160, 145, .15);
-    border-radius: 9px;
-    background: rgba(0, 160, 145, .045);
+    border-radius: 8px;
+    background: rgba(0, 160, 145, .045)
 }
 
 .porte-produtor-justificativa::before {
@@ -12591,24 +12700,50 @@ main.sicoobcard-container {
     top: 0;
     bottom: 0;
     left: 0;
-    width: 4px;
-    background: var(--turquesa);
-}
-
-.porte-produtor-justificativa strong {
-    display: block;
-    margin: 0 0 4px;
-    color: var(--verde-escuro);
-    font-size: 9px;
-    font-weight: 800;
-    line-height: 1.4;
+    width: 3px;
+    background: var(--turquesa)
 }
 
 .porte-produtor-justificativa p {
     margin: 0;
     color: var(--texto-secundario);
+    font-size: 8px;
+    font-weight: 400;
+    line-height: 1.5
+}
+
+/* =========================================================
+   13.13 BASE NORMATIVA / LINHA SELECIONADA
+   ========================================================= */
+
+.porte-produtor-container .linha-selecionada {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    min-width: 0;
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--fundo-secundario)
+}
+
+.porte-produtor-container .linha-selecionada span {
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.35
+}
+
+.porte-produtor-container .linha-selecionada strong {
+    min-width: 0;
+    color: var(--verde-escuro);
     font-size: 9px;
-    line-height: 1.5;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: right;
+    overflow-wrap: anywhere
 }
 
 /* =========================================================
@@ -12618,17 +12753,18 @@ main.sicoobcard-container {
 .porte-produtor-container .aviso,
 .porte-produtor-container .aviso-info {
     position: relative;
+    display: block;
     width: 100%;
     min-width: 0;
     margin: 15px 0 0;
-    padding: 12px 14px 12px 17px;
+    padding: 11px 13px 11px 16px;
     overflow: hidden;
     border: 1px solid rgba(0, 160, 145, .15);
-    border-radius: 9px;
+    border-radius: 8px;
     background: rgba(0, 160, 145, .045);
     color: var(--texto-secundario);
-    font-size: 9px;
-    line-height: 1.5;
+    font-size: 8px;
+    line-height: 1.5
 }
 
 .porte-produtor-container .aviso::before,
@@ -12638,13 +12774,14 @@ main.sicoobcard-container {
     top: 0;
     bottom: 0;
     left: 0;
-    width: 4px;
-    background: var(--turquesa);
+    width: 3px;
+    background: var(--turquesa)
 }
 
 .porte-produtor-container .aviso strong,
 .porte-produtor-container .aviso-info strong {
     color: var(--verde-escuro);
+    font-weight: 800
 }
 
 /* =========================================================
@@ -12656,23 +12793,15 @@ main.sicoobcard-container {
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
-    gap: 9px;
+    gap: 8px;
     width: 100%;
     min-width: 0;
-    margin: 18px 0 0;
-    padding: 0;
+    margin: 0;
+    padding: 0
 }
 
 .porte-produtor-container .acoes>* {
-    flex: 0 0 auto;
-}
-
-.porte-produtor-container .acoes .btn,
-.porte-produtor-container .acoes button {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: 125px;
-    margin: 0;
+    flex: 0 0 auto
 }
 
 /* =========================================================
@@ -12684,186 +12813,177 @@ main.sicoobcard-container {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    min-height: 40px;
-    padding: 8px 15px;
+    width: auto;
+    min-width: 110px;
+    min-height: 36px;
+    margin: 0;
+    padding: 8px 14px;
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 7px;
     font-family: inherit;
-    font-size: 10px;
-    font-weight: 750;
+    font-size: 9px;
+    font-weight: 800;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
+    white-space: nowrap;
     cursor: pointer;
-    transition:
-        background .18s ease,
-        border-color .18s ease,
-        color .18s ease,
-        box-shadow .18s ease,
-        transform .18s ease;
+    transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease
 }
 
 .porte-produtor-container .btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-1px)
 }
 
 .porte-produtor-container .btn-principal,
 .porte-produtor-container .btn-primario {
     border-color: var(--turquesa);
-    background: linear-gradient(135deg,
-            var(--turquesa),
-            #008E83);
-    color: var(--branco);
-    box-shadow: 0 5px 13px rgba(0, 160, 145, .16);
+    background: var(--turquesa);
+    color: var(--branco)
 }
 
 .porte-produtor-container .btn-principal:hover,
 .porte-produtor-container .btn-primario:hover {
     border-color: var(--verde-escuro);
-    background: var(--verde-escuro);
+    background: var(--verde-escuro)
 }
 
 .porte-produtor-container .btn-secundario {
     border-color: var(--borda-forte);
     background: var(--branco);
-    color: var(--verde-escuro);
+    color: var(--verde-escuro)
 }
 
 .porte-produtor-container .btn-secundario:hover {
     border-color: var(--turquesa);
-    background: var(--fundo-secundario);
+    background: rgba(0, 160, 145, .045);
+    color: var(--turquesa)
+}
+
+.porte-produtor-container .btn:focus-visible {
+    outline: none;
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10)
 }
 
 /* =========================================================
-   13.17 SEPARADOR
+   13.17 UTILITÁRIOS
    ========================================================= */
+
+.porte-produtor-container .hide,
+.porte-produtor-container [hidden] {
+    display: none !important
+}
+
+.porte-produtor-container .bloqueado {
+    opacity: .58;
+    pointer-events: none
+}
 
 .porte-produtor-container .separador {
     width: 100%;
     height: 1px;
     margin: 20px 0;
     border: 0;
-    background: var(--borda);
+    background: var(--borda)
 }
 
 /* =========================================================
-   13.18 UTILITÁRIOS
+   13.18 DESKTOP REDUZIDO
    ========================================================= */
 
-.porte-produtor-container .hide {
-    display: none !important;
-}
+@media(max-width:1050px) {
 
-.porte-produtor-container .bloqueado {
-    opacity: .58;
-    pointer-events: none;
-}
-
-/* =========================================================
-   13.19 DESKTOP REDUZIDO
-   ========================================================= */
-
-@media (max-width: 1050px) {
-
-    .porte-produtor-container {
+    main.porte-produtor-container {
         width: calc(100% - 40px);
-        gap: 18px;
+        gap: 17px
     }
 
     .porte-produtor-container>.card {
-        padding: 22px;
+        padding: 21px
     }
 
     .porte-produtor-container .grid-form-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
     .porte-produtor-container .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
+
 }
 
 /* =========================================================
-   13.20 TABLET
+   13.19 TABLET
    ========================================================= */
 
-@media (max-width: 850px) {
+@media(max-width:850px) {
 
-    .porte-produtor-container {
+    main.porte-produtor-container {
         grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 32px);
-        gap: 16px;
+        gap: 15px;
         padding-top: 24px;
-        padding-bottom: 38px;
+        padding-bottom: 38px
     }
 
     .porte-produtor-container>.card,
     .porte-produtor-container>.card-largura-total {
-        grid-column: 1;
+        grid-column: 1
     }
 
     .porte-produtor-container>.card {
         padding: 20px;
-        border-radius: 12px;
+        border-radius: 12px
     }
 
     .porte-produtor-container .grid-form-3,
     .porte-produtor-container .grid-form-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
     .porte-produtor-container .resultados-grid-3,
     .porte-produtor-container .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
+
 }
 
 /* =========================================================
-   13.21 MOBILE
+   13.20 MOBILE
    ========================================================= */
 
-@media (max-width: 650px) {
+@media(max-width:650px) {
 
-    .porte-produtor-container {
+    main.porte-produtor-container {
         width: calc(100% - 24px);
         gap: 12px;
-        padding-top: 20px;
-        padding-bottom: 30px;
+        padding-top: 18px;
+        padding-bottom: 30px
     }
 
     .porte-produtor-container>.card {
         padding: 16px;
-        border-radius: 11px;
+        border-radius: 11px
     }
 
     .porte-produtor-container .titulo-secao {
-        margin-bottom: 14px;
+        margin-bottom: 14px
     }
 
     .porte-produtor-container .titulo-secao h2 {
-        margin-bottom: 4px;
-        font-size: 16px;
+        font-size: 16px
     }
 
     .porte-produtor-container .titulo-secao p {
-        font-size: 9px;
+        font-size: 8px
     }
 
     .porte-produtor-container .grid-form,
     .porte-produtor-container .grid-form-3,
     .porte-produtor-container .grid-form-4 {
         grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-    }
-
-    .porte-produtor-container .campo label {
-        font-size: 9px;
-    }
-
-    .porte-produtor-container .campo input,
-    .porte-produtor-container .campo select {
-        min-height: 42px;
-        font-size: 10px;
+        gap: 11px
     }
 
     .porte-produtor-container .resultados-grid,
@@ -12871,235 +12991,188 @@ main.sicoobcard-container {
     .porte-produtor-container .resultados-grid-3,
     .porte-produtor-container .resultados-grid-4 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
+        gap: 7px
     }
 
     .porte-produtor-container .resultado-item {
         min-height: 58px;
-        padding: 10px;
+        padding: 9px
     }
 
     .porte-produtor-container .resultado-item span {
-        font-size: 7px;
+        font-size: 7px
     }
 
     .porte-produtor-container .resultado-item strong {
-        font-size: 11px;
+        font-size: 9px
     }
 
     .porte-produtor-container .resultado-destaque {
-        padding: 14px;
-    }
-
-    .porte-produtor-container .resultado-destaque span {
-        font-size: 8px;
+        padding: 14px
     }
 
     .porte-produtor-container .resultado-destaque strong {
-        font-size: 17px;
+        font-size: 15px
+    }
+
+    .porte-produtor-container .linha-selecionada {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px
+    }
+
+    .porte-produtor-container .linha-selecionada strong {
+        text-align: left
     }
 
     .porte-produtor-container .acoes {
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;
-        margin-top: 15px;
+        gap: 8px
     }
 
     .porte-produtor-container .acoes .btn,
     .porte-produtor-container .acoes button {
         width: 100%;
-        min-width: 0;
-    }
-
-    .porte-produtor-justificativa {
-        padding: 11px 12px 11px 15px;
-    }
-
-    .porte-produtor-justificativa p {
-        font-size: 8px;
+        min-width: 0
     }
 
     .porte-produtor-tabela {
-        min-width: 620px;
+        min-width: 620px
     }
 
     .porte-produtor-tabela th,
     .porte-produtor-tabela td {
         padding: 8px 9px;
-        font-size: 8px;
+        font-size: 8px
     }
 
     .porte-produtor-tabela th {
-        font-size: 7px;
-    }
-
-    .porte-produtor-tabela th:first-child,
-    .porte-produtor-tabela td:first-child {
-        min-width: 205px;
+        font-size: 7px
     }
 
     .porte-produtor-input-renda {
-        min-width: 130px;
+        min-width: 130px
     }
+
 }
 
 /* =========================================================
-   13.22 MOBILE PEQUENO
+   13.21 MOBILE PEQUENO
    ========================================================= */
 
-@media (max-width: 480px) {
+@media(max-width:480px) {
 
-    .porte-produtor-container {
+    main.porte-produtor-container {
         width: calc(100% - 18px);
         gap: 10px;
-        padding-top: 16px;
-        padding-bottom: 25px;
+        padding-top: 15px;
+        padding-bottom: 25px
     }
 
     .porte-produtor-container>.card {
         padding: 13px;
-        border-radius: 10px;
+        border-radius: 10px
     }
 
     .porte-produtor-container .titulo-secao h2 {
-        font-size: 15px;
-    }
-
-    .porte-produtor-container .titulo-secao p {
-        font-size: 8px;
+        font-size: 15px
     }
 
     .porte-produtor-container .resultados-grid,
     .porte-produtor-container .resultado-grid {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr)
     }
 
     .porte-produtor-container .resultados-grid-3,
     .porte-produtor-container .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .porte-produtor-container .resultado-destaque {
-        grid-column: 1 / -1;
-    }
-
-    .porte-produtor-tabela {
-        min-width: 590px;
-    }
-
-    .porte-produtor-tabela th {
-        font-size: 6px;
-    }
-
-    .porte-produtor-tabela th:first-child,
-    .porte-produtor-tabela td:first-child {
-        min-width: 195px;
-    }
-
-    .porte-produtor-input-renda {
-        min-width: 125px;
-    }
-
-    .porte-produtor-input-renda input {
-        font-size: 9px;
-    }
-
-    .porte-produtor-container .resultado-destaque span {
-        font-size: 8px;
-    }
-
-    .porte-produtor-container .resultado-destaque strong {
-        font-size: 15px;
-    }
-
-    .porte-produtor-container .resultado-item {
-        min-height: 54px;
-        padding: 8px;
-    }
-
-    .porte-produtor-container .resultado-item span {
-        font-size: 6px;
-    }
-
-    .porte-produtor-container .resultado-item strong {
-        font-size: 9px;
-    }
-
-    .porte-produtor-justificativa p {
-        font-size: 7px;
-    }
-}
-
-/* =========================================================
-   13.23 MOBILE MUITO PEQUENO
-   ========================================================= */
-
-@media (max-width: 360px) {
-
-    .porte-produtor-container {
-        width: calc(100% - 16px);
-    }
-
-    .porte-produtor-container>.card {
-        padding: 11px;
-    }
-
-    .porte-produtor-container .titulo-secao h2 {
-        font-size: 15px;
-    }
-
-    .porte-produtor-container .titulo-secao p {
-        font-size: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
     .porte-produtor-container .resultado-destaque {
         flex-direction: column;
         align-items: flex-start;
-        gap: 3px;
+        gap: 5px
     }
 
-    .porte-produtor-container .resultado-destaque span,
     .porte-produtor-container .resultado-destaque strong {
-        width: 100%;
         max-width: 100%;
-        text-align: left;
-    }
-
-    .porte-produtor-container .resultados-grid-4,
-    .porte-produtor-container .resultados-grid-3 {
-        grid-template-columns: minmax(0, 1fr);
+        font-size: 14px;
+        text-align: left
     }
 
     .porte-produtor-tabela {
-        min-width: 550px;
+        min-width: 590px
     }
 
-    .porte-produtor-tabela th:first-child,
-    .porte-produtor-tabela td:first-child {
-        min-width: 185px;
+    .porte-produtor-input-renda {
+        min-width: 125px
     }
+
 }
 
 /* =========================================================
-   13.24 TOUCH
+   13.22 MOBILE MUITO PEQUENO
    ========================================================= */
 
-@media (hover: none) and (pointer: coarse) {
+@media(max-width:360px) {
 
-    .porte-produtor-container .btn:hover {
-        transform: none;
+    main.porte-produtor-container {
+        width: calc(100% - 16px)
     }
+
+    .porte-produtor-container>.card {
+        padding: 11px
+    }
+
+    .porte-produtor-container .resultados-grid-3,
+    .porte-produtor-container .resultados-grid-4 {
+        grid-template-columns: minmax(0, 1fr)
+    }
+
+    .porte-produtor-tabela {
+        min-width: 550px
+    }
+
+}
+
+/* =========================================================
+   13.23 TOUCH
+   ========================================================= */
+
+@media(hover:none) and (pointer:coarse) {
 
     .porte-produtor-container .campo input,
-    .porte-produtor-container .campo select {
-        min-height: 44px;
+    .porte-produtor-container .campo select,
+    .porte-produtor-container .input-prefixo>input,
+    .porte-produtor-container .input-sufixo>input {
+        min-height: 44px
     }
 
-    .porte-produtor-container .btn,
-    .porte-produtor-container button {
-        min-height: 44px;
+    .porte-produtor-container .btn {
+        min-height: 44px
     }
+
+    .porte-produtor-container .btn:hover {
+        transform: none
+    }
+
+}
+
+/* =========================================================
+   13.24 ACESSIBILIDADE
+   ========================================================= */
+
+@media(prefers-reduced-motion:reduce) {
+
+    .porte-produtor-container *,
+    .porte-produtor-container *::before,
+    .porte-produtor-container *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important
+    }
+
 }
 
 /* =========================================================
@@ -13108,91 +13181,130 @@ main.sicoobcard-container {
 
 @media print {
 
-    .porte-produtor-container {
+    main.porte-produtor-container {
         display: grid !important;
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
-        gap: 20px !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
         width: 100% !important;
-        max-width: 1180px !important;
+        max-width: none !important;
         min-width: 0 !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
-        padding: 0 12px !important;
-        align-items: start !important;
-        overflow: visible !important;
+        margin: 0 !important;
+        padding: 10px 0 !important;
+        overflow: visible !important
     }
 
     .porte-produtor-container>.card {
         width: 100% !important;
         min-width: 0 !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
         margin: 0 !important;
-        padding: 14px !important;
+        padding: 12px !important;
         overflow: visible !important;
         border: 1px solid #CCC !important;
         border-radius: 0 !important;
         background: #FFF !important;
         box-shadow: none !important;
-        break-inside: auto !important;
-        page-break-inside: auto !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important
     }
 
     .porte-produtor-container>.card::before {
-        display: none !important;
+        display: none !important
     }
 
-    .porte-produtor-container .card-largura-total {
-        grid-column: 1 / -1 !important;
+    .porte-produtor-container>.card-largura-total {
+        grid-column: 1/-1 !important
     }
 
     .porte-produtor-container .grid-form-4 {
-        display: grid !important;
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr)) !important;
-        gap: 12px !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 8px !important
     }
 
     .porte-produtor-container .grid-form-3 {
-        display: grid !important;
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr)) !important;
-        gap: 12px !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important
     }
 
     .porte-produtor-container .resultados-grid-4 {
-        display: grid !important;
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr)) !important;
-        gap: 10px !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 7px !important
     }
 
     .porte-produtor-container .resultados-grid-3 {
-        display: grid !important;
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr)) !important;
-        gap: 10px !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 7px !important
+    }
+
+    .porte-produtor-container .resultado-item {
+        min-height: 0 !important;
+        padding: 7px !important;
+        border-color: #CCC !important;
+        background: #FFF !important
+    }
+
+    .porte-produtor-container .resultado-item span {
+        color: #444 !important;
+        font-size: 6px !important
+    }
+
+    .porte-produtor-container .resultado-item strong {
+        color: #000 !important;
+        font-size: 8px !important
+    }
+
+    .porte-produtor-container .resultado-destaque {
+        padding: 10px !important;
+        border: 1px solid #777 !important;
+        background: #FFF !important
+    }
+
+    .porte-produtor-container .resultado-destaque::after {
+        display: none !important
+    }
+
+    .porte-produtor-container .resultado-destaque span,
+    .porte-produtor-container .resultado-destaque strong {
+        background: transparent !important;
+        color: #000 !important
+    }
+
+    .porte-produtor-container .resultado-destaque strong {
+        padding: 0 !important
+    }
+
+    .porte-produtor-container .porte-produtor-justificativa {
+        padding: 9px !important;
+        border: 1px solid #AAA !important;
+        background: #FFF !important
+    }
+
+    .porte-produtor-container .porte-produtor-justificativa::before {
+        display: none !important
+    }
+
+    .porte-produtor-container .linha-selecionada {
+        padding: 7px !important;
+        border-color: #CCC !important;
+        background: #FFF !important
     }
 
     .porte-produtor-container .acoes,
     .porte-produtor-container button,
     .porte-produtor-container .btn {
-        display: none !important;
+        display: none !important
     }
 
     .porte-produtor-container .tabela-wrapper,
     .porte-produtor-container .tabela-responsiva {
         width: 100% !important;
         overflow: visible !important;
-        border-radius: 0 !important;
+        border-radius: 0 !important
     }
 
     .porte-produtor-tabela {
         width: 100% !important;
         min-width: 0 !important;
-        table-layout: auto !important;
+        table-layout: auto !important
     }
 
     .porte-produtor-tabela th,
@@ -13201,73 +13313,69 @@ main.sicoobcard-container {
         color: #000 !important;
         font-size: 7px !important;
         line-height: 1.3 !important;
-        white-space: normal !important;
+        white-space: normal !important
     }
 
     .porte-produtor-tabela th {
-        font-size: 6px !important;
+        font-size: 6px !important
     }
 
-    .porte-produtor-tabela th:first-child,
-    .porte-produtor-tabela td:first-child {
-        min-width: 0 !important;
-    }
-
-    .porte-produtor-tabela thead {
-        display: table-header-group !important;
-    }
-
-    .porte-produtor-tabela tr {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
+    .porte-produtor-tabela th:nth-child(1),
+    .porte-produtor-tabela td:nth-child(1),
+    .porte-produtor-tabela th:nth-child(2),
+    .porte-produtor-tabela td:nth-child(2),
+    .porte-produtor-tabela th:nth-child(3),
+    .porte-produtor-tabela td:nth-child(3) {
+        width: auto !important;
+        min-width: 0 !important
     }
 
     .porte-produtor-input-renda {
-        min-width: 0 !important;
+        min-width: 0 !important
     }
 
-    .porte-produtor-input-renda input,
+    .porte-produtor-input-renda>span {
+        height: 28px !important;
+        min-width: 30px !important;
+        font-size: 7px !important
+    }
+
+    .porte-produtor-input-renda input {
+        height: 28px !important;
+        min-height: 28px !important;
+        padding: 0 5px !important;
+        border: 1px solid #AAA !important;
+        background: #FFF !important;
+        color: #000 !important;
+        font-size: 8px !important;
+        box-shadow: none !important
+    }
+
     .porte-produtor-container .campo input,
     .porte-produtor-container .campo select,
     .porte-produtor-container .campo textarea {
         border: 1px solid #AAA !important;
         background: #FFF !important;
         color: #000 !important;
-        box-shadow: none !important;
+        box-shadow: none !important
     }
 
-    .porte-produtor-container .resultado-destaque {
-        border: 1px solid #777 !important;
-        background: #FFF !important;
-    }
-
-    .porte-produtor-container .resultado-destaque::after {
-        display: none !important;
-    }
-
-    .porte-produtor-container .resultado-destaque span,
-    .porte-produtor-container .resultado-destaque strong {
-        color: #000 !important;
-    }
-
-    .porte-produtor-justificativa {
-        border: 1px solid #AAA !important;
-        background: #FFF !important;
-    }
-
-    .porte-produtor-justificativa::before {
-        display: none !important;
+    .porte-produtor-container .campo input,
+    .porte-produtor-container .campo select {
+        height: 30px !important;
+        min-height: 30px !important;
+        font-size: 8px !important
     }
 
     .porte-produtor-container .campo label {
-        margin-bottom: 4px !important;
-        font-size: 9px !important;
+        margin-bottom: 3px !important;
+        font-size: 7px !important
     }
 
     .porte-produtor-container,
     .porte-produtor-container .card,
-    .porte-produtor-justificativa,
-    .porte-produtor-tag,
+    .porte-produtor-container .porte-produtor-justificativa,
+    .porte-produtor-container .porte-produtor-tag,
     .porte-produtor-tabela,
     .porte-produtor-tabela thead,
     .porte-produtor-tabela tbody,
@@ -13275,13 +13383,13 @@ main.sicoobcard-container {
     .porte-produtor-tabela th,
     .porte-produtor-tabela td {
         -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        print-color-adjust: exact !important
     }
+
 }
 
-/* =========================================================
-   FIM 13. PORTE-PRODUTOR-RURAL.HTML
-   ========================================================= */
+
+
 
 /* =========================================================
    PRECIFICACAO-SIPAG.HTML
