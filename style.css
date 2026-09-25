@@ -8341,90 +8341,692 @@ body:has(#btnSimular) .simulador-grid .hide {
 
 /* =========================================================
    INFORMACOES-BENEFICIOS-SICOOBCARD.HTML
-   REFATORAÇÃO COMPLETA DA SEÇÃO DE BENEFÍCIOS
    ========================================================= */
 
-.sicoobcard-container .sicoobcard-beneficios-card {
-    position: relative;
-    width: 100%;
+/* =========================================================
+   01. ESTRUTURA PRINCIPAL
+   ========================================================= */
+
+main.sicoobcard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    width: calc(100% - 48px);
+    max-width: 1180px;
     min-width: 0;
-    margin: 0;
-    padding: 24px;
-    overflow: hidden;
-    border: 1px solid var(--borda);
-    border-radius: 14px;
-    background: var(--branco);
-    box-shadow: 0 3px 8px rgba(0, 54, 64, .035), 0 10px 28px rgba(0, 54, 64, .055)
+
+    margin: 0 auto;
+    padding: 30px 0 48px;
 }
 
-.sicoobcard-container .sicoobcard-beneficios-card::before {
+.sicoobcard-container,
+.sicoobcard-container *,
+.sicoobcard-container *::before,
+.sicoobcard-container *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   02. CARDS GERAIS
+   ========================================================= */
+
+.sicoobcard-container>.card,
+.sicoobcard-container .sicoobcard-detalhes-grid>.card {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 24px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+
+    background: var(--branco);
+
+    box-shadow:
+        0 3px 8px rgba(0, 54, 64, .035),
+        0 10px 28px rgba(0, 54, 64, .055);
+}
+
+.sicoobcard-container>.card::before,
+.sicoobcard-container .sicoobcard-informacoes-card::before {
     content: "";
+
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
+
     height: 3px;
-    background: linear-gradient(90deg, var(--verde-claro), var(--turquesa), var(--verde-escuro))
+
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+/* =========================================================
+   03. TÍTULOS DAS SEÇÕES
+   ========================================================= */
+
+.sicoobcard-container .titulo-secao {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0 0 18px;
+    padding: 0;
+}
+
+.sicoobcard-container .titulo-secao .categoria-etiqueta,
+.sicoobcard-container .categoria-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    max-width: 100%;
+    min-height: 21px;
+
+    margin: 0 0 7px;
+    padding: 4px 9px;
+
+    border: 1px solid rgba(0, 160, 145, .12);
+    border-radius: 5px;
+
+    background: rgba(0, 160, 145, .08);
+    color: var(--turquesa);
+
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+}
+
+.sicoobcard-container .titulo-secao h2 {
+    margin: 0 0 5px;
+
+    color: var(--verde-escuro);
+
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -.2px;
+}
+
+.sicoobcard-container .titulo-secao p {
+    max-width: 850px;
+
+    margin: 0;
+
+    color: var(--texto-secundario);
+
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   04. SELEÇÃO DO CARTÃO
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-selecao-card {
+    padding-bottom: 22px;
+}
+
+.sicoobcard-container .sicoobcard-seletor {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+}
+
+.sicoobcard-container .sicoobcard-opcao {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+
+    margin: 0;
+    padding: 9px 12px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--borda-forte);
+    border-radius: 8px;
+
+    background: var(--branco);
+    color: var(--verde-escuro);
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 750;
+    line-height: 1.25;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+.sicoobcard-container .sicoobcard-opcao:hover {
+    border-color: rgba(0, 160, 145, .42);
+
+    background: rgba(0, 160, 145, .035);
+    color: var(--turquesa);
+
+    transform: translateY(-1px);
+}
+
+.sicoobcard-container .sicoobcard-opcao.ativo {
+    border-color: var(--turquesa);
+
+    background: rgba(0, 160, 145, .065);
+    color: var(--verde-escuro);
+
+    box-shadow:
+        0 0 0 2px rgba(0, 160, 145, .06);
+}
+
+.sicoobcard-container .sicoobcard-opcao.ativo::after {
+    content: "";
+
+    position: absolute;
+    right: 7px;
+    bottom: 0;
+    left: 7px;
+
+    height: 3px;
+
+    border-radius: 999px 999px 0 0;
+
+    background: var(--turquesa);
+}
+
+/* =========================================================
+   05. GRID DOS DETALHES
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-detalhes-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(300px, .72fr) minmax(0, 1.28fr);
+
+    gap: 20px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+
+    align-items: stretch;
+}
+
+.sicoobcard-container .sicoobcard-detalhes-grid>* {
+    min-width: 0;
+}
+
+/* =========================================================
+   06. CARD VISUAL DO CARTÃO
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-cartao-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 440px;
+
+    padding: 22px !important;
+
+    overflow: hidden;
+
+    border-color: #005B60 !important;
+
+    background:
+        linear-gradient(145deg,
+            #003640 0%,
+            #004D55 54%,
+            #0A684A 100%) !important;
+
+    color: var(--branco) !important;
+
+    box-shadow:
+        0 8px 24px rgba(0, 54, 64, .14) !important;
+}
+
+.sicoobcard-container .sicoobcard-cartao-card::before {
+    content: "";
+
+    position: absolute;
+    top: -80px;
+    right: -60px;
+
+    width: 220px;
+    height: 220px;
+
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 50%;
+
+    background:
+        radial-gradient(circle,
+            rgba(201, 210, 0, .08),
+            transparent 70%);
+}
+
+.sicoobcard-container .sicoobcard-cartao-card::after {
+    content: "";
+
+    position: absolute;
+    right: -65px;
+    bottom: -90px;
+
+    width: 250px;
+    height: 250px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(circle,
+            rgba(0, 160, 145, .18),
+            transparent 68%);
+}
+
+.sicoobcard-container .sicoobcard-cartao-card>* {
+    position: relative;
+    z-index: 1;
+}
+
+.sicoobcard-container .sicoobcard-cartao-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.sicoobcard-container .sicoobcard-cartao-topo>div:first-child {
+    min-width: 0;
+}
+
+.sicoobcard-container .sicoobcard-cartao-card .categoria-etiqueta {
+    min-height: 20px;
+
+    margin-bottom: 7px;
+    padding: 3px 7px;
+
+    border: 1px solid rgba(255, 255, 255, .16);
+
+    background: rgba(255, 255, 255, .08);
+    color: rgba(255, 255, 255, .92);
+
+    font-size: 7px;
+}
+
+.sicoobcard-container .sicoobcard-cartao-card h2 {
+    margin: 0 0 5px;
+
+    color: var(--branco);
+
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -.3px;
+}
+
+.sicoobcard-container .sicoobcard-cartao-card p {
+    max-width: 230px;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, .72);
+
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+/* =========================================================
+   07. BANDEIRAS DO CARTÃO
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-bandeiras {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    flex: 0 0 auto;
+}
+
+.sicoobcard-container .sicoobcard-bandeira-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 18px;
+
+    padding: 3px 6px;
+
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, .1);
+    color: rgba(255, 255, 255, .9);
+
+    font-size: 6px;
+    font-weight: 800;
+    line-height: 1;
+
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   08. IMAGEM DO CARTÃO
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-imagem-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 245px;
+
+    padding: 20px 0 10px;
+}
+
+.sicoobcard-container .sicoobcard-imagem {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: 80%;
+    max-height: 245px;
+
+    margin: auto;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(0 14px 18px rgba(0, 0, 0, .18));
+}
+
+.sicoobcard-container .sicoobcard-nome-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    width: 100%;
+
+    margin-top: auto;
+    padding-top: 11px;
+
+    border-top: 1px solid rgba(255, 255, 255, .11);
+}
+
+.sicoobcard-container .sicoobcard-nome-imagem strong {
+    color: rgba(255, 255, 255, .92);
+
+    font-size: 7px;
+    font-weight: 800;
+    line-height: 1.3;
+
+    text-transform: uppercase;
+}
+
+.sicoobcard-container .sicoobcard-nome-imagem span {
+    color: rgba(255, 255, 255, .62);
+
+    font-size: 7px;
+    line-height: 1.3;
+
+    text-align: right;
+}
+
+/* =========================================================
+   09. INFORMAÇÕES DO CARTÃO
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-informacoes-card {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 440px;
+}
+
+.sicoobcard-container .sicoobcard-informacoes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.sicoobcard-container .sicoobcard-info-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-width: 0;
+    min-height: 76px;
+
+    padding: 13px 14px;
+
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+
+    background: #FAFCFC;
+}
+
+.sicoobcard-container .sicoobcard-info-item>span {
+    color: var(--texto-secundario);
+
+    font-size: 7px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: .15px;
+
+    text-transform: uppercase;
+}
+
+.sicoobcard-container .sicoobcard-info-item>strong {
+    color: var(--verde-escuro);
+
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+.sicoobcard-container .sicoobcard-info-destaque {
+    position: relative;
+
+    overflow: hidden;
+
+    border-color: rgba(0, 160, 145, .25);
+
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .08),
+            rgba(201, 210, 0, .045));
+}
+
+.sicoobcard-container .sicoobcard-info-destaque::after {
+    content: "";
+
+    position: absolute;
+    right: -20px;
+    bottom: -24px;
+
+    width: 62px;
+    height: 62px;
+
+    border-radius: 50%;
+
+    background: rgba(0, 160, 145, .06);
+}
+
+.sicoobcard-container .sicoobcard-info-destaque>strong {
+    position: relative;
+    z-index: 1;
+
+    color: var(--turquesa);
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   10. FAIXA DE RENDA
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-faixa-renda {
+    grid-column: 1 / -1;
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+
+    gap: 11px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-top: 2px;
+    padding: 14px 15px;
+
+    border: 1px solid rgba(0, 160, 145, .14);
+    border-radius: 9px;
+
+    background: rgba(0, 160, 145, .035);
+}
+
+.sicoobcard-container .sicoobcard-faixa-renda-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    border-radius: 9px;
+
+    background: rgba(0, 160, 145, .10);
+    color: var(--turquesa);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.sicoobcard-container .sicoobcard-faixa-renda-conteudo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+.sicoobcard-container .sicoobcard-faixa-renda-conteudo>span {
+    color: var(--texto-secundario);
+
+    font-size: 7px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.sicoobcard-container .sicoobcard-faixa-renda-conteudo>strong {
+    color: var(--verde-escuro);
+
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.sicoobcard-container .sicoobcard-faixa-renda-conteudo>small {
+    display: block;
+
+    max-width: 520px;
+
+    margin-top: 2px;
+
+    color: var(--texto-secundario);
+
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+/* =========================================================
+   11. CARD DE BENEFÍCIOS
+   ========================================================= */
+
+.sicoobcard-container .sicoobcard-beneficios-card {
+    padding: 24px;
 }
 
 .sicoobcard-container .sicoobcard-beneficios-cabecalho {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
+
     gap: 20px;
+
     width: 100%;
     min-width: 0;
+
     margin: 0 0 18px;
-    padding: 0
+    padding: 0;
 }
 
 .sicoobcard-container .sicoobcard-beneficios-cabecalho .titulo-secao {
-    display: block;
-    width: 100%;
-    min-width: 0;
     margin: 0;
-    padding: 0
-}
-
-.sicoobcard-container .sicoobcard-beneficios-cabecalho .categoria-etiqueta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    min-height: 21px;
-    margin: 0 0 7px;
-    padding: 4px 9px;
-    border: 1px solid rgba(0, 160, 145, .12);
-    border-radius: 5px;
-    background: rgba(0, 160, 145, .08);
-    color: var(--turquesa);
-    font-size: 8px;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: .3px;
-    text-transform: uppercase
-}
-
-.sicoobcard-container .sicoobcard-beneficios-cabecalho .titulo-secao h2 {
-    margin: 0 0 5px;
-    color: var(--verde-escuro);
-    font-size: 18px;
-    font-weight: 800;
-    line-height: 1.3;
-    letter-spacing: -.2px
-}
-
-.sicoobcard-container .sicoobcard-beneficios-cabecalho .titulo-secao p {
-    max-width: 720px;
-    margin: 0;
-    color: var(--texto-secundario);
-    font-size: 9px;
-    font-weight: 400;
-    line-height: 1.5
 }
 
 /* =========================================================
-   LEGENDA DAS BANDEIRAS
+   12. LEGENDA DAS BANDEIRAS
    ========================================================= */
 
 .sicoobcard-container .sicoobcard-legenda {
@@ -8432,431 +9034,855 @@ body:has(#btnSimular) .simulador-grid .hide {
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
+
     gap: 7px 11px;
-    width: auto;
+
     max-width: 420px;
     min-width: 0;
-    margin: 0;
-    padding: 3px 0 0
+
+    padding-top: 3px;
 }
 
 .sicoobcard-container .sicoobcard-legenda>div {
     display: inline-flex;
     align-items: center;
+
     gap: 5px;
-    min-width: 0;
-    margin: 0;
-    padding: 0;
+
     color: var(--texto-secundario);
+
     font-size: 8px;
     font-weight: 500;
     line-height: 1.3;
-    white-space: nowrap
+
+    white-space: nowrap;
 }
 
 .sicoobcard-container .beneficio-bandeira {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     flex: 0 0 auto;
+
     min-width: 20px;
     height: 20px;
+
     padding: 0 5px;
+
     border-radius: 999px;
+
     font-size: 6px;
     font-weight: 900;
     line-height: 1;
-    letter-spacing: 0
 }
 
 .sicoobcard-container .beneficio-master {
     border: 1px solid rgba(73, 71, 157, .20);
+
     background: rgba(73, 71, 157, .07);
-    color: var(--roxo)
+    color: var(--roxo);
 }
 
 .sicoobcard-container .beneficio-visa {
     border: 1px solid rgba(0, 160, 145, .20);
+
     background: rgba(0, 160, 145, .07);
-    color: var(--turquesa)
+    color: var(--turquesa);
 }
 
 .sicoobcard-container .beneficio-ambas {
     border: 1px solid rgba(201, 210, 0, .42);
+
     background: rgba(201, 210, 0, .12);
-    color: #697000
+    color: #697000;
 }
 
 /* =========================================================
-   GRID DOS BENEFÍCIOS
+   13. GRID DOS BENEFÍCIOS
    ========================================================= */
 
 .sicoobcard-container #listaBeneficios,
 .sicoobcard-container .sicoobcard-beneficios-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+
     gap: 12px;
+
     width: 100%;
     min-width: 0;
+
     margin: 0;
     padding: 0;
-    align-items: stretch
+
+    align-items: stretch;
 }
 
 .sicoobcard-container #listaBeneficios.hide,
 .sicoobcard-container .sicoobcard-beneficios-grid.hide {
-    display: none !important
+    display: none !important;
 }
 
 /* =========================================================
-   CARD DE CADA BENEFÍCIO
+   14. ITEM DE BENEFÍCIO
    ========================================================= */
 
 .sicoobcard-container .sicoobcard-beneficio {
     position: relative;
+
     display: grid;
     grid-template-columns: 34px minmax(0, 1fr) auto;
-    grid-template-rows: auto;
     align-items: center;
+
     gap: 10px;
+
     width: 100%;
     min-width: 0;
     min-height: 82px;
+
     margin: 0;
     padding: 12px 13px;
+
     overflow: hidden;
+
     border: 1px solid var(--borda);
     border-radius: 9px;
+
     background: #FAFCFC;
-    box-shadow: 0 2px 5px rgba(0, 54, 64, .018);
-    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease
+
+    box-shadow:
+        0 2px 5px rgba(0, 54, 64, .018);
+
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
 }
 
 .sicoobcard-container .sicoobcard-beneficio::before {
     content: "";
+
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
+
     width: 3px;
-    background: var(--turquesa)
+
+    background: var(--turquesa);
 }
 
 .sicoobcard-container .sicoobcard-beneficio:hover {
     border-color: rgba(0, 160, 145, .28);
-    background: #FEFFFF;
-    box-shadow: 0 5px 12px rgba(0, 54, 64, .045);
-    transform: translateY(-1px)
-}
 
-/* =========================================================
-   ÍCONE DO BENEFÍCIO
-   ========================================================= */
+    background: #FEFFFF;
+
+    box-shadow:
+        0 5px 12px rgba(0, 54, 64, .045);
+
+    transform: translateY(-1px);
+}
 
 .sicoobcard-container .sicoobcard-beneficio-icone {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 34px;
     height: 34px;
     min-width: 34px;
     min-height: 34px;
+
     margin: 0;
     padding: 0;
+
     border-radius: 9px;
+
     background: rgba(0, 160, 145, .09);
     color: var(--turquesa);
+
     font-size: 12px;
     font-weight: 800;
     line-height: 1;
-    text-align: center
 }
-
-/* =========================================================
-   CONTEÚDO DO BENEFÍCIO
-   ========================================================= */
 
 .sicoobcard-container .sicoobcard-beneficio-conteudo {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     justify-content: center;
+
     gap: 4px;
+
     width: 100%;
     min-width: 0;
+
     margin: 0;
-    padding: 0
+    padding: 0;
 }
 
 .sicoobcard-container .sicoobcard-beneficio-conteudo strong {
     display: block;
+
     width: 100%;
     min-width: 0;
+
     margin: 0;
-    padding: 0;
+
     color: var(--verde-escuro);
+
     font-size: 9px;
     font-weight: 800;
     line-height: 1.35;
-    overflow-wrap: anywhere
+
+    overflow-wrap: anywhere;
 }
 
 .sicoobcard-container .sicoobcard-beneficio-conteudo small {
     display: block;
+
     width: 100%;
     min-width: 0;
+
     margin: 0;
-    padding: 0;
+
     color: var(--texto-secundario);
+
     font-size: 7px;
     font-weight: 400;
     line-height: 1.35;
-    overflow-wrap: anywhere
-}
 
-/* =========================================================
-   BADGE DA BANDEIRA DENTRO DO BENEFÍCIO
-   ========================================================= */
+    overflow-wrap: anywhere;
+}
 
 .sicoobcard-container .sicoobcard-beneficio>.beneficio-bandeira {
     align-self: start;
     justify-self: end;
+
     margin: 0;
 }
 
 /* =========================================================
-   ESTADO SEM BENEFÍCIOS
+   15. ESTADO SEM BENEFÍCIOS
    ========================================================= */
 
 .sicoobcard-container .sicoobcard-sem-beneficios {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
     gap: 5px;
+
     width: 100%;
     min-width: 0;
+
     margin: 0;
     padding: 14px 15px;
+
     border: 1px solid var(--borda);
     border-radius: 9px;
-    background: var(--fundo-secundario)
+
+    background: var(--fundo-secundario);
 }
 
 .sicoobcard-container .sicoobcard-sem-beneficios.hide {
-    display: none !important
+    display: none !important;
 }
 
 .sicoobcard-container .sicoobcard-sem-beneficios strong {
-    display: block;
-    margin: 0;
     color: var(--verde-escuro);
+
     font-size: 9px;
     font-weight: 800;
-    line-height: 1.4
+    line-height: 1.4;
 }
 
 .sicoobcard-container .sicoobcard-sem-beneficios span {
-    display: block;
-    margin: 0;
     color: var(--texto-secundario);
+
     font-size: 8px;
-    font-weight: 400;
-    line-height: 1.45
+    line-height: 1.45;
 }
 
 /* =========================================================
-   DESKTOP REDUZIDO
+   16. COMPARATIVO
    ========================================================= */
 
-@media(max-width:1050px) {
+.sicoobcard-container .sicoobcard-comparativo-card {
+    padding: 24px;
+}
 
-    .sicoobcard-container .sicoobcard-beneficios-card {
-        padding: 21px
+.sicoobcard-container .tabela-wrapper {
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+
+    background: var(--branco);
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--borda-forte) transparent;
+}
+
+.sicoobcard-container .tabela-wrapper::-webkit-scrollbar {
+    height: 7px;
+}
+
+.sicoobcard-container .tabela-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: var(--borda-forte);
+}
+
+.sicoobcard-container .tabela-sicoobcard {
+    width: 100%;
+    min-width: 760px;
+
+    margin: 0;
+
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    background: var(--branco);
+}
+
+.sicoobcard-container .tabela-sicoobcard th {
+    padding: 10px 11px;
+
+    border: 0;
+    border-bottom: 1px solid var(--borda);
+
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+
+    font-size: 7px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    text-align: left;
+    vertical-align: middle;
+
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.sicoobcard-container .tabela-sicoobcard td {
+    padding: 10px 11px;
+
+    border: 0;
+    border-bottom: 1px solid var(--borda);
+
+    background: var(--branco);
+    color: var(--texto);
+
+    font-size: 8px;
+    line-height: 1.4;
+
+    text-align: left;
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+.sicoobcard-container .tabela-sicoobcard th:not(:first-child),
+.sicoobcard-container .tabela-sicoobcard td:not(:first-child) {
+    text-align: center;
+}
+
+.sicoobcard-container .tabela-sicoobcard tbody tr:hover td {
+    background: rgba(0, 160, 145, .025);
+}
+
+.sicoobcard-container .tabela-sicoobcard tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.sicoobcard-container .tabela-sicoobcard tbody tr:first-child td {
+    background: rgba(0, 160, 145, .055);
+}
+
+.sicoobcard-container .tabela-sicoobcard tbody tr:first-child td:first-child {
+    position: relative;
+
+    color: var(--turquesa);
+
+    font-weight: 800;
+}
+
+.sicoobcard-container .tabela-sicoobcard tbody tr:first-child td:first-child::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 3px;
+
+    background: var(--turquesa);
+}
+
+/* =========================================================
+   17. DESKTOP REDUZIDO
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    main.sicoobcard-container {
+        width: calc(100% - 40px);
+
+        gap: 17px;
+    }
+
+    .sicoobcard-container>.card,
+    .sicoobcard-container .sicoobcard-detalhes-grid>.card {
+        padding: 21px;
+    }
+
+    .sicoobcard-container .sicoobcard-detalhes-grid {
+        grid-template-columns:
+            minmax(280px, .8fr) minmax(0, 1.2fr);
+
+        gap: 17px;
     }
 
     .sicoobcard-container #listaBeneficios,
     .sicoobcard-container .sicoobcard-beneficios-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px
-    }
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
 
+        gap: 10px;
+    }
 }
 
 /* =========================================================
-   TABLET
+   18. TABLET
    ========================================================= */
 
-@media(max-width:850px) {
+@media (max-width: 850px) {
 
-    .sicoobcard-container .sicoobcard-beneficios-card {
-        padding: 20px
+    main.sicoobcard-container {
+        width: calc(100% - 32px);
+
+        gap: 15px;
+
+        padding-top: 24px;
+        padding-bottom: 38px;
+    }
+
+    .sicoobcard-container>.card,
+    .sicoobcard-container .sicoobcard-detalhes-grid>.card {
+        padding: 20px;
+    }
+
+    .sicoobcard-container .sicoobcard-seletor {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .sicoobcard-container .sicoobcard-detalhes-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card,
+    .sicoobcard-container .sicoobcard-informacoes-card {
+        min-height: 0;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card {
+        min-height: 410px;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem-area {
+        min-height: 230px;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem {
+        max-height: 220px;
     }
 
     .sicoobcard-container .sicoobcard-beneficios-cabecalho {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 12px;
     }
 
     .sicoobcard-container .sicoobcard-legenda {
         justify-content: flex-start;
+
         max-width: none;
-        padding-top: 0
-    }
 
-    .sicoobcard-container #listaBeneficios,
-    .sicoobcard-container .sicoobcard-beneficios-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr))
+        padding-top: 0;
     }
-
 }
 
 /* =========================================================
-   MOBILE
+   19. MOBILE
    ========================================================= */
 
-@media(max-width:650px) {
+@media (max-width: 650px) {
 
-    .sicoobcard-container .sicoobcard-beneficios-card {
+    main.sicoobcard-container {
+        width: calc(100% - 24px);
+
+        gap: 12px;
+
+        padding-top: 18px;
+        padding-bottom: 30px;
+    }
+
+    .sicoobcard-container>.card,
+    .sicoobcard-container .sicoobcard-detalhes-grid>.card {
         padding: 16px;
-        border-radius: 11px
+
+        border-radius: 11px;
     }
 
-    .sicoobcard-container .sicoobcard-beneficios-cabecalho {
-        margin-bottom: 14px
+    .sicoobcard-container .titulo-secao {
+        margin-bottom: 14px;
     }
 
-    .sicoobcard-container .sicoobcard-beneficios-cabecalho .titulo-secao h2 {
-        font-size: 16px
+    .sicoobcard-container .titulo-secao h2 {
+        font-size: 16px;
     }
 
-    .sicoobcard-container .sicoobcard-legenda {
-        gap: 6px 9px
+    .sicoobcard-container .sicoobcard-seletor {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
     }
 
-    .sicoobcard-container .sicoobcard-legenda>div {
-        font-size: 7px
+    .sicoobcard-container .sicoobcard-opcao {
+        min-height: 40px;
+
+        padding: 8px;
+
+        font-size: 8px;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card {
+        min-height: 370px;
+
+        padding: 18px !important;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem-area {
+        min-height: 205px;
+
+        padding-top: 15px;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem {
+        max-width: 76%;
+        max-height: 200px;
+    }
+
+    .sicoobcard-container .sicoobcard-informacoes-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .sicoobcard-container .sicoobcard-faixa-renda {
+        grid-column: 1;
     }
 
     .sicoobcard-container #listaBeneficios,
     .sicoobcard-container .sicoobcard-beneficios-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 9px
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 9px;
     }
 
     .sicoobcard-container .sicoobcard-beneficio {
         min-height: 76px;
-        padding: 11px 12px
+
+        padding: 11px 12px;
     }
 
+    .sicoobcard-container .sicoobcard-beneficios-cabecalho {
+        margin-bottom: 14px;
+    }
 }
 
 /* =========================================================
-   MOBILE PEQUENO
+   20. MOBILE PEQUENO
    ========================================================= */
 
-@media(max-width:480px) {
+@media (max-width: 480px) {
 
-    .sicoobcard-container .sicoobcard-beneficios-card {
+    main.sicoobcard-container {
+        width: calc(100% - 18px);
+
+        gap: 10px;
+
+        padding-top: 15px;
+        padding-bottom: 25px;
+    }
+
+    .sicoobcard-container>.card,
+    .sicoobcard-container .sicoobcard-detalhes-grid>.card {
         padding: 13px;
-        border-radius: 10px
+
+        border-radius: 10px;
     }
 
-    .sicoobcard-container .sicoobcard-beneficios-cabecalho .titulo-secao h2 {
-        font-size: 15px
+    .sicoobcard-container .titulo-secao h2 {
+        font-size: 15px;
     }
 
-    .sicoobcard-container .sicoobcard-beneficios-cabecalho .titulo-secao p {
-        font-size: 8px
+    .sicoobcard-container .titulo-secao p {
+        font-size: 8px;
+    }
+
+    .sicoobcard-container .sicoobcard-seletor {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card {
+        min-height: 340px;
+
+        padding: 15px !important;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card h2 {
+        font-size: 18px;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem-area {
+        min-height: 185px;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem {
+        max-height: 180px;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-topo {
+        flex-direction: column;
+    }
+
+    .sicoobcard-container .sicoobcard-bandeiras {
+        justify-content: flex-start;
+    }
+
+    .sicoobcard-container .sicoobcard-nome-imagem {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 3px;
+    }
+
+    .sicoobcard-container .sicoobcard-nome-imagem span {
+        text-align: left;
     }
 
     .sicoobcard-container .sicoobcard-legenda {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
         width: 100%;
-        gap: 6px
+
+        gap: 6px;
     }
 
     .sicoobcard-container .sicoobcard-legenda>div {
-        white-space: normal
+        white-space: normal;
     }
 
     .sicoobcard-container .sicoobcard-beneficio {
-        grid-template-columns: 32px minmax(0, 1fr) auto;
+        grid-template-columns:
+            32px minmax(0, 1fr) auto;
+
         gap: 8px;
+
         min-height: 72px;
-        padding: 10px
+
+        padding: 10px;
     }
 
     .sicoobcard-container .sicoobcard-beneficio-icone {
         width: 32px;
         height: 32px;
         min-width: 32px;
-        min-height: 32px
+        min-height: 32px;
     }
-
 }
 
 /* =========================================================
-   TOUCH
+   21. TOUCH
    ========================================================= */
 
-@media(hover:none) and (pointer:coarse) {
+@media (hover: none) and (pointer: coarse) {
 
-    .sicoobcard-container .sicoobcard-beneficio:hover {
-        transform: none
+    .sicoobcard-container .sicoobcard-opcao {
+        min-height: 44px;
     }
 
+    .sicoobcard-container .sicoobcard-opcao:hover,
+    .sicoobcard-container .sicoobcard-beneficio:hover {
+        transform: none;
+    }
 }
 
 /* =========================================================
-   IMPRESSÃO
+   22. ACESSIBILIDADE
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sicoobcard-container *,
+    .sicoobcard-container *::before,
+    .sicoobcard-container *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================================================
+   23. IMPRESSÃO
    ========================================================= */
 
 @media print {
 
-    .sicoobcard-container .sicoobcard-beneficios-card {
+    main.sicoobcard-container {
+        display: block !important;
+
         width: 100% !important;
-        margin: 0 0 12px !important;
-        padding: 14px !important;
-        overflow: visible !important;
-        border: 1px solid #CCC !important;
-        border-radius: 0 !important;
-        background: #FFF !important;
-        box-shadow: none !important;
-        break-inside: auto !important;
-        page-break-inside: auto !important
+        max-width: none !important;
+
+        margin: 0 !important;
+        padding: 10px 0 !important;
     }
 
-    .sicoobcard-container .sicoobcard-beneficios-card::before {
-        display: none !important
+    .sicoobcard-container>.card,
+    .sicoobcard-container .sicoobcard-detalhes-grid>.card {
+        width: 100% !important;
+
+        margin: 0 0 12px !important;
+        padding: 14px !important;
+
+        overflow: visible !important;
+
+        border: 1px solid #CCC !important;
+        border-radius: 0 !important;
+
+        background: #FFF !important;
+
+        box-shadow: none !important;
+
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .sicoobcard-container>.card::before,
+    .sicoobcard-container .sicoobcard-informacoes-card::before {
+        display: none !important;
+    }
+
+    .sicoobcard-container .sicoobcard-selecao-card {
+        display: none !important;
+    }
+
+    .sicoobcard-container .sicoobcard-detalhes-grid {
+        display: grid !important;
+        grid-template-columns: 34% 66% !important;
+
+        gap: 10px !important;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card {
+        min-height: 0 !important;
+
+        border: 1px solid #777 !important;
+
+        background: #FFF !important;
+        color: #000 !important;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card::before,
+    .sicoobcard-container .sicoobcard-cartao-card::after {
+        display: none !important;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card h2,
+    .sicoobcard-container .sicoobcard-cartao-card p,
+    .sicoobcard-container .sicoobcard-cartao-card .categoria-etiqueta,
+    .sicoobcard-container .sicoobcard-bandeira-tag,
+    .sicoobcard-container .sicoobcard-nome-imagem strong,
+    .sicoobcard-container .sicoobcard-nome-imagem span {
+        color: #000 !important;
+    }
+
+    .sicoobcard-container .sicoobcard-cartao-card .categoria-etiqueta,
+    .sicoobcard-container .sicoobcard-bandeira-tag {
+        border-color: #AAA !important;
+
+        background: #FFF !important;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem-area {
+        min-height: 150px !important;
+    }
+
+    .sicoobcard-container .sicoobcard-imagem {
+        max-height: 145px !important;
+
+        filter: none !important;
+    }
+
+    .sicoobcard-container .sicoobcard-beneficios-card {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
     }
 
     .sicoobcard-container .sicoobcard-beneficios-cabecalho {
-        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-template-columns:
+            minmax(0, 1fr) auto !important;
+
         gap: 10px !important;
-        margin-bottom: 12px !important
+
+        margin-bottom: 12px !important;
     }
 
     .sicoobcard-container #listaBeneficios,
     .sicoobcard-container .sicoobcard-beneficios-grid {
         display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 7px !important
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
+
+        gap: 7px !important;
     }
 
     .sicoobcard-container .sicoobcard-beneficio {
         min-height: 0 !important;
+
         padding: 8px !important;
+
         border: 1px solid #CCC !important;
         border-radius: 0 !important;
+
         background: #FFF !important;
+
         box-shadow: none !important;
+
         break-inside: avoid !important;
-        page-break-inside: avoid !important
+        page-break-inside: avoid !important;
     }
 
     .sicoobcard-container .sicoobcard-beneficio::before {
-        display: none !important
+        display: none !important;
     }
 
     .sicoobcard-container .sicoobcard-beneficio-icone {
@@ -8864,18 +9890,41 @@ body:has(#btnSimular) .simulador-grid .hide {
         height: 26px !important;
         min-width: 26px !important;
         min-height: 26px !important;
+
         border: 1px solid #CCC !important;
+
         background: #FFF !important;
-        color: #000 !important
+        color: #000 !important;
     }
 
     .sicoobcard-container .sicoobcard-beneficio-conteudo strong,
     .sicoobcard-container .sicoobcard-beneficio-conteudo small,
     .sicoobcard-container .sicoobcard-legenda,
     .sicoobcard-container .sicoobcard-legenda>div {
-        color: #000 !important
+        color: #000 !important;
     }
 
+    .sicoobcard-container .tabela-wrapper {
+        overflow: visible !important;
+
+        border-radius: 0 !important;
+    }
+
+    .sicoobcard-container .tabela-sicoobcard {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .sicoobcard-container .tabela-sicoobcard th,
+    .sicoobcard-container .tabela-sicoobcard td {
+        padding: 5px !important;
+
+        color: #000 !important;
+
+        font-size: 7px !important;
+
+        white-space: normal !important;
+    }
 }
 
 
