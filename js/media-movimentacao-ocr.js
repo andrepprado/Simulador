@@ -551,10 +551,6 @@
             };
         }
 
-        /*
-         * Mercado Pago: valor positivo acompanhado de ID de operação.
-         * Mantemos para conferência quando não houver descrição segura.
-         */
         if (/\b\d{9,15}\b/.test(linha) && !negativo) {
             return {
                 natureza: "-",
@@ -569,15 +565,6 @@
     }
 
     function selecionarValorMovimentacaoMercadoPago(linha, valores, operacao) {
-        /*
-         * No extrato Mercado Pago a estrutura normalmente é:
-         *
-         * Data | Descrição | ID | Valor | Saldo
-         *
-         * PDF.js pode retornar os dois valores na mesma linha.
-         * O VALOR DA MOVIMENTAÇÃO é o primeiro valor monetário
-         * após o ID da operação. O último normalmente é o saldo.
-         */
         const id = linha.match(/\b\d{9,15}\b/);
 
         if (id) {
@@ -588,16 +575,9 @@
                 return Math.abs(depois[0]);
         }
 
-        /*
-         * Quando a linha contém apenas um valor, ele é utilizado.
-         */
         if (valores.length === 1)
             return Math.abs(valores[0]);
 
-        /*
-         * Em linhas reconhecidas explicitamente como crédito/débito,
-         * utiliza o primeiro valor e nunca o saldo final.
-         */
         if (operacao)
             return Math.abs(valores[0]);
 
@@ -833,11 +813,6 @@
     }
 
     function enviarMovimentacoesParaCalculadora(resultado) {
-        /*
-         * Gera texto padronizado para o media-movimentacao.js.
-         * Crédito recebe indicador C.
-         * Débito recebe indicador D.
-         */
         const texto = gerarTextoConsolidado(resultado.movimentacoes);
         resultado.textoConsolidado = texto;
 
@@ -851,10 +826,6 @@
             }
         }
 
-        /*
-         * A tabela OCR é renderizada também por este arquivo para garantir
-         * que a seleção inicial corresponda à classificação realizada.
-         */
         renderizarTabelaMovimentacoesOCR(resultado);
         atualizarResumoLeitura(resultado);
     }
@@ -902,9 +873,6 @@
         if (!resultadoLeituraOCR) return;
 
         resultadoLeituraOCR.movimentacoes.forEach(m => {
-            /*
-             * "Considerar Todos os Créditos" não pode marcar débitos.
-             */
             if (marcar)
                 m.considerar = m.natureza === "Crédito";
             else
@@ -959,9 +927,6 @@
 
         const total = creditos.reduce((s, m) => s + Number(m.valor || 0), 0);
 
-        /*
-         * Mantém as competências documentadas, inclusive mês sem crédito.
-         */
         const quantidadeMeses = resultado.competencias && resultado.competencias.length
             ? resultado.competencias.length
             : Object.keys(porMes).length;
@@ -985,9 +950,6 @@
         setTexto("mesesConsideradosOCR", quantidadeMeses);
         setTexto("mesMaiorMovimentacaoOCR", maiorMes);
 
-        /*
-         * Compatibilidade com IDs alternativos existentes no HTML.
-         */
         setTexto("ocrMediaMensal", formatarMoeda(media));
         setTexto("ocrTotalCreditos", formatarMoeda(total));
         setTexto("ocrMesesConsiderados", quantidadeMeses);
@@ -1217,9 +1179,6 @@
                 valores.push(valor);
         }
 
-        /*
-         * Alguns PDFs removem "R$".
-         */
         if (!valores.length) {
             const regexSem = /(-?\s*\d{1,3}(?:\.\d{3})*,\d{2})/g;
 
