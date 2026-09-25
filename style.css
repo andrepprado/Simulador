@@ -9927,13 +9927,11 @@ main.sicoobcard-container {
     }
 }
 
+/*COMEÇO DO media-movimentacao.html*/
+
 
 /* =========================================================
    MEDIA-MOVIMENTACAO.HTML
-   ========================================================= */
-
-/* =========================================================
-   01. ESTRUTURA PRINCIPAL
    ========================================================= */
 
 .media-movimentacao-container,
@@ -9945,7 +9943,7 @@ main.sicoobcard-container {
 
 main.media-movimentacao-container {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
     gap: 20px;
     width: calc(100% - 48px);
     max-width: 1180px;
@@ -9956,17 +9954,16 @@ main.media-movimentacao-container {
 }
 
 .media-movimentacao-container>* {
-    min-width: 0
+    min-width: 0;
+    max-width: 100%
 }
 
-/* =========================================================
-   02. CARDS
-   ========================================================= */
-
+/* CARDS */
 .media-movimentacao-container>.card {
     position: relative;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 24px;
     overflow: hidden;
@@ -9999,10 +9996,18 @@ main.media-movimentacao-container {
     align-self: start
 }
 
-/* =========================================================
-   03. TÍTULOS
-   ========================================================= */
+.media-movimentacao-container>.card-resultado-leitura-ocr {
+    display: block;
+    grid-column: 1/-1;
+    overflow: hidden
+}
 
+.media-movimentacao-container>.card-resultado-leitura-ocr>* {
+    min-width: 0;
+    max-width: 100%
+}
+
+/* TÍTULOS */
 .media-movimentacao-container .titulo-secao {
     display: block;
     width: 100%;
@@ -10042,7 +10047,8 @@ main.media-movimentacao-container {
     font-size: 18px;
     font-weight: 800;
     line-height: 1.3;
-    letter-spacing: -.2px
+    letter-spacing: -.2px;
+    overflow-wrap: anywhere
 }
 
 .media-movimentacao-container .titulo-secao h3 {
@@ -10050,7 +10056,8 @@ main.media-movimentacao-container {
     color: var(--verde-escuro);
     font-size: 13px;
     font-weight: 800;
-    line-height: 1.35
+    line-height: 1.35;
+    overflow-wrap: anywhere
 }
 
 .media-movimentacao-container .titulo-secao p {
@@ -10058,18 +10065,16 @@ main.media-movimentacao-container {
     margin: 0;
     color: var(--texto-secundario);
     font-size: 9px;
-    font-weight: 400;
-    line-height: 1.5
+    line-height: 1.5;
+    overflow-wrap: anywhere
 }
 
-/* =========================================================
-   04. SUBSEÇÕES
-   ========================================================= */
-
+/* SUBSEÇÕES */
 .media-movimentacao-container .subsecao-leitura-ocr {
     display: block;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 0
 }
@@ -10093,10 +10098,7 @@ main.media-movimentacao-container {
     line-height: 1.45
 }
 
-/* =========================================================
-   05. CAMPOS
-   ========================================================= */
-
+/* CAMPOS */
 .media-movimentacao-container .campo {
     display: flex;
     flex-direction: column;
@@ -10195,10 +10197,7 @@ main.media-movimentacao-container {
     line-height: 1.4
 }
 
-/* =========================================================
-   06. GRID DE FORMULÁRIO
-   ========================================================= */
-
+/* GRID FORMULÁRIO */
 .media-movimentacao-container .grid-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -10209,10 +10208,7 @@ main.media-movimentacao-container {
     padding: 0
 }
 
-/* =========================================================
-   07. AVISOS
-   ========================================================= */
-
+/* AVISOS */
 .media-movimentacao-container .aviso-info {
     position: relative;
     display: flex;
@@ -10266,18 +10262,23 @@ main.media-movimentacao-container {
     margin-top: 16px
 }
 
-/* =========================================================
-   08. ÁREA DE UPLOAD
-   ========================================================= */
-
+/* UPLOAD */
 .media-movimentacao-container .area-upload-extrato {
+    position: relative;
     width: 100%;
     min-width: 0;
     margin: 0 0 12px
 }
 
-.media-movimentacao-container .area-upload-extrato input[type="file"] {
-    display: none !important
+.media-movimentacao-container .area-upload-extrato input[type=file] {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    opacity: 0 !important;
+    pointer-events: none !important
 }
 
 .media-movimentacao-container .area-upload-extrato-conteudo {
@@ -10349,7 +10350,6 @@ main.media-movimentacao-container {
     margin: 0;
     color: var(--texto-secundario);
     font-size: 9px;
-    font-weight: 400;
     line-height: 1.45
 }
 
@@ -10361,10 +10361,7 @@ main.media-movimentacao-container {
     line-height: 1.4
 }
 
-/* =========================================================
-   09. RESUMO DOS ARQUIVOS
-   ========================================================= */
-
+/* ARQUIVOS */
 .media-movimentacao-container .resumo-arquivos-extrato {
     display: flex;
     align-items: center;
@@ -10386,10 +10383,6 @@ main.media-movimentacao-container {
 .media-movimentacao-container #quantidadeArquivosExtrato {
     color: var(--turquesa)
 }
-
-/* =========================================================
-   10. LISTA DE ARQUIVOS
-   ========================================================= */
 
 .media-movimentacao-container .lista-arquivos-extrato {
     display: flex;
@@ -10428,20 +10421,14 @@ main.media-movimentacao-container {
     padding: 9px 10px;
     border: 1px solid var(--borda);
     border-radius: 8px;
-    background: #FAFCFC;
-    transition: border-color .18s ease, background .18s ease
-}
-
-.media-movimentacao-container .arquivo-extrato:hover {
-    border-color: rgba(0, 160, 145, .22);
-    background: #FEFFFF
+    background: #FAFCFC
 }
 
 .media-movimentacao-container .arquivo-extrato-info {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: 2px;
-    flex: 1 1 auto;
     min-width: 0
 }
 
@@ -10458,10 +10445,8 @@ main.media-movimentacao-container {
 }
 
 .media-movimentacao-container .arquivo-extrato-info small {
-    display: block;
     color: var(--texto-secundario);
-    font-size: 7px;
-    line-height: 1.35
+    font-size: 7px
 }
 
 .media-movimentacao-container .btn-remover-arquivo {
@@ -10471,36 +10456,23 @@ main.media-movimentacao-container {
     flex: 0 0 auto;
     width: 28px;
     height: 28px;
-    min-width: 28px;
-    min-height: 28px;
     margin: 0;
     padding: 0;
     border: 1px solid rgba(199, 58, 58, .18);
     border-radius: 7px;
     background: rgba(199, 58, 58, .05);
     color: var(--erro);
-    font-family: inherit;
     font-size: 16px;
-    font-weight: 700;
-    line-height: 1;
-    cursor: pointer;
-    transition: border-color .18s ease, background .18s ease, color .18s ease
+    font-weight: 700
 }
 
-.media-movimentacao-container .btn-remover-arquivo:hover {
-    border-color: var(--erro);
-    background: rgba(199, 58, 58, .10)
-}
-
-/* =========================================================
-   11. STATUS DA LEITURA
-   ========================================================= */
-
+/* STATUS */
 .media-movimentacao-container .status-leitura-ocr {
     position: relative;
     display: flex;
     align-items: center;
     width: 100%;
+    min-width: 0;
     min-height: 38px;
     margin: 12px 0 0;
     padding: 9px 11px;
@@ -10510,13 +10482,13 @@ main.media-movimentacao-container {
     color: var(--texto-secundario);
     font-size: 8px;
     font-weight: 500;
-    line-height: 1.4
+    line-height: 1.4;
+    overflow-wrap: anywhere
 }
 
 .media-movimentacao-container .status-leitura-ocr.status-info {
     border-color: var(--borda);
-    background: var(--fundo-secundario);
-    color: var(--texto-secundario)
+    background: var(--fundo-secundario)
 }
 
 .media-movimentacao-container .status-leitura-ocr.status-processando {
@@ -10558,10 +10530,7 @@ main.media-movimentacao-container {
     }
 }
 
-/* =========================================================
-   12. AÇÕES
-   ========================================================= */
-
+/* AÇÕES E BOTÕES */
 .media-movimentacao-container .acoes {
     display: flex;
     align-items: center;
@@ -10573,10 +10542,6 @@ main.media-movimentacao-container {
     margin: 18px 0 0;
     padding: 0
 }
-
-/* =========================================================
-   13. BOTÕES
-   ========================================================= */
 
 .media-movimentacao-container .btn {
     display: inline-flex;
@@ -10613,8 +10578,7 @@ main.media-movimentacao-container {
 
 .media-movimentacao-container .btn-primario:hover {
     border-color: var(--verde-escuro);
-    background: var(--verde-escuro);
-    color: var(--branco)
+    background: var(--verde-escuro)
 }
 
 .media-movimentacao-container .btn-secundario {
@@ -10635,81 +10599,107 @@ main.media-movimentacao-container {
     color: var(--indisponivel);
     cursor: not-allowed;
     opacity: .72;
-    transform: none;
-    box-shadow: none
-}
-
-.media-movimentacao-container .btn:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10)
+    transform: none
 }
 
 /* =========================================================
-   14. DADOS GERAIS DA LEITURA
+   RESULTADO DA LEITURA
    ========================================================= */
 
+/* DADOS GERAIS */
 .media-movimentacao-container .dados-gerais-leitura-ocr {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 9px;
+    align-items: start;
+    gap: 10px;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 0
 }
 
 .media-movimentacao-container .dado-leitura-ocr {
     display: flex;
+    align-self: start;
     flex-direction: column;
-    justify-content: center;
-    gap: 4px;
+    justify-content: flex-start;
+    gap: 5px;
+    width: 100%;
     min-width: 0;
-    min-height: 64px;
-    padding: 10px 11px;
+    max-width: 100%;
+    min-height: 68px;
+    margin: 0;
+    padding: 11px 12px;
+    overflow: hidden;
     border: 1px solid var(--borda);
-    border-radius: 8px;
+    border-radius: 9px;
     background: #FAFCFC
 }
 
 .media-movimentacao-container .dado-leitura-ocr span {
     display: block;
+    min-width: 0;
     color: var(--texto-secundario);
     font-size: 7px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.35
 }
 
 .media-movimentacao-container .dado-leitura-ocr strong {
-    display: block;
+    display: -webkit-box;
+    width: 100%;
     min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
     color: var(--verde-escuro);
     font-size: 9px;
     font-weight: 800;
-    line-height: 1.35;
-    overflow-wrap: anywhere
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3
 }
 
-/* =========================================================
-   15. LISTA DE DOCUMENTOS OCR
-   ========================================================= */
+.media-movimentacao-container #ocrNomeTitular {
+    -webkit-line-clamp: 3
+}
 
+.media-movimentacao-container #ocrDocumentoTitular,
+.media-movimentacao-container #ocrPeriodoLeitura,
+.media-movimentacao-container #ocrQuantidadeArquivos {
+    -webkit-line-clamp: 2
+}
+
+.media-movimentacao-container #ocrInstituicoes {
+    -webkit-line-clamp: 3
+}
+
+/* DOCUMENTOS */
 .media-movimentacao-container .lista-documentos-ocr {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
     gap: 9px;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 0
 }
 
 .media-movimentacao-container .documento-ocr-item {
     display: flex;
+    align-self: start;
     flex-direction: column;
     gap: 3px;
+    width: 100%;
     min-width: 0;
+    max-width: 100%;
     min-height: 70px;
     padding: 11px 12px;
+    overflow: hidden;
     border: 1px solid var(--borda);
     border-radius: 8px;
     background: #FAFCFC
@@ -10717,6 +10707,7 @@ main.media-movimentacao-container {
 
 .media-movimentacao-container .documento-ocr-item strong {
     display: block;
+    max-width: 100%;
     overflow: hidden;
     color: var(--verde-escuro);
     font-size: 8px;
@@ -10726,47 +10717,49 @@ main.media-movimentacao-container {
     white-space: nowrap
 }
 
-.media-movimentacao-container .documento-ocr-item span {
+.media-movimentacao-container .documento-ocr-item span,
+.media-movimentacao-container .documento-ocr-item small {
     display: block;
+    max-width: 100%;
+    overflow: hidden;
     color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.35
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.media-movimentacao-container .documento-ocr-item span {
+    font-size: 8px
 }
 
 .media-movimentacao-container .documento-ocr-item small {
-    display: block;
-    color: var(--texto-secundario);
-    font-size: 7px;
-    line-height: 1.35
+    font-size: 7px
 }
 
-/* =========================================================
-   16. ALERTAS
-   ========================================================= */
-
+/* ALERTAS */
 .media-movimentacao-container .lista-alertas-ocr {
     display: flex;
     flex-direction: column;
     gap: 7px;
     width: 100%;
-    min-width: 0
+    min-width: 0;
+    max-width: 100%
 }
 
 .media-movimentacao-container .lista-alertas-ocr .aviso-info {
     margin: 0
 }
 
-/* =========================================================
-   17. PREVIEW DO RESULTADO
-   ========================================================= */
-
+/* PREVIEW */
 .media-movimentacao-container .preview-resultado-ocr {
     display: grid;
-    grid-template-columns: minmax(250px, .75fr) minmax(0, 1.25fr);
+    grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr);
+    align-items: stretch;
     gap: 10px;
     width: 100%;
     min-width: 0;
-    align-items: stretch
+    max-width: 100%;
+    margin: 0
 }
 
 .media-movimentacao-container .resultado-destaque {
@@ -10777,6 +10770,7 @@ main.media-movimentacao-container {
     gap: 5px;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 17px 18px;
     overflow: hidden;
@@ -10811,6 +10805,7 @@ main.media-movimentacao-container {
     z-index: 1;
     display: block;
     min-width: 0;
+    max-width: 100%;
     color: var(--verde-escuro);
     font-size: 20px;
     font-weight: 850;
@@ -10818,16 +10813,15 @@ main.media-movimentacao-container {
     overflow-wrap: anywhere
 }
 
-/* =========================================================
-   18. GRID DE RESULTADOS
-   ========================================================= */
-
+/* GRID RESULTADOS */
 .media-movimentacao-container .resultados-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
     gap: 8px;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 0
 }
@@ -10843,9 +10837,11 @@ main.media-movimentacao-container {
     gap: 4px;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     min-height: 64px;
     margin: 0;
     padding: 10px 11px;
+    overflow: hidden;
     border: 1px solid var(--borda);
     border-radius: 8px;
     background: #FAFCFC
@@ -10853,15 +10849,17 @@ main.media-movimentacao-container {
 
 .media-movimentacao-container .resultado-item span {
     display: block;
+    min-width: 0;
     color: var(--texto-secundario);
     font-size: 7px;
-    font-weight: 400;
-    line-height: 1.35
+    line-height: 1.35;
+    overflow-wrap: anywhere
 }
 
 .media-movimentacao-container .resultado-item strong {
     display: block;
     min-width: 0;
+    max-width: 100%;
     color: var(--verde-escuro);
     font-size: 9px;
     font-weight: 800;
@@ -10869,10 +10867,7 @@ main.media-movimentacao-container {
     overflow-wrap: anywhere
 }
 
-/* =========================================================
-   19. CABEÇALHO DA REVISÃO
-   ========================================================= */
-
+/* REVISÃO */
 .media-movimentacao-container .cabecalho-revisao-ocr {
     display: flex;
     align-items: flex-start;
@@ -10880,12 +10875,13 @@ main.media-movimentacao-container {
     gap: 18px;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0 0 12px
 }
 
 .media-movimentacao-container .cabecalho-revisao-ocr>div:first-child {
-    min-width: 0;
-    flex: 1 1 auto
+    flex: 1 1 auto;
+    min-width: 0
 }
 
 .media-movimentacao-container .cabecalho-revisao-ocr h3 {
@@ -10908,10 +10904,7 @@ main.media-movimentacao-container {
     margin: 0
 }
 
-/* =========================================================
-   20. TABELAS
-   ========================================================= */
-
+/* TABELAS */
 .media-movimentacao-container .tabela-wrapper {
     display: block;
     width: 100%;
@@ -10944,7 +10937,8 @@ main.media-movimentacao-container {
     border: 0;
     border-collapse: collapse;
     border-spacing: 0;
-    background: var(--branco)
+    background: var(--branco);
+    table-layout: auto
 }
 
 .media-movimentacao-container table th {
@@ -10965,6 +10959,7 @@ main.media-movimentacao-container {
 }
 
 .media-movimentacao-container table td {
+    max-width: 400px;
     padding: 9px;
     border: 0;
     border-right: 1px solid var(--borda);
@@ -10974,7 +10969,9 @@ main.media-movimentacao-container {
     font-size: 8px;
     line-height: 1.4;
     text-align: left;
-    vertical-align: middle
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+    word-break: normal
 }
 
 .media-movimentacao-container table th:last-child,
@@ -11004,7 +11001,7 @@ main.media-movimentacao-container {
 }
 
 .media-movimentacao-container #tabelaMovimentacoesOCR {
-    min-width: 1050px
+    min-width: 1080px
 }
 
 .media-movimentacao-container #tabelaMovimentacoesConsideradas,
@@ -11031,7 +11028,8 @@ main.media-movimentacao-container {
 
 .media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(4),
 .media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(4) {
-    min-width: 230px
+    min-width: 250px;
+    max-width: 360px
 }
 
 .media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(5),
@@ -11053,14 +11051,12 @@ main.media-movimentacao-container {
 
 .media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(8),
 .media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(8) {
-    min-width: 210px
+    min-width: 210px;
+    max-width: 300px
 }
 
-/* =========================================================
-   21. CHECKBOXES DA REVISÃO
-   ========================================================= */
-
-.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"] {
+/* CHECKBOX OCR */
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type=checkbox] {
     appearance: none;
     -webkit-appearance: none;
     display: inline-flex;
@@ -11072,16 +11068,15 @@ main.media-movimentacao-container {
     border: 1px solid var(--borda-forte);
     border-radius: 5px;
     background: var(--branco);
-    cursor: pointer;
-    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease
+    cursor: pointer
 }
 
-.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:checked {
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type=checkbox]:checked {
     border-color: var(--turquesa);
     background: var(--turquesa)
 }
 
-.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:checked::after {
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type=checkbox]:checked::after {
     content: "✓";
     color: #FFF;
     font-size: 11px;
@@ -11089,22 +11084,14 @@ main.media-movimentacao-container {
     line-height: 1
 }
 
-.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10)
-}
-
-.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:disabled {
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type=checkbox]:disabled {
     border-color: var(--indisponivel-borda);
     background: var(--indisponivel-fundo);
     cursor: not-allowed;
     opacity: .7
 }
 
-/* =========================================================
-   22. ESTADOS DAS MOVIMENTAÇÕES
-   ========================================================= */
-
+/* ESTADOS */
 .media-movimentacao-container #tabelaMovimentacoesOCR tr.movimentacao-duvida td {
     background: #FFFDF4
 }
@@ -11121,18 +11108,16 @@ main.media-movimentacao-container {
     box-shadow: inset 3px 0 0 var(--erro)
 }
 
-/* =========================================================
-   23. HISTÓRICOS / REGRAS
-   ========================================================= */
-
+/* HISTÓRICOS / REGRAS */
 .media-movimentacao-container .resumo-regras-movimentacao {
     margin: 0
 }
 
 .media-movimentacao-container #listaRegrasMovimentacao {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 8px;
     width: 100%;
     min-width: 0
 }
@@ -11141,11 +11126,13 @@ main.media-movimentacao-container {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
+    align-self: start;
     gap: 10px;
     width: 100%;
     min-width: 0;
     margin: 0;
     padding: 10px 11px;
+    overflow: hidden;
     border: 1px solid var(--borda);
     border-radius: 8px;
     background: #FAFCFC;
@@ -11158,7 +11145,7 @@ main.media-movimentacao-container {
     background: #FEFFFF
 }
 
-.media-movimentacao-container .regra-movimentacao-item input[type="checkbox"] {
+.media-movimentacao-container .regra-movimentacao-item input[type=checkbox] {
     appearance: none;
     -webkit-appearance: none;
     display: inline-flex;
@@ -11173,12 +11160,12 @@ main.media-movimentacao-container {
     cursor: pointer
 }
 
-.media-movimentacao-container .regra-movimentacao-item input[type="checkbox"]:checked {
+.media-movimentacao-container .regra-movimentacao-item input[type=checkbox]:checked {
     border-color: var(--erro);
     background: var(--erro)
 }
 
-.media-movimentacao-container .regra-movimentacao-item input[type="checkbox"]:checked::after {
+.media-movimentacao-container .regra-movimentacao-item input[type=checkbox]:checked::after {
     content: "×";
     color: #FFF;
     font-size: 14px;
@@ -11207,13 +11194,11 @@ main.media-movimentacao-container {
     display: block;
     color: var(--texto-secundario);
     font-size: 7px;
-    line-height: 1.4
+    line-height: 1.4;
+    overflow-wrap: anywhere
 }
 
-/* =========================================================
-   24. SEPARADOR
-   ========================================================= */
-
+/* SEPARADOR */
 .media-movimentacao-container .separador {
     display: block;
     width: 100%;
@@ -11223,10 +11208,7 @@ main.media-movimentacao-container {
     background: var(--borda)
 }
 
-/* =========================================================
-   25. RESULTADO LATERAL
-   ========================================================= */
-
+/* RESULTADO LATERAL */
 .media-movimentacao-container #cardResultadoMovimentacao .resultado-destaque {
     margin-bottom: 10px
 }
@@ -11235,14 +11217,10 @@ main.media-movimentacao-container {
     grid-template-columns: repeat(2, minmax(0, 1fr))
 }
 
-/* =========================================================
-   26. RESPONSIVIDADE - DESKTOP REDUZIDO
-   ========================================================= */
-
+/* DESKTOP MÉDIO */
 @media(max-width:1050px) {
-
     main.media-movimentacao-container {
-        grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
+        grid-template-columns: minmax(0, 1.2fr) minmax(290px, .8fr);
         width: calc(100% - 40px);
         gap: 17px
     }
@@ -11256,21 +11234,20 @@ main.media-movimentacao-container {
     }
 
     .media-movimentacao-container .preview-resultado-ocr {
-        grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr)
+        grid-template-columns: minmax(210px, .75fr) minmax(0, 1.25fr)
     }
 
     .media-movimentacao-container .preview-resultado-ocr .resultados-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr))
     }
 
+    .media-movimentacao-container #listaRegrasMovimentacao {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
 }
 
-/* =========================================================
-   27. RESPONSIVIDADE - TABLET
-   ========================================================= */
-
+/* TABLET */
 @media(max-width:850px) {
-
     main.media-movimentacao-container {
         grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 32px);
@@ -11312,14 +11289,13 @@ main.media-movimentacao-container {
         justify-content: flex-start
     }
 
+    .media-movimentacao-container #listaRegrasMovimentacao {
+        grid-template-columns: minmax(0, 1fr)
+    }
 }
 
-/* =========================================================
-   28. RESPONSIVIDADE - MOBILE
-   ========================================================= */
-
+/* MOBILE */
 @media(max-width:650px) {
-
     main.media-movimentacao-container {
         width: calc(100% - 24px);
         gap: 12px;
@@ -11374,6 +11350,14 @@ main.media-movimentacao-container {
         grid-template-columns: minmax(0, 1fr)
     }
 
+    .media-movimentacao-container .dado-leitura-ocr {
+        min-height: 0
+    }
+
+    .media-movimentacao-container .dado-leitura-ocr strong {
+        -webkit-line-clamp: 4
+    }
+
     .media-movimentacao-container .preview-resultado-ocr .resultados-grid,
     .media-movimentacao-container #cardResultadoMovimentacao .resultados-grid {
         grid-template-columns: minmax(0, 1fr)
@@ -11402,14 +11386,13 @@ main.media-movimentacao-container {
         align-items: flex-start
     }
 
+    .media-movimentacao-container #listaRegrasMovimentacao {
+        grid-template-columns: minmax(0, 1fr)
+    }
 }
 
-/* =========================================================
-   29. RESPONSIVIDADE - MOBILE PEQUENO
-   ========================================================= */
-
+/* MOBILE PEQUENO */
 @media(max-width:480px) {
-
     main.media-movimentacao-container {
         width: calc(100% - 18px);
         gap: 10px;
@@ -11443,13 +11426,9 @@ main.media-movimentacao-container {
     .media-movimentacao-container .documento-ocr-item {
         padding: 9px 10px
     }
-
 }
 
-/* =========================================================
-   30. TOUCH
-   ========================================================= */
-
+/* TOUCH */
 @media(hover:none) and (pointer:coarse) {
 
     .media-movimentacao-container .campo input,
@@ -11469,13 +11448,9 @@ main.media-movimentacao-container {
     .media-movimentacao-container .btn:hover {
         transform: none
     }
-
 }
 
-/* =========================================================
-   31. ACESSIBILIDADE
-   ========================================================= */
-
+/* ACESSIBILIDADE */
 @media(prefers-reduced-motion:reduce) {
 
     .media-movimentacao-container *,
@@ -11485,15 +11460,10 @@ main.media-movimentacao-container {
         transition: none !important;
         scroll-behavior: auto !important
     }
-
 }
 
-/* =========================================================
-   32. IMPRESSÃO
-   ========================================================= */
-
+/* IMPRESSÃO */
 @media print {
-
     main.media-movimentacao-container {
         display: block !important;
         width: 100% !important;
@@ -11519,7 +11489,7 @@ main.media-movimentacao-container {
         display: none !important
     }
 
-    .media-movimentacao-container .card-leitura-ocr,
+    .media-movimentacao-container #cardLeituraExtratos,
     .media-movimentacao-container .acoes,
     .media-movimentacao-container .btn-remover-arquivo {
         display: none !important
@@ -11528,6 +11498,17 @@ main.media-movimentacao-container {
     .media-movimentacao-container .dados-gerais-leitura-ocr {
         grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
         gap: 5px !important
+    }
+
+    .media-movimentacao-container .dado-leitura-ocr {
+        min-height: 0 !important;
+        overflow: visible !important
+    }
+
+    .media-movimentacao-container .dado-leitura-ocr strong {
+        display: block !important;
+        overflow: visible !important;
+        -webkit-line-clamp: unset !important
     }
 
     .media-movimentacao-container .dado-leitura-ocr,
@@ -11594,15 +11575,18 @@ main.media-movimentacao-container {
         min-height: 60px !important
     }
 
-    .media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"],
-    .media-movimentacao-container .regra-movimentacao-item input[type="checkbox"] {
+    .media-movimentacao-container #tabelaMovimentacoesOCR input[type=checkbox],
+    .media-movimentacao-container .regra-movimentacao-item input[type=checkbox] {
         border: 1px solid #777 !important;
         background: #FFF !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important
     }
-
 }
+
+
+
+/*FIM DO media-movimentacao.html*/
 
 /* =========================================================
    13. PORTE-PRODUTOR-RURAL.HTML
