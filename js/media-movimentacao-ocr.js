@@ -16,70 +16,224 @@
         pdfjs: [
             "./pdfjs/pdf.mjs"
         ],
-        pdfWorker: "./js/pdfjs/pdf.worker.mjs",
-        ocrIdioma: "por",
-        ocrEscala: 2.25,
-        ocrMinCaracteresPagina: 80,
-        ocrWorkerPath: "./js/tesseract/worker.min.js",
-        ocrCorePath: "./js/tesseract/tesseract-core-lstm.wasm.js",
-        ocrLangPath: "./js/tesseract/lang-data",
-        toleranciaDiasTransferencia: 2,
-        toleranciaValor: 0.01
+        pdfWorker:
+            "./js/pdfjs/pdf.worker.mjs",
+        ocrIdioma:
+            "por",
+        ocrEscala:
+            2.25,
+        ocrMinCaracteresPagina:
+            80,
+        ocrWorkerPath:
+            "./js/tesseract/worker.min.js",
+        ocrCorePath:
+            "./js/tesseract/tesseract-core-lstm.wasm.js",
+        ocrLangPath:
+            "./js/tesseract/lang-data",
+        toleranciaDiasTransferencia:
+            2,
+        toleranciaValor:
+            0.01
     };
+
+    const LINHAS_INFORMATIVAS = [
+        /\bSALDO ANTERIOR\b/,
+        /\bSALDO DO DIA\b/,
+        /\bSALDO FINAL\b/,
+        /\bSALDO DISPONIVEL\b/,
+        /\bSALDO TOTAL\b/,
+        /\bSALDO EM CONTA CAPITAL\b/,
+        /\bSALDO CONTA CAPITAL\b/,
+        /\bSALDO BLOQUEADO\b/,
+        /\bSALDO BLOQUEADO ANTERIOR\b/,
+        /\bCHEQUE ESPECIAL CONTRATADO\b/,
+        /\bLIMITE DE CHEQUE ESPECIAL\b/,
+        /\bLIMITE DISPONIVEL\b/,
+        /\bTOTAL DE CREDITOS\b/,
+        /\bTOTAL CREDITOS\b/,
+        /\bTOTAL DE DEBITOS\b/,
+        /\bTOTAL DEBITOS\b/,
+        /\bTOTAL MOVIMENTACAO\b/,
+        /\bTOTAL MOVIMENTACOES\b/,
+        /\bRESUMO\b/,
+        /\bLANCAMENTOS FUTUROS\b/,
+        /\bDATA DOCUMENTO HISTORICO VALOR\b/,
+        /\bDATA HISTORICO VALOR\b/,
+        /\bEXTRATO CONTA CORRENTE\b/,
+        /\bEXTRATO DE CONTA\b/,
+        /\bAGENCIA CONTA\b/,
+        /\bCONTA CORRENTE\b/,
+        /\bOUVIDORIA\b/,
+        /\bCENTRAL DE ATENDIMENTO\b/,
+        /\bSAC\b/
+    ];
+
+    const PADROES_CREDITO = [
+        /\bPIX RECEBIDO\b/,
+        /\bPIX RECEBIDA\b/,
+        /\bPIX RECEB\b/,
+        /\bTRANSF RECEBIDA\b/,
+        /\bTRANSFERENCIA RECEBIDA\b/,
+        /\bTRANSFERENCIA RECEBIDO\b/,
+        /\bCRED TRANSF\b/,
+        /\bCREDITO TRANSFERENCIA\b/,
+        /\bCRED TED\b/,
+        /\bTED RECEBIDA\b/,
+        /\bTED RECEBIDO\b/,
+        /\bDOC RECEBIDO\b/,
+        /\bDOC RECEBIDA\b/,
+        /\bDEPOSITO EM DINHEIRO\b/,
+        /\bDEP DINHEIRO\b/,
+        /\bDEPOSITO CHEQUE\b/,
+        /\bDEP CHEQUE\b/,
+        /\bRECEBIMENTO\b/,
+        /\bPAGAMENTO RECEBIDO\b/,
+        /\bCOBRANCA RECEBIDA\b/,
+        /\bLIQUIDACAO COBRANCA\b/,
+        /\bCRED LIQUIDACAO COBRANCA\b/,
+        /\bOUTROS CREDITOS\b/,
+        /\bCREDITO EM CONTA\b/,
+        /\bCR COMPRAS\b/,
+
+        /*
+         * CORREÇÃO:
+         * antecipação de recebíveis de cartão é crédito válido
+         * para a média de movimentação.
+         */
+        /\bCR ANTECIPACAO MASTERCARD\b/,
+        /\bCR ANTECIPACAO VISA\b/,
+        /\bCRED ANTECIPACAO MASTERCARD\b/,
+        /\bCRED ANTECIPACAO VISA\b/,
+        /\bCREDITO ANTECIPACAO MASTERCARD\b/,
+        /\bCREDITO ANTECIPACAO VISA\b/
+    ];
+
+    const PADROES_DEBITO = [
+        /\bPIX ENVIADO\b/,
+        /\bPIX REALIZADO\b/,
+        /\bPIX EFETUADO\b/,
+        /\bTRANSFERENCIA ENVIADA\b/,
+        /\bTRANSFERENCIA REALIZADA\b/,
+        /\bTED ENVIADA\b/,
+        /\bTED REALIZADA\b/,
+        /\bPAGAMENTO\b/,
+        /\bCOMPRA\b/,
+        /\bSAQUE\b/,
+        /\bDEBITO\b/,
+        /\bTARIFA\b/
+    ];
 
     let arquivos = [];
     let documentos = [];
     let movimentacoes = [];
     let resultado = null;
+
     let pdfjs = null;
     let workerOCR = null;
     let contadorMovimentacoes = 0;
 
-    document.addEventListener("DOMContentLoaded", iniciar);
+    document.addEventListener(
+        "DOMContentLoaded",
+        iniciar
+    );
 
     function iniciar() {
-        const input = document.getElementById("arquivosExtrato");
-        const area = document.getElementById("areaUploadExtrato");
-        const btnLer = document.getElementById("btnLerExtratos");
-        const btnLimpar = document.getElementById("btnLimparArquivosExtrato");
-        const btnSelecionar = document.getElementById("btnSelecionarTodosOCR");
-        const btnDesmarcar = document.getElementById("btnDesmarcarTodosOCR");
-        const btnAplicar = document.getElementById("btnAplicarLeituraOCR");
-        const btnCopiar = document.getElementById("btnCopiarResumoOCR");
+        const input =
+            document.getElementById(
+                "arquivosExtrato"
+            );
+
+        const area =
+            document.getElementById(
+                "areaUploadExtrato"
+            );
+
+        const btnLer =
+            document.getElementById(
+                "btnLerExtratos"
+            );
+
+        const btnLimpar =
+            document.getElementById(
+                "btnLimparArquivosExtrato"
+            );
+
+        const btnSelecionar =
+            document.getElementById(
+                "btnSelecionarTodosOCR"
+            );
+
+        const btnDesmarcar =
+            document.getElementById(
+                "btnDesmarcarTodosOCR"
+            );
+
+        const btnAplicar =
+            document.getElementById(
+                "btnAplicarLeituraOCR"
+            );
+
+        const btnCopiar =
+            document.getElementById(
+                "btnCopiarResumoOCR"
+            );
 
         if (input) {
-            input.addEventListener("change", function () {
-                adicionarArquivos(
-                    Array.from(input.files || [])
-                );
+            input.addEventListener(
+                "change",
+                function () {
+                    adicionarArquivos(
+                        Array.from(
+                            input.files ||
+                            []
+                        )
+                    );
 
-                input.value = "";
-            });
+                    input.value = "";
+                }
+            );
         }
 
         if (area) {
-            area.addEventListener("dragover", function (e) {
-                e.preventDefault();
-                area.classList.add("arrastando");
-            });
+            area.addEventListener(
+                "dragover",
+                function (e) {
+                    e.preventDefault();
 
-            area.addEventListener("dragleave", function () {
-                area.classList.remove("arrastando");
-            });
+                    area.classList.add(
+                        "arrastando"
+                    );
+                }
+            );
 
-            area.addEventListener("drop", function (e) {
-                e.preventDefault();
-                area.classList.remove("arrastando");
+            area.addEventListener(
+                "dragleave",
+                function () {
+                    area.classList.remove(
+                        "arrastando"
+                    );
+                }
+            );
 
-                adicionarArquivos(
-                    Array.from(
-                        e.dataTransfer &&
-                            e.dataTransfer.files
-                            ? e.dataTransfer.files
-                            : []
-                    )
-                );
-            });
+            area.addEventListener(
+                "drop",
+                function (e) {
+                    e.preventDefault();
+
+                    area.classList.remove(
+                        "arrastando"
+                    );
+
+                    adicionarArquivos(
+                        Array.from(
+                            e.dataTransfer &&
+                                e.dataTransfer.files
+                                ? e.dataTransfer.files
+                                : []
+                        )
+                    );
+                }
+            );
         }
 
         if (btnLer) {
@@ -143,17 +297,23 @@
 
     function atualizarBotoes() {
         const btnLer =
-            document.getElementById("btnLerExtratos");
+            document.getElementById(
+                "btnLerExtratos"
+            );
 
         const btnLimpar =
-            document.getElementById("btnLimparArquivosExtrato");
+            document.getElementById(
+                "btnLimparArquivosExtrato"
+            );
 
         if (btnLer) {
-            btnLer.disabled = arquivos.length === 0;
+            btnLer.disabled =
+                arquivos.length === 0;
         }
 
         if (btnLimpar) {
-            btnLimpar.disabled = arquivos.length === 0;
+            btnLimpar.disabled =
+                arquivos.length === 0;
         }
     }
 
@@ -165,51 +325,74 @@
 
         const erros = [];
 
-        novos.forEach(function (file) {
-            if (arquivos.length >= CONFIG.maxArquivos) {
-                erros.push(
-                    "Limite de " +
-                    CONFIG.maxArquivos +
-                    " arquivos atingido."
-                );
+        novos.forEach(
+            function (file) {
+                if (
+                    arquivos.length >=
+                    CONFIG.maxArquivos
+                ) {
+                    erros.push(
+                        "Limite de " +
+                        CONFIG.maxArquivos +
+                        " arquivos atingido."
+                    );
 
-                return;
+                    return;
+                }
+
+                const ext =
+                    obterExtensao(
+                        file.name
+                    );
+
+                if (
+                    !CONFIG.extensoes.includes(
+                        ext
+                    )
+                ) {
+                    erros.push(
+                        file.name +
+                        ": formato não suportado."
+                    );
+
+                    return;
+                }
+
+                if (
+                    file.size >
+                    CONFIG.maxTamanho
+                ) {
+                    erros.push(
+                        file.name +
+                        ": arquivo maior que " +
+                        formatarTamanho(
+                            CONFIG.maxTamanho
+                        ) +
+                        "."
+                    );
+
+                    return;
+                }
+
+                const duplicado =
+                    arquivos.some(
+                        function (a) {
+                            return (
+                                a.name ===
+                                file.name &&
+                                a.size ===
+                                file.size &&
+                                a.lastModified ===
+                                file.lastModified
+                            );
+                        }
+                    );
+
+                if (!duplicado) {
+                    arquivos.push(file);
+                }
             }
-
-            const ext = obterExtensao(file.name);
-
-            if (!CONFIG.extensoes.includes(ext)) {
-                erros.push(
-                    file.name +
-                    ": formato não suportado."
-                );
-
-                return;
-            }
-
-            if (file.size > CONFIG.maxTamanho) {
-                erros.push(
-                    file.name +
-                    ": arquivo maior que " +
-                    formatarTamanho(CONFIG.maxTamanho) +
-                    "."
-                );
-
-                return;
-            }
-
-            const duplicado = arquivos.some(function (a) {
-                return (
-                    a.name === file.name &&
-                    a.size === file.size &&
-                    a.lastModified === file.lastModified
-                );
-            });
-
-            if (!duplicado) {
-                arquivos.push(file);
-            }
-        });
+        );
 
         renderizarArquivos();
         atualizarBotoes();
@@ -226,7 +409,10 @@
     }
 
     function removerArquivo(indice) {
-        arquivos.splice(indice, 1);
+        arquivos.splice(
+            indice,
+            1
+        );
 
         renderizarArquivos();
         atualizarBotoes();
@@ -242,14 +428,20 @@
 
     function renderizarArquivos() {
         const lista =
-            document.getElementById("listaArquivosExtrato");
+            document.getElementById(
+                "listaArquivosExtrato"
+            );
 
         const quantidade =
-            document.getElementById("quantidadeArquivosExtrato");
+            document.getElementById(
+                "quantidadeArquivosExtrato"
+            );
 
         if (quantidade) {
             quantidade.textContent =
-                String(arquivos.length);
+                String(
+                    arquivos.length
+                );
         }
 
         if (!lista) return;
@@ -263,43 +455,66 @@
             return;
         }
 
-        arquivos.forEach(function (file, indice) {
-            const item =
-                document.createElement("div");
+        arquivos.forEach(
+            function (
+                file,
+                indice
+            ) {
+                const item =
+                    document.createElement(
+                        "div"
+                    );
 
-            item.className = "arquivo-extrato";
+                item.className =
+                    "arquivo-extrato";
 
-            item.innerHTML =
-                '<div class="arquivo-extrato-info">' +
-                "<strong>" +
-                escapar(file.name) +
-                "</strong>" +
-                "<small>" +
-                escapar(
-                    obterExtensao(file.name).toUpperCase()
-                ) +
-                " · " +
-                escapar(formatarTamanho(file.size)) +
-                "</small>" +
-                "</div>" +
-                '<button type="button" class="btn-remover-arquivo" aria-label="Remover arquivo">×</button>';
+                item.innerHTML =
+                    '<div class="arquivo-extrato-info">' +
+                    "<strong>" +
+                    escapar(
+                        file.name
+                    ) +
+                    "</strong>" +
+                    "<small>" +
+                    escapar(
+                        obterExtensao(
+                            file.name
+                        ).toUpperCase()
+                    ) +
+                    " · " +
+                    escapar(
+                        formatarTamanho(
+                            file.size
+                        )
+                    ) +
+                    "</small>" +
+                    "</div>" +
+                    '<button type="button" class="btn-remover-arquivo" aria-label="Remover arquivo">×</button>';
 
-            const btn =
-                item.querySelector("button");
+                const btn =
+                    item.querySelector(
+                        "button"
+                    );
 
-            if (btn) {
-                btn.addEventListener(
-                    "click",
-                    function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        removerArquivo(indice);
-                    }
+                if (btn) {
+                    btn.addEventListener(
+                        "click",
+                        function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            removerArquivo(
+                                indice
+                            );
+                        }
+                    );
+                }
+
+                lista.appendChild(
+                    item
                 );
             }
-
-            lista.appendChild(item);
-        });
+        );
     }
 
     async function processarExtratos() {
@@ -312,7 +527,9 @@
             return;
         }
 
-        bloquearProcessamento(true);
+        bloquearProcessamento(
+            true
+        );
 
         documentos = [];
         movimentacoes = [];
@@ -325,7 +542,8 @@
                 i < arquivos.length;
                 i++
             ) {
-                const file = arquivos[i];
+                const file =
+                    arquivos[i];
 
                 definirStatus(
                     "Processando " +
@@ -344,13 +562,19 @@
                             i
                         );
 
-                    documentos.push(documento);
-
-                    documento.movimentacoes.forEach(
-                        function (m) {
-                            movimentacoes.push(m);
-                        }
+                    documentos.push(
+                        documento
                     );
+
+                    documento
+                        .movimentacoes
+                        .forEach(
+                            function (m) {
+                                movimentacoes.push(
+                                    m
+                                );
+                            }
+                        );
 
                     console.log(
                         "[Média Movimentação] Arquivo processado:",
@@ -372,24 +596,41 @@
                     documentos.push({
                         id:
                             "DOC" +
-                            String(i + 1).padStart(3, "0"),
-                        arquivo: file.name,
+                            String(
+                                i + 1
+                            ).padStart(
+                                3,
+                                "0"
+                            ),
+                        arquivo:
+                            file.name,
                         tipo:
-                            obterExtensao(file.name)
-                                .toUpperCase(),
-                        metodoLeitura: "ERRO",
-                        banco: "Não identificado",
-                        titular: "",
-                        documentoTitular: "",
-                        texto: "",
-                        periodo: null,
-                        competencias: [],
-                        movimentacoes: [],
+                            obterExtensao(
+                                file.name
+                            ).toUpperCase(),
+                        metodoLeitura:
+                            "ERRO",
+                        banco:
+                            "Não identificado",
+                        titular:
+                            "",
+                        documentoTitular:
+                            "",
+                        texto:
+                            "",
+                        periodo:
+                            null,
+                        competencias:
+                            [],
+                        movimentacoes:
+                            [],
                         erro:
                             erroArquivo &&
                                 erroArquivo.message
                                 ? erroArquivo.message
-                                : String(erroArquivo)
+                                : String(
+                                    erroArquivo
+                                )
                     });
                 }
             }
@@ -397,13 +638,16 @@
             detectarDuplicidades();
             detectarTransferenciasProprias();
 
-            resultado = montarResultado();
+            resultado =
+                montarResultado();
 
             renderizarResultado();
 
-            if (!movimentacoes.length) {
+            if (
+                !movimentacoes.length
+            ) {
                 definirStatus(
-                    "Os arquivos foram lidos, mas nenhuma movimentação financeira foi identificada.",
+                    "Arquivos lidos, porém nenhuma movimentação financeira foi identificada.",
                     "erro"
                 );
 
@@ -412,9 +656,7 @@
 
             definirStatus(
                 movimentacoes.length +
-                " movimentação(ões) identificada(s) em " +
-                documentos.length +
-                " documento(s). Confira antes de aplicar.",
+                " movimentação(ões) identificada(s). Confira antes de aplicar.",
                 "sucesso"
             );
         } catch (erro) {
@@ -426,44 +668,74 @@
             definirStatus(
                 "Erro durante a leitura: " +
                 (
-                    erro && erro.message
+                    erro &&
+                        erro.message
                         ? erro.message
-                        : String(erro)
+                        : String(
+                            erro
+                        )
                 ),
                 "erro"
             );
         } finally {
-            bloquearProcessamento(false);
+            bloquearProcessamento(
+                false
+            );
         }
     }
 
-    async function processarArquivo(file, indice) {
-        const ext = obterExtensao(file.name);
+    async function processarArquivo(
+        file,
+        indice
+    ) {
+        const ext =
+            obterExtensao(
+                file.name
+            );
 
         let texto = "";
-        let metodoLeitura = "TEXTO";
+        let metodoLeitura =
+            "TEXTO";
 
         if (ext === "pdf") {
             const leitura =
-                await extrairPDF(file);
+                await extrairPDF(
+                    file
+                );
 
-            texto = leitura.texto;
-            metodoLeitura = leitura.metodo;
+            texto =
+                leitura.texto;
+
+            metodoLeitura =
+                leitura.metodo;
         } else if (
-            ["png", "jpg", "jpeg", "webp"].includes(ext)
+            [
+                "png",
+                "jpg",
+                "jpeg",
+                "webp"
+            ].includes(ext)
         ) {
             texto =
-                await extrairImagemOCR(file);
+                await extrairImagemOCR(
+                    file
+                );
 
-            metodoLeitura = "OCR";
+            metodoLeitura =
+                "OCR";
         } else {
-            texto = await file.text();
+            texto =
+                await file.text();
         }
 
         texto =
-            normalizarTextoExtraido(texto);
+            normalizarTextoExtraido(
+                texto
+            );
 
-        if (!texto.trim()) {
+        if (
+            !texto.trim()
+        ) {
             throw new Error(
                 "Nenhum texto pôde ser extraído."
             );
@@ -476,27 +748,42 @@
             );
 
         const titular =
-            identificarTitular(texto);
+            identificarTitular(
+                texto
+            );
 
         const periodo =
-            identificarPeriodo(texto);
+            identificarPeriodo(
+                texto
+            );
 
         const doc = {
             id:
                 "DOC" +
-                String(indice + 1).padStart(3, "0"),
-            arquivo: file.name,
-            tipo: ext.toUpperCase(),
+                String(
+                    indice + 1
+                ).padStart(
+                    3,
+                    "0"
+                ),
+            arquivo:
+                file.name,
+            tipo:
+                ext.toUpperCase(),
             metodoLeitura,
             banco,
-            titular: titular.nome,
+            titular:
+                titular.nome,
             documentoTitular:
                 titular.documento,
             texto,
             periodo,
-            competencias: [],
-            movimentacoes: [],
-            erro: ""
+            competencias:
+                [],
+            movimentacoes:
+                [],
+            erro:
+                ""
         };
 
         doc.movimentacoes =
@@ -508,44 +795,44 @@
             Array.from(
                 new Set(
                     doc.movimentacoes
-                        .map(m => m.competencia)
-                        .filter(Boolean)
+                        .map(
+                            m =>
+                                m.competencia
+                        )
+                        .filter(
+                            Boolean
+                        )
                 )
             ).sort();
-
-        if (
-            !doc.competencias.length &&
-            periodo
-        ) {
-            const comps =
-                competenciasEntre(
-                    periodo.inicio,
-                    periodo.fim
-                );
-
-            if (comps.length === 1) {
-                doc.competencias = comps;
-            }
-        }
 
         return doc;
     }
 
     async function carregarPDFJS() {
-        if (pdfjs) return pdfjs;
+        if (pdfjs) {
+            return pdfjs;
+        }
 
-        let ultimoErro = null;
+        let ultimoErro =
+            null;
 
-        for (const caminho of CONFIG.pdfjs) {
+        for (
+            const caminho of
+            CONFIG.pdfjs
+        ) {
             try {
                 pdfjs =
-                    await import(caminho);
+                    await import(
+                        caminho
+                    );
 
                 if (
                     pdfjs &&
                     pdfjs.GlobalWorkerOptions
                 ) {
-                    pdfjs.GlobalWorkerOptions.workerSrc =
+                    pdfjs
+                        .GlobalWorkerOptions
+                        .workerSrc =
                         CONFIG.pdfWorker;
                 }
 
@@ -556,7 +843,8 @@
 
                 return pdfjs;
             } catch (e) {
-                ultimoErro = e;
+                ultimoErro =
+                    e;
             }
         }
 
@@ -571,29 +859,37 @@
         );
     }
 
-    async function extrairPDF(file) {
+    async function extrairPDF(
+        file
+    ) {
         const lib =
             await carregarPDFJS();
 
         const buffer =
             await file.arrayBuffer();
 
-        const loadingTask =
-            lib.getDocument({
-                data: new Uint8Array(buffer)
-            });
-
         const pdf =
-            await loadingTask.promise;
+            await lib
+                .getDocument({
+                    data:
+                        new Uint8Array(
+                            buffer
+                        )
+                })
+                .promise;
 
         const paginas = [];
 
-        let usouOCR = false;
-        let usouTexto = false;
+        let usouOCR =
+            false;
+
+        let usouTexto =
+            false;
 
         for (
             let numero = 1;
-            numero <= pdf.numPages;
+            numero <=
+            pdf.numPages;
             numero++
         ) {
             definirStatus(
@@ -607,18 +903,27 @@
             );
 
             const pagina =
-                await pdf.getPage(numero);
+                await pdf.getPage(
+                    numero
+                );
 
             const conteudo =
-                await pagina.getTextContent();
+                await pagina
+                    .getTextContent();
 
             let textoPagina =
                 reconstruirPagina(
-                    conteudo.items || []
+                    conteudo.items ||
+                    []
                 );
 
-            if (textoPDFUtil(textoPagina)) {
-                usouTexto = true;
+            if (
+                textoPDFUtil(
+                    textoPagina
+                )
+            ) {
+                usouTexto =
+                    true;
             } else {
                 definirStatus(
                     "Aplicando OCR em " +
@@ -638,16 +943,20 @@
                         pdf.numPages
                     );
 
-                usouOCR = true;
+                usouOCR =
+                    true;
             }
 
             paginas.push(
-                textoPagina || ""
+                textoPagina ||
+                ""
             );
         }
 
         const final =
-            paginas.join("\n").trim();
+            paginas
+                .join("\n")
+                .trim();
 
         if (!final) {
             throw new Error(
@@ -656,25 +965,37 @@
         }
 
         return {
-            texto: final,
+            texto:
+                final,
             metodo:
-                usouOCR && usouTexto
+                usouOCR &&
+                    usouTexto
                     ? "PDF.js + OCR"
-                    : usouOCR
-                        ? "OCR"
-                        : "PDF.js"
+                    : (
+                        usouOCR
+                            ? "OCR"
+                            : "PDF.js"
+                    )
         };
     }
 
-    function textoPDFUtil(texto) {
+    function textoPDFUtil(
+        texto
+    ) {
         const t =
-            String(texto || "")
-                .replace(/\s+/g, " ")
+            String(
+                texto || ""
+            )
+                .replace(
+                    /\s+/g,
+                    " "
+                )
                 .trim();
 
         if (
             t.length <
-            CONFIG.ocrMinCaracteresPagina
+            CONFIG
+                .ocrMinCaracteresPagina
         ) {
             return false;
         }
@@ -683,110 +1004,187 @@
             (
                 t.match(
                     /[A-Za-zÀ-ÿ0-9]/g
-                ) || []
+                ) ||
+                []
             ).length;
 
         return (
             validos /
-            Math.max(1, t.length)
+            Math.max(
+                1,
+                t.length
+            )
         ) >= 0.35;
     }
 
-    function reconstruirPagina(items) {
+    function reconstruirPagina(
+        items
+    ) {
         const elementos =
             (items || [])
-                .filter(function (item) {
-                    return (
+                .filter(
+                    item =>
                         item &&
-                        String(item.str || "").trim()
-                    );
-                })
-                .map(function (item) {
-                    return {
-                        texto:
-                            String(item.str || "")
-                                .replace(/\s+/g, " ")
-                                .trim(),
-                        x:
-                            item.transform &&
-                                Number.isFinite(
-                                    item.transform[4]
+                        String(
+                            item.str ||
+                            ""
+                        ).trim()
+                )
+                .map(
+                    function (item) {
+                        return {
+                            texto:
+                                String(
+                                    item.str ||
+                                    ""
                                 )
-                                ? item.transform[4]
-                                : 0,
-                        y:
-                            item.transform &&
-                                Number.isFinite(
-                                    item.transform[5]
-                                )
-                                ? item.transform[5]
-                                : 0,
-                        width:
-                            Number(item.width || 0)
-                    };
-                });
-
-        elementos.sort(function (a, b) {
-            const dy =
-                b.y - a.y;
-
-            if (Math.abs(dy) > 2.5) {
-                return dy;
-            }
-
-            return a.x - b.x;
-        });
-
-        const linhas = [];
-
-        let atual = [];
-        let yAtual = null;
-
-        elementos.forEach(function (el) {
-            if (
-                yAtual === null ||
-                Math.abs(
-                    el.y - yAtual
-                ) <= 2.5
-            ) {
-                atual.push(el);
-
-                if (yAtual === null) {
-                    yAtual = el.y;
-                }
-            } else {
-                linhas.push(
-                    montarLinhaPDF(atual)
+                                    .replace(
+                                        /\s+/g,
+                                        " "
+                                    )
+                                    .trim(),
+                            x:
+                                item.transform &&
+                                    Number.isFinite(
+                                        item.transform[4]
+                                    )
+                                    ? item.transform[4]
+                                    : 0,
+                            y:
+                                item.transform &&
+                                    Number.isFinite(
+                                        item.transform[5]
+                                    )
+                                    ? item.transform[5]
+                                    : 0
+                        };
+                    }
                 );
 
-                atual = [el];
-                yAtual = el.y;
-            }
-        });
+        elementos.sort(
+            function (
+                a,
+                b
+            ) {
+                const dy =
+                    b.y -
+                    a.y;
 
-        if (atual.length) {
+                if (
+                    Math.abs(
+                        dy
+                    ) >
+                    2.5
+                ) {
+                    return dy;
+                }
+
+                return (
+                    a.x -
+                    b.x
+                );
+            }
+        );
+
+        const linhas =
+            [];
+
+        let atual =
+            [];
+
+        let yAtual =
+            null;
+
+        elementos.forEach(
+            function (el) {
+                if (
+                    yAtual ===
+                    null ||
+                    Math.abs(
+                        el.y -
+                        yAtual
+                    ) <= 2.5
+                ) {
+                    atual.push(
+                        el
+                    );
+
+                    if (
+                        yAtual ===
+                        null
+                    ) {
+                        yAtual =
+                            el.y;
+                    }
+                } else {
+                    linhas.push(
+                        atual
+                            .sort(
+                                (
+                                    a,
+                                    b
+                                ) =>
+                                    a.x -
+                                    b.x
+                            )
+                            .map(
+                                x =>
+                                    x.texto
+                            )
+                            .join(
+                                " "
+                            )
+                    );
+
+                    atual = [
+                        el
+                    ];
+
+                    yAtual =
+                        el.y;
+                }
+            }
+        );
+
+        if (
+            atual.length
+        ) {
             linhas.push(
-                montarLinhaPDF(atual)
+                atual
+                    .sort(
+                        (
+                            a,
+                            b
+                        ) =>
+                            a.x -
+                            b.x
+                    )
+                    .map(
+                        x =>
+                            x.texto
+                    )
+                    .join(
+                        " "
+                    )
             );
         }
 
         return linhas
-            .filter(Boolean)
-            .join("\n");
-    }
-
-    function montarLinhaPDF(itens) {
-        return itens
-            .slice()
-            .sort(
-                (a, b) => a.x - b.x
-            )
             .map(
-                item => item.texto
+                l =>
+                    l
+                        .replace(
+                            /\s+/g,
+                            " "
+                        )
+                        .trim()
             )
-            .join(" ")
-            .replace(/\s+/g, " ")
-            .trim();
+            .filter(
+                Boolean
+            )
+            .join(
+                "\n"
+            );
     }
 
     async function reconhecerPaginaPDFOCR(
@@ -797,60 +1195,72 @@
     ) {
         const viewport =
             pagina.getViewport({
-                scale: CONFIG.ocrEscala
+                scale:
+                    CONFIG
+                        .ocrEscala
             });
 
         const canvas =
-            document.createElement("canvas");
+            document.createElement(
+                "canvas"
+            );
 
         const ctx =
             canvas.getContext(
                 "2d",
                 {
-                    willReadFrequently: true
+                    willReadFrequently:
+                        true
                 }
             );
 
         canvas.width =
-            Math.ceil(viewport.width);
-
-        canvas.height =
-            Math.ceil(viewport.height);
-
-        await pagina.render({
-            canvasContext: ctx,
-            viewport,
-            background: "white"
-        }).promise;
-
-        melhorarImagemOCR(canvas);
-
-        const texto =
-            await reconhecerCanvasOCR(
-                canvas,
-                nomeArquivo +
-                " · página " +
-                numero +
-                "/" +
-                total
+            Math.ceil(
+                viewport.width
             );
 
-        canvas.width = 1;
-        canvas.height = 1;
+        canvas.height =
+            Math.ceil(
+                viewport.height
+            );
 
-        return texto;
+        await pagina
+            .render({
+                canvasContext:
+                    ctx,
+                viewport,
+                background:
+                    "white"
+            })
+            .promise;
+
+        melhorarImagemOCR(
+            canvas
+        );
+
+        return reconhecerCanvasOCR(
+            canvas,
+            nomeArquivo +
+            " · página " +
+            numero +
+            "/" +
+            total
+        );
     }
 
-    async function extrairImagemOCR(file) {
+    async function extrairImagemOCR(
+        file
+    ) {
         const url =
-            URL.createObjectURL(file);
+            URL.createObjectURL(
+                file
+            );
 
         try {
             const imagem =
-                await carregarImagem(url);
-
-            const canvas =
-                document.createElement("canvas");
+                await carregarImagem(
+                    url
+                );
 
             const largura =
                 imagem.naturalWidth ||
@@ -860,7 +1270,8 @@
                 imagem.naturalHeight ||
                 imagem.height;
 
-            const maxLado = 3200;
+            const maxLado =
+                3200;
 
             const escala =
                 Math.min(
@@ -872,11 +1283,17 @@
                     )
                 );
 
+            const canvas =
+                document.createElement(
+                    "canvas"
+                );
+
             canvas.width =
                 Math.max(
                     1,
                     Math.round(
-                        largura * escala
+                        largura *
+                        escala
                     )
                 );
 
@@ -884,7 +1301,8 @@
                 Math.max(
                     1,
                     Math.round(
-                        altura * escala
+                        altura *
+                        escala
                     )
                 );
 
@@ -892,11 +1310,13 @@
                 canvas.getContext(
                     "2d",
                     {
-                        willReadFrequently: true
+                        willReadFrequently:
+                            true
                     }
                 );
 
-            ctx.fillStyle = "#FFFFFF";
+            ctx.fillStyle =
+                "#FFFFFF";
 
             ctx.fillRect(
                 0,
@@ -913,47 +1333,61 @@
                 canvas.height
             );
 
-            melhorarImagemOCR(canvas);
+            melhorarImagemOCR(
+                canvas
+            );
 
             return await reconhecerCanvasOCR(
                 canvas,
                 file.name
             );
         } finally {
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(
+                url
+            );
         }
     }
 
-    function carregarImagem(url) {
+    function carregarImagem(
+        url
+    ) {
         return new Promise(
-            function (resolve, reject) {
-                const img = new Image();
+            function (
+                resolve,
+                reject
+            ) {
+                const img =
+                    new Image();
 
                 img.onload =
-                    function () {
-                        resolve(img);
-                    };
+                    () =>
+                        resolve(
+                            img
+                        );
 
                 img.onerror =
-                    function () {
+                    () =>
                         reject(
                             new Error(
                                 "Não foi possível abrir a imagem."
                             )
                         );
-                    };
 
-                img.src = url;
+                img.src =
+                    url;
             }
         );
     }
 
-    function melhorarImagemOCR(canvas) {
+    function melhorarImagemOCR(
+        canvas
+    ) {
         const ctx =
             canvas.getContext(
                 "2d",
                 {
-                    willReadFrequently: true
+                    willReadFrequently:
+                        true
                 }
             );
 
@@ -975,9 +1409,12 @@
         ) {
             const cinza =
                 Math.round(
-                    dados[i] * 0.299 +
-                    dados[i + 1] * 0.587 +
-                    dados[i + 2] * 0.114
+                    dados[i] *
+                    0.299 +
+                    dados[i + 1] *
+                    0.587 +
+                    dados[i + 2] *
+                    0.114
                 );
 
             const contraste =
@@ -985,8 +1422,11 @@
                     0,
                     Math.min(
                         255,
-                        (cinza - 128) *
-                        1.2 +
+                        (
+                            cinza -
+                            128
+                        ) *
+                        1.18 +
                         128
                     )
                 );
@@ -996,7 +1436,8 @@
                 dados[i + 2] =
                 contraste;
 
-            dados[i + 3] = 255;
+            dados[i + 3] =
+                255;
         }
 
         ctx.putImageData(
@@ -1013,7 +1454,9 @@
 
         if (
             !window.Tesseract ||
-            typeof window.Tesseract.createWorker !==
+            typeof window
+                .Tesseract
+                .createWorker !==
             "function"
         ) {
             throw new Error(
@@ -1022,50 +1465,57 @@
         }
 
         workerOCR =
-            await window.Tesseract.createWorker(
-                CONFIG.ocrIdioma,
-                1,
-                {
-                    workerPath:
-                        CONFIG.ocrWorkerPath,
-
-                    corePath:
-                        CONFIG.ocrCorePath,
-
-                    langPath:
-                        CONFIG.ocrLangPath,
-
-                    logger:
-                        function (m) {
-                            if (
-                                !m ||
-                                typeof m.progress !==
-                                "number"
+            await window
+                .Tesseract
+                .createWorker(
+                    CONFIG
+                        .ocrIdioma,
+                    1,
+                    {
+                        workerPath:
+                            CONFIG
+                                .ocrWorkerPath,
+                        corePath:
+                            CONFIG
+                                .ocrCorePath,
+                        langPath:
+                            CONFIG
+                                .ocrLangPath,
+                        logger:
+                            function (
+                                m
                             ) {
-                                return;
-                            }
+                                if (
+                                    !m ||
+                                    typeof m.progress !==
+                                    "number"
+                                ) {
+                                    return;
+                                }
 
-                            if (
-                                String(
-                                    m.status || ""
-                                ).toLowerCase()
-                                    .includes(
-                                        "recognizing text"
+                                if (
+                                    String(
+                                        m.status ||
+                                        ""
                                     )
-                            ) {
-                                definirStatus(
-                                    "OCR reconhecendo texto: " +
-                                    Math.round(
-                                        m.progress *
-                                        100
-                                    ) +
-                                    "%",
-                                    "processando"
-                                );
+                                        .toLowerCase()
+                                        .includes(
+                                            "recognizing text"
+                                        )
+                                ) {
+                                    definirStatus(
+                                        "OCR reconhecendo texto: " +
+                                        Math.round(
+                                            m.progress *
+                                            100
+                                        ) +
+                                        "%",
+                                        "processando"
+                                    );
+                                }
                             }
-                        }
-                }
-            );
+                    }
+                );
 
         return workerOCR;
     }
@@ -1091,7 +1541,9 @@
                 )
                 : "";
 
-        if (!texto.trim()) {
+        if (
+            !texto.trim()
+        ) {
             throw new Error(
                 "OCR não encontrou texto legível em " +
                 referencia +
@@ -1102,281 +1554,64 @@
         return texto;
     }
 
-    function normalizarTextoExtraido(texto) {
-        return String(texto || "")
-            .replace(/\u00A0/g, " ")
-            .replace(/\r\n/g, "\n")
-            .replace(/\r/g, "\n")
-            .replace(/[ \t]+/g, " ")
-            .replace(/\n{3,}/g, "\n\n")
+    function normalizarTextoExtraido(
+        texto
+    ) {
+        return String(
+            texto || ""
+        )
+            .replace(
+                /\u00A0/g,
+                " "
+            )
+            .replace(
+                /\r\n/g,
+                "\n"
+            )
+            .replace(
+                /\r/g,
+                "\n"
+            )
+            .replace(
+                /[ \t]+/g,
+                " "
+            )
+            .replace(
+                /\n{3,}/g,
+                "\n\n"
+            )
             .trim();
     }
 
-    function identificarBanco(texto, nomeArquivo) {
-        const n =
-            normalizar(
-                (nomeArquivo || "") +
-                " " +
-                (texto || "")
-            );
-
-        const regras = [
-            {
-                nome: "Nubank",
-                padroes: [
-                    "NUBANK",
-                    "NU PAGAMENTOS",
-                    "NU FINANCEIRA"
-                ]
-            },
-            {
-                nome: "Mercado Pago",
-                padroes: [
-                    "MERCADO PAGO",
-                    "MERCADOPAGO"
-                ]
-            },
-            {
-                nome: "Itaú",
-                padroes: [
-                    "ITAU UNIBANCO",
-                    "BANCO ITAU",
-                    "ITAU"
-                ]
-            },
-            {
-                nome: "Sicoob",
-                padroes: [
-                    "SICOOB",
-                    "BANCO COOPERATIVO SICOOB",
-                    "SISTEMA DE COOPERATIVAS DE CREDITO DO BRASIL"
-                ]
-            },
-            {
-                nome: "Banco do Brasil",
-                padroes: [
-                    "BANCO DO BRASIL",
-                    "BB S A"
-                ]
-            },
-            {
-                nome: "Bradesco",
-                padroes: [
-                    "BRADESCO",
-                    "BANCO BRADESCO"
-                ]
-            },
-            {
-                nome: "Santander",
-                padroes: [
-                    "SANTANDER",
-                    "BANCO SANTANDER"
-                ]
-            },
-            {
-                nome: "Banco Inter",
-                padroes: [
-                    "BANCO INTER",
-                    "INTER PAGAMENTOS"
-                ]
-            },
-            {
-                nome: "Sicredi",
-                padroes: [
-                    "SICREDI"
-                ]
-            },
-            {
-                nome: "Caixa",
-                padroes: [
-                    "CAIXA ECONOMICA FEDERAL",
-                    "CEF"
-                ]
-            },
-            {
-                nome: "C6 Bank",
-                padroes: [
-                    "C6 BANK",
-                    "BANCO C6"
-                ]
-            },
-            {
-                nome: "PicPay",
-                padroes: [
-                    "PICPAY"
-                ]
-            },
-            {
-                nome: "PagBank",
-                padroes: [
-                    "PAGBANK",
-                    "PAGSEGURO"
-                ]
-            },
-            {
-                nome: "BTG Pactual",
-                padroes: [
-                    "BTG PACTUAL"
-                ]
-            },
-            {
-                nome: "Safra",
-                padroes: [
-                    "BANCO SAFRA",
-                    "SAFRA"
-                ]
-            }
-        ];
-
-        for (
-            let i = 0;
-            i < regras.length;
-            i++
-        ) {
-            if (
-                regras[i].padroes.some(
-                    p => n.includes(p)
-                )
-            ) {
-                return regras[i].nome;
-            }
-        }
-
-        return "Não identificado";
-    }
-
-    function identificarTitular(texto) {
+    function interpretarMovimentacoesDocumento(
+        doc
+    ) {
         const linhas =
-            String(texto || "")
-                .split("\n")
-                .map(l => l.trim())
-                .filter(Boolean);
-
-        let nome = "";
-        let documento = "";
-
-        const regexDoc =
-            /\b(?:CPF|CNPJ)?\s*:?\s*((?:\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(?:\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}))\b/i;
-
-        for (
-            let i = 0;
-            i < Math.min(
-                linhas.length,
-                120
-            );
-            i++
-        ) {
-            const linha =
-                linhas[i];
-
-            if (!documento) {
-                const m =
-                    linha.match(regexDoc);
-
-                if (m) {
-                    documento =
-                        m[1]
-                            .replace(
-                                /\D/g,
-                                ""
-                            );
-                }
-            }
-
-            if (!nome) {
-                const m =
-                    linha.match(
-                        /(?:TITULAR|CLIENTE|NOME)\s*:?\s+(.{3,100})$/i
-                    );
-
-                if (m) {
-                    const candidato =
-                        m[1]
-                            .replace(
-                                regexDoc,
-                                ""
-                            )
-                            .trim();
-
-                    if (
-                        candidato &&
-                        /[A-Za-zÀ-ÿ]{2,}/.test(
-                            candidato
-                        )
-                    ) {
-                        nome =
-                            candidato;
-                    }
-                }
-            }
-        }
-
-        return {
-            nome,
-            documento
-        };
-    }
-
-    function identificarPeriodo(texto) {
-        const regex =
-            /\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})\b/g;
-
-        const datas = [];
-
-        let m;
-
-        while (
-            (
-                m =
-                regex.exec(
-                    String(
-                        texto || ""
-                    )
+            String(
+                doc.texto ||
+                ""
+            )
+                .split(
+                    "\n"
                 )
-            ) !== null
-        ) {
-            const data =
-                criarData(
-                    Number(m[1]),
-                    Number(m[2]),
-                    normalizarAno(
-                        Number(m[3]),
-                        m[3].length
-                    )
+                .map(
+                    l =>
+                        l
+                            .replace(
+                                /\s+/g,
+                                " "
+                            )
+                            .trim()
+                )
+                .filter(
+                    Boolean
                 );
 
-            if (data) {
-                datas.push(data);
-            }
-        }
+        const lista =
+            [];
 
-        if (!datas.length) {
-            return null;
-        }
-
-        datas.sort(
-            (a, b) => a - b
-        );
-
-        return {
-            inicio: datas[0],
-            fim:
-                datas[
-                datas.length - 1
-                ]
-        };
-    }
-
-    function interpretarMovimentacoesDocumento(doc) {
-        const linhas =
-            String(doc.texto || "")
-                .split("\n")
-                .map(l => l.trim())
-                .filter(Boolean);
-
-        const lista = [];
-
-        let dataCorrente = null;
+        let dataCorrente =
+            null;
 
         for (
             let i = 0;
@@ -1386,16 +1621,35 @@
             const linha =
                 linhas[i];
 
-            const encontrada =
+            const n =
+                normalizar(
+                    linha
+                );
+
+            if (
+                linhaInformativa(
+                    n
+                )
+            ) {
+                continue;
+            }
+
+            const dataInfo =
                 extrairDataLinha(
                     linha,
                     dataCorrente,
                     doc.periodo
                 );
 
-            if (encontrada.data) {
+            const possuiData =
+                !!dataInfo
+                    .explicitamenteInformada;
+
+            if (
+                dataInfo.data
+            ) {
                 dataCorrente =
-                    encontrada.data;
+                    dataInfo.data;
             }
 
             let mov =
@@ -1403,43 +1657,45 @@
                     linha,
                     dataCorrente,
                     doc,
-                    i
+                    i,
+                    possuiData
                 );
 
+            /*
+             * Concatenação só é tentada quando a linha inicial possui
+             * data explícita. Isso evita juntar saldo/resumo às linhas
+             * anteriores e criar créditos inexistentes.
+             */
             if (
                 !mov &&
-                i + 1 < linhas.length
+                possuiData &&
+                i + 1 <
+                linhas.length &&
+                !extrairDataLinha(
+                    linhas[i + 1],
+                    null,
+                    doc.periodo
+                )
+                    .explicitamenteInformada
             ) {
                 mov =
                     interpretarLinha(
                         linha +
                         " " +
-                        linhas[i + 1],
+                        linhas[
+                        i + 1
+                        ],
                         dataCorrente,
                         doc,
-                        i
-                    );
-            }
-
-            if (
-                !mov &&
-                i + 2 < linhas.length
-            ) {
-                mov =
-                    interpretarLinha(
-                        linha +
-                        " " +
-                        linhas[i + 1] +
-                        " " +
-                        linhas[i + 2],
-                        dataCorrente,
-                        doc,
-                        i
+                        i,
+                        true
                     );
             }
 
             if (mov) {
-                lista.push(mov);
+                lista.push(
+                    mov
+                );
             }
         }
 
@@ -1448,168 +1704,62 @@
         );
     }
 
-    function extrairDataLinha(
-        linha,
-        dataCorrente,
-        periodo
-    ) {
-        const texto =
-            String(linha || "");
-
-        let m =
-            texto.match(
-                /(?:^|\s)(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})(?=\s|$)/
-            );
-
-        if (m) {
-            const data =
-                criarData(
-                    Number(m[1]),
-                    Number(m[2]),
-                    normalizarAno(
-                        Number(m[3]),
-                        m[3].length
-                    )
-                );
-
-            if (data) {
-                return {
-                    data
-                };
-            }
-        }
-
-        m =
-            texto.match(
-                /(?:^|\s)(\d{1,2})[\/.-](\d{1,2})(?=\s|$)/
-            );
-
-        if (m) {
-            const ano =
-                dataCorrente
-                    ? dataCorrente.getFullYear()
-                    : (
-                        periodo &&
-                            periodo.inicio
-                            ? periodo.inicio.getFullYear()
-                            : new Date().getFullYear()
-                    );
-
-            const data =
-                criarData(
-                    Number(m[1]),
-                    Number(m[2]),
-                    ano
-                );
-
-            if (data) {
-                return {
-                    data
-                };
-            }
-        }
-
-        return {
-            data: dataCorrente
-        };
-    }
-
     function interpretarLinha(
         linha,
         dataCorrente,
         doc,
-        indice
+        indice,
+        possuiDataNaLinha
     ) {
         const original =
-            String(linha || "")
-                .replace(/\s+/g, " ")
-                .trim();
-
-        if (!original) {
-            return null;
-        }
-
-        const n =
-            normalizar(original);
-
-        if (deveIgnorarLinha(n)) {
-            return null;
-        }
-
-        const dataInfo =
-            extrairDataLinha(
-                original,
-                dataCorrente,
-                doc.periodo
-            );
-
-        const data =
-            dataInfo.data;
-
-        if (!data) {
-            return null;
-        }
-
-        const regexData =
-            /(?:^|\s)(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?(?=\s|$)/;
-
-        const semData =
-            original
-                .replace(
-                    regexData,
-                    " "
-                )
+            String(
+                linha || ""
+            )
                 .replace(
                     /\s+/g,
                     " "
                 )
                 .trim();
 
-        const valores = [];
-
-        const regexValor =
-            /(?:R\$\s*)?([+-]?\s*(?:\d{1,3}(?:\.\d{3})*(?:,\d{2})|\d+(?:,\d{2})|\d{1,3}(?:,\d{3})*(?:\.\d{2})|\d+(?:\.\d{2})))\s*([CD])?(?=\s|$|[|])/gi;
-
-        let match;
-
-        while (
-            (
-                match =
-                regexValor.exec(
-                    semData
-                )
-            ) !== null
+        if (
+            !original ||
+            !dataCorrente
         ) {
-            const valor =
-                converterValorFlexivel(
-                    match[1]
-                );
-
-            if (
-                Number.isFinite(valor) &&
-                Math.abs(valor) > 0
-            ) {
-                valores.push({
-                    valor:
-                        Math.abs(valor),
-                    sinal:
-                        valor < 0
-                            ? -1
-                            : 1,
-                    indicador:
-                        String(
-                            match[2] ||
-                            ""
-                        ).toUpperCase(),
-                    texto:
-                        match[0],
-                    indice:
-                        match.index
-                });
-            }
+            return null;
         }
 
-        if (!valores.length) {
+        const normalizado =
+            normalizar(
+                original
+            );
+
+        if (
+            linhaInformativa(
+                normalizado
+            )
+        ) {
+            return null;
+        }
+
+        let semData =
+            original.replace(
+                /(?:^|\s)(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?(?=\s|$)/,
+                " "
+            )
+                .replace(
+                    /\s+/g,
+                    " "
+                )
+                .trim();
+
+        const valores =
+            extrairValores(
+                semData
+            );
+
+        if (
+            !valores.length
+        ) {
             return null;
         }
 
@@ -1620,6 +1770,17 @@
             );
 
         if (!escolhido) {
+            return null;
+        }
+
+        /*
+         * Linha sem data herdada só entra se possuir C/D explícito.
+         * Essa regra elimina falso crédito de saldo/resumo.
+         */
+        if (
+            !possuiDataNaLinha &&
+            !escolhido.indicador
+        ) {
             return null;
         }
 
@@ -1635,8 +1796,14 @@
                     escolhido.texto.length
                 )
             )
-                .replace(/[|]+/g, " ")
-                .replace(/\s+/g, " ")
+                .replace(
+                    /[|]+/g,
+                    " "
+                )
+                .replace(
+                    /\s+/g,
+                    " "
+                )
                 .trim();
 
         historico =
@@ -1644,9 +1811,18 @@
                 historico
             );
 
+        const historicoNormalizado =
+            normalizar(
+                historico
+            );
+
         if (
             !historico ||
-            historico.length < 2
+            historico.length <
+            2 ||
+            linhaInformativa(
+                historicoNormalizado
+            )
         ) {
             return null;
         }
@@ -1654,9 +1830,14 @@
         const natureza =
             inferirNatureza(
                 original,
-                escolhido
+                escolhido,
+                historicoNormalizado
             );
 
+        /*
+         * CORREÇÃO PRINCIPAL:
+         * desconhecido não é transformado automaticamente em crédito.
+         */
         if (!natureza) {
             return null;
         }
@@ -1685,158 +1866,272 @@
             linhaOrigem:
                 indice + 1,
             original,
-            data,
+            data:
+                dataCorrente,
             dataTexto:
-                formatarData(data),
+                formatarData(
+                    dataCorrente
+                ),
             competencia:
-                competencia(data),
+                competencia(
+                    dataCorrente
+                ),
             historico,
-            historicoNormalizado:
-                normalizar(historico),
+            historicoNormalizado,
             valor:
                 escolhido.valor,
             natureza,
-            classificacao: "",
-            motivo: "",
-            considerar: false,
-            duvida: false,
-            duplicado: false,
-            transferenciaPropria: false,
-            referenciaTransferencia: "",
-            manual: false
+            classificacao:
+                "",
+            motivo:
+                "",
+            considerar:
+                false,
+            duvida:
+                false,
+            duplicado:
+                false,
+            transferenciaPropria:
+                false,
+            referenciaTransferencia:
+                "",
+            manual:
+                false
         };
 
-        classificar(mov);
+        classificar(
+            mov
+        );
 
         return mov;
+    }
+
+    function extrairValores(
+        texto
+    ) {
+        const lista =
+            [];
+
+        const regex =
+            /(?:R\$\s*)?([+-]?\s*(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD])?(?=\s|$|[|])/gi;
+
+        let m;
+
+        while (
+            (
+                m =
+                regex.exec(
+                    texto
+                )
+            ) !== null
+        ) {
+            const original =
+                converterValorFlexivel(
+                    m[1]
+                );
+
+            if (
+                !Number.isFinite(
+                    original
+                ) ||
+                Math.abs(
+                    original
+                ) === 0
+            ) {
+                continue;
+            }
+
+            lista.push({
+                valor:
+                    Math.abs(
+                        original
+                    ),
+                sinal:
+                    original < 0
+                        ? -1
+                        : 1,
+                indicador:
+                    String(
+                        m[2] ||
+                        ""
+                    ).toUpperCase(),
+                texto:
+                    m[0],
+                indice:
+                    m.index
+            });
+        }
+
+        return lista;
     }
 
     function escolherValorMovimentacao(
         valores,
         linha
     ) {
-        if (!valores.length) {
+        if (
+            !valores.length
+        ) {
             return null;
         }
 
-        if (valores.length === 1) {
-            return valores[0];
-        }
-
-        const n =
-            normalizar(linha);
-
-        if (n.includes("SALDO")) {
-            return valores[0];
-        }
-
+        /*
+         * Preferência absoluta por valor que possua indicador C/D.
+         * Em extrato Sicoob isso diferencia lançamento de saldos.
+         */
         for (
             let i =
-                valores.length - 1;
+                valores.length -
+                1;
             i >= 0;
             i--
         ) {
             if (
-                valores[i].indicador ===
+                valores[i]
+                    .indicador ===
                 "C" ||
-                valores[i].indicador ===
+                valores[i]
+                    .indicador ===
                 "D"
             ) {
                 return valores[i];
             }
         }
 
-        return valores[
-            valores.length - 1
-        ];
+        if (
+            linhaInformativa(
+                normalizar(
+                    linha
+                )
+            )
+        ) {
+            return null;
+        }
+
+        if (
+            valores.length ===
+            1
+        ) {
+            return valores[0];
+        }
+
+        /*
+         * Mais de um valor sem C/D é ambíguo.
+         * Não assume o último como movimento para não capturar saldo.
+         */
+        return null;
     }
 
     function inferirNatureza(
         linha,
-        valor
+        valor,
+        historicoNormalizado
     ) {
         if (
-            valor.indicador === "C"
+            valor.indicador ===
+            "C"
         ) {
             return "C";
         }
 
         if (
-            valor.indicador === "D"
+            valor.indicador ===
+            "D"
         ) {
             return "D";
         }
 
-        if (valor.sinal < 0) {
+        if (
+            valor.sinal <
+            0
+        ) {
             return "D";
         }
 
-        const texto =
-            normalizar(linha);
-
         if (
-            /\b(PIX RECEBIDO|PIX RECEBIDA|PIX RECEB|TRANSFERENCIA RECEBIDA|TRANSFERENCIA RECEBIDO|TRANSF RECEBIDA|TED RECEBIDA|TED RECEBIDO|DOC RECEBIDO|DOC RECEBIDA|DEPOSITO|RECEBIMENTO|PAGAMENTO RECEBIDO|PAGAMENTO RECEBIDA|CREDITO|CRED|ENTRADA)\b/.test(
-                texto
+            PADROES_CREDITO.some(
+                regex =>
+                    regex.test(
+                        historicoNormalizado
+                    )
             )
         ) {
             return "C";
         }
 
         if (
-            /\b(DEBITO|DEB|SAIDA|PAGAMENTO|COMPRA|PIX ENVIADO|PIX REALIZADO|PIX EFETUADO|TRANSFERENCIA ENVIADA|TRANSFERENCIA REALIZADA|TED ENVIADA|SAQUE|APLICACAO)\b/.test(
-                texto
+            PADROES_DEBITO.some(
+                regex =>
+                    regex.test(
+                        historicoNormalizado
+                    )
             )
         ) {
             return "D";
         }
 
-        return "C";
+        /*
+         * NÃO utilizar return "C" como fallback.
+         */
+        return null;
     }
 
-    function classificar(m) {
-        if (m.natureza !== "C") {
+    function classificar(
+        m
+    ) {
+        const h =
+            m.historicoNormalizado;
+
+        if (
+            linhaInformativa(
+                h
+            )
+        ) {
+            m.classificacao =
+                "INFORMATIVO";
+
+            m.motivo =
+                "Saldo/resumo informativo";
+
+            m.considerar =
+                false;
+
+            return;
+        }
+
+        if (
+            m.natureza !==
+            "C"
+        ) {
             m.classificacao =
                 "DÉBITO";
 
             m.motivo =
                 "Débito/saída de recursos";
 
-            m.considerar = false;
+            m.considerar =
+                false;
 
             return;
         }
 
-        const h =
-            m.historicoNormalizado;
-
+        /*
+         * CR ANTECIPAÇÃO MASTERCARD/VISA É CRÉDITO VÁLIDO.
+         * Esta regra vem antes da exclusão genérica de operações.
+         */
         if (
-            /\b(EMPRESTIMO|FINANCIAMENTO|FINANC|LIBERACAO DE CREDITO|LIBERACAO CREDITO|CREDITO PESSOAL|CREDITO CONSIGNADO|CAPITAL DE GIRO)\b/.test(
+            /\b(CR|CRED|CREDITO) ANTECIPACAO (MASTERCARD|VISA)\b/.test(
                 h
             )
         ) {
             m.classificacao =
-                "EMPRÉSTIMO / FINANCIAMENTO";
+                "ANTECIPAÇÃO DE RECEBÍVEIS";
 
             m.motivo =
-                "Não representa renda";
+                "Crédito de recebível de cartão";
 
-            m.considerar = false;
-
-            return;
-        }
-
-        if (
-            /\b(ANTECIPACAO|ADIANTAMENTO|ADIANTAMENTO A DEPOSITANTE)\b/.test(
-                h
-            )
-        ) {
-            m.classificacao =
-                "ANTECIPAÇÃO";
-
-            m.motivo =
-                "Antecipação/adiantamento não representa renda";
-
-            m.considerar = false;
+            m.considerar =
+                true;
 
             return;
         }
@@ -1850,9 +2145,44 @@
                 "ESTORNO / DEVOLUÇÃO";
 
             m.motivo =
-                "Estorno ou devolução";
+                "Estorno, devolução ou cancelamento";
 
-            m.considerar = false;
+            m.considerar =
+                false;
+
+            return;
+        }
+
+        if (
+            /\b(EMPRESTIMO|FINANCIAMENTO|FINANC|LIBERACAO DE CREDITO|LIBERACAO CREDITO|CREDITO PESSOAL|CREDITO CONSIGNADO|CAPITAL DE GIRO|CRED LIBERACAO BNDES)\b/.test(
+                h
+            )
+        ) {
+            m.classificacao =
+                "EMPRÉSTIMO / FINANCIAMENTO";
+
+            m.motivo =
+                "Não representa renda";
+
+            m.considerar =
+                false;
+
+            return;
+        }
+
+        if (
+            /\b(CHEQUE ESPECIAL|LIMITE DE CREDITO|CREDITO ROTATIVO)\b/.test(
+                h
+            )
+        ) {
+            m.classificacao =
+                "LIMITE";
+
+            m.motivo =
+                "Limite de crédito não representa renda";
+
+            m.considerar =
+                false;
 
             return;
         }
@@ -1866,9 +2196,27 @@
                 "INVESTIMENTO";
 
             m.motivo =
-                "Movimentação de investimento";
+                "Aplicação/resgate de investimento";
 
-            m.considerar = false;
+            m.considerar =
+                false;
+
+            return;
+        }
+
+        if (
+            /\b(CRED LIBERACAO TD|CREDITO LIBERACAO TD|TITULO DESCONTADO|DESCONTO DE TITULOS)\b/.test(
+                h
+            )
+        ) {
+            m.classificacao =
+                "TÍTULO DESCONTADO";
+
+            m.motivo =
+                "Liberação de título descontado";
+
+            m.considerar =
+                false;
 
             return;
         }
@@ -1884,7 +2232,8 @@
             m.motivo =
                 "PIX recebido";
 
-            m.considerar = true;
+            m.considerar =
+                true;
 
             return;
         }
@@ -1900,39 +2249,8 @@
             m.motivo =
                 "Transferência recebida";
 
-            m.considerar = true;
-
-            return;
-        }
-
-        if (
-            /\b(DEPOSITO|DEP DINHEIRO|DEP CHEQUE)\b/.test(
-                h
-            )
-        ) {
-            m.classificacao =
-                "DEPÓSITO";
-
-            m.motivo =
-                "Depósito recebido";
-
-            m.considerar = true;
-
-            return;
-        }
-
-        if (
-            /\b(PAGAMENTO RECEBIDO|RECEBIMENTO|RECEBIDO DE|RECEBIDA DE|COBRANCA RECEBIDA|LIQUIDACAO COBRANCA)\b/.test(
-                h
-            )
-        ) {
-            m.classificacao =
-                "RECEBIMENTO";
-
-            m.motivo =
-                "Recebimento identificado";
-
-            m.considerar = true;
+            m.considerar =
+                true;
 
             return;
         }
@@ -1948,93 +2266,227 @@
             m.motivo =
                 "Transferência recebida";
 
-            m.considerar = true;
+            m.considerar =
+                true;
 
             return;
         }
 
         if (
-            /\b(OUTROS CREDITOS|OUTRO CREDITO|CREDITO EM CONTA|CREDITO CONTA|CREDITO)\b/.test(
+            /\b(DEPOSITO|DEP DINHEIRO|DEP CHEQUE)\b/.test(
                 h
             )
+        ) {
+            m.classificacao =
+                "DEPÓSITO";
+
+            m.motivo =
+                "Depósito recebido";
+
+            m.considerar =
+                true;
+
+            return;
+        }
+
+        if (
+            /\b(PAGAMENTO RECEBIDO|RECEBIMENTO|COBRANCA RECEBIDA|LIQUIDACAO COBRANCA)\b/.test(
+                h
+            )
+        ) {
+            m.classificacao =
+                "RECEBIMENTO";
+
+            m.motivo =
+                "Recebimento identificado";
+
+            m.considerar =
+                true;
+
+            return;
+        }
+
+        /*
+         * Crédito com indicador bancário C, após passar por todas
+         * as exclusões acima, é uma entrada efetiva no extrato.
+         */
+        if (
+            m.natureza ===
+            "C"
         ) {
             m.classificacao =
                 "CRÉDITO";
 
             m.motivo =
-                "Crédito identificado";
+                "Crédito identificado no extrato";
 
-            m.considerar = true;
+            m.considerar =
+                true;
 
             return;
         }
 
         m.classificacao =
-            "CRÉDITO A CONFERIR";
+            "A CONFERIR";
 
         m.motivo =
-            "Origem do crédito não identificada com segurança";
+            "Movimentação não classificada";
 
-        m.considerar = false;
-        m.duvida = true;
+        m.considerar =
+            false;
+
+        m.duvida =
+            true;
     }
 
-    function deveIgnorarLinha(n) {
-        if (!n) return true;
-
-        const padroes = [
-            "EXTRATO DE CONTA",
-            "EXTRATO CONTA",
-            "SALDO ANTERIOR",
-            "SALDO DO DIA",
-            "SALDO FINAL",
-            "SALDO DISPONIVEL",
-            "SALDO TOTAL",
-            "TOTAL DE CREDITOS",
-            "TOTAL CREDITOS",
-            "TOTAL DE DEBITOS",
-            "TOTAL DEBITOS",
-            "RESUMO",
-            "LANCAMENTOS FUTUROS",
-            "DATA HISTORICO",
-            "DATA DOCUMENTO HISTORICO",
-            "PERIODO",
-            "AGENCIA CONTA",
-            "CONTA CORRENTE",
-            "OUVIDORIA",
-            "CENTRAL DE ATENDIMENTO"
-        ];
-
-        return padroes.some(
-            p => n.includes(p)
+    function linhaInformativa(
+        n
+    ) {
+        return LINHAS_INFORMATIVAS.some(
+            regex =>
+                regex.test(
+                    n
+                )
         );
     }
 
-    function removerDuplicadosDocumento(lista) {
-        const saida = [];
-        const mapa = new Map();
+    function extrairDataLinha(
+        linha,
+        dataCorrente,
+        periodo
+    ) {
+        const texto =
+            String(
+                linha ||
+                ""
+            );
 
-        lista.forEach(function (m) {
-            const chave =
-                m.documentoId +
-                "|" +
-                m.dataTexto +
-                "|" +
-                m.natureza +
-                "|" +
-                m.valor.toFixed(2) +
-                "|" +
-                m.historicoNormalizado;
+        let m =
+            texto.match(
+                /(?:^|\s)(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})(?=\s|$)/
+            );
 
-            if (!mapa.has(chave)) {
-                mapa.set(
-                    chave,
-                    m
+        if (m) {
+            const data =
+                criarData(
+                    Number(
+                        m[1]
+                    ),
+                    Number(
+                        m[2]
+                    ),
+                    normalizarAno(
+                        Number(
+                            m[3]
+                        ),
+                        m[3]
+                            .length
+                    )
                 );
 
-                saida.push(m);
+            return {
+                data:
+                    data ||
+                    dataCorrente,
+                explicitamenteInformada:
+                    !!data
+            };
+        }
+
+        m =
+            texto.match(
+                /(?:^|\s)(\d{1,2})[\/.-](\d{1,2})(?=\s|$)/
+            );
+
+        if (m) {
+            const ano =
+                dataCorrente
+                    ? dataCorrente
+                        .getFullYear()
+                    : (
+                        periodo &&
+                            periodo.inicio
+                            ? periodo.inicio
+                                .getFullYear()
+                            : new Date()
+                                .getFullYear()
+                    );
+
+            const data =
+                criarData(
+                    Number(
+                        m[1]
+                    ),
+                    Number(
+                        m[2]
+                    ),
+                    ano
+                );
+
+            return {
+                data:
+                    data ||
+                    dataCorrente,
+                explicitamenteInformada:
+                    !!data
+            };
+        }
+
+        return {
+            data:
+                dataCorrente,
+            explicitamenteInformada:
+                false
+        };
+    }
+
+    function removerDuplicadosDocumento(
+        lista
+    ) {
+        const saida =
+            [];
+
+        const chaves =
+            new Set();
+
+        lista.forEach(
+            function (m) {
+                /*
+                 * Não remove duas operações iguais legítimas do mesmo dia.
+                 * Usa linha de origem para distinguir lançamentos.
+                 * A duplicidade entre arquivos é tratada separadamente.
+                 */
+                const chave =
+                    [
+                        m.documentoId,
+                        m.linhaOrigem,
+                        m.dataTexto,
+                        m.natureza,
+                        m.valor.toFixed(
+                            2
+                        ),
+                        m.historicoNormalizado
+                    ].join(
+                        "|"
+                    );
+
+                if (
+                    chaves.has(
+                        chave
+                    )
+                ) {
+                    return;
+                }
+
+                chaves.add(
+                    chave
+                );
+
+                saida.push(
+                    m
+                );
             }
-        });
+        );
 
         return saida;
     }
@@ -2042,15 +2494,18 @@
     function detectarDuplicidades() {
         for (
             let i = 0;
-            i < movimentacoes.length;
+            i <
+            movimentacoes.length;
             i++
         ) {
             const a =
                 movimentacoes[i];
 
             for (
-                let j = i + 1;
-                j < movimentacoes.length;
+                let j =
+                    i + 1;
+                j <
+                movimentacoes.length;
                 j++
             ) {
                 const b =
@@ -2075,7 +2530,8 @@
                         a.valor -
                         b.valor
                     ) >
-                    CONFIG.toleranciaValor
+                    CONFIG
+                        .toleranciaValor
                 ) {
                     continue;
                 }
@@ -2086,7 +2542,8 @@
                             a.data,
                             b.data
                         )
-                    ) > 1
+                    ) >
+                    1
                 ) {
                     continue;
                 }
@@ -2095,13 +2552,21 @@
                     similaridadeHistorico(
                         a.historicoNormalizado,
                         b.historicoNormalizado
-                    ) >= 0.82
+                    ) >=
+                    0.82
                 ) {
-                    b.duplicado = true;
-                    b.considerar = false;
-                    b.duvida = false;
+                    b.duplicado =
+                        true;
+
+                    b.considerar =
+                        false;
+
+                    b.duvida =
+                        false;
+
                     b.classificacao =
                         "DUPLICADO";
+
                     b.motivo =
                         "Possível lançamento duplicado entre arquivos";
                 }
@@ -2113,35 +2578,36 @@
         const creditos =
             movimentacoes.filter(
                 m =>
-                    m.natureza === "C" &&
+                    m.natureza ===
+                    "C" &&
                     !m.duplicado
             );
 
         const debitos =
             movimentacoes.filter(
                 m =>
-                    m.natureza === "D" &&
+                    m.natureza ===
+                    "D" &&
                     !m.duplicado
             );
 
         creditos.forEach(
-            function (credito) {
+            function (
+                credito
+            ) {
                 if (
-                    !/\b(PIX|TRANSFER|TRANSF|TED)\b/.test(
-                        credito.historicoNormalizado
+                    !/\b(PIX|TRANSFERENCIA|TRANSF|TED)\b/.test(
+                        credito
+                            .historicoNormalizado
                     )
                 ) {
                     return;
                 }
 
                 for (
-                    let i = 0;
-                    i < debitos.length;
-                    i++
+                    const debito of
+                    debitos
                 ) {
-                    const debito =
-                        debitos[i];
-
                     if (
                         credito.documentoId ===
                         debito.documentoId
@@ -2161,7 +2627,8 @@
                             credito.valor -
                             debito.valor
                         ) >
-                        CONFIG.toleranciaValor
+                        CONFIG
+                            .toleranciaValor
                     ) {
                         continue;
                     }
@@ -2173,27 +2640,34 @@
                                 debito.data
                             )
                         ) >
-                        CONFIG.toleranciaDiasTransferencia
+                        CONFIG
+                            .toleranciaDiasTransferencia
                     ) {
                         continue;
                     }
 
-                    credito.transferenciaPropria =
+                    credito
+                        .transferenciaPropria =
                         true;
 
-                    credito.referenciaTransferencia =
+                    credito
+                        .referenciaTransferencia =
                         debito.id;
 
-                    credito.considerar =
+                    credito
+                        .considerar =
                         false;
 
-                    credito.duvida =
+                    credito
+                        .duvida =
                         true;
 
-                    credito.classificacao =
+                    credito
+                        .classificacao =
                         "POSSÍVEL TRANSFERÊNCIA PRÓPRIA";
 
-                    credito.motivo =
+                    credito
+                        .motivo =
                         "Existe débito de mesmo valor em outra instituição próxima à mesma data";
 
                     break;
@@ -2240,11 +2714,14 @@
     }
 
     function gerarAlertas() {
-        const alertas = [];
+        const alertas =
+            [];
 
         documentos.forEach(
             function (doc) {
-                if (doc.erro) {
+                if (
+                    doc.erro
+                ) {
                     alertas.push(
                         doc.arquivo +
                         ": " +
@@ -2253,12 +2730,14 @@
                 }
 
                 if (
-                    !doc.movimentacoes.length &&
-                    !doc.erro
+                    !doc.erro &&
+                    !doc
+                        .movimentacoes
+                        .length
                 ) {
                     alertas.push(
                         doc.arquivo +
-                        ": nenhuma movimentação foi reconhecida."
+                        ": nenhuma movimentação reconhecida."
                     );
                 }
 
@@ -2276,15 +2755,17 @@
 
         const duvidas =
             movimentacoes.filter(
-                m => m.duvida
+                m =>
+                    m.duvida
             ).length;
 
         const duplicados =
             movimentacoes.filter(
-                m => m.duplicado
+                m =>
+                    m.duplicado
             ).length;
 
-        const transferencias =
+        const proprias =
             movimentacoes.filter(
                 m =>
                     m.transferenciaPropria
@@ -2293,7 +2774,7 @@
         if (duvidas) {
             alertas.push(
                 duvidas +
-                " crédito(s) precisam de conferência."
+                " lançamento(s) precisam de conferência."
             );
         }
 
@@ -2304,9 +2785,9 @@
             );
         }
 
-        if (transferencias) {
+        if (proprias) {
             alertas.push(
-                transferencias +
+                proprias +
                 " possível(is) transferência(s) entre contas próprias."
             );
         }
@@ -2321,27 +2802,22 @@
             );
 
         if (card) {
-            card.hidden = false;
+            card.hidden =
+                false;
         }
-
-        const titulares =
-            documentos
-                .map(
-                    d => d.titular
-                )
-                .filter(Boolean);
-
-        const documentosTitular =
-            documentos
-                .map(
-                    d =>
-                        d.documentoTitular
-                )
-                .filter(Boolean);
 
         definirTexto(
             "ocrNomeTitular",
-            maisFrequente(titulares) ||
+            maisFrequente(
+                documentos
+                    .map(
+                        d =>
+                            d.titular
+                    )
+                    .filter(
+                        Boolean
+                    )
+            ) ||
             "Não identificado"
         );
 
@@ -2349,7 +2825,15 @@
             "ocrDocumentoTitular",
             formatarDocumento(
                 maisFrequente(
-                    documentosTitular
+                    documentos
+                        .map(
+                            d =>
+                                d
+                                    .documentoTitular
+                        )
+                        .filter(
+                            Boolean
+                        )
                 )
             ) ||
             "Não identificado"
@@ -2357,38 +2841,58 @@
 
         definirTexto(
             "ocrInstituicoes",
-            resultado.bancos.length
-                ? resultado.bancos.join(", ")
+            resultado
+                .bancos
+                .length
+                ? resultado
+                    .bancos
+                    .join(
+                        ", "
+                    )
                 : "Não identificadas"
         );
 
         definirTexto(
             "ocrQuantidadeArquivos",
-            String(documentos.length)
+            String(
+                documentos.length
+            )
         );
 
         const datas =
             movimentacoes
-                .map(m => m.data)
+                .map(
+                    m =>
+                        m.data
+                )
                 .filter(
                     d =>
-                        d instanceof Date &&
+                        d instanceof
+                        Date &&
                         !Number.isNaN(
                             d.getTime()
                         )
                 )
                 .sort(
-                    (a, b) => a - b
+                    (
+                        a,
+                        b
+                    ) =>
+                        a -
+                        b
                 );
 
         definirTexto(
             "ocrPeriodoLeitura",
             datas.length
-                ? formatarData(datas[0]) +
+                ? formatarData(
+                    datas[0]
+                ) +
                 " a " +
                 formatarData(
                     datas[
-                    datas.length - 1
+                    datas.length -
+                    1
                     ]
                 )
                 : "Não identificado"
@@ -2407,16 +2911,12 @@
                 "listaDocumentosOCR"
             );
 
-        if (!lista) return;
-
-        lista.innerHTML = "";
-
-        if (!documentos.length) {
-            lista.innerHTML =
-                '<div class="sem-dados">Nenhum documento processado.</div>';
-
+        if (!lista) {
             return;
         }
+
+        lista.innerHTML =
+            "";
 
         documentos.forEach(
             function (doc) {
@@ -2430,25 +2930,31 @@
 
                 item.innerHTML =
                     "<strong>" +
-                    escapar(doc.arquivo) +
+                    escapar(
+                        doc.arquivo
+                    ) +
                     "</strong>" +
                     "<span>" +
-                    escapar(doc.banco) +
+                    escapar(
+                        doc.banco
+                    ) +
                     " · " +
                     escapar(
-                        doc.metodoLeitura ||
-                        doc.tipo
+                        doc.metodoLeitura
                     ) +
                     "</span>" +
                     "<small>" +
                     (
-                        doc.competencias.length
+                        doc.competencias
+                            .length
                             ? escapar(
                                 doc.competencias
                                     .map(
                                         formatarCompetencia
                                     )
-                                    .join(", ")
+                                    .join(
+                                        ", "
+                                    )
                             )
                             : "Competência não identificada"
                     ) +
@@ -2467,9 +2973,12 @@
                 "listaAlertasOCR"
             );
 
-        if (!lista) return;
+        if (!lista) {
+            return;
+        }
 
-        lista.innerHTML = "";
+        lista.innerHTML =
+            "";
 
         const alertas =
             resultado &&
@@ -2477,7 +2986,9 @@
                 ? resultado.alertas
                 : [];
 
-        if (!alertas.length) {
+        if (
+            !alertas.length
+        ) {
             lista.innerHTML =
                 '<div class="aviso-info">Nenhum alerta adicional.</div>';
 
@@ -2510,11 +3021,16 @@
                 "tabelaMovimentacoesOCR"
             );
 
-        if (!tbody) return;
+        if (!tbody) {
+            return;
+        }
 
-        tbody.innerHTML = "";
+        tbody.innerHTML =
+            "";
 
-        if (!movimentacoes.length) {
+        if (
+            !movimentacoes.length
+        ) {
             inserirVazio(
                 tbody,
                 8,
@@ -2527,8 +3043,12 @@
         movimentacoes
             .slice()
             .sort(
-                (a, b) =>
-                    a.data - b.data
+                (
+                    a,
+                    b
+                ) =>
+                    a.data -
+                    b.data
             )
             .forEach(
                 function (m) {
@@ -2537,7 +3057,9 @@
                             "tr"
                         );
 
-                    if (m.duvida) {
+                    if (
+                        m.duvida
+                    ) {
                         tr.classList.add(
                             "movimentacao-duvida"
                         );
@@ -2569,7 +3091,8 @@
                         !!m.considerar;
 
                     checkbox.disabled =
-                        m.natureza !== "C";
+                        m.natureza !==
+                        "C";
 
                     checkbox.addEventListener(
                         "change",
@@ -2577,12 +3100,15 @@
                             m.considerar =
                                 checkbox.checked;
 
-                            m.manual = true;
+                            m.manual =
+                                true;
 
                             if (
                                 checkbox.checked
                             ) {
-                                m.duvida = false;
+                                m.duvida =
+                                    false;
+
                                 m.motivo =
                                     "Incluído manualmente na conferência";
                             } else {
@@ -2624,7 +3150,8 @@
                                 );
 
                             td.textContent =
-                                valor || "-";
+                                valor ||
+                                "-";
 
                             tr.appendChild(
                                 td
@@ -2639,26 +3166,31 @@
             );
     }
 
-    function alterarTodos(considerar) {
+    function alterarTodos(
+        considerar
+    ) {
         movimentacoes.forEach(
             function (m) {
                 if (
-                    m.natureza === "C"
+                    m.natureza !==
+                    "C"
                 ) {
-                    m.considerar =
-                        considerar;
-
-                    m.manual = true;
-
-                    if (considerar) {
-                        m.duvida = false;
-                        m.motivo =
-                            "Incluído manualmente na conferência";
-                    } else {
-                        m.motivo =
-                            "Excluído manualmente na conferência";
-                    }
+                    return;
                 }
+
+                m.considerar =
+                    considerar;
+
+                m.manual =
+                    true;
+
+                m.duvida =
+                    false;
+
+                m.motivo =
+                    considerar
+                        ? "Incluído manualmente na conferência"
+                        : "Excluído manualmente na conferência";
             }
         );
 
@@ -2671,15 +3203,21 @@
         const consideradas =
             movimentacoes.filter(
                 m =>
-                    m.natureza === "C" &&
+                    m.natureza ===
+                    "C" &&
                     m.considerar
             );
 
         const competencias =
             resultado &&
-                resultado.competenciasDocumentadas &&
-                resultado.competenciasDocumentadas.length
-                ? resultado.competenciasDocumentadas.slice()
+                resultado
+                    .competenciasDocumentadas &&
+                resultado
+                    .competenciasDocumentadas
+                    .length
+                ? resultado
+                    .competenciasDocumentadas
+                    .slice()
                 : Array.from(
                     new Set(
                         consideradas
@@ -2687,7 +3225,9 @@
                                 m =>
                                     m.competencia
                             )
-                            .filter(Boolean)
+                            .filter(
+                                Boolean
+                            )
                     )
                 ).sort();
 
@@ -2704,8 +3244,10 @@
                     porMes.set(
                         m.competencia,
                         {
-                            total: 0,
-                            quantidade: 0,
+                            total:
+                                0,
+                            quantidade:
+                                0,
                             bancos:
                                 new Set()
                         }
@@ -2722,7 +3264,9 @@
 
                 item.quantidade++;
 
-                if (m.banco) {
+                if (
+                    m.banco
+                ) {
                     item.bancos.add(
                         m.banco
                     );
@@ -2732,8 +3276,12 @@
 
         const total =
             consideradas.reduce(
-                (soma, m) =>
-                    soma + m.valor,
+                (
+                    soma,
+                    m
+                ) =>
+                    soma +
+                    m.valor,
                 0
             );
 
@@ -2742,20 +3290,27 @@
             porMes.size ||
             1;
 
-        let maiorMes = "";
-        let maiorValor = -1;
+        let maiorMes =
+            "";
+
+        let maiorValor =
+            0;
 
         porMes.forEach(
-            function (item, comp) {
+            function (
+                item,
+                comp
+            ) {
                 if (
+                    !maiorMes ||
                     item.total >
                     maiorValor
                 ) {
-                    maiorValor =
-                        item.total;
-
                     maiorMes =
                         comp;
+
+                    maiorValor =
+                        item.total;
                 }
             }
         );
@@ -2767,12 +3322,10 @@
             total,
             meses,
             media:
-                total / meses,
+                total /
+                meses,
             maiorMes,
-            maiorValor:
-                maiorValor < 0
-                    ? 0
-                    : maiorValor
+            maiorValor
         };
     }
 
@@ -2831,18 +3384,27 @@
                 "tabelaResumoMensalOCR"
             );
 
-        if (!tbody) return;
+        if (!tbody) {
+            return;
+        }
 
-        tbody.innerHTML = "";
+        tbody.innerHTML =
+            "";
 
         const competencias =
-            resumo.competencias.length
+            resumo
+                .competencias
+                .length
                 ? resumo.competencias
                 : Array.from(
-                    resumo.porMes.keys()
+                    resumo
+                        .porMes
+                        .keys()
                 ).sort();
 
-        if (!competencias.length) {
+        if (
+            !competencias.length
+        ) {
             inserirVazio(
                 tbody,
                 4,
@@ -2855,11 +3417,16 @@
         competencias.forEach(
             function (comp) {
                 const item =
-                    resumo.porMes.get(
-                        comp
-                    ) || {
-                        total: 0,
-                        quantidade: 0,
+                    resumo
+                        .porMes
+                        .get(
+                            comp
+                        ) ||
+                    {
+                        total:
+                            0,
+                        quantidade:
+                            0,
                         bancos:
                             new Set()
                     };
@@ -2884,7 +3451,9 @@
                     escapar(
                         Array.from(
                             item.bancos
-                        ).join(", ") ||
+                        ).join(
+                            ", "
+                        ) ||
                         "-"
                     ) +
                     "</td>" +
@@ -2911,47 +3480,66 @@
                 "tabelaResumoBancosOCR"
             );
 
-        if (!tbody) return;
+        if (!tbody) {
+            return;
+        }
 
-        tbody.innerHTML = "";
+        tbody.innerHTML =
+            "";
 
         const mapa =
             new Map();
 
-        resumo.consideradas.forEach(
-            function (m) {
-                const banco =
-                    m.banco ||
-                    "Não identificado";
+        resumo
+            .consideradas
+            .forEach(
+                function (m) {
+                    const banco =
+                        m.banco ||
+                        "Não identificado";
 
-                if (!mapa.has(banco)) {
-                    mapa.set(
-                        banco,
-                        {
-                            quantidade: 0,
-                            total: 0,
-                            competencias:
-                                new Set()
-                        }
-                    );
-                }
+                    if (
+                        !mapa.has(
+                            banco
+                        )
+                    ) {
+                        mapa.set(
+                            banco,
+                            {
+                                quantidade:
+                                    0,
+                                total:
+                                    0,
+                                competencias:
+                                    new Set()
+                            }
+                        );
+                    }
 
-                const item =
-                    mapa.get(banco);
+                    const item =
+                        mapa.get(
+                            banco
+                        );
 
-                item.quantidade++;
-                item.total +=
-                    m.valor;
+                    item.quantidade++;
+                    item.total +=
+                        m.valor;
 
-                if (m.competencia) {
-                    item.competencias.add(
+                    if (
                         m.competencia
-                    );
+                    ) {
+                        item
+                            .competencias
+                            .add(
+                                m.competencia
+                            );
+                    }
                 }
-            }
-        );
+            );
 
-        if (!mapa.size) {
+        if (
+            !mapa.size
+        ) {
             inserirVazio(
                 tbody,
                 4,
@@ -2965,18 +3553,27 @@
             mapa.entries()
         )
             .sort(
-                (a, b) =>
-                    a[0].localeCompare(
-                        b[0],
-                        "pt-BR"
-                    )
+                (
+                    a,
+                    b
+                ) =>
+                    a[0]
+                        .localeCompare(
+                            b[0],
+                            "pt-BR"
+                        )
             )
             .forEach(
                 function (
-                    [banco, item]
+                    [
+                        banco,
+                        item
+                    ]
                 ) {
                     const divisor =
-                        item.competencias.size ||
+                        item
+                            .competencias
+                            .size ||
                         resumo.meses ||
                         1;
 
@@ -2987,7 +3584,9 @@
 
                     tr.innerHTML =
                         "<td>" +
-                        escapar(banco) +
+                        escapar(
+                            banco
+                        ) +
                         "</td>" +
                         "<td>" +
                         item.quantidade +
@@ -3015,137 +3614,16 @@
             );
     }
 
-    function gerarResumoTexto() {
-        const resumo =
-            calcularResumo();
-
-        const linhas = [];
-
-        linhas.push(
-            "RESUMO DA LEITURA DOS EXTRATOS"
-        );
-
-        linhas.push("");
-
-        linhas.push(
-            "Arquivos processados: " +
-            documentos.length
-        );
-
-        linhas.push(
-            "Instituições: " +
-            (
-                resultado &&
-                    resultado.bancos.length
-                    ? resultado.bancos.join(
-                        ", "
-                    )
-                    : "Não identificadas"
-            )
-        );
-
-        linhas.push(
-            "Competências consideradas: " +
-            (
-                resumo.competencias.length
-                    ? resumo.competencias
-                        .map(
-                            formatarCompetencia
-                        )
-                        .join(", ")
-                    : "-"
-            )
-        );
-
-        linhas.push("");
-
-        resumo.competencias.forEach(
-            function (comp) {
-                const item =
-                    resumo.porMes.get(
-                        comp
-                    ) || {
-                        total: 0,
-                        quantidade: 0
-                    };
-
-                linhas.push(
-                    formatarCompetencia(
-                        comp
-                    ) +
-                    ": " +
-                    formatarMoeda(
-                        item.total
-                    ) +
-                    " (" +
-                    item.quantidade +
-                    " crédito(s))"
-                );
-            }
-        );
-
-        linhas.push("");
-        linhas.push(
-            "Total considerado: " +
-            formatarMoeda(
-                resumo.total
-            )
-        );
-
-        linhas.push(
-            "Meses considerados: " +
-            resumo.meses
-        );
-
-        linhas.push(
-            "Média mensal: " +
-            formatarMoeda(
-                resumo.media
-            )
-        );
-
-        const observacao =
-            document.getElementById(
-                "observacaoLeituraExtrato"
-            );
-
-        if (
-            observacao &&
-            String(
-                observacao.value ||
-                ""
-            ).trim()
-        ) {
-            linhas.push("");
-            linhas.push(
-                "Observação: " +
-                String(
-                    observacao.value
-                ).trim()
-            );
-        }
-
-        return linhas.join("\n");
-    }
-
-    function atualizarResumoTexto() {
-        const textarea =
-            document.getElementById(
-                "resumoLeituraOCR"
-            );
-
-        if (textarea) {
-            textarea.value =
-                gerarResumoTexto();
-        }
-    }
-
     function gerarTextoConsolidado() {
         return movimentacoes
             .slice()
             .sort(
-                (a, b) =>
-                    a.data - b.data
+                (
+                    a,
+                    b
+                ) =>
+                    a.data -
+                    b.data
             )
             .map(
                 function (m) {
@@ -3158,7 +3636,9 @@
                                     : "EXCLUIR"
                             );
 
-                    const historico =
+                    return (
+                        m.dataTexto +
+                        " | " +
                         "[ID:" +
                         sanitizarTag(
                             m.id
@@ -3177,12 +3657,7 @@
                         "[DECISAO:" +
                         decisao +
                         "] " +
-                        m.historico;
-
-                    return (
-                        m.dataTexto +
-                        " | " +
-                        historico +
+                        m.historico +
                         " | " +
                         formatarValor(
                             m.valor
@@ -3192,11 +3667,15 @@
                     );
                 }
             )
-            .join("\n");
+            .join(
+                "\n"
+            );
     }
 
     function aplicarAoMotor() {
-        if (!movimentacoes.length) {
+        if (
+            !movimentacoes.length
+        ) {
             definirStatus(
                 "Nenhuma leitura disponível para aplicar.",
                 "erro"
@@ -3218,90 +3697,180 @@
                 texto;
         }
 
-        try {
-            if (
-                window.MediaMovimentacao &&
-                typeof window.MediaMovimentacao.processarTexto ===
-                "function"
-            ) {
-                window.MediaMovimentacao.processarTexto(
-                    texto,
-                    {
-                        competenciasDocumentadas:
-                            resultado
-                                ? resultado.competenciasDocumentadas
-                                : []
-                    }
-                );
-            } else {
-                throw new Error(
-                    "Motor media-movimentacao.js não encontrado."
-                );
-            }
-
+        if (
+            !window
+                .MediaMovimentacao ||
+            typeof window
+                .MediaMovimentacao
+                .processarTexto !==
+            "function"
+        ) {
             definirStatus(
-                "Leitura aplicada ao cálculo da Média de Movimentação.",
-                "sucesso"
-            );
-        } catch (e) {
-            console.error(e);
-
-            definirStatus(
-                "Não foi possível aplicar os dados: " +
-                (
-                    e.message ||
-                    e
-                ),
+                "Motor media-movimentacao.js não encontrado.",
                 "erro"
             );
+
+            return;
         }
+
+        window
+            .MediaMovimentacao
+            .processarTexto(
+                texto,
+                {
+                    competenciasDocumentadas:
+                        resultado
+                            ? resultado
+                                .competenciasDocumentadas
+                            : []
+                }
+            );
+
+        definirStatus(
+            "Leitura aplicada ao cálculo.",
+            "sucesso"
+        );
     }
 
-    async function copiarResumo() {
-        const textarea =
+    function gerarResumoTexto() {
+        const resumo =
+            calcularResumo();
+
+        const linhas = [
+            "RESUMO DA LEITURA DOS EXTRATOS",
+            "",
+            "Arquivos processados: " +
+            documentos.length,
+            "Competências consideradas: " +
+            (
+                resumo
+                    .competencias
+                    .length
+                    ? resumo
+                        .competencias
+                        .map(
+                            formatarCompetencia
+                        )
+                        .join(
+                            ", "
+                        )
+                    : "-"
+            ),
+            ""
+        ];
+
+        resumo
+            .competencias
+            .forEach(
+                function (comp) {
+                    const item =
+                        resumo
+                            .porMes
+                            .get(
+                                comp
+                            ) ||
+                        {
+                            total:
+                                0,
+                            quantidade:
+                                0
+                        };
+
+                    linhas.push(
+                        formatarCompetencia(
+                            comp
+                        ) +
+                        ": " +
+                        formatarMoeda(
+                            item.total
+                        ) +
+                        " (" +
+                        item.quantidade +
+                        " crédito(s))"
+                    );
+                }
+            );
+
+        linhas.push(
+            "",
+            "Total considerado: " +
+            formatarMoeda(
+                resumo.total
+            ),
+            "Meses considerados: " +
+            resumo.meses,
+            "Média mensal: " +
+            formatarMoeda(
+                resumo.media
+            )
+        );
+
+        return linhas.join(
+            "\n"
+        );
+    }
+
+    function atualizarResumoTexto() {
+        const campo =
             document.getElementById(
                 "resumoLeituraOCR"
             );
 
-        const texto =
-            textarea
-                ? textarea.value
-                : gerarResumoTexto();
+        if (campo) {
+            campo.value =
+                gerarResumoTexto();
+        }
+    }
 
-        if (!texto) return;
+    async function copiarResumo() {
+        const texto =
+            gerarResumoTexto();
 
         try {
-            await navigator.clipboard.writeText(
-                texto
-            );
+            await navigator
+                .clipboard
+                .writeText(
+                    texto
+                );
 
             definirStatus(
                 "Resumo copiado.",
                 "sucesso"
             );
         } catch (e) {
-            if (textarea) {
-                textarea.focus();
-                textarea.select();
+            const campo =
+                document.getElementById(
+                    "resumoLeituraOCR"
+                );
+
+            if (campo) {
+                campo.value =
+                    texto;
+
+                campo.select();
 
                 document.execCommand(
                     "copy"
-                );
-
-                definirStatus(
-                    "Resumo copiado.",
-                    "sucesso"
                 );
             }
         }
     }
 
     function limparTudo() {
-        arquivos = [];
-        documentos = [];
-        movimentacoes = [];
-        resultado = null;
-        contadorMovimentacoes = 0;
+        arquivos =
+            [];
+
+        documentos =
+            [];
+
+        movimentacoes =
+            [];
+
+        resultado =
+            null;
+
+        contadorMovimentacoes =
+            0;
 
         const input =
             document.getElementById(
@@ -3309,16 +3878,8 @@
             );
 
         if (input) {
-            input.value = "";
-        }
-
-        const observacao =
-            document.getElementById(
-                "observacaoLeituraExtrato"
-            );
-
-        if (observacao) {
-            observacao.value = "";
+            input.value =
+                "";
         }
 
         const card =
@@ -3327,16 +3888,8 @@
             );
 
         if (card) {
-            card.hidden = true;
-        }
-
-        const resumo =
-            document.getElementById(
-                "resumoLeituraOCR"
-            );
-
-        if (resumo) {
-            resumo.value = "";
+            card.hidden =
+                true;
         }
 
         renderizarArquivos();
@@ -3356,7 +3909,9 @@
                 "btnLerExtratos"
             );
 
-        if (!btn) return;
+        if (!btn) {
+            return;
+        }
 
         btn.disabled =
             bloquear;
@@ -3365,11 +3920,789 @@
             bloquear
                 ? "Lendo..."
                 : "Ler e Consolidar";
+    }
 
-        btn.style.cursor =
-            bloquear
-                ? "wait"
-                : "pointer";
+    function identificarBanco(
+        texto,
+        arquivo
+    ) {
+        const n =
+            normalizar(
+                arquivo +
+                " " +
+                texto
+            );
+
+        const bancos = [
+            [
+                "Sicoob",
+                [
+                    "SICOOB",
+                    "BANCO COOPERATIVO SICOOB"
+                ]
+            ],
+            [
+                "Nubank",
+                [
+                    "NUBANK",
+                    "NU PAGAMENTOS"
+                ]
+            ],
+            [
+                "Mercado Pago",
+                [
+                    "MERCADO PAGO",
+                    "MERCADOPAGO"
+                ]
+            ],
+            [
+                "Itaú",
+                [
+                    "ITAU",
+                    "ITAU UNIBANCO"
+                ]
+            ],
+            [
+                "Banco do Brasil",
+                [
+                    "BANCO DO BRASIL"
+                ]
+            ],
+            [
+                "Bradesco",
+                [
+                    "BRADESCO"
+                ]
+            ],
+            [
+                "Santander",
+                [
+                    "SANTANDER"
+                ]
+            ],
+            [
+                "Banco Inter",
+                [
+                    "BANCO INTER"
+                ]
+            ],
+            [
+                "Sicredi",
+                [
+                    "SICREDI"
+                ]
+            ],
+            [
+                "Caixa",
+                [
+                    "CAIXA ECONOMICA FEDERAL"
+                ]
+            ]
+        ];
+
+        for (
+            const [
+                nome,
+                padroes
+            ] of bancos
+        ) {
+            if (
+                padroes.some(
+                    p =>
+                        n.includes(
+                            p
+                        )
+                )
+            ) {
+                return nome;
+            }
+        }
+
+        return "Não identificado";
+    }
+
+    function identificarTitular(
+        texto
+    ) {
+        const linhas =
+            String(
+                texto ||
+                ""
+            )
+                .split(
+                    "\n"
+                )
+                .map(
+                    l =>
+                        l.trim()
+                )
+                .filter(
+                    Boolean
+                );
+
+        let nome =
+            "";
+
+        let documento =
+            "";
+
+        const regexDoc =
+            /\b(?:CPF|CNPJ)?\s*:?\s*((?:\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(?:\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}))\b/i;
+
+        for (
+            let i = 0;
+            i <
+            Math.min(
+                linhas.length,
+                120
+            );
+            i++
+        ) {
+            const linha =
+                linhas[i];
+
+            if (
+                !documento
+            ) {
+                const m =
+                    linha.match(
+                        regexDoc
+                    );
+
+                if (m) {
+                    documento =
+                        m[1]
+                            .replace(
+                                /\D/g,
+                                ""
+                            );
+                }
+            }
+
+            if (!nome) {
+                const m =
+                    linha.match(
+                        /(?:TITULAR|CLIENTE|NOME)\s*:?\s+(.{3,100})$/i
+                    );
+
+                if (m) {
+                    nome =
+                        m[1]
+                            .replace(
+                                regexDoc,
+                                ""
+                            )
+                            .trim();
+                }
+            }
+        }
+
+        return {
+            nome,
+            documento
+        };
+    }
+
+    function identificarPeriodo(
+        texto
+    ) {
+        const regex =
+            /\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})\b/g;
+
+        const datas =
+            [];
+
+        let m;
+
+        while (
+            (
+                m =
+                regex.exec(
+                    String(
+                        texto ||
+                        ""
+                    )
+                )
+            ) !==
+            null
+        ) {
+            const d =
+                criarData(
+                    Number(
+                        m[1]
+                    ),
+                    Number(
+                        m[2]
+                    ),
+                    normalizarAno(
+                        Number(
+                            m[3]
+                        ),
+                        m[3]
+                            .length
+                    )
+                );
+
+            if (d) {
+                datas.push(
+                    d
+                );
+            }
+        }
+
+        if (
+            !datas.length
+        ) {
+            return null;
+        }
+
+        datas.sort(
+            (
+                a,
+                b
+            ) =>
+                a -
+                b
+        );
+
+        return {
+            inicio:
+                datas[0],
+            fim:
+                datas[
+                datas.length -
+                1
+                ]
+        };
+    }
+
+    function diferencaDias(
+        a,
+        b
+    ) {
+        return Math.round(
+            (
+                a.getTime() -
+                b.getTime()
+            ) /
+            86400000
+        );
+    }
+
+    function similaridadeHistorico(
+        a,
+        b
+    ) {
+        const sa =
+            new Set(
+                normalizar(
+                    a
+                )
+                    .split(
+                        " "
+                    )
+                    .filter(
+                        x =>
+                            x.length >
+                            2
+                    )
+            );
+
+        const sb =
+            new Set(
+                normalizar(
+                    b
+                )
+                    .split(
+                        " "
+                    )
+                    .filter(
+                        x =>
+                            x.length >
+                            2
+                    )
+            );
+
+        if (
+            !sa.size &&
+            !sb.size
+        ) {
+            return 1;
+        }
+
+        let inter =
+            0;
+
+        sa.forEach(
+            function (x) {
+                if (
+                    sb.has(
+                        x
+                    )
+                ) {
+                    inter++;
+                }
+            }
+        );
+
+        const uniao =
+            new Set([
+                ...sa,
+                ...sb
+            ]).size;
+
+        return uniao
+            ? inter /
+            uniao
+            : 0;
+    }
+
+    function criarData(
+        dia,
+        mes,
+        ano
+    ) {
+        if (
+            dia < 1 ||
+            dia > 31 ||
+            mes < 1 ||
+            mes > 12 ||
+            ano < 1900 ||
+            ano > 2200
+        ) {
+            return null;
+        }
+
+        const d =
+            new Date(
+                ano,
+                mes -
+                1,
+                dia,
+                12
+            );
+
+        if (
+            d.getDate() !==
+            dia ||
+            d.getMonth() !==
+            mes -
+            1 ||
+            d.getFullYear() !==
+            ano
+        ) {
+            return null;
+        }
+
+        return d;
+    }
+
+    function normalizarAno(
+        ano,
+        tamanho
+    ) {
+        if (
+            tamanho ===
+            2
+        ) {
+            return ano >=
+                70
+                ? 1900 +
+                ano
+                : 2000 +
+                ano;
+        }
+
+        return ano;
+    }
+
+    function competencia(
+        d
+    ) {
+        return (
+            d.getFullYear() +
+            "-" +
+            String(
+                d.getMonth() +
+                1
+            ).padStart(
+                2,
+                "0"
+            )
+        );
+    }
+
+    function formatarData(
+        d
+    ) {
+        return (
+            String(
+                d.getDate()
+            ).padStart(
+                2,
+                "0"
+            ) +
+            "/" +
+            String(
+                d.getMonth() +
+                1
+            ).padStart(
+                2,
+                "0"
+            ) +
+            "/" +
+            d.getFullYear()
+        );
+    }
+
+    function formatarCompetencia(
+        c
+    ) {
+        const p =
+            String(
+                c ||
+                ""
+            ).split(
+                "-"
+            );
+
+        return p.length ===
+            2
+            ? p[1] +
+            "/" +
+            p[0]
+            : c;
+    }
+
+    function converterValorFlexivel(
+        valor
+    ) {
+        let s =
+            String(
+                valor ||
+                ""
+            )
+                .replace(
+                    /R\$/gi,
+                    ""
+                )
+                .replace(
+                    /\s+/g,
+                    ""
+                );
+
+        const negativo =
+            s.startsWith(
+                "-"
+            );
+
+        s =
+            s.replace(
+                /^[+-]/,
+                ""
+            );
+
+        if (
+            s.includes(
+                ","
+            )
+        ) {
+            s =
+                s
+                    .replace(
+                        /\./g,
+                        ""
+                    )
+                    .replace(
+                        ",",
+                        "."
+                    );
+        }
+
+        s =
+            s.replace(
+                /[^\d.]/g,
+                ""
+            );
+
+        const n =
+            Number(
+                s
+            );
+
+        if (
+            !Number.isFinite(
+                n
+            )
+        ) {
+            return NaN;
+        }
+
+        return negativo
+            ? -n
+            : n;
+    }
+
+    function normalizar(
+        texto
+    ) {
+        return String(
+            texto ||
+            ""
+        )
+            .normalize(
+                "NFD"
+            )
+            .replace(
+                /[\u0300-\u036f]/g,
+                ""
+            )
+            .toUpperCase()
+            .replace(
+                /[.,:;()[\]{}]+/g,
+                " "
+            )
+            .replace(
+                /[-–—]+/g,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+    }
+
+    function limparHistorico(
+        texto
+    ) {
+        return String(
+            texto ||
+            ""
+        )
+            .replace(
+                /^[|;,\s]+|[|;,\s]+$/g,
+                ""
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+    }
+
+    function maisFrequente(
+        lista
+    ) {
+        const mapa =
+            new Map();
+
+        let melhor =
+            "";
+
+        let quantidade =
+            0;
+
+        lista.forEach(
+            function (v) {
+                const valor =
+                    String(
+                        v ||
+                        ""
+                    ).trim();
+
+                if (
+                    !valor
+                ) {
+                    return;
+                }
+
+                const atual =
+                    (
+                        mapa.get(
+                            valor
+                        ) ||
+                        0
+                    ) +
+                    1;
+
+                mapa.set(
+                    valor,
+                    atual
+                );
+
+                if (
+                    atual >
+                    quantidade
+                ) {
+                    melhor =
+                        valor;
+
+                    quantidade =
+                        atual;
+                }
+            }
+        );
+
+        return melhor;
+    }
+
+    function formatarDocumento(
+        doc
+    ) {
+        const s =
+            String(
+                doc ||
+                ""
+            ).replace(
+                /\D/g,
+                ""
+            );
+
+        if (
+            s.length ===
+            11
+        ) {
+            return s.replace(
+                /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                "$1.$2.$3-$4"
+            );
+        }
+
+        if (
+            s.length ===
+            14
+        ) {
+            return s.replace(
+                /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+                "$1.$2.$3/$4-$5"
+            );
+        }
+
+        return doc ||
+            "";
+    }
+
+    function formatarMoeda(
+        v
+    ) {
+        return Number(
+            v ||
+            0
+        ).toLocaleString(
+            "pt-BR",
+            {
+                style:
+                    "currency",
+                currency:
+                    "BRL",
+                minimumFractionDigits:
+                    2,
+                maximumFractionDigits:
+                    2
+            }
+        );
+    }
+
+    function formatarValor(
+        v
+    ) {
+        return Number(
+            v ||
+            0
+        ).toLocaleString(
+            "pt-BR",
+            {
+                minimumFractionDigits:
+                    2,
+                maximumFractionDigits:
+                    2,
+                useGrouping:
+                    true
+            }
+        );
+    }
+
+    function formatarTamanho(
+        bytes
+    ) {
+        const n =
+            Number(
+                bytes ||
+                0
+            );
+
+        if (
+            n <
+            1024
+        ) {
+            return (
+                n +
+                " B"
+            );
+        }
+
+        if (
+            n <
+            1024 *
+            1024
+        ) {
+            return (
+                n /
+                1024
+            ).toFixed(
+                1
+            ) +
+                " KB";
+        }
+
+        return (
+            n /
+            (
+                1024 *
+                1024
+            )
+        ).toFixed(
+            1
+        ) +
+            " MB";
+    }
+
+    function obterExtensao(
+        nome
+    ) {
+        const p =
+            String(
+                nome ||
+                ""
+            )
+                .toLowerCase()
+                .split(
+                    "."
+                );
+
+        return p.length >
+            1
+            ? p.pop()
+            : "";
+    }
+
+    function sanitizarTag(
+        v
+    ) {
+        return String(
+            v ||
+            ""
+        )
+            .replace(
+                /[\[\]\r\n]/g,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
     }
 
     function definirStatus(
@@ -3381,24 +4714,31 @@
                 "statusLeituraExtrato"
             );
 
-        if (!el) return;
+        if (
+            !el
+        ) {
+            return;
+        }
 
         el.textContent =
-            texto || "";
+            texto;
 
         el.className =
-            "status-leitura-ocr" +
+            "status-leitura-ocr status-" +
             (
-                tipo
-                    ? " status-" +
-                    tipo
-                    : ""
+                tipo ||
+                "info"
             );
     }
 
-    function definirTexto(id, texto) {
+    function definirTexto(
+        id,
+        texto
+    ) {
         const el =
-            document.getElementById(id);
+            document.getElementById(
+                id
+            );
 
         if (el) {
             el.textContent =
@@ -3406,20 +4746,21 @@
         }
     }
 
-    function obterTbody(id) {
-        const el =
-            document.getElementById(id);
+    function obterTbody(
+        id
+    ) {
+        const tabela =
+            document.getElementById(
+                id
+            );
 
-        if (!el) {
+        if (!tabela) {
             return null;
         }
 
-        return el.tagName ===
-            "TBODY"
-            ? el
-            : el.querySelector(
-                "tbody"
-            );
+        return tabela.querySelector(
+            "tbody"
+        );
     }
 
     function inserirVazio(
@@ -3436,550 +4777,23 @@
             '<td colspan="' +
             colunas +
             '" class="sem-dados">' +
-            escapar(texto) +
+            escapar(
+                texto
+            ) +
             "</td>";
 
-        tbody.appendChild(tr);
+        tbody.appendChild(
+            tr
+        );
     }
 
-    function obterExtensao(nome) {
-        const partes =
-            String(nome || "")
-                .toLowerCase()
-                .split(".");
-
-        return partes.length > 1
-            ? partes.pop()
-            : "";
-    }
-
-    function formatarTamanho(bytes) {
-        const n =
-            Number(bytes || 0);
-
-        if (n < 1024) {
-            return n + " B";
-        }
-
-        if (
-            n <
-            1024 * 1024
-        ) {
-            return (
-                n / 1024
-            ).toFixed(1) +
-                " KB";
-        }
-
-        return (
-            n /
-            (
-                1024 *
-                1024
-            )
-        ).toFixed(1) +
-            " MB";
-    }
-
-    function normalizar(texto) {
-        return String(texto || "")
-            .normalize("NFD")
-            .replace(
-                /[\u0300-\u036f]/g,
-                ""
-            )
-            .toUpperCase()
-            .replace(/\u00A0/g, " ")
-            .replace(
-                /[.,:;()[\]{}]+/g,
-                " "
-            )
-            .replace(
-                /[-–—]+/g,
-                " "
-            )
-            .replace(
-                /[*_=<>]+/g,
-                " "
-            )
-            .replace(/\s+/g, " ")
-            .trim();
-    }
-
-    function limparHistorico(texto) {
-        return String(texto || "")
-            .replace(
-                /^[|;,\s]+|[|;,\s]+$/g,
-                " "
-            )
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
-    }
-
-    function converterValorFlexivel(
-        valor
+    function escapar(
+        texto
     ) {
-        let s =
-            String(valor || "")
-                .replace(
-                    /R\$/gi,
-                    ""
-                )
-                .replace(
-                    /\s+/g,
-                    ""
-                )
-                .trim();
-
-        if (!s) {
-            return NaN;
-        }
-
-        let negativo = false;
-
-        if (
-            s.startsWith("-")
-        ) {
-            negativo = true;
-            s = s.substring(1);
-        }
-
-        if (
-            s.startsWith("+")
-        ) {
-            s = s.substring(1);
-        }
-
-        const ultimaVirgula =
-            s.lastIndexOf(",");
-
-        const ultimoPonto =
-            s.lastIndexOf(".");
-
-        if (
-            ultimaVirgula >= 0 &&
-            ultimoPonto >= 0
-        ) {
-            if (
-                ultimaVirgula >
-                ultimoPonto
-            ) {
-                s =
-                    s
-                        .replace(
-                            /\./g,
-                            ""
-                        )
-                        .replace(
-                            ",",
-                            "."
-                        );
-            } else {
-                s =
-                    s.replace(
-                        /,/g,
-                        ""
-                    );
-            }
-        } else if (
-            ultimaVirgula >= 0
-        ) {
-            s =
-                s
-                    .replace(
-                        /\./g,
-                        ""
-                    )
-                    .replace(
-                        ",",
-                        "."
-                    );
-        } else if (
-            ultimoPonto >= 0
-        ) {
-            const decimais =
-                s.length -
-                ultimoPonto -
-                1;
-
-            if (
-                decimais !== 2
-            ) {
-                s =
-                    s.replace(
-                        /\./g,
-                        ""
-                    );
-            }
-        }
-
-        s =
-            s.replace(
-                /[^\d.]/g,
-                ""
-            );
-
-        const n =
-            Number(s);
-
-        if (
-            !Number.isFinite(n)
-        ) {
-            return NaN;
-        }
-
-        return negativo
-            ? -n
-            : n;
-    }
-
-    function normalizarAno(
-        ano,
-        tamanho
-    ) {
-        if (
-            tamanho === 2
-        ) {
-            return ano >= 70
-                ? 1900 + ano
-                : 2000 + ano;
-        }
-
-        return ano;
-    }
-
-    function criarData(
-        dia,
-        mes,
-        ano
-    ) {
-        if (
-            !Number.isInteger(dia) ||
-            !Number.isInteger(mes) ||
-            !Number.isInteger(ano) ||
-            dia < 1 ||
-            dia > 31 ||
-            mes < 1 ||
-            mes > 12 ||
-            ano < 1900 ||
-            ano > 2200
-        ) {
-            return null;
-        }
-
-        const d =
-            new Date(
-                ano,
-                mes - 1,
-                dia,
-                12,
-                0,
-                0,
-                0
-            );
-
-        if (
-            d.getFullYear() !==
-            ano ||
-            d.getMonth() !==
-            mes - 1 ||
-            d.getDate() !==
-            dia
-        ) {
-            return null;
-        }
-
-        return d;
-    }
-
-    function formatarData(d) {
-        if (
-            !(d instanceof Date) ||
-            Number.isNaN(
-                d.getTime()
-            )
-        ) {
-            return "";
-        }
-
-        return (
-            String(
-                d.getDate()
-            ).padStart(
-                2,
-                "0"
-            ) +
-            "/" +
-            String(
-                d.getMonth() + 1
-            ).padStart(
-                2,
-                "0"
-            ) +
-            "/" +
-            d.getFullYear()
-        );
-    }
-
-    function competencia(d) {
-        if (
-            !(d instanceof Date) ||
-            Number.isNaN(
-                d.getTime()
-            )
-        ) {
-            return "";
-        }
-
-        return (
-            d.getFullYear() +
-            "-" +
-            String(
-                d.getMonth() + 1
-            ).padStart(
-                2,
-                "0"
-            )
-        );
-    }
-
-    function formatarCompetencia(c) {
-        const p =
-            String(c || "")
-                .split("-");
-
-        return p.length === 2
-            ? p[1] +
-            "/" +
-            p[0]
-            : c;
-    }
-
-    function competenciasEntre(
-        inicio,
-        fim
-    ) {
-        if (
-            !(inicio instanceof Date) ||
-            !(fim instanceof Date)
-        ) {
-            return [];
-        }
-
-        const atual =
-            new Date(
-                inicio.getFullYear(),
-                inicio.getMonth(),
-                1
-            );
-
-        const final =
-            new Date(
-                fim.getFullYear(),
-                fim.getMonth(),
-                1
-            );
-
-        const arr = [];
-
-        while (
-            atual <= final
-        ) {
-            arr.push(
-                competencia(
-                    atual
-                )
-            );
-
-            atual.setMonth(
-                atual.getMonth() +
-                1
-            );
-        }
-
-        return arr;
-    }
-
-    function diferencaDias(a, b) {
-        return Math.round(
-            (
-                a.getTime() -
-                b.getTime()
-            ) /
-            86400000
-        );
-    }
-
-    function similaridadeHistorico(
-        a,
-        b
-    ) {
-        const sa =
-            new Set(
-                normalizar(a)
-                    .split(" ")
-                    .filter(
-                        x =>
-                            x.length > 2
-                    )
-            );
-
-        const sb =
-            new Set(
-                normalizar(b)
-                    .split(" ")
-                    .filter(
-                        x =>
-                            x.length > 2
-                    )
-            );
-
-        if (
-            !sa.size &&
-            !sb.size
-        ) {
-            return 1;
-        }
-
-        let inter = 0;
-
-        sa.forEach(
-            function (x) {
-                if (sb.has(x)) {
-                    inter++;
-                }
-            }
-        );
-
-        const uniao =
-            new Set(
-                [
-                    ...sa,
-                    ...sb
-                ]
-            ).size;
-
-        return uniao
-            ? inter / uniao
-            : 0;
-    }
-
-    function maisFrequente(lista) {
-        if (!lista.length) {
-            return "";
-        }
-
-        const mapa = {};
-        let melhor = "";
-        let quantidade = 0;
-
-        lista.forEach(
-            function (valor) {
-                const chave =
-                    String(
-                        valor || ""
-                    ).trim();
-
-                if (!chave) {
-                    return;
-                }
-
-                mapa[chave] =
-                    (
-                        mapa[chave] ||
-                        0
-                    ) + 1;
-
-                if (
-                    mapa[chave] >
-                    quantidade
-                ) {
-                    quantidade =
-                        mapa[chave];
-
-                    melhor =
-                        chave;
-                }
-            }
-        );
-
-        return melhor;
-    }
-
-    function formatarDocumento(doc) {
-        const s =
-            String(doc || "")
-                .replace(
-                    /\D/g,
-                    ""
-                );
-
-        if (
-            s.length === 11
-        ) {
-            return s.replace(
-                /(\d{3})(\d{3})(\d{3})(\d{2})/,
-                "$1.$2.$3-$4"
-            );
-        }
-
-        if (
-            s.length === 14
-        ) {
-            return s.replace(
-                /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-                "$1.$2.$3/$4-$5"
-            );
-        }
-
-        return doc || "";
-    }
-
-    function formatarMoeda(v) {
-        return Number(
-            v || 0
-        ).toLocaleString(
-            "pt-BR",
-            {
-                style: "currency",
-                currency: "BRL",
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
-    }
-
-    function formatarValor(v) {
-        return Number(
-            v || 0
-        ).toLocaleString(
-            "pt-BR",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-                useGrouping: true
-            }
-        );
-    }
-
-    function sanitizarTag(v) {
-        return String(v || "")
-            .replace(
-                /[\[\]\r\n]/g,
-                " "
-            )
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
-    }
-
-    function escapar(texto) {
-        return String(texto || "")
+        return String(
+            texto ||
+            ""
+        )
             .replace(
                 /&/g,
                 "&amp;"
@@ -4003,9 +4817,14 @@
     }
 
     window.MediaMovimentacaoOCR = {
-        processar: processarExtratos,
-        limpar: limparTudo,
-        aplicar: aplicarAoMotor,
+        processar:
+            processarExtratos,
+
+        limpar:
+            limparTudo,
+
+        aplicar:
+            aplicarAoMotor,
 
         obterResultado:
             function () {
