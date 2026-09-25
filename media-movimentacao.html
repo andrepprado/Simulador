@@ -4,559 +4,507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Média de Movimentação | Caixa de Ferramentas</title>
-
+    <title>Média de Movimentação | Sicoob Mantiqueira</title>
     <link rel="icon" type="image/png" href="img/caixaFerramentas.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-    <!-- =====================================================
-         CABEÇALHO
-         ===================================================== -->
-
     <header class="topo">
         <div class="container topo-conteudo">
-
             <div class="topo-textos">
                 <h1>Média de Movimentação</h1>
-                <p>
-                    Analise extratos de conta corrente e calcule a média
-                    mensal das movimentações de crédito consideradas.
-                </p>
+                <p>Analise extratos de conta corrente e calcule a média mensal das movimentações de crédito
+                    consideradas.</p>
             </div>
-
             <div class="topo-logo">
                 <img src="img/logoBranco.png" alt="Sicoob Mantiqueira">
             </div>
-
         </div>
     </header>
-
-    <!-- =====================================================
-         MENU PRINCIPAL
-         ===================================================== -->
-
     <div id="menuPrincipal"></div>
-
-    <!-- =====================================================
-         CONTEÚDO PRINCIPAL
-         ===================================================== -->
-
     <main class="container media-movimentacao-container">
-
-        <!-- =================================================
-             EXTRATO DA CONTA CORRENTE
-             ================================================= -->
-
-        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao">
-
+        <!-- =====================================================
+             ANÁLISE E CONSOLIDAÇÃO LOCAL DE EXTRATOS
+        ====================================================== -->
+        <section class="card card-largura-total card-analise-ia" id="cardAnaliseExtratosIA">
             <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Movimentação Financeira
-                </span>
-
-                <h2>
-                    Extrato da Conta Corrente
-                </h2>
-
-                <p>
-                    Copie o extrato do SISBR e cole no campo abaixo.
-                    O sistema identifica as movimentações, o período
-                    efetivo do primeiro bloco de extrato e os históricos
-                    encontrados.
-                </p>
-
+                <div>
+                    <span class="categoria-etiqueta">Análise de Extratos</span>
+                    <h2>Análise e Consolidação de Múltiplos Extratos</h2>
+                    <p>Selecione extratos de diferentes bancos e períodos. Os arquivos são processados localmente no
+                        navegador, sem envio para serviços externos. O sistema extrai, normaliza e consolida as
+                        movimentações para conferência antes do cálculo.</p>
+                </div>
             </div>
-
-            <div class="campo">
-
-                <label for="textoExtratoMovimentacao">
-                    Extrato
+            <div class="aviso-info orientacao-local-extratos">
+                <strong>Processamento local</strong>
+                <span>Os arquivos selecionados permanecem no navegador durante a análise. PDFs com texto são processados
+                    pelo PDF.js instalado localmente no projeto. Arquivos PDF formados exclusivamente por imagens podem
+                    exigir conferência manual.</span>
+            </div>
+            <div class="area-upload-extrato-ia" id="areaUploadExtratoIA">
+                <input type="file" id="arquivosExtratoIA" accept=".pdf,.txt,.csv,application/pdf,text/plain,text/csv"
+                    multiple hidden>
+                <label for="arquivosExtratoIA" class="area-upload-extrato-ia-conteudo">
+                    <strong>Selecionar extratos bancários</strong>
+                    <span>Clique para selecionar ou arraste os arquivos para esta área.</span>
+                    <small>Formatos aceitos: PDF, TXT e CSV. É possível selecionar vários arquivos de diferentes bancos
+                        e períodos.</small>
                 </label>
-
-                <textarea id="textoExtratoMovimentacao" rows="10" spellcheck="false" autocomplete="off"
-                    placeholder="Cole aqui o extrato da conta corrente..."></textarea>
-
-                <small>
-                    Saldo Anterior, Saldo Bloqueado Anterior e Saldo do Dia
-                    são linhas informativas e não definem o período de
-                    apuração. Caso mais de um bloco de extrato seja colado,
-                    será considerado o primeiro bloco identificado.
-                </small>
-
             </div>
-
+            <div class="resumo-arquivos-ia">
+                <strong>Arquivos selecionados: <span id="quantidadeArquivosIA">0</span></strong>
+            </div>
+            <div id="listaArquivosExtratoIA" class="lista-arquivos-extrato-ia">
+                <div class="sem-dados">Nenhum arquivo selecionado.</div>
+            </div>
+            <div class="campo">
+                <label for="orientacaoAnaliseIA">Observação para análise</label>
+                <textarea id="orientacaoAnaliseIA" rows="3" spellcheck="true" autocomplete="off"
+                    placeholder="Campo opcional para registrar observações sobre os extratos ou sobre a análise."></textarea>
+                <small>Este campo é apenas informativo no processamento local e não é enviado para serviços
+                    externos.</small>
+            </div>
             <div class="acoes">
-
-                <button type="button" id="btnProcessarMovimentacao" class="btn btn-primario">
-                    Processar Extrato
-                </button>
-
-                <button type="button" id="btnLimparMovimentacao" class="btn btn-secundario">
-                    Limpar
-                </button>
-
+                <button type="button" id="btnAnalisarExtratosIA" class="btn btn-primario" disabled>Analisar e
+                    Consolidar</button>
+                <button type="button" id="btnLimparExtratosIA" class="btn btn-secundario" disabled>Limpar
+                    Arquivos</button>
             </div>
-
+            <div id="statusAnaliseIA" class="status-analise-ia" aria-live="polite">Selecione os extratos bancários que
+                serão analisados localmente.</div>
         </section>
 
-        <!-- =================================================
-             PERÍODO DE APURAÇÃO
-             ================================================= -->
-
-        <section class="card configuracao-card" id="cardPeriodoMovimentacao">
-
+        <!-- =====================================================
+             RESULTADO DA ANÁLISE LOCAL
+        ====================================================== -->
+        <section class="card card-largura-total card-resultado-analise-ia" id="cardResultadoAnaliseIA" hidden>
             <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Período
-                </span>
-
-                <h2>
-                    Período de Apuração
-                </h2>
-
-                <p>
-                    Os valores são preenchidos automaticamente,
-                    porém todos os campos permanecem disponíveis
-                    para alteração manual.
-                </p>
-
+                <div>
+                    <span class="categoria-etiqueta">Consolidação</span>
+                    <h2>Resultado da Análise dos Extratos</h2>
+                    <p>Confira os documentos, bancos, períodos e movimentações identificados. As marcações podem ser
+                        alteradas antes de enviar os dados ao cálculo definitivo.</p>
+                </div>
             </div>
 
-            <div class="grid-form">
-
-                <!-- Primeira Movimentação -->
-
-                <div class="campo">
-
-                    <label for="primeiraDataMovimentacao">
-                        Primeira movimentação
-                    </label>
-
-                    <input type="text" id="primeiraDataMovimentacao" value="" placeholder="DD/MM/AAAA"
-                        inputmode="numeric" autocomplete="off">
-
-                    <small>
-                        Preenchida automaticamente e disponível
-                        para ajuste manual.
-                    </small>
-
+            <div class="dados-gerais-analise-ia">
+                <div class="dado-analise-ia">
+                    <span>Titular</span>
+                    <strong id="iaNomeTitular">Não identificado</strong>
                 </div>
-
-                <!-- Última Movimentação -->
-
-                <div class="campo">
-
-                    <label for="ultimaDataMovimentacao">
-                        Última movimentação
-                    </label>
-
-                    <input type="text" id="ultimaDataMovimentacao" value="" placeholder="DD/MM/AAAA" inputmode="numeric"
-                        autocomplete="off">
-
-                    <small>
-                        Preenchida automaticamente e disponível
-                        para ajuste manual.
-                    </small>
-
+                <div class="dado-analise-ia">
+                    <span>CPF/CNPJ</span>
+                    <strong id="iaDocumentoTitular">Não identificado</strong>
                 </div>
-
-                <!-- Meses Detectados -->
-
-                <div class="campo">
-
-                    <label for="mesesDetectadosMovimentacao">
-                        Meses detectados
-                    </label>
-
-                    <input type="number" id="mesesDetectadosMovimentacao" value="" min="1" step="1" inputmode="numeric"
-                        placeholder="Ex.: 1">
-
-                    <small>
-                        Preenchido automaticamente e disponível
-                        para ajuste manual.
-                    </small>
-
+                <div class="dado-analise-ia">
+                    <span>Período identificado</span>
+                    <strong id="iaPeriodoAnalise">Não identificado</strong>
                 </div>
-
-                <!-- Meses Considerados -->
-
-                <div class="campo">
-
-                    <label for="mesesConsideradosMovimentacao">
-                        Meses considerados
-                    </label>
-
-                    <input type="number" id="mesesConsideradosMovimentacao" value="" min="1" step="1"
-                        inputmode="numeric" placeholder="Ex.: 1">
-
-                    <small>
-                        Quantidade efetivamente utilizada como
-                        divisor da média mensal.
-                    </small>
-
+                <div class="dado-analise-ia">
+                    <span>Instituições</span>
+                    <strong id="iaInstituicoesAnalise">Não identificadas</strong>
                 </div>
-
-            </div>
-
-            <!-- Regra do Período -->
-
-            <div class="aviso-info aviso-periodo-movimentacao">
-
-                <strong>
-                    Regra do período
-                </strong>
-
-                <span>
-                    O período automático considera somente as movimentações
-                    efetivas pertencentes ao primeiro bloco do extrato.
-                    Saldo Anterior, Saldo Bloqueado Anterior e Saldo do Dia
-                    não entram na definição da primeira ou última movimentação.
-                </span>
-
-            </div>
-
-            <!-- Ações -->
-
-            <div class="acoes">
-
-                <button type="button" id="btnRecalcularMovimentacao" class="btn btn-secundario">
-                    Recalcular
-                </button>
-
-                <button type="button" id="btnRestaurarPeriodoMovimentacao" class="btn btn-secundario">
-                    Restaurar Período Automático
-                </button>
-
-            </div>
-
-        </section>
-
-        <!-- =================================================
-             RESULTADO
-             ================================================= -->
-
-        <aside class="card resultado-card" id="cardResultadoMovimentacao">
-
-            <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Resultado
-                </span>
-
-                <h2>
-                    Média de Movimentação
-                </h2>
-
-                <p>
-                    Resultado calculado apenas com os créditos
-                    considerados válidos.
-                </p>
-
-            </div>
-
-            <!-- Resultado Principal -->
-
-            <div class="resultado-destaque">
-
-                <span>
-                    Média mensal
-                </span>
-
-                <strong id="resultadoMediaMovimentacao">
-                    R$ 0,00
-                </strong>
-
-            </div>
-
-            <!-- Indicadores -->
-
-            <div class="resultados-grid">
-
-                <div class="resultado-item">
-
-                    <span>
-                        Total considerado
-                    </span>
-
-                    <strong id="resultadoTotalMovimentacao">
-                        R$ 0,00
-                    </strong>
-
+                <div class="dado-analise-ia">
+                    <span>Arquivos analisados</span>
+                    <strong id="iaQuantidadeArquivos">0</strong>
                 </div>
-
-                <div class="resultado-item">
-
-                    <span>
-                        Meses considerados
-                    </span>
-
-                    <strong id="resultadoMesesMovimentacao">
-                        0
-                    </strong>
-
-                </div>
-
-                <div class="resultado-item">
-
-                    <span>
-                        Créditos considerados
-                    </span>
-
-                    <strong id="resultadoQtdConsiderados">
-                        0
-                    </strong>
-
-                </div>
-
-                <div class="resultado-item">
-
-                    <span>
-                        Movimentações desconsideradas
-                    </span>
-
-                    <strong id="resultadoQtdExcluidos">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </aside>
-
-        <!-- =================================================
-             HISTÓRICOS DO EXTRATO
-             ================================================= -->
-
-        <section class="card card-largura-total" id="cardHistoricosMovimentacao">
-
-            <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Regras
-                </span>
-
-                <h2>
-                    Históricos do Extrato
-                </h2>
-
-                <p>
-                    Todos os históricos identificados são apresentados
-                    abaixo. Os históricos sugeridos para exclusão ficam
-                    inicialmente marcados, mas todas as marcações podem
-                    ser alteradas manualmente.
-                </p>
-
-            </div>
-
-            <div id="resumoRegrasMovimentacao" class="aviso-info resumo-regras-movimentacao">
-                Processe um extrato para visualizar os históricos encontrados.
             </div>
 
             <div class="separador"></div>
 
-            <div id="listaRegrasMovimentacao">
-
-                <div class="sem-dados">
-                    Nenhum histórico identificado.
+            <div class="subsecao-analise-ia">
+                <h3>Documentos identificados</h3>
+                <p>Relação dos arquivos processados, instituição identificada e competência encontrada.</p>
+                <div id="listaDocumentosAnaliseIA" class="lista-documentos-analise-ia">
+                    <div class="sem-dados">Nenhum documento analisado.</div>
                 </div>
-
             </div>
 
+            <div class="subsecao-analise-ia">
+                <h3>Alertas e pontos para conferência</h3>
+                <p>Itens que não puderam ser interpretados com segurança devem ser conferidos antes da aplicação ao
+                    cálculo.</p>
+                <div id="listaAlertasAnaliseIA" class="lista-alertas-analise-ia">
+                    <div class="aviso-info">Nenhum alerta adicional.</div>
+                </div>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="preview-resultado-ia">
+                <div class="resultado-destaque">
+                    <span>Média mensal preliminar</span>
+                    <strong id="iaMediaMensal">R$ 0,00</strong>
+                </div>
+                <div class="resultados-grid">
+                    <div class="resultado-item">
+                        <span>Total de créditos válidos</span>
+                        <strong id="iaTotalCreditosValidos">R$ 0,00</strong>
+                    </div>
+                    <div class="resultado-item">
+                        <span>Meses considerados</span>
+                        <strong id="iaMesesConsiderados">0</strong>
+                    </div>
+                    <div class="resultado-item">
+                        <span>Mês de maior movimentação</span>
+                        <strong id="iaMaiorMes">-</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="subsecao-analise-ia">
+                <h3>Créditos válidos por mês</h3>
+                <p>Consolidação preliminar dos créditos marcados para consideração, agrupados pelas competências
+                    identificadas nos extratos.</p>
+                <div class="tabela-wrapper">
+                    <table id="tabelaResumoMensalIA">
+                        <thead>
+                            <tr>
+                                <th>Mês</th>
+                                <th>Quantidade</th>
+                                <th>Bancos</th>
+                                <th>Total Considerado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="sem-dados">Nenhuma análise realizada.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="subsecao-analise-ia">
+                <h3>Resumo por instituição</h3>
+                <p>Distribuição dos créditos considerados entre as instituições identificadas.</p>
+                <div class="tabela-wrapper">
+                    <table id="tabelaResumoBancosIA">
+                        <thead>
+                            <tr>
+                                <th>Banco</th>
+                                <th>Quantidade</th>
+                                <th>Total Considerado</th>
+                                <th>Média por Competência</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="sem-dados">Nenhuma análise realizada.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="subsecao-analise-ia">
+                <div class="cabecalho-revisao-ia">
+                    <div>
+                        <h3>Revisão das movimentações</h3>
+                        <p>Confira cada lançamento identificado. Créditos duvidosos, possíveis transferências próprias,
+                            duplicidades, empréstimos, investimentos e outras exclusões permanecem disponíveis para
+                            conferência.</p>
+                    </div>
+                    <div class="acoes acoes-revisao-ia">
+                        <button type="button" id="btnSelecionarTodosIA" class="btn btn-secundario">Considerar Todos os
+                            Créditos</button>
+                        <button type="button" id="btnDesmarcarTodosIA" class="btn btn-secundario">Desmarcar
+                            Todos</button>
+                    </div>
+                </div>
+                <div class="aviso-info">
+                    <strong>Conferência obrigatória</strong>
+                    <span>O processamento local utiliza regras determinísticas. Casos ambíguos não devem ser tratados
+                        como conclusão automática. Revise as marcações antes de aplicar a consolidação ao
+                        cálculo.</span>
+                </div>
+                <div class="tabela-wrapper tabela-revisao-ia-wrapper">
+                    <table id="tabelaMovimentacoesIA">
+                        <thead>
+                            <tr>
+                                <th>Considerar</th>
+                                <th>Data</th>
+                                <th>Banco</th>
+                                <th>Histórico</th>
+                                <th>Valor</th>
+                                <th>Natureza</th>
+                                <th>Classificação</th>
+                                <th>Motivo</th>
+                                <th>Confiança</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="9" class="sem-dados">Nenhuma análise realizada.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="subsecao-analise-ia">
+                <h3>Resumo da análise</h3>
+                <p>O texto abaixo é produzido a partir das movimentações atualmente marcadas para consideração.</p>
+                <div class="campo">
+                    <label for="parecerAnaliseIA">Resumo</label>
+                    <textarea id="parecerAnaliseIA" rows="10" spellcheck="false" autocomplete="off"></textarea>
+                </div>
+                <div class="acoes">
+                    <button type="button" id="btnAplicarAnaliseIA" class="btn btn-primario">Aplicar ao Cálculo da
+                        Média</button>
+                    <button type="button" id="btnCopiarParecerIA" class="btn btn-secundario">Copiar Resumo</button>
+                </div>
+            </div>
         </section>
 
-        <!-- =================================================
+        <!-- =====================================================
+             EXTRATO MANUAL
+        ====================================================== -->
+        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao">
+            <div class="titulo-secao">
+                <div>
+                    <span class="categoria-etiqueta">Movimentação Financeira</span>
+                    <h2>Extrato da Conta Corrente</h2>
+                    <p>Para utilização manual, copie o extrato do SISBR e cole no campo abaixo. Na análise de múltiplos
+                        extratos, este campo é preenchido automaticamente após a consolidação.</p>
+                </div>
+            </div>
+            <div class="campo">
+                <label for="textoExtratoMovimentacao">Extrato consolidado</label>
+                <textarea id="textoExtratoMovimentacao" rows="10" spellcheck="false" autocomplete="off"
+                    placeholder="Cole aqui o extrato da conta corrente ou utilize a análise de múltiplos extratos acima..."></textarea>
+                <small>Linhas informativas como Saldo Anterior, Saldo Bloqueado Anterior e Saldo do Dia não participam
+                    da identificação do período.</small>
+            </div>
+            <div class="acoes">
+                <button type="button" id="btnProcessarMovimentacao" class="btn btn-primario">Processar Extrato</button>
+                <button type="button" id="btnLimparMovimentacao" class="btn btn-secundario">Limpar</button>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PERÍODO
+        ====================================================== -->
+        <section class="card configuracao-card" id="cardPeriodoMovimentacao">
+            <div class="titulo-secao">
+                <div>
+                    <span class="categoria-etiqueta">Período</span>
+                    <h2>Período de Apuração</h2>
+                    <p>O período é identificado automaticamente. Quando a consolidação de múltiplos extratos for
+                        utilizada, a quantidade de meses considera as competências efetivamente documentadas.</p>
+                </div>
+            </div>
+            <div class="grid-form">
+                <div class="campo">
+                    <label for="primeiraDataMovimentacao">Primeira movimentação</label>
+                    <input type="text" id="primeiraDataMovimentacao" value="" placeholder="DD/MM/AAAA"
+                        inputmode="numeric" autocomplete="off">
+                    <small>Preenchida automaticamente e disponível para ajuste manual.</small>
+                </div>
+                <div class="campo">
+                    <label for="ultimaDataMovimentacao">Última movimentação</label>
+                    <input type="text" id="ultimaDataMovimentacao" value="" placeholder="DD/MM/AAAA" inputmode="numeric"
+                        autocomplete="off">
+                    <small>Preenchida automaticamente e disponível para ajuste manual.</small>
+                </div>
+                <div class="campo">
+                    <label for="mesesDetectadosMovimentacao">Meses detectados</label>
+                    <input type="number" id="mesesDetectadosMovimentacao" value="" min="1" step="1" inputmode="numeric"
+                        placeholder="Ex.: 3">
+                    <small>Na consolidação local, representa as competências documentadas identificadas.</small>
+                </div>
+                <div class="campo">
+                    <label for="mesesConsideradosMovimentacao">Meses considerados</label>
+                    <input type="number" id="mesesConsideradosMovimentacao" min="1" step="1" inputmode="numeric"
+                        placeholder="Ex.: 3">
+                    <small>Preenchido automaticamente e ajustável manualmente quando necessário.</small>
+                </div>
+            </div>
+            <div class="aviso-info aviso-periodo-movimentacao">
+                <strong>Regra do período</strong>
+                <span>Na utilização manual, o período segue as regras do extrato processado. Na consolidação de
+                    múltiplos arquivos, o divisor padrão corresponde às competências efetivamente documentadas. Assim,
+                    por exemplo, extratos de abril, junho e agosto correspondem inicialmente a três meses considerados,
+                    e não a cinco meses corridos.</span>
+            </div>
+            <div class="acoes">
+                <button type="button" id="btnRecalcularMovimentacao" class="btn btn-secundario">Recalcular</button>
+                <button type="button" id="btnRestaurarPeriodoMovimentacao" class="btn btn-secundario">Restaurar Período
+                    Automático</button>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             RESULTADO
+        ====================================================== -->
+        <aside class="card resultado-card" id="cardResultadoMovimentacao">
+            <div class="titulo-secao">
+                <div>
+                    <span class="categoria-etiqueta">Resultado</span>
+                    <h2>Média de Movimentação</h2>
+                    <p>Resultado calculado apenas com os créditos considerados válidos.</p>
+                </div>
+            </div>
+            <div class="resultado-destaque">
+                <span>Média mensal</span>
+                <strong id="resultadoMediaMovimentacao">R$ 0,00</strong>
+            </div>
+            <div class="resultados-grid">
+                <div class="resultado-item">
+                    <span>Total considerado</span>
+                    <strong id="resultadoTotalMovimentacao">R$ 0,00</strong>
+                </div>
+                <div class="resultado-item">
+                    <span>Meses considerados</span>
+                    <strong id="resultadoMesesMovimentacao">0</strong>
+                </div>
+                <div class="resultado-item">
+                    <span>Créditos considerados</span>
+                    <strong id="resultadoQtdConsiderados">0</strong>
+                </div>
+                <div class="resultado-item">
+                    <span>Movimentações desconsideradas</span>
+                    <strong id="resultadoQtdExcluidos">0</strong>
+                </div>
+            </div>
+        </aside>
+
+        <!-- =====================================================
+             HISTÓRICOS
+        ====================================================== -->
+        <section class="card card-largura-total" id="cardHistoricosMovimentacao">
+            <div class="titulo-secao">
+                <div>
+                    <span class="categoria-etiqueta">Regras</span>
+                    <h2>Históricos do Extrato</h2>
+                    <p>Todos os históricos encontrados são apresentados abaixo. Os históricos sugeridos para exclusão já
+                        são exibidos marcados, porém todas as marcações ficam disponíveis para alteração manual.</p>
+                </div>
+            </div>
+            <div id="resumoRegrasMovimentacao" class="aviso-info resumo-regras-movimentacao">Processe um extrato para
+                visualizar os históricos encontrados.</div>
+            <div class="separador"></div>
+            <div id="listaRegrasMovimentacao">
+                <div class="sem-dados">Nenhum histórico identificado.</div>
+            </div>
+        </section>
+
+        <!-- =====================================================
              RESUMO MENSAL
-             ================================================= -->
-
+        ====================================================== -->
         <section class="card card-largura-total" id="cardResumoMensalMovimentacao">
-
             <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Resumo Mensal
-                </span>
-
-                <h2>
-                    Movimentação por Mês
-                </h2>
-
-                <p>
-                    Total de créditos considerados em cada competência
-                    pertencente ao período de apuração.
-                </p>
-
+                <div>
+                    <span class="categoria-etiqueta">Resumo Mensal</span>
+                    <h2>Movimentação por Mês</h2>
+                    <p>Total de créditos considerados em cada competência pertencente ao período de apuração.</p>
+                </div>
             </div>
-
             <div class="tabela-wrapper">
-
                 <table id="tabelaResumoMensalMovimentacao">
-
                     <thead>
                         <tr>
-                            <th scope="col">Mês</th>
-                            <th scope="col">Quantidade</th>
-                            <th scope="col">Total Considerado</th>
+                            <th>Mês</th>
+                            <th>Quantidade</th>
+                            <th>Total Considerado</th>
                         </tr>
                     </thead>
-
                     <tbody>
-
                         <tr>
-                            <td colspan="3" class="sem-dados">
-                                Nenhum extrato processado.
-                            </td>
+                            <td colspan="3" class="sem-dados">Nenhum extrato processado.</td>
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </section>
 
-        <!-- =================================================
+        <!-- =====================================================
              CRÉDITOS CONSIDERADOS
-             ================================================= -->
-
+        ====================================================== -->
         <section class="card card-largura-total" id="cardCreditosConsideradosMovimentacao">
-
             <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Movimentações
-                </span>
-
-                <h2>
-                    Créditos Considerados
-                </h2>
-
-                <p>
-                    Movimentações de crédito que efetivamente
-                    participam do cálculo da média mensal.
-                </p>
-
+                <div>
+                    <span class="categoria-etiqueta">Movimentações</span>
+                    <h2>Créditos Considerados</h2>
+                    <p>Movimentações de crédito que efetivamente participam do cálculo da média mensal.</p>
+                </div>
             </div>
-
             <div class="tabela-wrapper">
-
                 <table id="tabelaMovimentacoesConsideradas">
-
                     <thead>
                         <tr>
-                            <th scope="col">Data</th>
-                            <th scope="col">Documento</th>
-                            <th scope="col">Histórico</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Identificação</th>
+                            <th>Data</th>
+                            <th>Documento</th>
+                            <th>Histórico</th>
+                            <th>Valor</th>
+                            <th>Identificação</th>
                         </tr>
                     </thead>
-
                     <tbody>
-
                         <tr>
-                            <td colspan="5" class="sem-dados">
-                                Nenhum extrato processado.
-                            </td>
+                            <td colspan="5" class="sem-dados">Nenhum extrato processado.</td>
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </section>
 
-        <!-- =================================================
-             MOVIMENTAÇÕES DESCONSIDERADAS
-             ================================================= -->
-
+        <!-- =====================================================
+             DESCONSIDERADAS
+        ====================================================== -->
         <section class="card card-largura-total" id="cardMovimentacoesExcluidas">
-
             <div class="titulo-secao">
-
-                <span class="categoria-etiqueta">
-                    Exclusões
-                </span>
-
-                <h2>
-                    Movimentações Desconsideradas
-                </h2>
-
-                <p>
-                    Movimentações removidas automaticamente,
-                    identificadas como débito ou excluídas
-                    manualmente do cálculo.
-                </p>
-
+                <div>
+                    <span class="categoria-etiqueta">Exclusões</span>
+                    <h2>Movimentações Desconsideradas</h2>
+                    <p>Movimentações removidas automaticamente, identificadas como débito ou excluídas manualmente do
+                        cálculo.</p>
+                </div>
             </div>
-
             <div class="tabela-wrapper">
-
                 <table id="tabelaMovimentacoesExcluidas">
-
                     <thead>
                         <tr>
-                            <th scope="col">Data</th>
-                            <th scope="col">Documento</th>
-                            <th scope="col">Histórico</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Motivo</th>
+                            <th>Data</th>
+                            <th>Documento</th>
+                            <th>Histórico</th>
+                            <th>Valor</th>
+                            <th>Motivo</th>
                         </tr>
                     </thead>
-
                     <tbody>
-
                         <tr>
-                            <td colspan="5" class="sem-dados">
-                                Nenhum extrato processado.
-                            </td>
+                            <td colspan="5" class="sem-dados">Nenhum extrato processado.</td>
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </section>
-
     </main>
 
-    <!-- =====================================================
-         RODAPÉ
-         ===================================================== -->
-
-    <footer class="rodape">
-
+    <footer>
         <div class="container">
-
-            <p>
-                Caixa de Ferramentas | Sicoob Mantiqueira |
-                Desenvolvimento e Gestão: Área de Processos
-            </p>
-
+            <p>Caixa de Ferramentas | Sicoob Mantiqueira | Desenvolvimento e Gestão: Área de Processos</p>
         </div>
-
     </footer>
 
-    <!-- =====================================================
-         SCRIPTS
-         ===================================================== -->
-
+    <!-- Motor determinístico da Média de Movimentação -->
     <script src="js/media-movimentacao.js"></script>
+
+    <!-- Análise, leitura e consolidação LOCAL dos múltiplos extratos -->
+    <script src="js/media-movimentacao-ia.js"></script>
+
     <script src="js/impressao-pdf.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/preload.js"></script>
-
 </body>
 
 </html>

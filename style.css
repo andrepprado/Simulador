@@ -9242,11 +9242,9 @@ body:has(#btnSimular) .simulador-grid .hide {
     }
 }
 
-
 /* =========================================================
    12. MEDIA-MOVIMENTACAO.HTML
    ========================================================= */
-
 
 /* =========================================================
    12.1 CONTAINER PRINCIPAL
@@ -9276,11 +9274,12 @@ body:has(#btnSimular) .simulador-grid .hide {
     min-width: 0;
 }
 
-
 /* =========================================================
    12.2 POSICIONAMENTO DOS CARDS
    ========================================================= */
 
+.media-movimentacao-container>#cardAnaliseExtratosIA,
+.media-movimentacao-container>#cardResultadoAnaliseIA,
 .media-movimentacao-container>#cardExtratoMovimentacao {
     grid-column: 1 / -1;
 }
@@ -9300,7 +9299,6 @@ body:has(#btnSimular) .simulador-grid .hide {
 .media-movimentacao-container>.card-largura-total {
     grid-column: 1 / -1;
 }
-
 
 /* =========================================================
    12.3 CARDS
@@ -9333,7 +9331,6 @@ body:has(#btnSimular) .simulador-grid .hide {
             var(--turquesa),
             var(--verde-escuro));
 }
-
 
 /* =========================================================
    12.4 TÍTULOS DOS CARDS
@@ -9378,6 +9375,14 @@ body:has(#btnSimular) .simulador-grid .hide {
     letter-spacing: -.2px;
 }
 
+.media-movimentacao-container .titulo-secao h3 {
+    margin: 0 0 5px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
 .media-movimentacao-container .titulo-secao p {
     max-width: 880px;
     margin: 0;
@@ -9385,7 +9390,6 @@ body:has(#btnSimular) .simulador-grid .hide {
     font-size: 9px;
     line-height: 1.5;
 }
-
 
 /* =========================================================
    12.5 CAMPOS
@@ -9399,6 +9403,10 @@ body:has(#btnSimular) .simulador-grid .hide {
     min-width: 0;
     margin: 0;
     padding: 0;
+}
+
+.media-movimentacao-container .campo+.campo {
+    margin-top: 14px;
 }
 
 .media-movimentacao-container .campo label {
@@ -9420,9 +9428,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     line-height: 1.45;
 }
 
-
 /* =========================================================
-   12.6 INPUTS
+   12.6 INPUTS E TEXTAREAS
    ========================================================= */
 
 .media-movimentacao-container .campo input,
@@ -9473,6 +9480,11 @@ body:has(#btnSimular) .simulador-grid .hide {
     box-shadow: 0 0 0 3px rgba(0, 160, 145, .08);
 }
 
+.media-movimentacao-container .campo textarea[readonly] {
+    background: #F8FAFA;
+    color: var(--texto);
+    cursor: default;
+}
 
 /* =========================================================
    12.7 CAMPO DO EXTRATO
@@ -9515,7 +9527,6 @@ body:has(#btnSimular) .simulador-grid .hide {
     opacity: 1;
 }
 
-
 /* =========================================================
    12.8 AÇÕES
    ========================================================= */
@@ -9531,7 +9542,6 @@ body:has(#btnSimular) .simulador-grid .hide {
     margin: 18px 0 0;
     padding: 0;
 }
-
 
 /* =========================================================
    12.9 BOTÕES
@@ -9560,7 +9570,8 @@ body:has(#btnSimular) .simulador-grid .hide {
         border-color .18s ease,
         color .18s ease,
         box-shadow .18s ease,
-        transform .18s ease;
+        transform .18s ease,
+        opacity .18s ease;
 }
 
 .media-movimentacao-container .btn-primario {
@@ -9588,46 +9599,24 @@ body:has(#btnSimular) .simulador-grid .hide {
     transform: translateY(-1px);
 }
 
-.media-movimentacao-container .btn:focus-visible {
+.media-movimentacao-container .btn:focus-visible,
+.media-movimentacao-container button:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
 }
 
+.media-movimentacao-container .btn:disabled,
+.media-movimentacao-container button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none !important;
+}
 
 /* =========================================================
-   12.10 PERÍODO DE APURAÇÃO
+   12.10 AVISOS GERAIS
    ========================================================= */
 
-.media-movimentacao-container #cardPeriodoMovimentacao {
-    align-self: stretch;
-}
-
-.media-movimentacao-container #cardPeriodoMovimentacao .grid-form {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-    width: 100%;
-    min-width: 0;
-}
-
-.media-movimentacao-container #primeiraDataMovimentacao,
-.media-movimentacao-container #ultimaDataMovimentacao,
-.media-movimentacao-container #mesesDetectadosMovimentacao,
-.media-movimentacao-container #mesesConsideradosMovimentacao {
-    color: var(--verde-escuro);
-}
-
-.media-movimentacao-container #mesesDetectadosMovimentacao,
-.media-movimentacao-container #mesesConsideradosMovimentacao {
-    font-weight: 750;
-}
-
-
-/* =========================================================
-   12.11 AVISO DO PERÍODO
-   ========================================================= */
-
-.media-movimentacao-container .aviso-periodo-movimentacao {
+.media-movimentacao-container .aviso-info {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -9645,7 +9634,7 @@ body:has(#btnSimular) .simulador-grid .hide {
     line-height: 1.5;
 }
 
-.media-movimentacao-container .aviso-periodo-movimentacao::before {
+.media-movimentacao-container .aviso-info::before {
     content: "";
     position: absolute;
     top: 0;
@@ -9655,31 +9644,774 @@ body:has(#btnSimular) .simulador-grid .hide {
     background: var(--turquesa);
 }
 
-.media-movimentacao-container .aviso-periodo-movimentacao strong {
+.media-movimentacao-container .aviso-info strong {
     display: block;
     color: var(--verde-escuro);
     font-size: 8px;
     font-weight: 800;
 }
 
-.media-movimentacao-container .aviso-periodo-movimentacao span {
+.media-movimentacao-container .aviso-info span {
     display: block;
     color: var(--texto-secundario);
 }
 
+/* =========================================================
+   12.11 CARD DE ANÁLISE DE EXTRATOS
+   ========================================================= */
+
+.media-movimentacao-container #cardAnaliseExtratosIA {
+    overflow: visible;
+}
+
+.media-movimentacao-container #cardAnaliseExtratosIA>.aviso-info {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.media-movimentacao-container .orientacao-local-extratos {
+    margin-bottom: 18px;
+}
 
 /* =========================================================
-   12.12 RESULTADO
+   12.12 ÁREA DE UPLOAD
+   ========================================================= */
+
+.media-movimentacao-container .area-upload-extrato-ia {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    width: 100%;
+    min-width: 0;
+    min-height: 145px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1.5px dashed rgba(0, 160, 145, .45);
+    border-radius: 11px;
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .035),
+            rgba(201, 210, 0, .025));
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+.media-movimentacao-container .area-upload-extrato-ia:hover {
+    border-color: var(--turquesa);
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .065),
+            rgba(201, 210, 0, .04));
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .045);
+}
+
+.media-movimentacao-container .area-upload-extrato-ia.arrastando,
+.media-movimentacao-container .area-upload-extrato-ia.drag-over,
+.media-movimentacao-container .area-upload-extrato-ia.ativo {
+    border-color: var(--turquesa);
+    background: rgba(0, 160, 145, .08);
+    box-shadow: 0 0 0 4px rgba(0, 160, 145, .07);
+    transform: translateY(-1px);
+}
+
+.media-movimentacao-container .area-upload-extrato-ia input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.media-movimentacao-container .area-upload-extrato-ia-conteudo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    min-height: 145px;
+    margin: 0;
+    padding: 24px;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.media-movimentacao-container .area-upload-extrato-ia-conteudo::before {
+    content: "+";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 0 0 4px;
+    border: 1px solid rgba(0, 160, 145, .18);
+    border-radius: 50%;
+    background: rgba(0, 160, 145, .08);
+    color: var(--turquesa);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.media-movimentacao-container .area-upload-extrato-ia-conteudo strong {
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.media-movimentacao-container .area-upload-extrato-ia-conteudo span {
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+.media-movimentacao-container .area-upload-extrato-ia-conteudo small {
+    color: #7B8E91;
+    font-size: 7px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   12.13 QUANTIDADE DE ARQUIVOS
+   ========================================================= */
+
+.media-movimentacao-container .resumo-arquivos-ia {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+    margin: 8px 0 0;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.4;
+}
+
+.media-movimentacao-container .resumo-arquivos-ia strong {
+    color: var(--texto-secundario);
+    font-size: 7px;
+    font-weight: 700;
+}
+
+.media-movimentacao-container #quantidadeArquivosIA {
+    color: var(--turquesa);
+    font-size: 8px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   12.14 LISTA DE ARQUIVOS
+   ========================================================= */
+
+.media-movimentacao-container .lista-arquivos-extrato-ia {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+.media-movimentacao-container .lista-arquivos-extrato-ia>.sem-dados {
+    grid-column: 1 / -1;
+    padding: 15px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+}
+
+.media-movimentacao-container .arquivo-extrato-ia,
+.media-movimentacao-container .item-arquivo-ia {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    margin: 0;
+    padding: 9px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+}
+
+.media-movimentacao-container .arquivo-extrato-ia-conteudo,
+.media-movimentacao-container .item-arquivo-ia-conteudo {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.media-movimentacao-container .arquivo-extrato-ia strong,
+.media-movimentacao-container .item-arquivo-ia strong {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--verde-escuro);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.media-movimentacao-container .arquivo-extrato-ia span,
+.media-movimentacao-container .arquivo-extrato-ia small,
+.media-movimentacao-container .item-arquivo-ia span,
+.media-movimentacao-container .item-arquivo-ia small {
+    display: block;
+    margin-top: 2px;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.35;
+}
+
+.media-movimentacao-container .arquivo-extrato-ia button,
+.media-movimentacao-container .item-arquivo-ia button,
+.media-movimentacao-container .btn-remover-arquivo-ia {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+    min-height: 27px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    background: var(--branco);
+    color: #8A5555;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.media-movimentacao-container .arquivo-extrato-ia button:hover,
+.media-movimentacao-container .item-arquivo-ia button:hover,
+.media-movimentacao-container .btn-remover-arquivo-ia:hover {
+    border-color: rgba(166, 60, 60, .35);
+    background: rgba(166, 60, 60, .045);
+    color: #A63C3C;
+}
+
+/* =========================================================
+   12.15 OBSERVAÇÃO DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container #cardAnaliseExtratosIA>.campo {
+    margin-top: 16px;
+}
+
+.media-movimentacao-container #orientacaoAnaliseIA {
+    min-height: 88px;
+    max-height: 220px;
+}
+
+/* =========================================================
+   12.16 STATUS DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container .status-analise-ia {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 14px 0 0;
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    font-weight: 650;
+    line-height: 1.45;
+}
+
+.media-movimentacao-container .status-analise-ia.processando,
+.media-movimentacao-container .status-analise-ia.carregando {
+    border-color: rgba(0, 160, 145, .18);
+    background: rgba(0, 160, 145, .045);
+    color: var(--verde-escuro);
+}
+
+.media-movimentacao-container .status-analise-ia.sucesso {
+    border-color: rgba(0, 160, 145, .22);
+    background: rgba(0, 160, 145, .065);
+    color: var(--verde-escuro);
+}
+
+.media-movimentacao-container .status-analise-ia.erro {
+    border-color: rgba(166, 60, 60, .22);
+    background: rgba(166, 60, 60, .045);
+    color: #8F3434;
+}
+
+.media-movimentacao-container .status-analise-ia.aviso {
+    border-color: rgba(174, 132, 0, .22);
+    background: rgba(201, 210, 0, .065);
+    color: #655C19;
+}
+
+/* =========================================================
+   12.17 RESULTADO DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container #cardResultadoAnaliseIA {
+    overflow: hidden;
+}
+
+/* =========================================================
+   12.18 DADOS GERAIS DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container .dados-gerais-analise-ia {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+.media-movimentacao-container .dado-analise-ia {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 58px;
+    padding: 10px 11px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+}
+
+.media-movimentacao-container .dado-analise-ia span {
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.35;
+}
+
+.media-movimentacao-container .dado-analise-ia strong {
+    color: var(--verde-escuro);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.media-movimentacao-container #iaNomeTitular,
+.media-movimentacao-container #iaDocumentoTitular,
+.media-movimentacao-container #iaPeriodoAnalise,
+.media-movimentacao-container #iaInstituicoesAnalise,
+.media-movimentacao-container #iaQuantidadeArquivos {
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   12.19 SUBSEÇÕES DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container .subsecao-analise-ia {
+    width: 100%;
+    min-width: 0;
+    margin: 18px 0 0;
+}
+
+.media-movimentacao-container .subsecao-analise-ia:first-child {
+    margin-top: 0;
+}
+
+.media-movimentacao-container .subsecao-analise-ia h3 {
+    margin: 0 0 4px;
+    color: var(--verde-escuro);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.media-movimentacao-container .subsecao-analise-ia>p {
+    max-width: 900px;
+    margin: 0 0 11px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   12.20 DOCUMENTOS IDENTIFICADOS
+   ========================================================= */
+
+.media-movimentacao-container .lista-documentos-analise-ia {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
+.media-movimentacao-container .lista-documentos-analise-ia>.sem-dados {
+    grid-column: 1 / -1;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+}
+
+.media-movimentacao-container .documento-analise-ia,
+.media-movimentacao-container .item-documento-ia {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+}
+
+.media-movimentacao-container .documento-analise-ia strong,
+.media-movimentacao-container .item-documento-ia strong {
+    color: var(--verde-escuro);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.media-movimentacao-container .documento-analise-ia span,
+.media-movimentacao-container .documento-analise-ia small,
+.media-movimentacao-container .item-documento-ia span,
+.media-movimentacao-container .item-documento-ia small {
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   12.21 ALERTAS
+   ========================================================= */
+
+.media-movimentacao-container .lista-alertas-analise-ia {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+    min-width: 0;
+}
+
+.media-movimentacao-container .lista-alertas-analise-ia>.aviso-info {
+    margin-top: 0;
+}
+
+.media-movimentacao-container .lista-alertas-analise-ia>.sem-dados {
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+}
+
+.media-movimentacao-container .alerta-analise-ia,
+.media-movimentacao-container .item-alerta-ia {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    padding: 9px 11px 9px 14px;
+    overflow: hidden;
+    border: 1px solid rgba(174, 132, 0, .18);
+    border-radius: 8px;
+    background: rgba(201, 210, 0, .045);
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+.media-movimentacao-container .alerta-analise-ia::before,
+.media-movimentacao-container .item-alerta-ia::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: var(--verde-claro);
+}
+
+/* =========================================================
+   12.22 RESULTADO PRELIMINAR DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container .preview-resultado-ia {
+    width: 100%;
+    min-width: 0;
+}
+
+.media-movimentacao-container .preview-resultado-ia .resultados-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.media-movimentacao-container #iaTotalCreditosValidos,
+.media-movimentacao-container #iaMediaMensal,
+.media-movimentacao-container #iaMesesConsiderados,
+.media-movimentacao-container #iaMaiorMes {
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   12.23 CABEÇALHO DA REVISÃO
+   ========================================================= */
+
+.media-movimentacao-container .cabecalho-revisao-ia {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 11px;
+}
+
+.media-movimentacao-container .cabecalho-revisao-ia>div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.media-movimentacao-container .cabecalho-revisao-ia h3 {
+    margin-bottom: 4px;
+}
+
+.media-movimentacao-container .cabecalho-revisao-ia p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+.media-movimentacao-container .acoes-revisao-ia {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin: 0;
+}
+
+/* =========================================================
+   12.24 TABELA DE REVISÃO
+   ========================================================= */
+
+.media-movimentacao-container .tabela-revisao-ia-wrapper,
+.media-movimentacao-container .tabela-wrapper-ia {
+    max-height: 520px;
+    overflow: auto;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA {
+    min-width: 1220px;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA thead {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th {
+    background: var(--fundo-secundario);
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(1),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(1) {
+    width: 76px;
+    text-align: center;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(2),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(2) {
+    width: 90px;
+    white-space: nowrap;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(3),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(3) {
+    width: 125px;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(5),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(5) {
+    width: 115px;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 750;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(6),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(6) {
+    width: 90px;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(7),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(7) {
+    width: 155px;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(9),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(9) {
+    width: 80px;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(4),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(7),
+.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(8) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    accent-color: var(--turquesa);
+    cursor: pointer;
+}
+
+/* =========================================================
+   12.25 ESTADOS DAS LINHAS DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container #tabelaMovimentacoesIA tr.movimentacao-ia-excluida td,
+.media-movimentacao-container #tabelaMovimentacoesIA tr.excluida td,
+.media-movimentacao-container #tabelaMovimentacoesIA tr.desconsiderada td {
+    background: rgba(166, 60, 60, .025);
+    color: #68787A;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA tr.movimentacao-ia-duvida td,
+.media-movimentacao-container #tabelaMovimentacoesIA tr.duvida td {
+    background: rgba(201, 210, 0, .045);
+}
+
+.media-movimentacao-container #tabelaMovimentacoesIA tr.movimentacao-ia-considerada td,
+.media-movimentacao-container #tabelaMovimentacoesIA tr.considerada td {
+    background: rgba(0, 160, 145, .018);
+}
+
+/* =========================================================
+   12.26 RESUMO / PARECER DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container #parecerAnaliseIA {
+    min-height: 180px;
+    max-height: 420px;
+    padding: 13px;
+    overflow-y: auto;
+    border-radius: 9px;
+    background: #FAFCFC;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+/* =========================================================
+   12.27 TABELA - RESUMO MENSAL DA ANÁLISE
+   ========================================================= */
+
+.media-movimentacao-container #tabelaResumoMensalIA {
+    min-width: 650px;
+}
+
+.media-movimentacao-container #tabelaResumoMensalIA th:nth-child(2),
+.media-movimentacao-container #tabelaResumoMensalIA td:nth-child(2),
+.media-movimentacao-container #tabelaResumoMensalIA th:nth-child(4),
+.media-movimentacao-container #tabelaResumoMensalIA td:nth-child(4) {
+    text-align: right;
+}
+
+.media-movimentacao-container #tabelaResumoMensalIA td:nth-child(4) {
+    font-weight: 750;
+}
+
+/* =========================================================
+   12.28 TABELA - RESUMO POR BANCO
+   ========================================================= */
+
+.media-movimentacao-container #tabelaResumoBancosIA {
+    min-width: 650px;
+}
+
+.media-movimentacao-container #tabelaResumoBancosIA th:nth-child(2),
+.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(2),
+.media-movimentacao-container #tabelaResumoBancosIA th:nth-child(3),
+.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(3),
+.media-movimentacao-container #tabelaResumoBancosIA th:nth-child(4),
+.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(4) {
+    text-align: right;
+}
+
+.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(3),
+.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(4) {
+    font-weight: 750;
+}
+
+/* =========================================================
+   12.29 PERÍODO DE APURAÇÃO
+   ========================================================= */
+
+.media-movimentacao-container #cardPeriodoMovimentacao {
+    align-self: stretch;
+}
+
+.media-movimentacao-container #cardPeriodoMovimentacao .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+}
+
+.media-movimentacao-container #cardPeriodoMovimentacao .grid-form .campo {
+    margin-top: 0;
+}
+
+.media-movimentacao-container #primeiraDataMovimentacao,
+.media-movimentacao-container #ultimaDataMovimentacao,
+.media-movimentacao-container #mesesDetectadosMovimentacao,
+.media-movimentacao-container #mesesConsideradosMovimentacao {
+    color: var(--verde-escuro);
+}
+
+.media-movimentacao-container #mesesDetectadosMovimentacao,
+.media-movimentacao-container #mesesConsideradosMovimentacao {
+    font-weight: 750;
+}
+
+.media-movimentacao-container .aviso-periodo-movimentacao {
+    margin-top: 15px;
+}
+
+/* =========================================================
+   12.30 RESULTADO PRINCIPAL
    ========================================================= */
 
 .media-movimentacao-container #cardResultadoMovimentacao {
     align-self: stretch;
 }
-
-
-/* =========================================================
-   12.13 RESULTADO PRINCIPAL
-   ========================================================= */
 
 .media-movimentacao-container .resultado-destaque {
     position: relative;
@@ -9695,7 +10427,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     overflow: hidden;
     border: 1px solid rgba(0, 160, 145, .18);
     border-radius: 10px;
-    background: linear-gradient(135deg,
+    background:
+        linear-gradient(135deg,
             rgba(0, 160, 145, .08),
             rgba(201, 210, 0, .06));
 }
@@ -9731,9 +10464,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     overflow-wrap: anywhere;
 }
 
-
 /* =========================================================
-   12.14 GRID DE RESULTADOS
+   12.31 GRID DE RESULTADOS
    ========================================================= */
 
 .media-movimentacao-container .resultados-grid {
@@ -9777,19 +10509,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     overflow-wrap: anywhere;
 }
 
-
 /* =========================================================
-   12.15 CARD DE HISTÓRICOS
-   ========================================================= */
-
-.media-movimentacao-container #cardHistoricosMovimentacao {
-    width: 100%;
-    min-width: 0;
-}
-
-
-/* =========================================================
-   12.16 RESUMO DAS REGRAS
+   12.32 RESUMO DAS REGRAS
    ========================================================= */
 
 .media-movimentacao-container .resumo-regras-movimentacao {
@@ -9818,24 +10539,22 @@ body:has(#btnSimular) .simulador-grid .hide {
     background: var(--turquesa);
 }
 
-
 /* =========================================================
-   12.17 SEPARADOR
+   12.33 SEPARADOR
    ========================================================= */
 
 .media-movimentacao-container .separador {
     display: block;
     width: 100%;
     height: 1px;
-    margin: 15px 0;
+    margin: 18px 0;
     padding: 0;
     border: 0;
     background: var(--borda);
 }
 
-
 /* =========================================================
-   12.18 LISTA DE REGRAS
+   12.34 LISTA DE REGRAS
    ========================================================= */
 
 .media-movimentacao-container #listaRegrasMovimentacao {
@@ -9852,9 +10571,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     background: var(--branco);
 }
 
-
 /* =========================================================
-   12.19 REGRAS DE MOVIMENTAÇÃO
+   12.35 REGRAS DE MOVIMENTAÇÃO
    ========================================================= */
 
 .media-movimentacao-container .regra-movimentacao-automatica,
@@ -9892,9 +10610,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     font-weight: 800;
 }
 
-
 /* =========================================================
-   12.20 CHECKBOXES DAS REGRAS
+   12.36 CHECKBOXES DAS REGRAS
    ========================================================= */
 
 .media-movimentacao-container #listaRegrasMovimentacao input[type="checkbox"] {
@@ -9914,9 +10631,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     cursor: pointer;
 }
 
-
 /* =========================================================
-   12.21 SEM DADOS
+   12.37 SEM DADOS
    ========================================================= */
 
 .media-movimentacao-container .sem-dados {
@@ -9929,9 +10645,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     text-align: center;
 }
 
-
 /* =========================================================
-   12.22 TABELAS
+   12.38 TABELAS
    ========================================================= */
 
 .media-movimentacao-container .tabela-wrapper {
@@ -9947,6 +10662,7 @@ body:has(#btnSimular) .simulador-grid .hide {
 }
 
 .media-movimentacao-container .tabela-wrapper::-webkit-scrollbar {
+    width: 7px;
     height: 7px;
 }
 
@@ -10007,9 +10723,8 @@ body:has(#btnSimular) .simulador-grid .hide {
     text-align: center;
 }
 
-
 /* =========================================================
-   12.23 TABELA - RESUMO MENSAL
+   12.39 TABELA - RESUMO MENSAL
    ========================================================= */
 
 .media-movimentacao-container #tabelaResumoMensalMovimentacao {
@@ -10023,84 +10738,74 @@ body:has(#btnSimular) .simulador-grid .hide {
     text-align: right;
 }
 
-
 /* =========================================================
-   12.24 TABELA - CRÉDITOS CONSIDERADOS
+   12.40 TABELA - CRÉDITOS CONSIDERADOS
    ========================================================= */
 
 .media-movimentacao-container #tabelaMovimentacoesConsideradas {
     min-width: 760px;
 }
 
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(4),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(4) {
-    text-align: right;
+.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(1),
+.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(1) {
+    width: 90px;
+    white-space: nowrap;
 }
 
+.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(2),
+.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(2) {
+    width: 110px;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(4),
+.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(4) {
+    width: 125px;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 750;
+}
+
+.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(3),
+.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(5) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
 
 /* =========================================================
-   12.25 TABELA - MOVIMENTAÇÕES EXCLUÍDAS
+   12.41 TABELA - MOVIMENTAÇÕES EXCLUÍDAS
    ========================================================= */
 
 .media-movimentacao-container #tabelaMovimentacoesExcluidas {
     min-width: 760px;
 }
 
-.media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(4),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(4) {
-    text-align: right;
-}
-
-
-/* =========================================================
-   12.26 TEXTOS LONGOS DAS TABELAS
-   ========================================================= */
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(3),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(5),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(3),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(5) {
-    white-space: normal;
-    overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   12.27 COLUNAS DE DATA E DOCUMENTO
-   ========================================================= */
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(1),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(1),
 .media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(1),
 .media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(1) {
     width: 90px;
     white-space: nowrap;
 }
 
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(2),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(2),
 .media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(2),
 .media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(2) {
     width: 110px;
 }
 
-
-/* =========================================================
-   12.28 COLUNA DE VALOR
-   ========================================================= */
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(4),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(4),
 .media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(4),
 .media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(4) {
     width: 125px;
+    text-align: right;
     white-space: nowrap;
     font-weight: 750;
 }
 
+.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(3),
+.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(5) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
 
 /* =========================================================
-   12.29 ESTADOS POSITIVOS
+   12.42 ESTADOS POSITIVOS E NEGATIVOS
    ========================================================= */
 
 .media-movimentacao-container .resultado-positivo {
@@ -10108,19 +10813,13 @@ body:has(#btnSimular) .simulador-grid .hide {
     font-weight: 800;
 }
 
-
-/* =========================================================
-   12.30 ESTADOS NEGATIVOS
-   ========================================================= */
-
 .media-movimentacao-container .resultado-negativo {
     color: #A63C3C;
     font-weight: 800;
 }
 
-
 /* =========================================================
-   12.31 ELEMENTOS OCULTOS
+   12.43 ELEMENTOS OCULTOS
    ========================================================= */
 
 .media-movimentacao-container [hidden],
@@ -10128,13 +10827,11 @@ body:has(#btnSimular) .simulador-grid .hide {
     display: none !important;
 }
 
-
 /* =========================================================
-   12.32 DESKTOP REDUZIDO
+   12.44 DESKTOP REDUZIDO
    ========================================================= */
 
 @media (max-width: 1050px) {
-
     .media-movimentacao-container {
         grid-template-columns: minmax(0, 1.3fr) minmax(290px, .7fr);
         width: calc(100% - 40px);
@@ -10149,18 +10846,20 @@ body:has(#btnSimular) .simulador-grid .hide {
         gap: 12px;
     }
 
-    .media-movimentacao-container .resultados-grid {
+    .media-movimentacao-container #cardResultadoMovimentacao .resultados-grid {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .media-movimentacao-container .dados-gerais-analise-ia {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-
 /* =========================================================
-   12.33 TABLET
+   12.45 TABLET
    ========================================================= */
 
 @media (max-width: 850px) {
-
     .media-movimentacao-container {
         grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 32px);
@@ -10169,6 +10868,8 @@ body:has(#btnSimular) .simulador-grid .hide {
         padding-bottom: 38px;
     }
 
+    .media-movimentacao-container>#cardAnaliseExtratosIA,
+    .media-movimentacao-container>#cardResultadoAnaliseIA,
     .media-movimentacao-container>#cardExtratoMovimentacao,
     .media-movimentacao-container>#cardPeriodoMovimentacao,
     .media-movimentacao-container>#cardResultadoMovimentacao,
@@ -10188,15 +10889,31 @@ body:has(#btnSimular) .simulador-grid .hide {
     .media-movimentacao-container .resultados-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .media-movimentacao-container .dados-gerais-analise-ia {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .media-movimentacao-container .lista-arquivos-extrato-ia,
+    .media-movimentacao-container .lista-documentos-analise-ia {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .media-movimentacao-container .cabecalho-revisao-ia {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .media-movimentacao-container .acoes-revisao-ia {
+        justify-content: flex-start;
+    }
 }
 
-
 /* =========================================================
-   12.34 MOBILE
+   12.46 MOBILE
    ========================================================= */
 
 @media (max-width: 650px) {
-
     .media-movimentacao-container {
         width: calc(100% - 24px);
         gap: 12px;
@@ -10217,7 +10934,13 @@ body:has(#btnSimular) .simulador-grid .hide {
         font-size: 16px;
     }
 
-    .media-movimentacao-container .titulo-secao p {
+    .media-movimentacao-container .titulo-secao h3,
+    .media-movimentacao-container .subsecao-analise-ia h3 {
+        font-size: 12px;
+    }
+
+    .media-movimentacao-container .titulo-secao p,
+    .media-movimentacao-container .subsecao-analise-ia>p {
         font-size: 8px;
     }
 
@@ -10233,7 +10956,12 @@ body:has(#btnSimular) .simulador-grid .hide {
         font-size: 9px;
     }
 
-    .media-movimentacao-container .resultados-grid {
+    .media-movimentacao-container .resultados-grid,
+    .media-movimentacao-container .preview-resultado-ia .resultados-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .media-movimentacao-container .dados-gerais-analise-ia {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -10258,15 +10986,42 @@ body:has(#btnSimular) .simulador-grid .hide {
     .media-movimentacao-container table td {
         padding: 8px 9px;
     }
+
+    .media-movimentacao-container .area-upload-extrato-ia,
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
+        min-height: 130px;
+    }
+
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
+        padding: 18px 12px;
+    }
+
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo::before {
+        width: 32px;
+        height: 32px;
+        font-size: 19px;
+    }
+
+    .media-movimentacao-container .lista-arquivos-extrato-ia,
+    .media-movimentacao-container .lista-documentos-analise-ia {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .media-movimentacao-container .tabela-revisao-ia-wrapper,
+    .media-movimentacao-container .tabela-wrapper-ia {
+        max-height: 430px;
+    }
+
+    .media-movimentacao-container #parecerAnaliseIA {
+        min-height: 150px;
+    }
 }
 
-
 /* =========================================================
-   12.35 MOBILE PEQUENO
+   12.47 MOBILE PEQUENO
    ========================================================= */
 
 @media (max-width: 480px) {
-
     .media-movimentacao-container {
         width: calc(100% - 18px);
         gap: 10px;
@@ -10309,7 +11064,9 @@ body:has(#btnSimular) .simulador-grid .hide {
         line-height: 1.5;
     }
 
-    .media-movimentacao-container .resultados-grid {
+    .media-movimentacao-container .resultados-grid,
+    .media-movimentacao-container .preview-resultado-ia .resultados-grid,
+    .media-movimentacao-container .dados-gerais-analise-ia {
         grid-template-columns: minmax(0, 1fr);
     }
 
@@ -10317,11 +11074,13 @@ body:has(#btnSimular) .simulador-grid .hide {
         padding: 14px;
     }
 
-    .media-movimentacao-container .resultado-item {
+    .media-movimentacao-container .resultado-item,
+    .media-movimentacao-container .dado-analise-ia {
         min-height: 0;
         padding: 9px;
     }
 
+    .media-movimentacao-container .aviso-info,
     .media-movimentacao-container .aviso-periodo-movimentacao,
     .media-movimentacao-container .resumo-regras-movimentacao {
         font-size: 7px;
@@ -10333,15 +11092,40 @@ body:has(#btnSimular) .simulador-grid .hide {
         padding: 9px;
         font-size: 7px;
     }
+
+    .media-movimentacao-container .area-upload-extrato-ia,
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
+        min-height: 120px;
+    }
+
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
+        padding: 15px 10px;
+    }
+
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo strong {
+        font-size: 9px;
+    }
+
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo span,
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo small {
+        font-size: 7px;
+    }
+
+    .media-movimentacao-container .resumo-arquivos-ia {
+        justify-content: flex-start;
+    }
+
+    .media-movimentacao-container #parecerAnaliseIA {
+        min-height: 140px;
+        font-size: 8px;
+    }
 }
 
-
 /* =========================================================
-   12.36 MOBILE MUITO PEQUENO
+   12.48 MOBILE MUITO PEQUENO
    ========================================================= */
 
 @media (max-width: 360px) {
-
     .media-movimentacao-container {
         width: calc(100% - 14px);
     }
@@ -10358,15 +11142,17 @@ body:has(#btnSimular) .simulador-grid .hide {
     .media-movimentacao-container .resultado-destaque strong {
         font-size: 17px;
     }
+
+    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
+        padding: 12px 8px;
+    }
 }
 
-
 /* =========================================================
-   12.37 DISPOSITIVOS TOUCH
+   12.49 DISPOSITIVOS TOUCH
    ========================================================= */
 
 @media (hover: none) and (pointer: coarse) {
-
     .media-movimentacao-container .btn:hover {
         transform: none;
     }
@@ -10374,11 +11160,15 @@ body:has(#btnSimular) .simulador-grid .hide {
     .media-movimentacao-container table tbody tr:hover td {
         background: var(--branco);
     }
+
+    .media-movimentacao-container .area-upload-extrato-ia:hover {
+        transform: none;
+        border-color: rgba(0, 160, 145, .45);
+    }
 }
 
-
 /* =========================================================
-   12.38 ACESSIBILIDADE
+   12.50 ACESSIBILIDADE
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -10392,13 +11182,11 @@ body:has(#btnSimular) .simulador-grid .hide {
     }
 }
 
-
 /* =========================================================
-   12.39 IMPRESSÃO
+   12.51 IMPRESSÃO
    ========================================================= */
 
 @media print {
-
     .media-movimentacao-container {
         display: block !important;
         width: 100% !important;
@@ -10424,13 +11212,18 @@ body:has(#btnSimular) .simulador-grid .hide {
         display: none !important;
     }
 
-    .media-movimentacao-container .acoes {
+    .media-movimentacao-container .acoes,
+    .media-movimentacao-container #cardAnaliseExtratosIA,
+    .media-movimentacao-container .area-upload-extrato-ia,
+    .media-movimentacao-container .status-analise-ia {
         display: none !important;
     }
 
-    .media-movimentacao-container #textoExtratoMovimentacao {
+    .media-movimentacao-container #textoExtratoMovimentacao,
+    .media-movimentacao-container #parecerAnaliseIA {
         min-height: 0 !important;
         height: auto !important;
+        max-height: none !important;
         overflow: visible !important;
         border-color: #CCCCCC !important;
         background: #FFFFFF !important;
@@ -10440,20 +11233,30 @@ body:has(#btnSimular) .simulador-grid .hide {
 
     .media-movimentacao-container .resultado-destaque,
     .media-movimentacao-container .resultado-item,
+    .media-movimentacao-container .dado-analise-ia,
+    .media-movimentacao-container .aviso-info,
     .media-movimentacao-container .aviso-periodo-movimentacao,
     .media-movimentacao-container .resumo-regras-movimentacao,
-    .media-movimentacao-container #listaRegrasMovimentacao {
+    .media-movimentacao-container #listaRegrasMovimentacao,
+    .media-movimentacao-container .documento-analise-ia,
+    .media-movimentacao-container .item-documento-ia,
+    .media-movimentacao-container .alerta-analise-ia,
+    .media-movimentacao-container .item-alerta-ia {
         border-color: #CCCCCC !important;
         background: #FFFFFF !important;
         box-shadow: none !important;
     }
 
     .media-movimentacao-container .resultado-destaque strong,
-    .media-movimentacao-container .resultado-item strong {
+    .media-movimentacao-container .resultado-item strong,
+    .media-movimentacao-container .dado-analise-ia strong {
         color: #000000 !important;
     }
 
-    .media-movimentacao-container .tabela-wrapper {
+    .media-movimentacao-container .tabela-wrapper,
+    .media-movimentacao-container .tabela-revisao-ia-wrapper,
+    .media-movimentacao-container .tabela-wrapper-ia {
+        max-height: none !important;
         overflow: visible !important;
         border-radius: 0 !important;
     }
@@ -10461,6 +11264,10 @@ body:has(#btnSimular) .simulador-grid .hide {
     .media-movimentacao-container table {
         width: 100% !important;
         min-width: 0 !important;
+    }
+
+    .media-movimentacao-container #tabelaMovimentacoesIA thead {
+        position: static !important;
     }
 
     .media-movimentacao-container table th,
@@ -10480,11 +11287,9 @@ body:has(#btnSimular) .simulador-grid .hide {
     }
 }
 
-
 /* =========================================================
    FIM 12. MEDIA-MOVIMENTACAO.HTML
    ========================================================= */
-
 
 
 
