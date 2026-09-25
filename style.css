@@ -9928,68 +9928,39 @@ main.sicoobcard-container {
 }
 
 
-
-
 /* =========================================================
-   12. MEDIA-MOVIMENTACAO.HTML
+   MEDIA-MOVIMENTACAO.HTML
    ========================================================= */
 
 /* =========================================================
-   12.1 CONTAINER PRINCIPAL
+   01. ESTRUTURA PRINCIPAL
    ========================================================= */
 
 .media-movimentacao-container,
 .media-movimentacao-container *,
 .media-movimentacao-container *::before,
 .media-movimentacao-container *::after {
-    box-sizing: border-box;
+    box-sizing: border-box
 }
 
-.media-movimentacao-container {
+main.media-movimentacao-container {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(320px, .75fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
     gap: 20px;
     width: calc(100% - 48px);
     max-width: 1180px;
     min-width: 0;
     margin: 0 auto;
-    padding-top: 28px;
-    padding-bottom: 44px;
+    padding: 30px 0 48px;
+    align-items: start
 }
 
 .media-movimentacao-container>* {
-    min-width: 0;
+    min-width: 0
 }
 
 /* =========================================================
-   12.2 POSICIONAMENTO DOS CARDS
-   ========================================================= */
-
-.media-movimentacao-container>#cardAnaliseExtratosIA,
-.media-movimentacao-container>#cardResultadoAnaliseIA,
-.media-movimentacao-container>#cardExtratoMovimentacao {
-    grid-column: 1 / -1;
-}
-
-.media-movimentacao-container>#cardPeriodoMovimentacao {
-    grid-column: 1;
-}
-
-.media-movimentacao-container>#cardResultadoMovimentacao {
-    grid-column: 2;
-}
-
-.media-movimentacao-container>#cardHistoricosMovimentacao,
-.media-movimentacao-container>#cardResumoMensalMovimentacao,
-.media-movimentacao-container>#cardCreditosConsideradosMovimentacao,
-.media-movimentacao-container>#cardMovimentacoesExcluidas,
-.media-movimentacao-container>.card-largura-total {
-    grid-column: 1 / -1;
-}
-
-/* =========================================================
-   12.3 CARDS
+   02. CARDS
    ========================================================= */
 
 .media-movimentacao-container>.card {
@@ -10002,9 +9973,7 @@ main.sicoobcard-container {
     border: 1px solid var(--borda);
     border-radius: 14px;
     background: var(--branco);
-    box-shadow:
-        0 3px 8px rgba(0, 54, 64, .035),
-        0 10px 28px rgba(0, 54, 64, .055);
+    box-shadow: 0 3px 8px rgba(0, 54, 64, .035), 0 10px 28px rgba(0, 54, 64, .055)
 }
 
 .media-movimentacao-container>.card::before {
@@ -10014,14 +9983,24 @@ main.sicoobcard-container {
     right: 0;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg,
-            var(--verde-claro),
-            var(--turquesa),
-            var(--verde-escuro));
+    background: linear-gradient(90deg, var(--verde-claro), var(--turquesa), var(--verde-escuro))
+}
+
+.media-movimentacao-container>.card-largura-total {
+    grid-column: 1/-1
+}
+
+.media-movimentacao-container>.configuracao-card {
+    grid-column: 1
+}
+
+.media-movimentacao-container>.resultado-card {
+    grid-column: 2;
+    align-self: start
 }
 
 /* =========================================================
-   12.4 TÍTULOS DOS CARDS
+   03. TÍTULOS
    ========================================================= */
 
 .media-movimentacao-container .titulo-secao {
@@ -10029,29 +10008,32 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     margin: 0 0 18px;
-    padding: 0;
+    padding: 0
 }
 
 .media-movimentacao-container .titulo-secao>div {
     width: 100%;
-    min-width: 0;
+    min-width: 0
 }
 
-.media-movimentacao-container .titulo-secao .categoria-etiqueta {
+.media-movimentacao-container .categoria-etiqueta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     width: fit-content;
     max-width: 100%;
+    min-height: 21px;
     margin: 0 0 7px;
-    padding: 4px 8px;
-    border-radius: 999px;
+    padding: 4px 9px;
+    border: 1px solid rgba(0, 160, 145, .12);
+    border-radius: 5px;
     background: rgba(0, 160, 145, .08);
     color: var(--turquesa);
-    font-size: 7px;
+    font-size: 8px;
     font-weight: 800;
     line-height: 1.2;
-    letter-spacing: .25px;
-    text-transform: uppercase;
+    letter-spacing: .3px;
+    text-transform: uppercase
 }
 
 .media-movimentacao-container .titulo-secao h2 {
@@ -10060,7 +10042,7 @@ main.sicoobcard-container {
     font-size: 18px;
     font-weight: 800;
     line-height: 1.3;
-    letter-spacing: -.2px;
+    letter-spacing: -.2px
 }
 
 .media-movimentacao-container .titulo-secao h3 {
@@ -10068,19 +10050,51 @@ main.sicoobcard-container {
     color: var(--verde-escuro);
     font-size: 13px;
     font-weight: 800;
-    line-height: 1.35;
+    line-height: 1.35
 }
 
 .media-movimentacao-container .titulo-secao p {
-    max-width: 880px;
+    max-width: 850px;
     margin: 0;
     color: var(--texto-secundario);
     font-size: 9px;
-    line-height: 1.5;
+    font-weight: 400;
+    line-height: 1.5
 }
 
 /* =========================================================
-   12.5 CAMPOS
+   04. SUBSEÇÕES
+   ========================================================= */
+
+.media-movimentacao-container .subsecao-leitura-ocr {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0
+}
+
+.media-movimentacao-container .subsecao-leitura-ocr+.subsecao-leitura-ocr {
+    margin-top: 20px
+}
+
+.media-movimentacao-container .subsecao-leitura-ocr>h3 {
+    margin: 0 0 4px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35
+}
+
+.media-movimentacao-container .subsecao-leitura-ocr>p {
+    margin: 0 0 12px;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.45
+}
+
+/* =========================================================
+   05. CAMPOS
    ========================================================= */
 
 .media-movimentacao-container .campo {
@@ -10090,11 +10104,7 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     margin: 0;
-    padding: 0;
-}
-
-.media-movimentacao-container .campo+.campo {
-    margin-top: 14px;
+    padding: 0
 }
 
 .media-movimentacao-container .campo label {
@@ -10104,21 +10114,8 @@ main.sicoobcard-container {
     color: var(--verde-escuro);
     font-size: 9px;
     font-weight: 750;
-    line-height: 1.4;
+    line-height: 1.4
 }
-
-.media-movimentacao-container .campo small {
-    display: block;
-    width: 100%;
-    margin: 0;
-    color: var(--texto-secundario);
-    font-size: 7px;
-    line-height: 1.45;
-}
-
-/* =========================================================
-   12.6 INPUTS E TEXTAREAS
-   ========================================================= */
 
 .media-movimentacao-container .campo input,
 .media-movimentacao-container .campo select,
@@ -10134,10 +10131,9 @@ main.sicoobcard-container {
     background: var(--branco);
     color: var(--texto);
     font-family: inherit;
-    transition:
-        border-color .18s ease,
-        box-shadow .18s ease,
-        background .18s ease;
+    font-size: 10px;
+    font-weight: 400;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease
 }
 
 .media-movimentacao-container .campo input,
@@ -10145,78 +10141,425 @@ main.sicoobcard-container {
     height: 38px;
     min-height: 38px;
     padding: 0 10px;
-    font-size: 10px;
+    line-height: 1.2
 }
 
 .media-movimentacao-container .campo textarea {
-    padding: 11px;
-    font-size: 10px;
-    line-height: 1.5;
-    resize: vertical;
+    min-height: 90px;
+    padding: 10px;
+    line-height: 1.45;
+    resize: vertical
+}
+
+.media-movimentacao-container .card-extrato-movimentacao .campo textarea {
+    min-height: 190px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9px;
+    line-height: 1.45
 }
 
 .media-movimentacao-container .campo input:hover,
 .media-movimentacao-container .campo select:hover,
 .media-movimentacao-container .campo textarea:hover {
-    border-color: #B5C7C8;
+    border-color: #B5C7C8
 }
 
 .media-movimentacao-container .campo input:focus,
 .media-movimentacao-container .campo select:focus,
 .media-movimentacao-container .campo textarea:focus {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08);
+    background: #FEFFFF;
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08)
 }
 
+.media-movimentacao-container .campo input:disabled,
+.media-movimentacao-container .campo select:disabled,
+.media-movimentacao-container .campo textarea:disabled {
+    border-color: var(--indisponivel-borda);
+    background: var(--indisponivel-fundo);
+    color: var(--indisponivel);
+    cursor: not-allowed
+}
+
+.media-movimentacao-container .campo input[readonly],
 .media-movimentacao-container .campo textarea[readonly] {
-    background: #F8FAFA;
-    color: var(--texto);
-    cursor: default;
+    background: #F7F9F9
+}
+
+.media-movimentacao-container .campo small {
+    display: block;
+    width: 100%;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.4
 }
 
 /* =========================================================
-   12.7 CAMPO DO EXTRATO
+   06. GRID DE FORMULÁRIO
    ========================================================= */
 
-.media-movimentacao-container #textoExtratoMovimentacao {
+.media-movimentacao-container .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
     width: 100%;
     min-width: 0;
-    min-height: 230px;
-    height: 230px;
-    padding: 13px;
-    overflow-x: auto;
-    overflow-y: auto;
-    border: 1px solid var(--borda-forte);
-    border-radius: 9px;
-    background: #FAFCFC;
-    color: var(--texto);
-    font-family: Consolas, "Courier New", monospace;
-    font-size: 10px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    overflow-wrap: normal;
-    word-break: normal;
-    resize: vertical;
-}
-
-.media-movimentacao-container #textoExtratoMovimentacao:hover {
-    border-color: var(--turquesa-claro);
-}
-
-.media-movimentacao-container #textoExtratoMovimentacao:focus {
-    border-color: var(--turquesa);
-    background: var(--branco);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08);
-}
-
-.media-movimentacao-container #textoExtratoMovimentacao::placeholder {
-    color: #8A9A9D;
-    font-family: inherit;
-    opacity: 1;
+    margin: 0;
+    padding: 0
 }
 
 /* =========================================================
-   12.8 AÇÕES
+   07. AVISOS
+   ========================================================= */
+
+.media-movimentacao-container .aviso-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 11px 13px 11px 16px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 160, 145, .15);
+    border-radius: 8px;
+    background: rgba(0, 160, 145, .045);
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.5
+}
+
+.media-movimentacao-container .aviso-info::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: var(--turquesa)
+}
+
+.media-movimentacao-container .aviso-info strong {
+    display: block;
+    margin: 0;
+    color: var(--verde-escuro);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.35
+}
+
+.media-movimentacao-container .aviso-info span {
+    display: block;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.45
+}
+
+.media-movimentacao-container .orientacao-local-extratos {
+    margin-bottom: 18px
+}
+
+.media-movimentacao-container .aviso-periodo-movimentacao {
+    margin-top: 16px
+}
+
+/* =========================================================
+   08. ÁREA DE UPLOAD
+   ========================================================= */
+
+.media-movimentacao-container .area-upload-extrato {
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 12px
+}
+
+.media-movimentacao-container .area-upload-extrato input[type="file"] {
+    display: none !important
+}
+
+.media-movimentacao-container .area-upload-extrato-conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    min-height: 145px;
+    margin: 0;
+    padding: 24px 20px;
+    border: 2px dashed rgba(0, 160, 145, .38);
+    border-radius: 10px;
+    background: rgba(0, 160, 145, .035);
+    color: var(--verde-escuro);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease
+}
+
+.media-movimentacao-container .area-upload-extrato-conteudo:hover {
+    border-color: var(--turquesa);
+    background: rgba(0, 160, 145, .07);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .05);
+    transform: translateY(-1px)
+}
+
+.media-movimentacao-container .area-upload-extrato.arrastando .area-upload-extrato-conteudo {
+    border-color: var(--turquesa);
+    background: rgba(0, 160, 145, .11);
+    box-shadow: 0 0 0 4px rgba(0, 160, 145, .07);
+    transform: none
+}
+
+.media-movimentacao-container .area-upload-extrato-conteudo::before {
+    content: "↑";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 0 0 3px;
+    border-radius: 10px;
+    background: var(--turquesa);
+    color: #FFF;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 5px 12px rgba(0, 160, 145, .16)
+}
+
+.media-movimentacao-container .area-upload-extrato-conteudo strong {
+    display: block;
+    margin: 0;
+    color: var(--verde-escuro);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.35
+}
+
+.media-movimentacao-container .area-upload-extrato-conteudo span {
+    display: block;
+    max-width: 640px;
+    margin: 0;
+    color: var(--texto-secundario);
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 1.45
+}
+
+.media-movimentacao-container .area-upload-extrato-conteudo small {
+    display: block;
+    margin: 1px 0 0;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.4
+}
+
+/* =========================================================
+   09. RESUMO DOS ARQUIVOS
+   ========================================================= */
+
+.media-movimentacao-container .resumo-arquivos-extrato {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    margin: 10px 0 8px;
+    padding: 0 2px
+}
+
+.media-movimentacao-container .resumo-arquivos-extrato strong {
+    color: var(--verde-escuro);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.35
+}
+
+.media-movimentacao-container #quantidadeArquivosExtrato {
+    color: var(--turquesa)
+}
+
+/* =========================================================
+   10. LISTA DE ARQUIVOS
+   ========================================================= */
+
+.media-movimentacao-container .lista-arquivos-extrato {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 16px;
+    padding: 0
+}
+
+.media-movimentacao-container .lista-arquivos-extrato .sem-dados {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    font-size: 8px;
+    font-style: italic;
+    line-height: 1.4;
+    text-align: center
+}
+
+.media-movimentacao-container .arquivo-extrato {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+    transition: border-color .18s ease, background .18s ease
+}
+
+.media-movimentacao-container .arquivo-extrato:hover {
+    border-color: rgba(0, 160, 145, .22);
+    background: #FEFFFF
+}
+
+.media-movimentacao-container .arquivo-extrato-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1 1 auto;
+    min-width: 0
+}
+
+.media-movimentacao-container .arquivo-extrato-info strong {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--verde-escuro);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.media-movimentacao-container .arquivo-extrato-info small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.35
+}
+
+.media-movimentacao-container .btn-remover-arquivo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(199, 58, 58, .18);
+    border-radius: 7px;
+    background: rgba(199, 58, 58, .05);
+    color: var(--erro);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, color .18s ease
+}
+
+.media-movimentacao-container .btn-remover-arquivo:hover {
+    border-color: var(--erro);
+    background: rgba(199, 58, 58, .10)
+}
+
+/* =========================================================
+   11. STATUS DA LEITURA
+   ========================================================= */
+
+.media-movimentacao-container .status-leitura-ocr {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 38px;
+    margin: 12px 0 0;
+    padding: 9px 11px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 1.4
+}
+
+.media-movimentacao-container .status-leitura-ocr.status-info {
+    border-color: var(--borda);
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario)
+}
+
+.media-movimentacao-container .status-leitura-ocr.status-processando {
+    padding-left: 33px;
+    border-color: rgba(0, 160, 145, .22);
+    background: rgba(0, 160, 145, .055);
+    color: var(--verde-escuro)
+}
+
+.media-movimentacao-container .status-leitura-ocr.status-processando::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border: 2px solid rgba(0, 160, 145, .22);
+    border-top-color: var(--turquesa);
+    border-radius: 50%;
+    animation: mediaMovimentacaoSpin .75s linear infinite
+}
+
+.media-movimentacao-container .status-leitura-ocr.status-sucesso {
+    border-color: rgba(71, 125, 13, .22);
+    background: var(--sucesso-fundo);
+    color: var(--sucesso)
+}
+
+.media-movimentacao-container .status-leitura-ocr.status-erro {
+    border-color: rgba(199, 58, 58, .22);
+    background: var(--erro-fundo);
+    color: var(--erro)
+}
+
+@keyframes mediaMovimentacaoSpin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+/* =========================================================
+   12. AÇÕES
    ========================================================= */
 
 .media-movimentacao-container .acoes {
@@ -10228,877 +10571,202 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     margin: 18px 0 0;
-    padding: 0;
+    padding: 0
 }
 
 /* =========================================================
-   12.9 BOTÕES
+   13. BOTÕES
    ========================================================= */
 
-.media-movimentacao-container .acoes .btn,
-.media-movimentacao-container .acoes button {
+.media-movimentacao-container .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     width: auto;
     min-width: 110px;
     min-height: 36px;
     margin: 0;
     padding: 8px 14px;
+    border: 1px solid transparent;
     border-radius: 7px;
     font-family: inherit;
     font-size: 9px;
     font-weight: 800;
     line-height: 1.2;
     text-align: center;
+    text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
-    transition:
-        background .18s ease,
-        border-color .18s ease,
-        color .18s ease,
-        box-shadow .18s ease,
-        transform .18s ease,
-        opacity .18s ease;
+    transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease, opacity .18s ease
+}
+
+.media-movimentacao-container .btn:hover {
+    transform: translateY(-1px)
 }
 
 .media-movimentacao-container .btn-primario {
-    border: 1px solid var(--turquesa);
+    border-color: var(--turquesa);
     background: var(--turquesa);
-    color: var(--branco);
+    color: var(--branco)
 }
 
 .media-movimentacao-container .btn-primario:hover {
     border-color: var(--verde-escuro);
     background: var(--verde-escuro);
-    transform: translateY(-1px);
+    color: var(--branco)
 }
 
 .media-movimentacao-container .btn-secundario {
-    border: 1px solid var(--borda-forte);
+    border-color: var(--borda-forte);
     background: var(--branco);
-    color: var(--verde-escuro);
+    color: var(--verde-escuro)
 }
 
 .media-movimentacao-container .btn-secundario:hover {
     border-color: var(--turquesa);
     background: rgba(0, 160, 145, .045);
-    color: var(--turquesa);
-    transform: translateY(-1px);
+    color: var(--turquesa)
 }
 
-.media-movimentacao-container .btn:focus-visible,
-.media-movimentacao-container button:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10);
-}
-
-.media-movimentacao-container .btn:disabled,
-.media-movimentacao-container button:disabled {
-    opacity: .55;
+.media-movimentacao-container .btn:disabled {
+    border-color: var(--indisponivel-borda);
+    background: var(--indisponivel-fundo);
+    color: var(--indisponivel);
     cursor: not-allowed;
-    transform: none !important;
+    opacity: .72;
+    transform: none;
+    box-shadow: none
+}
+
+.media-movimentacao-container .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10)
 }
 
 /* =========================================================
-   12.10 AVISOS GERAIS
+   14. DADOS GERAIS DA LEITURA
    ========================================================= */
 
-.media-movimentacao-container .aviso-info {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-    min-width: 0;
-    margin: 15px 0 0;
-    padding: 11px 12px 11px 15px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 160, 145, .14);
-    border-radius: 8px;
-    background: rgba(0, 160, 145, .045);
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.5;
-}
-
-.media-movimentacao-container .aviso-info::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 3px;
-    background: var(--turquesa);
-}
-
-.media-movimentacao-container .aviso-info strong {
-    display: block;
-    color: var(--verde-escuro);
-    font-size: 8px;
-    font-weight: 800;
-}
-
-.media-movimentacao-container .aviso-info span {
-    display: block;
-    color: var(--texto-secundario);
-}
-
-/* =========================================================
-   12.11 CARD DE ANÁLISE DE EXTRATOS
-   ========================================================= */
-
-.media-movimentacao-container #cardAnaliseExtratosIA {
-    overflow: visible;
-}
-
-.media-movimentacao-container #cardAnaliseExtratosIA>.aviso-info {
-    margin-top: 0;
-    margin-bottom: 18px;
-}
-
-.media-movimentacao-container .orientacao-local-extratos {
-    margin-bottom: 18px;
-}
-
-/* =========================================================
-   12.12 ÁREA DE UPLOAD
-   ========================================================= */
-
-.media-movimentacao-container .area-upload-extrato-ia {
-    position: relative;
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-    width: 100%;
-    min-width: 0;
-    min-height: 145px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    border: 1.5px dashed rgba(0, 160, 145, .45);
-    border-radius: 11px;
-    background:
-        linear-gradient(135deg,
-            rgba(0, 160, 145, .035),
-            rgba(201, 210, 0, .025));
-    transition:
-        border-color .18s ease,
-        background .18s ease,
-        box-shadow .18s ease,
-        transform .18s ease;
-}
-
-.media-movimentacao-container .area-upload-extrato-ia:hover {
-    border-color: var(--turquesa);
-    background:
-        linear-gradient(135deg,
-            rgba(0, 160, 145, .065),
-            rgba(201, 210, 0, .04));
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .045);
-}
-
-.media-movimentacao-container .area-upload-extrato-ia.arrastando,
-.media-movimentacao-container .area-upload-extrato-ia.drag-over,
-.media-movimentacao-container .area-upload-extrato-ia.ativo {
-    border-color: var(--turquesa);
-    background: rgba(0, 160, 145, .08);
-    box-shadow: 0 0 0 4px rgba(0, 160, 145, .07);
-    transform: translateY(-1px);
-}
-
-.media-movimentacao-container .area-upload-extrato-ia input[type="file"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-.media-movimentacao-container .area-upload-extrato-ia-conteudo {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    width: 100%;
-    min-width: 0;
-    min-height: 145px;
-    margin: 0;
-    padding: 24px;
-    color: inherit;
-    text-align: center;
-    cursor: pointer;
-}
-
-.media-movimentacao-container .area-upload-extrato-ia-conteudo::before {
-    content: "+";
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: 0 0 4px;
-    border: 1px solid rgba(0, 160, 145, .18);
-    border-radius: 50%;
-    background: rgba(0, 160, 145, .08);
-    color: var(--turquesa);
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 1;
-}
-
-.media-movimentacao-container .area-upload-extrato-ia-conteudo strong {
-    color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.4;
-}
-
-.media-movimentacao-container .area-upload-extrato-ia-conteudo span {
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.45;
-}
-
-.media-movimentacao-container .area-upload-extrato-ia-conteudo small {
-    color: #7B8E91;
-    font-size: 7px;
-    line-height: 1.4;
-}
-
-/* =========================================================
-   12.13 QUANTIDADE DE ARQUIVOS
-   ========================================================= */
-
-.media-movimentacao-container .resumo-arquivos-ia {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 5px;
-    width: 100%;
-    min-width: 0;
-    margin: 8px 0 0;
-    color: var(--texto-secundario);
-    font-size: 7px;
-    line-height: 1.4;
-}
-
-.media-movimentacao-container .resumo-arquivos-ia strong {
-    color: var(--texto-secundario);
-    font-size: 7px;
-    font-weight: 700;
-}
-
-.media-movimentacao-container #quantidadeArquivosIA {
-    color: var(--turquesa);
-    font-size: 8px;
-    font-weight: 800;
-}
-
-/* =========================================================
-   12.14 LISTA DE ARQUIVOS
-   ========================================================= */
-
-.media-movimentacao-container .lista-arquivos-extrato-ia {
+.media-movimentacao-container .dados-gerais-leitura-ocr {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    width: 100%;
-    min-width: 0;
-    margin: 10px 0 0;
-    padding: 0;
-}
-
-.media-movimentacao-container .lista-arquivos-extrato-ia>.sem-dados {
-    grid-column: 1 / -1;
-    padding: 15px;
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    background: #FAFCFC;
-}
-
-.media-movimentacao-container .arquivo-extrato-ia,
-.media-movimentacao-container .item-arquivo-ia {
-    display: flex;
-    align-items: center;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 9px;
     width: 100%;
     min-width: 0;
-    min-height: 46px;
     margin: 0;
-    padding: 9px 10px;
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    background: #FAFCFC;
+    padding: 0
 }
 
-.media-movimentacao-container .arquivo-extrato-ia-conteudo,
-.media-movimentacao-container .item-arquivo-ia-conteudo {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.media-movimentacao-container .arquivo-extrato-ia strong,
-.media-movimentacao-container .item-arquivo-ia strong {
-    display: block;
-    max-width: 100%;
-    overflow: hidden;
-    color: var(--verde-escuro);
-    font-size: 8px;
-    font-weight: 800;
-    line-height: 1.4;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.media-movimentacao-container .arquivo-extrato-ia span,
-.media-movimentacao-container .arquivo-extrato-ia small,
-.media-movimentacao-container .item-arquivo-ia span,
-.media-movimentacao-container .item-arquivo-ia small {
-    display: block;
-    margin-top: 2px;
-    color: var(--texto-secundario);
-    font-size: 7px;
-    line-height: 1.35;
-}
-
-.media-movimentacao-container .arquivo-extrato-ia button,
-.media-movimentacao-container .item-arquivo-ia button,
-.media-movimentacao-container .btn-remover-arquivo-ia {
-    flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 27px;
-    height: 27px;
-    min-width: 27px;
-    min-height: 27px;
-    margin: 0;
-    padding: 0;
-    border: 1px solid var(--borda);
-    border-radius: 6px;
-    background: var(--branco);
-    color: #8A5555;
-    font-family: inherit;
-    font-size: 11px;
-    cursor: pointer;
-}
-
-.media-movimentacao-container .arquivo-extrato-ia button:hover,
-.media-movimentacao-container .item-arquivo-ia button:hover,
-.media-movimentacao-container .btn-remover-arquivo-ia:hover {
-    border-color: rgba(166, 60, 60, .35);
-    background: rgba(166, 60, 60, .045);
-    color: #A63C3C;
-}
-
-/* =========================================================
-   12.15 OBSERVAÇÃO DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container #cardAnaliseExtratosIA>.campo {
-    margin-top: 16px;
-}
-
-.media-movimentacao-container #orientacaoAnaliseIA {
-    min-height: 88px;
-    max-height: 220px;
-}
-
-/* =========================================================
-   12.16 STATUS DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container .status-analise-ia {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    margin: 14px 0 0;
-    padding: 10px 12px;
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    background: #FAFCFC;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    font-weight: 650;
-    line-height: 1.45;
-}
-
-.media-movimentacao-container .status-analise-ia.processando,
-.media-movimentacao-container .status-analise-ia.carregando {
-    border-color: rgba(0, 160, 145, .18);
-    background: rgba(0, 160, 145, .045);
-    color: var(--verde-escuro);
-}
-
-.media-movimentacao-container .status-analise-ia.sucesso {
-    border-color: rgba(0, 160, 145, .22);
-    background: rgba(0, 160, 145, .065);
-    color: var(--verde-escuro);
-}
-
-.media-movimentacao-container .status-analise-ia.erro {
-    border-color: rgba(166, 60, 60, .22);
-    background: rgba(166, 60, 60, .045);
-    color: #8F3434;
-}
-
-.media-movimentacao-container .status-analise-ia.aviso {
-    border-color: rgba(174, 132, 0, .22);
-    background: rgba(201, 210, 0, .065);
-    color: #655C19;
-}
-
-/* =========================================================
-   12.17 RESULTADO DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container #cardResultadoAnaliseIA {
-    overflow: hidden;
-}
-
-/* =========================================================
-   12.18 DADOS GERAIS DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container .dados-gerais-analise-ia {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-}
-
-.media-movimentacao-container .dado-analise-ia {
+.media-movimentacao-container .dado-leitura-ocr {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 4px;
     min-width: 0;
-    min-height: 58px;
+    min-height: 64px;
     padding: 10px 11px;
     border: 1px solid var(--borda);
     border-radius: 8px;
-    background: #FAFCFC;
+    background: #FAFCFC
 }
 
-.media-movimentacao-container .dado-analise-ia span {
+.media-movimentacao-container .dado-leitura-ocr span {
+    display: block;
     color: var(--texto-secundario);
     font-size: 7px;
-    line-height: 1.35;
+    font-weight: 400;
+    line-height: 1.35
 }
 
-.media-movimentacao-container .dado-analise-ia strong {
+.media-movimentacao-container .dado-leitura-ocr strong {
+    display: block;
+    min-width: 0;
     color: var(--verde-escuro);
     font-size: 9px;
     font-weight: 800;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
-}
-
-.media-movimentacao-container #iaNomeTitular,
-.media-movimentacao-container #iaDocumentoTitular,
-.media-movimentacao-container #iaPeriodoAnalise,
-.media-movimentacao-container #iaInstituicoesAnalise,
-.media-movimentacao-container #iaQuantidadeArquivos {
-    overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   12.19 SUBSEÇÕES DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container .subsecao-analise-ia {
-    width: 100%;
-    min-width: 0;
-    margin: 18px 0 0;
-}
-
-.media-movimentacao-container .subsecao-analise-ia:first-child {
-    margin-top: 0;
-}
-
-.media-movimentacao-container .subsecao-analise-ia h3 {
-    margin: 0 0 4px;
-    color: var(--verde-escuro);
-    font-size: 12px;
-    font-weight: 800;
     line-height: 1.35;
-}
-
-.media-movimentacao-container .subsecao-analise-ia>p {
-    max-width: 900px;
-    margin: 0 0 11px;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.5;
+    overflow-wrap: anywhere
 }
 
 /* =========================================================
-   12.20 DOCUMENTOS IDENTIFICADOS
+   15. LISTA DE DOCUMENTOS OCR
    ========================================================= */
 
-.media-movimentacao-container .lista-documentos-analise-ia {
+.media-movimentacao-container .lista-documentos-ocr {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 9px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
-.media-movimentacao-container .lista-documentos-analise-ia>.sem-dados {
-    grid-column: 1 / -1;
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    background: #FAFCFC;
-}
-
-.media-movimentacao-container .documento-analise-ia,
-.media-movimentacao-container .item-documento-ia {
+.media-movimentacao-container .documento-ocr-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    width: 100%;
+    gap: 3px;
     min-width: 0;
-    padding: 10px 11px;
+    min-height: 70px;
+    padding: 11px 12px;
     border: 1px solid var(--borda);
     border-radius: 8px;
-    background: #FAFCFC;
+    background: #FAFCFC
 }
 
-.media-movimentacao-container .documento-analise-ia strong,
-.media-movimentacao-container .item-documento-ia strong {
+.media-movimentacao-container .documento-ocr-item strong {
+    display: block;
+    overflow: hidden;
     color: var(--verde-escuro);
     font-size: 8px;
     font-weight: 800;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap
 }
 
-.media-movimentacao-container .documento-analise-ia span,
-.media-movimentacao-container .documento-analise-ia small,
-.media-movimentacao-container .item-documento-ia span,
-.media-movimentacao-container .item-documento-ia small {
+.media-movimentacao-container .documento-ocr-item span {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.35
+}
+
+.media-movimentacao-container .documento-ocr-item small {
+    display: block;
     color: var(--texto-secundario);
     font-size: 7px;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
+    line-height: 1.35
 }
 
 /* =========================================================
-   12.21 ALERTAS
+   16. ALERTAS
    ========================================================= */
 
-.media-movimentacao-container .lista-alertas-analise-ia {
+.media-movimentacao-container .lista-alertas-ocr {
     display: flex;
     flex-direction: column;
     gap: 7px;
     width: 100%;
-    min-width: 0;
+    min-width: 0
 }
 
-.media-movimentacao-container .lista-alertas-analise-ia>.aviso-info {
-    margin-top: 0;
-}
-
-.media-movimentacao-container .lista-alertas-analise-ia>.sem-dados {
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    background: #FAFCFC;
-}
-
-.media-movimentacao-container .alerta-analise-ia,
-.media-movimentacao-container .item-alerta-ia {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-    padding: 9px 11px 9px 14px;
-    overflow: hidden;
-    border: 1px solid rgba(174, 132, 0, .18);
-    border-radius: 8px;
-    background: rgba(201, 210, 0, .045);
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.45;
-}
-
-.media-movimentacao-container .alerta-analise-ia::before,
-.media-movimentacao-container .item-alerta-ia::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 3px;
-    background: var(--verde-claro);
+.media-movimentacao-container .lista-alertas-ocr .aviso-info {
+    margin: 0
 }
 
 /* =========================================================
-   12.22 RESULTADO PRELIMINAR DA ANÁLISE
+   17. PREVIEW DO RESULTADO
    ========================================================= */
 
-.media-movimentacao-container .preview-resultado-ia {
-    width: 100%;
-    min-width: 0;
-}
-
-.media-movimentacao-container .preview-resultado-ia .resultados-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.media-movimentacao-container #iaTotalCreditosValidos,
-.media-movimentacao-container #iaMediaMensal,
-.media-movimentacao-container #iaMesesConsiderados,
-.media-movimentacao-container #iaMaiorMes {
-    overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   12.23 CABEÇALHO DA REVISÃO
-   ========================================================= */
-
-.media-movimentacao-container .cabecalho-revisao-ia {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    width: 100%;
-    min-width: 0;
-    margin: 0 0 11px;
-}
-
-.media-movimentacao-container .cabecalho-revisao-ia>div:first-child {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.media-movimentacao-container .cabecalho-revisao-ia h3 {
-    margin-bottom: 4px;
-}
-
-.media-movimentacao-container .cabecalho-revisao-ia p {
-    max-width: 760px;
-    margin: 0;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.5;
-}
-
-.media-movimentacao-container .acoes-revisao-ia {
-    flex: 0 0 auto;
-    justify-content: flex-end;
-    margin: 0;
-}
-
-/* =========================================================
-   12.24 TABELA DE REVISÃO
-   ========================================================= */
-
-.media-movimentacao-container .tabela-revisao-ia-wrapper,
-.media-movimentacao-container .tabela-wrapper-ia {
-    max-height: 520px;
-    overflow: auto;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA {
-    min-width: 1220px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA thead {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th {
-    background: var(--fundo-secundario);
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(1),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(1) {
-    width: 76px;
-    text-align: center;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(2),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(2) {
-    width: 90px;
-    white-space: nowrap;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(3),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(3) {
-    width: 125px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(5),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(5) {
-    width: 115px;
-    text-align: right;
-    white-space: nowrap;
-    font-weight: 750;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(6),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(6) {
-    width: 90px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(7),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(7) {
-    width: 155px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA th:nth-child(9),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(9) {
-    width: 80px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(4),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(7),
-.media-movimentacao-container #tabelaMovimentacoesIA td:nth-child(8) {
-    white-space: normal;
-    overflow-wrap: anywhere;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
-    margin: 0;
-    accent-color: var(--turquesa);
-    cursor: pointer;
-}
-
-/* =========================================================
-   12.25 ESTADOS DAS LINHAS DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container #tabelaMovimentacoesIA tr.movimentacao-ia-excluida td,
-.media-movimentacao-container #tabelaMovimentacoesIA tr.excluida td,
-.media-movimentacao-container #tabelaMovimentacoesIA tr.desconsiderada td {
-    background: rgba(166, 60, 60, .025);
-    color: #68787A;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA tr.movimentacao-ia-duvida td,
-.media-movimentacao-container #tabelaMovimentacoesIA tr.duvida td {
-    background: rgba(201, 210, 0, .045);
-}
-
-.media-movimentacao-container #tabelaMovimentacoesIA tr.movimentacao-ia-considerada td,
-.media-movimentacao-container #tabelaMovimentacoesIA tr.considerada td {
-    background: rgba(0, 160, 145, .018);
-}
-
-/* =========================================================
-   12.26 RESUMO / PARECER DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container #parecerAnaliseIA {
-    min-height: 180px;
-    max-height: 420px;
-    padding: 13px;
-    overflow-y: auto;
-    border-radius: 9px;
-    background: #FAFCFC;
-    font-family: Consolas, "Courier New", monospace;
-    font-size: 9px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-}
-
-/* =========================================================
-   12.27 TABELA - RESUMO MENSAL DA ANÁLISE
-   ========================================================= */
-
-.media-movimentacao-container #tabelaResumoMensalIA {
-    min-width: 650px;
-}
-
-.media-movimentacao-container #tabelaResumoMensalIA th:nth-child(2),
-.media-movimentacao-container #tabelaResumoMensalIA td:nth-child(2),
-.media-movimentacao-container #tabelaResumoMensalIA th:nth-child(4),
-.media-movimentacao-container #tabelaResumoMensalIA td:nth-child(4) {
-    text-align: right;
-}
-
-.media-movimentacao-container #tabelaResumoMensalIA td:nth-child(4) {
-    font-weight: 750;
-}
-
-/* =========================================================
-   12.28 TABELA - RESUMO POR BANCO
-   ========================================================= */
-
-.media-movimentacao-container #tabelaResumoBancosIA {
-    min-width: 650px;
-}
-
-.media-movimentacao-container #tabelaResumoBancosIA th:nth-child(2),
-.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(2),
-.media-movimentacao-container #tabelaResumoBancosIA th:nth-child(3),
-.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(3),
-.media-movimentacao-container #tabelaResumoBancosIA th:nth-child(4),
-.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(4) {
-    text-align: right;
-}
-
-.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(3),
-.media-movimentacao-container #tabelaResumoBancosIA td:nth-child(4) {
-    font-weight: 750;
-}
-
-/* =========================================================
-   12.29 PERÍODO DE APURAÇÃO
-   ========================================================= */
-
-.media-movimentacao-container #cardPeriodoMovimentacao {
-    align-self: stretch;
-}
-
-.media-movimentacao-container #cardPeriodoMovimentacao .grid-form {
+.media-movimentacao-container .preview-resultado-ocr {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: minmax(250px, .75fr) minmax(0, 1.25fr);
+    gap: 10px;
     width: 100%;
     min-width: 0;
-}
-
-.media-movimentacao-container #cardPeriodoMovimentacao .grid-form .campo {
-    margin-top: 0;
-}
-
-.media-movimentacao-container #primeiraDataMovimentacao,
-.media-movimentacao-container #ultimaDataMovimentacao,
-.media-movimentacao-container #mesesDetectadosMovimentacao,
-.media-movimentacao-container #mesesConsideradosMovimentacao {
-    color: var(--verde-escuro);
-}
-
-.media-movimentacao-container #mesesDetectadosMovimentacao,
-.media-movimentacao-container #mesesConsideradosMovimentacao {
-    font-weight: 750;
-}
-
-.media-movimentacao-container .aviso-periodo-movimentacao {
-    margin-top: 15px;
-}
-
-/* =========================================================
-   12.30 RESULTADO PRINCIPAL
-   ========================================================= */
-
-.media-movimentacao-container #cardResultadoMovimentacao {
-    align-self: stretch;
+    align-items: stretch
 }
 
 .media-movimentacao-container .resultado-destaque {
@@ -11109,16 +10777,12 @@ main.sicoobcard-container {
     gap: 5px;
     width: 100%;
     min-width: 0;
-    min-height: 82px;
-    margin: 0 0 10px;
-    padding: 16px 17px;
+    margin: 0;
+    padding: 17px 18px;
     overflow: hidden;
     border: 1px solid rgba(0, 160, 145, .18);
     border-radius: 10px;
-    background:
-        linear-gradient(135deg,
-            rgba(0, 160, 145, .08),
-            rgba(201, 210, 0, .06));
+    background: linear-gradient(135deg, rgba(0, 160, 145, .08), rgba(201, 210, 0, .06))
 }
 
 .media-movimentacao-container .resultado-destaque::after {
@@ -11130,7 +10794,7 @@ main.sicoobcard-container {
     height: 145px;
     border-radius: 50%;
     background: rgba(0, 160, 145, .045);
-    pointer-events: none;
+    pointer-events: none
 }
 
 .media-movimentacao-container .resultado-destaque span {
@@ -11139,21 +10803,23 @@ main.sicoobcard-container {
     color: var(--texto-secundario);
     font-size: 8px;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.35
 }
 
 .media-movimentacao-container .resultado-destaque strong {
     position: relative;
     z-index: 1;
+    display: block;
+    min-width: 0;
     color: var(--verde-escuro);
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 850;
     line-height: 1.2;
-    overflow-wrap: anywhere;
+    overflow-wrap: anywhere
 }
 
 /* =========================================================
-   12.31 GRID DE RESULTADOS
+   18. GRID DE RESULTADOS
    ========================================================= */
 
 .media-movimentacao-container .resultados-grid {
@@ -11163,7 +10829,11 @@ main.sicoobcard-container {
     width: 100%;
     min-width: 0;
     margin: 0;
-    padding: 0;
+    padding: 0
+}
+
+.media-movimentacao-container .preview-resultado-ocr .resultados-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
 }
 
 .media-movimentacao-container .resultado-item {
@@ -11173,190 +10843,98 @@ main.sicoobcard-container {
     gap: 4px;
     width: 100%;
     min-width: 0;
-    min-height: 57px;
+    min-height: 64px;
     margin: 0;
-    padding: 10px;
+    padding: 10px 11px;
     border: 1px solid var(--borda);
     border-radius: 8px;
-    background: #FAFCFC;
+    background: #FAFCFC
 }
 
 .media-movimentacao-container .resultado-item span {
     display: block;
     color: var(--texto-secundario);
     font-size: 7px;
-    line-height: 1.35;
+    font-weight: 400;
+    line-height: 1.35
 }
 
 .media-movimentacao-container .resultado-item strong {
     display: block;
+    min-width: 0;
     color: var(--verde-escuro);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
     line-height: 1.35;
-    overflow-wrap: anywhere;
+    overflow-wrap: anywhere
 }
 
 /* =========================================================
-   12.32 RESUMO DAS REGRAS
+   19. CABEÇALHO DA REVISÃO
    ========================================================= */
 
-.media-movimentacao-container .resumo-regras-movimentacao {
-    position: relative;
-    display: block;
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-    padding: 11px 13px 11px 16px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 160, 145, .14);
-    border-radius: 8px;
-    background: rgba(0, 160, 145, .045);
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.5;
-}
-
-.media-movimentacao-container .resumo-regras-movimentacao::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 3px;
-    background: var(--turquesa);
-}
-
-/* =========================================================
-   12.33 SEPARADOR
-   ========================================================= */
-
-.media-movimentacao-container .separador {
-    display: block;
-    width: 100%;
-    height: 1px;
-    margin: 18px 0;
-    padding: 0;
-    border: 0;
-    background: var(--borda);
-}
-
-/* =========================================================
-   12.34 LISTA DE REGRAS
-   ========================================================= */
-
-.media-movimentacao-container #listaRegrasMovimentacao {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    border: 1px solid var(--borda);
-    border-radius: 9px;
-    background: var(--branco);
-}
-
-/* =========================================================
-   12.35 REGRAS DE MOVIMENTAÇÃO
-   ========================================================= */
-
-.media-movimentacao-container .regra-movimentacao-automatica,
-.media-movimentacao-container .regra-movimentacao-informativa {
+.media-movimentacao-container .cabecalho-revisao-ocr {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 18px;
     width: 100%;
     min-width: 0;
-    margin: 0;
-    padding: 10px 12px;
-    border: 0;
-    border-bottom: 1px solid var(--borda);
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.45;
+    margin: 0 0 12px
 }
 
-.media-movimentacao-container .regra-movimentacao-automatica:last-child,
-.media-movimentacao-container .regra-movimentacao-informativa:last-child {
-    border-bottom: 0;
+.media-movimentacao-container .cabecalho-revisao-ocr>div:first-child {
+    min-width: 0;
+    flex: 1 1 auto
 }
 
-.media-movimentacao-container .regra-movimentacao-automatica {
-    background: rgba(201, 210, 0, .045);
-}
-
-.media-movimentacao-container .regra-movimentacao-informativa {
-    background: #FAFCFC;
-}
-
-.media-movimentacao-container .regra-movimentacao-automatica strong,
-.media-movimentacao-container .regra-movimentacao-informativa strong {
+.media-movimentacao-container .cabecalho-revisao-ocr h3 {
+    margin: 0 0 4px;
     color: var(--verde-escuro);
+    font-size: 13px;
     font-weight: 800;
+    line-height: 1.35
 }
 
-/* =========================================================
-   12.36 CHECKBOXES DAS REGRAS
-   ========================================================= */
-
-.media-movimentacao-container #listaRegrasMovimentacao input[type="checkbox"] {
-    flex: 0 0 auto;
-    width: 15px;
-    height: 15px;
-    margin: 1px 0 0;
-    accent-color: var(--turquesa);
-    cursor: pointer;
-}
-
-.media-movimentacao-container #listaRegrasMovimentacao label {
-    min-width: 0;
-    color: var(--texto);
-    font-size: 8px;
-    line-height: 1.45;
-    cursor: pointer;
-}
-
-/* =========================================================
-   12.37 SEM DADOS
-   ========================================================= */
-
-.media-movimentacao-container .sem-dados {
-    width: 100%;
-    padding: 22px;
+.media-movimentacao-container .cabecalho-revisao-ocr p {
+    margin: 0;
     color: var(--texto-secundario);
     font-size: 8px;
-    font-style: italic;
-    line-height: 1.45;
-    text-align: center;
+    line-height: 1.45
+}
+
+.media-movimentacao-container .acoes-revisao-ocr {
+    flex: 0 0 auto;
+    margin: 0
 }
 
 /* =========================================================
-   12.38 TABELAS
+   20. TABELAS
    ========================================================= */
 
 .media-movimentacao-container .tabela-wrapper {
+    display: block;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     margin: 0;
     overflow-x: auto;
+    overflow-y: hidden;
     border: 1px solid var(--borda);
     border-radius: 9px;
     background: var(--branco);
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    scrollbar-color: var(--borda-forte) transparent;
+    scrollbar-color: var(--borda-forte) transparent
 }
 
 .media-movimentacao-container .tabela-wrapper::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+    height: 7px
 }
 
 .media-movimentacao-container .tabela-wrapper::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    background: var(--borda-forte);
+    background: var(--borda-forte)
 }
 
 .media-movimentacao-container table {
@@ -11366,521 +10944,562 @@ main.sicoobcard-container {
     border: 0;
     border-collapse: collapse;
     border-spacing: 0;
-    background: var(--branco);
+    background: var(--branco)
 }
 
 .media-movimentacao-container table th {
-    padding: 10px 11px;
+    padding: 10px 9px;
     border: 0;
+    border-right: 1px solid var(--borda);
     border-bottom: 1px solid var(--borda);
     background: var(--fundo-secundario);
     color: var(--verde-escuro);
     font-size: 7px;
     font-weight: 800;
     line-height: 1.35;
+    letter-spacing: .12px;
     text-align: left;
     vertical-align: middle;
     white-space: nowrap;
+    text-transform: uppercase
 }
 
 .media-movimentacao-container table td {
-    padding: 9px 11px;
+    padding: 9px;
     border: 0;
+    border-right: 1px solid var(--borda);
     border-bottom: 1px solid var(--borda);
     background: var(--branco);
     color: var(--texto);
     font-size: 8px;
     line-height: 1.4;
     text-align: left;
-    vertical-align: middle;
+    vertical-align: middle
+}
+
+.media-movimentacao-container table th:last-child,
+.media-movimentacao-container table td:last-child {
+    border-right: 0
 }
 
 .media-movimentacao-container table tbody tr:last-child td {
-    border-bottom: 0;
+    border-bottom: 0
 }
 
 .media-movimentacao-container table tbody tr:hover td {
-    background: rgba(0, 160, 145, .025);
+    background: rgba(0, 160, 145, .025)
 }
 
-.media-movimentacao-container table td.sem-dados {
-    padding: 22px;
+.media-movimentacao-container table .sem-dados {
+    padding: 18px;
     color: var(--texto-secundario);
-    font-size: 8px;
     font-style: italic;
-    text-align: center;
+    text-align: center
 }
 
-/* =========================================================
-   12.39 TABELA - RESUMO MENSAL
-   ========================================================= */
-
+.media-movimentacao-container #tabelaResumoMensalOCR,
+.media-movimentacao-container #tabelaResumoBancosOCR,
 .media-movimentacao-container #tabelaResumoMensalMovimentacao {
-    min-width: 520px;
+    min-width: 620px
 }
 
-.media-movimentacao-container #tabelaResumoMensalMovimentacao th:nth-child(2),
-.media-movimentacao-container #tabelaResumoMensalMovimentacao td:nth-child(2),
-.media-movimentacao-container #tabelaResumoMensalMovimentacao th:nth-child(3),
-.media-movimentacao-container #tabelaResumoMensalMovimentacao td:nth-child(3) {
-    text-align: right;
+.media-movimentacao-container #tabelaMovimentacoesOCR {
+    min-width: 1050px
 }
 
-/* =========================================================
-   12.40 TABELA - CRÉDITOS CONSIDERADOS
-   ========================================================= */
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas {
-    min-width: 760px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(1),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(1) {
-    width: 90px;
-    white-space: nowrap;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(2),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(2) {
-    width: 110px;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas th:nth-child(4),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(4) {
-    width: 125px;
-    text-align: right;
-    white-space: nowrap;
-    font-weight: 750;
-}
-
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(3),
-.media-movimentacao-container #tabelaMovimentacoesConsideradas td:nth-child(5) {
-    white-space: normal;
-    overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   12.41 TABELA - MOVIMENTAÇÕES EXCLUÍDAS
-   ========================================================= */
-
+.media-movimentacao-container #tabelaMovimentacoesConsideradas,
 .media-movimentacao-container #tabelaMovimentacoesExcluidas {
-    min-width: 760px;
+    min-width: 850px
 }
 
-.media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(1),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(1) {
-    width: 90px;
-    white-space: nowrap;
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(1),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(1) {
+    width: 78px;
+    text-align: center
 }
 
-.media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(2),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(2) {
-    width: 110px;
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(2),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(2) {
+    width: 95px;
+    white-space: nowrap
 }
 
-.media-movimentacao-container #tabelaMovimentacoesExcluidas th:nth-child(4),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(4) {
-    width: 125px;
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(3),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(3) {
+    width: 120px
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(4),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(4) {
+    min-width: 230px
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(5),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(5) {
+    width: 115px;
     text-align: right;
-    white-space: nowrap;
-    font-weight: 750;
+    white-space: nowrap
 }
 
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(3),
-.media-movimentacao-container #tabelaMovimentacoesExcluidas td:nth-child(5) {
-    white-space: normal;
-    overflow-wrap: anywhere;
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(6),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(6) {
+    width: 90px
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(7),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(7) {
+    width: 170px
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR th:nth-child(8),
+.media-movimentacao-container #tabelaMovimentacoesOCR td:nth-child(8) {
+    min-width: 210px
 }
 
 /* =========================================================
-   12.42 ESTADOS POSITIVOS E NEGATIVOS
+   21. CHECKBOXES DA REVISÃO
    ========================================================= */
 
-.media-movimentacao-container .resultado-positivo {
-    color: var(--turquesa);
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border: 1px solid var(--borda-forte);
+    border-radius: 5px;
+    background: var(--branco);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:checked {
+    border-color: var(--turquesa);
+    background: var(--turquesa)
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:checked::after {
+    content: "✓";
+    color: #FFF;
+    font-size: 11px;
     font-weight: 800;
+    line-height: 1
 }
 
-.media-movimentacao-container .resultado-negativo {
-    color: #A63C3C;
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .10)
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"]:disabled {
+    border-color: var(--indisponivel-borda);
+    background: var(--indisponivel-fundo);
+    cursor: not-allowed;
+    opacity: .7
+}
+
+/* =========================================================
+   22. ESTADOS DAS MOVIMENTAÇÕES
+   ========================================================= */
+
+.media-movimentacao-container #tabelaMovimentacoesOCR tr.movimentacao-duvida td {
+    background: #FFFDF4
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR tr.movimentacao-duvida td:first-child {
+    box-shadow: inset 3px 0 0 var(--atencao)
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR tr.movimentacao-alerta td {
+    background: #FFF7F7
+}
+
+.media-movimentacao-container #tabelaMovimentacoesOCR tr.movimentacao-alerta td:first-child {
+    box-shadow: inset 3px 0 0 var(--erro)
+}
+
+/* =========================================================
+   23. HISTÓRICOS / REGRAS
+   ========================================================= */
+
+.media-movimentacao-container .resumo-regras-movimentacao {
+    margin: 0
+}
+
+.media-movimentacao-container #listaRegrasMovimentacao {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+    min-width: 0
+}
+
+.media-movimentacao-container .regra-movimentacao-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease
+}
+
+.media-movimentacao-container .regra-movimentacao-item:hover {
+    border-color: rgba(0, 160, 145, .22);
+    background: #FEFFFF
+}
+
+.media-movimentacao-container .regra-movimentacao-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border: 1px solid var(--borda-forte);
+    border-radius: 5px;
+    background: #FFF;
+    cursor: pointer
+}
+
+.media-movimentacao-container .regra-movimentacao-item input[type="checkbox"]:checked {
+    border-color: var(--erro);
+    background: var(--erro)
+}
+
+.media-movimentacao-container .regra-movimentacao-item input[type="checkbox"]:checked::after {
+    content: "×";
+    color: #FFF;
+    font-size: 14px;
     font-weight: 800;
+    line-height: 1
+}
+
+.media-movimentacao-container .regra-movimentacao-item>span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0
+}
+
+.media-movimentacao-container .regra-movimentacao-item strong {
+    display: block;
+    min-width: 0;
+    color: var(--verde-escuro);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere
+}
+
+.media-movimentacao-container .regra-movimentacao-item small {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.4
 }
 
 /* =========================================================
-   12.43 ELEMENTOS OCULTOS
+   24. SEPARADOR
    ========================================================= */
 
-.media-movimentacao-container [hidden],
-.media-movimentacao-container .hide {
-    display: none !important;
+.media-movimentacao-container .separador {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 20px 0;
+    border: 0;
+    background: var(--borda)
 }
 
 /* =========================================================
-   12.44 DESKTOP REDUZIDO
+   25. RESULTADO LATERAL
    ========================================================= */
 
-@media (max-width: 1050px) {
-    .media-movimentacao-container {
-        grid-template-columns: minmax(0, 1.3fr) minmax(290px, .7fr);
+.media-movimentacao-container #cardResultadoMovimentacao .resultado-destaque {
+    margin-bottom: 10px
+}
+
+.media-movimentacao-container #cardResultadoMovimentacao .resultados-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+}
+
+/* =========================================================
+   26. RESPONSIVIDADE - DESKTOP REDUZIDO
+   ========================================================= */
+
+@media(max-width:1050px) {
+
+    main.media-movimentacao-container {
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
         width: calc(100% - 40px);
-        gap: 17px;
+        gap: 17px
     }
 
     .media-movimentacao-container>.card {
-        padding: 21px;
+        padding: 21px
     }
 
-    .media-movimentacao-container #cardPeriodoMovimentacao .grid-form {
-        gap: 12px;
+    .media-movimentacao-container .dados-gerais-leitura-ocr {
+        grid-template-columns: repeat(3, minmax(0, 1fr))
     }
 
-    .media-movimentacao-container #cardResultadoMovimentacao .resultados-grid {
-        grid-template-columns: minmax(0, 1fr);
+    .media-movimentacao-container .preview-resultado-ocr {
+        grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr)
     }
 
-    .media-movimentacao-container .dados-gerais-analise-ia {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .media-movimentacao-container .preview-resultado-ocr .resultados-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr))
     }
+
 }
 
 /* =========================================================
-   12.45 TABLET
+   27. RESPONSIVIDADE - TABLET
    ========================================================= */
 
-@media (max-width: 850px) {
-    .media-movimentacao-container {
+@media(max-width:850px) {
+
+    main.media-movimentacao-container {
         grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 32px);
         gap: 15px;
         padding-top: 24px;
-        padding-bottom: 38px;
+        padding-bottom: 38px
     }
 
-    .media-movimentacao-container>#cardAnaliseExtratosIA,
-    .media-movimentacao-container>#cardResultadoAnaliseIA,
-    .media-movimentacao-container>#cardExtratoMovimentacao,
-    .media-movimentacao-container>#cardPeriodoMovimentacao,
-    .media-movimentacao-container>#cardResultadoMovimentacao,
-    .media-movimentacao-container>#cardHistoricosMovimentacao,
-    .media-movimentacao-container>#cardResumoMensalMovimentacao,
-    .media-movimentacao-container>#cardCreditosConsideradosMovimentacao,
-    .media-movimentacao-container>#cardMovimentacoesExcluidas,
-    .media-movimentacao-container>.card-largura-total {
-        grid-column: 1;
-        grid-row: auto;
+    .media-movimentacao-container>.card,
+    .media-movimentacao-container>.card-largura-total,
+    .media-movimentacao-container>.configuracao-card,
+    .media-movimentacao-container>.resultado-card {
+        grid-column: 1
     }
 
     .media-movimentacao-container>.card {
-        padding: 20px;
+        padding: 20px
     }
 
-    .media-movimentacao-container .resultados-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .media-movimentacao-container .dados-gerais-leitura-ocr {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
-    .media-movimentacao-container .dados-gerais-analise-ia {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .media-movimentacao-container .preview-resultado-ocr {
+        grid-template-columns: minmax(0, 1fr)
     }
 
-    .media-movimentacao-container .lista-arquivos-extrato-ia,
-    .media-movimentacao-container .lista-documentos-analise-ia {
-        grid-template-columns: minmax(0, 1fr);
+    .media-movimentacao-container .lista-documentos-ocr {
+        grid-template-columns: minmax(0, 1fr)
     }
 
-    .media-movimentacao-container .cabecalho-revisao-ia {
+    .media-movimentacao-container .cabecalho-revisao-ocr {
         flex-direction: column;
-        align-items: stretch;
+        gap: 10px
     }
 
-    .media-movimentacao-container .acoes-revisao-ia {
-        justify-content: flex-start;
+    .media-movimentacao-container .acoes-revisao-ocr {
+        width: 100%;
+        justify-content: flex-start
     }
+
 }
 
 /* =========================================================
-   12.46 MOBILE
+   28. RESPONSIVIDADE - MOBILE
    ========================================================= */
 
-@media (max-width: 650px) {
-    .media-movimentacao-container {
+@media(max-width:650px) {
+
+    main.media-movimentacao-container {
         width: calc(100% - 24px);
         gap: 12px;
         padding-top: 18px;
-        padding-bottom: 30px;
+        padding-bottom: 30px
     }
 
     .media-movimentacao-container>.card {
         padding: 16px;
-        border-radius: 11px;
+        border-radius: 11px
     }
 
     .media-movimentacao-container .titulo-secao {
-        margin-bottom: 14px;
+        margin-bottom: 14px
     }
 
     .media-movimentacao-container .titulo-secao h2 {
-        font-size: 16px;
+        font-size: 16px
     }
 
-    .media-movimentacao-container .titulo-secao h3,
-    .media-movimentacao-container .subsecao-analise-ia h3 {
-        font-size: 12px;
+    .media-movimentacao-container .titulo-secao p {
+        font-size: 8px
     }
 
-    .media-movimentacao-container .titulo-secao p,
-    .media-movimentacao-container .subsecao-analise-ia>p {
-        font-size: 8px;
-    }
-
-    .media-movimentacao-container #cardPeriodoMovimentacao .grid-form {
+    .media-movimentacao-container .grid-form {
         grid-template-columns: minmax(0, 1fr);
-        gap: 11px;
+        gap: 11px
     }
 
-    .media-movimentacao-container #textoExtratoMovimentacao {
-        min-height: 210px;
-        height: 210px;
-        padding: 11px;
-        font-size: 9px;
+    .media-movimentacao-container .area-upload-extrato-conteudo {
+        min-height: 125px;
+        padding: 18px 14px
     }
 
-    .media-movimentacao-container .resultados-grid,
-    .media-movimentacao-container .preview-resultado-ia .resultados-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .media-movimentacao-container .area-upload-extrato-conteudo::before {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 19px
     }
 
-    .media-movimentacao-container .dados-gerais-analise-ia {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .media-movimentacao-container .area-upload-extrato-conteudo strong {
+        font-size: 10px
+    }
+
+    .media-movimentacao-container .area-upload-extrato-conteudo span {
+        font-size: 8px
+    }
+
+    .media-movimentacao-container .dados-gerais-leitura-ocr {
+        grid-template-columns: minmax(0, 1fr)
+    }
+
+    .media-movimentacao-container .preview-resultado-ocr .resultados-grid,
+    .media-movimentacao-container #cardResultadoMovimentacao .resultados-grid {
+        grid-template-columns: minmax(0, 1fr)
+    }
+
+    .media-movimentacao-container .resultado-destaque strong {
+        font-size: 18px
     }
 
     .media-movimentacao-container .acoes {
         flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        margin-top: 15px;
+        align-items: stretch
     }
 
-    .media-movimentacao-container .acoes .btn,
-    .media-movimentacao-container .acoes button {
+    .media-movimentacao-container .acoes .btn {
         width: 100%;
-        min-width: 0;
+        min-width: 0
     }
 
-    .media-movimentacao-container .resultado-destaque strong {
-        font-size: 18px;
+    .media-movimentacao-container .acoes-revisao-ocr {
+        flex-direction: column;
+        align-items: stretch
     }
 
-    .media-movimentacao-container table th,
-    .media-movimentacao-container table td {
-        padding: 8px 9px;
+    .media-movimentacao-container .arquivo-extrato {
+        align-items: flex-start
     }
 
-    .media-movimentacao-container .area-upload-extrato-ia,
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
-        min-height: 130px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
-        padding: 18px 12px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo::before {
-        width: 32px;
-        height: 32px;
-        font-size: 19px;
-    }
-
-    .media-movimentacao-container .lista-arquivos-extrato-ia,
-    .media-movimentacao-container .lista-documentos-analise-ia {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .media-movimentacao-container .tabela-revisao-ia-wrapper,
-    .media-movimentacao-container .tabela-wrapper-ia {
-        max-height: 430px;
-    }
-
-    .media-movimentacao-container #parecerAnaliseIA {
-        min-height: 150px;
-    }
 }
 
 /* =========================================================
-   12.47 MOBILE PEQUENO
+   29. RESPONSIVIDADE - MOBILE PEQUENO
    ========================================================= */
 
-@media (max-width: 480px) {
-    .media-movimentacao-container {
+@media(max-width:480px) {
+
+    main.media-movimentacao-container {
         width: calc(100% - 18px);
         gap: 10px;
         padding-top: 15px;
-        padding-bottom: 25px;
+        padding-bottom: 25px
     }
 
     .media-movimentacao-container>.card {
         padding: 13px;
-        border-radius: 10px;
+        border-radius: 10px
     }
 
     .media-movimentacao-container .titulo-secao h2 {
-        font-size: 15px;
+        font-size: 15px
     }
 
-    .media-movimentacao-container .categoria-etiqueta {
-        font-size: 6px;
-    }
-
-    .media-movimentacao-container .campo label {
-        font-size: 8px;
-    }
-
-    .media-movimentacao-container .campo small {
-        font-size: 7px;
-    }
-
-    .media-movimentacao-container .campo input,
-    .media-movimentacao-container .campo select {
-        height: 37px;
-        min-height: 37px;
-        font-size: 9px;
-    }
-
-    .media-movimentacao-container #textoExtratoMovimentacao {
-        min-height: 190px;
-        height: 190px;
-        font-size: 8px;
-        line-height: 1.5;
-    }
-
-    .media-movimentacao-container .resultados-grid,
-    .media-movimentacao-container .preview-resultado-ia .resultados-grid,
-    .media-movimentacao-container .dados-gerais-analise-ia {
-        grid-template-columns: minmax(0, 1fr);
+    .media-movimentacao-container .area-upload-extrato-conteudo {
+        min-height: 115px;
+        padding: 15px 10px
     }
 
     .media-movimentacao-container .resultado-destaque {
-        padding: 14px;
+        padding: 14px
     }
 
-    .media-movimentacao-container .resultado-item,
-    .media-movimentacao-container .dado-analise-ia {
-        min-height: 0;
-        padding: 9px;
+    .media-movimentacao-container .resultado-item {
+        min-height: 58px;
+        padding: 9px
     }
 
-    .media-movimentacao-container .aviso-info,
-    .media-movimentacao-container .aviso-periodo-movimentacao,
-    .media-movimentacao-container .resumo-regras-movimentacao {
-        font-size: 7px;
+    .media-movimentacao-container .documento-ocr-item {
+        padding: 9px 10px
     }
 
-    .media-movimentacao-container .regra-movimentacao-automatica,
-    .media-movimentacao-container .regra-movimentacao-informativa {
-        gap: 8px;
-        padding: 9px;
-        font-size: 7px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia,
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
-        min-height: 120px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
-        padding: 15px 10px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo strong {
-        font-size: 9px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo span,
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo small {
-        font-size: 7px;
-    }
-
-    .media-movimentacao-container .resumo-arquivos-ia {
-        justify-content: flex-start;
-    }
-
-    .media-movimentacao-container #parecerAnaliseIA {
-        min-height: 140px;
-        font-size: 8px;
-    }
 }
 
 /* =========================================================
-   12.48 MOBILE MUITO PEQUENO
+   30. TOUCH
    ========================================================= */
 
-@media (max-width: 360px) {
-    .media-movimentacao-container {
-        width: calc(100% - 14px);
+@media(hover:none) and (pointer:coarse) {
+
+    .media-movimentacao-container .campo input,
+    .media-movimentacao-container .campo select,
+    .media-movimentacao-container .btn {
+        min-height: 44px
     }
 
-    .media-movimentacao-container>.card {
-        padding: 11px;
+    .media-movimentacao-container .btn-remover-arquivo {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px
     }
 
-    .media-movimentacao-container #textoExtratoMovimentacao {
-        min-height: 175px;
-        height: 175px;
-    }
-
-    .media-movimentacao-container .resultado-destaque strong {
-        font-size: 17px;
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia-conteudo {
-        padding: 12px 8px;
-    }
-}
-
-/* =========================================================
-   12.49 DISPOSITIVOS TOUCH
-   ========================================================= */
-
-@media (hover: none) and (pointer: coarse) {
+    .media-movimentacao-container .area-upload-extrato-conteudo:hover,
     .media-movimentacao-container .btn:hover {
-        transform: none;
+        transform: none
     }
 
-    .media-movimentacao-container table tbody tr:hover td {
-        background: var(--branco);
-    }
-
-    .media-movimentacao-container .area-upload-extrato-ia:hover {
-        transform: none;
-        border-color: rgba(0, 160, 145, .45);
-    }
 }
 
 /* =========================================================
-   12.50 ACESSIBILIDADE
+   31. ACESSIBILIDADE
    ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+@media(prefers-reduced-motion:reduce) {
 
     .media-movimentacao-container *,
     .media-movimentacao-container *::before,
     .media-movimentacao-container *::after {
-        scroll-behavior: auto !important;
-        transition: none !important;
         animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important
     }
+
 }
 
 /* =========================================================
-   12.51 IMPRESSÃO
+   32. IMPRESSÃO
    ========================================================= */
 
 @media print {
-    .media-movimentacao-container {
+
+    main.media-movimentacao-container {
         display: block !important;
         width: 100% !important;
         max-width: none !important;
         margin: 0 !important;
-        padding: 10px 0 !important;
+        padding: 10px 0 !important
     }
 
     .media-movimentacao-container>.card {
@@ -11888,97 +11507,102 @@ main.sicoobcard-container {
         margin: 0 0 12px !important;
         padding: 14px !important;
         overflow: visible !important;
-        border: 1px solid #CCCCCC !important;
+        border: 1px solid #CCC !important;
         border-radius: 0 !important;
-        background: #FFFFFF !important;
+        background: #FFF !important;
         box-shadow: none !important;
         break-inside: avoid;
-        page-break-inside: avoid;
+        page-break-inside: avoid
     }
 
     .media-movimentacao-container>.card::before {
-        display: none !important;
+        display: none !important
     }
 
+    .media-movimentacao-container .card-leitura-ocr,
     .media-movimentacao-container .acoes,
-    .media-movimentacao-container #cardAnaliseExtratosIA,
-    .media-movimentacao-container .area-upload-extrato-ia,
-    .media-movimentacao-container .status-analise-ia {
-        display: none !important;
+    .media-movimentacao-container .btn-remover-arquivo {
+        display: none !important
     }
 
-    .media-movimentacao-container #textoExtratoMovimentacao,
-    .media-movimentacao-container #parecerAnaliseIA {
-        min-height: 0 !important;
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-        border-color: #CCCCCC !important;
-        background: #FFFFFF !important;
-        color: #000000 !important;
-        box-shadow: none !important;
+    .media-movimentacao-container .dados-gerais-leitura-ocr {
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        gap: 5px !important
     }
 
-    .media-movimentacao-container .resultado-destaque,
+    .media-movimentacao-container .dado-leitura-ocr,
     .media-movimentacao-container .resultado-item,
-    .media-movimentacao-container .dado-analise-ia,
-    .media-movimentacao-container .aviso-info,
-    .media-movimentacao-container .aviso-periodo-movimentacao,
-    .media-movimentacao-container .resumo-regras-movimentacao,
-    .media-movimentacao-container #listaRegrasMovimentacao,
-    .media-movimentacao-container .documento-analise-ia,
-    .media-movimentacao-container .item-documento-ia,
-    .media-movimentacao-container .alerta-analise-ia,
-    .media-movimentacao-container .item-alerta-ia {
-        border-color: #CCCCCC !important;
-        background: #FFFFFF !important;
-        box-shadow: none !important;
+    .media-movimentacao-container .documento-ocr-item,
+    .media-movimentacao-container .regra-movimentacao-item,
+    .media-movimentacao-container .aviso-info {
+        border-color: #CCC !important;
+        background: #FFF !important;
+        box-shadow: none !important
     }
 
+    .media-movimentacao-container .resultado-destaque {
+        border: 1px solid #AAA !important;
+        background: #FFF !important;
+        box-shadow: none !important
+    }
+
+    .media-movimentacao-container .resultado-destaque::after,
+    .media-movimentacao-container .aviso-info::before {
+        display: none !important
+    }
+
+    .media-movimentacao-container .resultado-destaque span,
     .media-movimentacao-container .resultado-destaque strong,
-    .media-movimentacao-container .resultado-item strong,
-    .media-movimentacao-container .dado-analise-ia strong {
-        color: #000000 !important;
+    .media-movimentacao-container .resultado-item span,
+    .media-movimentacao-container .resultado-item strong {
+        color: #000 !important
     }
 
-    .media-movimentacao-container .tabela-wrapper,
-    .media-movimentacao-container .tabela-revisao-ia-wrapper,
-    .media-movimentacao-container .tabela-wrapper-ia {
-        max-height: none !important;
+    .media-movimentacao-container .tabela-wrapper {
         overflow: visible !important;
-        border-radius: 0 !important;
+        border-radius: 0 !important
     }
 
     .media-movimentacao-container table {
         width: 100% !important;
-        min-width: 0 !important;
-    }
-
-    .media-movimentacao-container #tabelaMovimentacoesIA thead {
-        position: static !important;
+        min-width: 0 !important
     }
 
     .media-movimentacao-container table th,
     .media-movimentacao-container table td {
         padding: 5px !important;
-        color: #000000 !important;
+        color: #000 !important;
         font-size: 7px !important;
-        white-space: normal !important;
+        line-height: 1.3 !important;
+        white-space: normal !important
     }
 
-    .media-movimentacao-container,
-    .media-movimentacao-container *,
-    .media-movimentacao-container *::before,
-    .media-movimentacao-container *::after {
+    .media-movimentacao-container table th {
+        font-size: 6px !important
+    }
+
+    .media-movimentacao-container .campo input,
+    .media-movimentacao-container .campo select,
+    .media-movimentacao-container .campo textarea {
+        border: 1px solid #AAA !important;
+        background: #FFF !important;
+        color: #000 !important;
+        box-shadow: none !important
+    }
+
+    .media-movimentacao-container .campo textarea {
+        min-height: 60px !important
+    }
+
+    .media-movimentacao-container #tabelaMovimentacoesOCR input[type="checkbox"],
+    .media-movimentacao-container .regra-movimentacao-item input[type="checkbox"] {
+        border: 1px solid #777 !important;
+        background: #FFF !important;
         -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        print-color-adjust: exact !important
     }
+
 }
-
-/* =========================================================
-   FIM 12. MEDIA-MOVIMENTACAO.HTML
-   ========================================================= */
-
 
 /* =========================================================
    13. PORTE-PRODUTOR-RURAL.HTML
