@@ -1,35 +1,147 @@
-document.addEventListener("DOMContentLoaded", function () { iniciarMediaMovimentacao(); });
-let movimentacoesExtrato = [], movimentacoesConsideradas = [], movimentacoesExcluidas = [];
-let primeiraDataExtrato = null, ultimaDataExtrato = null, primeiraDataExtratoAutomatica = null, ultimaDataExtratoAutomatica = null;
-let mesesDetectadosAutomaticos = 0, formatoDataExtrato = "BR";
-const historicosExcluidosManualmente = new Set(), historicosIncluidosManualmente = new Set();
+"use strict";
+
+document.addEventListener("DOMContentLoaded", iniciarMediaMovimentacao);
+
+let movimentacoesExtrato = [];
+let movimentacoesConsideradas = [];
+let movimentacoesExcluidas = [];
+let primeiraDataExtrato = null;
+let ultimaDataExtrato = null;
+let primeiraDataExtratoAutomatica = null;
+let ultimaDataExtratoAutomatica = null;
+let mesesDetectadosAutomaticos = 0;
+let competenciasDocumentadasExternas = [];
+let formatoDataExtrato = "BR";
+
+const historicosExcluidosManualmente = new Set();
+const historicosIncluidosManualmente = new Set();
 
 const REGRAS_EXCLUSAO_MOVIMENTACAO = [
-    { id: "cred-liberacao-td", rotulo: "CRÉD. LIBERAÇÃO TD", motivo: "Liberação de título descontado não representa renda.", ignorarPeriodo: false, testar: h => h.includes("CRED LIBERACAO TD") || h.includes("CREDITO LIBERACAO TD") || h.includes("TITULO DESCONTADO") },
-    { id: "cred-liberacao-bndes", rotulo: "CRÉD. LIBERAÇÃO BNDES", motivo: "Liberação de recurso de financiamento BNDES não representa renda.", ignorarPeriodo: false, testar: h => h.includes("CRED LIBERACAO BNDES") || h.includes("CREDITO LIBERACAO BNDES") },
-    { id: "cred-liberacao-cartao", rotulo: "CRÉD. LIBERAÇÃO TÍTULO REC. CARTÃO", motivo: "Liberação de título de recebível de cartão deve ser desconsiderada.", ignorarPeriodo: false, testar: h => h.includes("CRED LIBERACAO TITULO REC CARTAO") || h.includes("CREDITO LIBERACAO TITULO REC CARTAO") || h.includes("LIBERACAO TITULO REC CARTAO") },
-    { id: "devolucao-pix", rotulo: "CRÉDITO DEVOLUÇÃO PIX", motivo: "Devolução de PIX não representa renda.", ignorarPeriodo: false, testar: h => h.includes("CRED DEVOLUCAO PIX") || h.includes("CREDITO DEVOLUCAO PIX") || h.includes("DEVOLUCAO PIX") },
-    { id: "cheque-devolvido", rotulo: "CHEQUE DEVOLVIDO", motivo: "Cheque devolvido não representa renda efetiva.", ignorarPeriodo: false, testar: h => h.includes("CHEQUE DEVOLVIDO") || h.includes("CH DEVOLVIDO") },
-    { id: "est-pix-outra-if", rotulo: "EST. PIX EMITIDO OUTRA IF", motivo: "Estorno não representa renda.", ignorarPeriodo: false, testar: h => h.includes("EST PIX EMITIDO OUTRA IF") || h.includes("ESTORNO PIX EMITIDO") },
-    { id: "estorno-compra-mastercard", rotulo: "ESTORNO COMPRA MASTERCARD", motivo: "Estorno de compra não representa renda.", ignorarPeriodo: false, testar: h => h.includes("ESTORNO COMPRA") && h.includes("MASTERCARD") },
-    { id: "estorno-deb-convenio", rotulo: "ESTORNO DÉB. CONV. DEMAIS EMPRESAS", motivo: "Estorno de débito não representa renda.", ignorarPeriodo: false, testar: h => h.includes("ESTORNO DEB CONV DEMAIS EMPRESAS") || h.includes("ESTORNO DEB CONV DEMAIS EMPRESA") },
-    { id: "estorno-generico", rotulo: "OUTROS ESTORNOS", motivo: "Estorno não representa renda.", ignorarPeriodo: false, testar: h => h.startsWith("ESTORNO ") || h.startsWith("EST ") },
-    { id: "resgate-rdc", rotulo: "RESGATE RDC", motivo: "Resgate de aplicação não representa renda.", ignorarPeriodo: false, testar: h => h.includes("RESGATE RDC") },
-    { id: "coopera-resgate-pontos", rotulo: "COOPERA - CRÉDITO RESGATE PONTOS C/C", motivo: "Resgate de pontos Coopera não representa renda.", ignorarPeriodo: false, testar: h => h.includes("CREDITO RESGATE PONTOS") || h.includes("CRED RESGATE PONTOS") || (h.includes("COOPERA") && h.includes("RESGATE PONTOS")) },
-    { id: "saldo-anterior", rotulo: "SALDO ANTERIOR", motivo: "Saldo anterior é somente uma linha informativa.", ignorarPeriodo: true, testar: h => h.includes("SALDO ANTERIOR") && !h.includes("SALDO BLOQUEADO ANTERIOR") },
-    { id: "saldo-bloqueado-anterior", rotulo: "SALDO BLOQUEADO ANTERIOR", motivo: "Saldo bloqueado anterior é somente uma linha informativa.", ignorarPeriodo: true, testar: h => h.includes("SALDO BLOQUEADO ANTERIOR") },
-    { id: "saldo-dia", rotulo: "SALDO DO DIA", motivo: "Saldo do dia é somente uma linha informativa.", ignorarPeriodo: true, testar: h => h.includes("SALDO DO DIA") || h.includes("SALDO FINAL DO DIA") }
+    {
+        id: "cred-liberacao-td",
+        rotulo: "CRÉD. LIBERAÇÃO TD",
+        motivo: "Liberação de título descontado não representa renda.",
+        testar: h =>
+            h.includes("CRED LIBERACAO TD") ||
+            h.includes("CREDITO LIBERACAO TD") ||
+            h.includes("TITULO DESCONTADO")
+    },
+    {
+        id: "cred-liberacao-bndes",
+        rotulo: "CRÉD. LIBERAÇÃO BNDES",
+        motivo: "Liberação de financiamento BNDES não representa renda.",
+        testar: h =>
+            h.includes("CRED LIBERACAO BNDES") ||
+            h.includes("CREDITO LIBERACAO BNDES")
+    },
+    {
+        id: "cred-liberacao-cartao",
+        rotulo: "CRÉD. LIBERAÇÃO TÍTULO REC. CARTÃO",
+        motivo: "Liberação de recebível de cartão deve ser desconsiderada.",
+        testar: h =>
+            h.includes("CRED LIBERACAO TITULO REC CARTAO") ||
+            h.includes("CREDITO LIBERACAO TITULO REC CARTAO") ||
+            h.includes("LIBERACAO TITULO REC CARTAO")
+    },
+    {
+        id: "emprestimo",
+        rotulo: "EMPRÉSTIMO / FINANCIAMENTO",
+        motivo: "Empréstimo ou financiamento não representa renda.",
+        testar: h =>
+            /\b(EMPRESTIMO|FINANCIAMENTO|FINANC|CREDITO PESSOAL|CREDITO CONSIGNADO|CAPITAL DE GIRO|LIBERACAO DE CREDITO|LIBERACAO CREDITO)\b/.test(h)
+    },
+    {
+        id: "antecipacao",
+        rotulo: "ANTECIPAÇÃO / ADIANTAMENTO",
+        motivo: "Antecipação ou adiantamento não representa renda.",
+        testar: h =>
+            /\b(ANTECIPACAO|ADIANTAMENTO|ADIANTAMENTO A DEPOSITANTE)\b/.test(h)
+    },
+    {
+        id: "limite",
+        rotulo: "LIMITE DE CRÉDITO",
+        motivo: "Utilização ou liberação de limite não representa renda.",
+        testar: h =>
+            /\b(CHEQUE ESPECIAL|CREDITO ROTATIVO|LIMITE DE CREDITO)\b/.test(h)
+    },
+    {
+        id: "devolucao-pix",
+        rotulo: "CRÉDITO DEVOLUÇÃO PIX",
+        motivo: "Devolução de PIX não representa renda.",
+        testar: h =>
+            h.includes("CRED DEVOLUCAO PIX") ||
+            h.includes("CREDITO DEVOLUCAO PIX") ||
+            h.includes("DEVOLUCAO PIX")
+    },
+    {
+        id: "cheque-devolvido",
+        rotulo: "CHEQUE DEVOLVIDO",
+        motivo: "Cheque devolvido não representa renda efetiva.",
+        testar: h =>
+            h.includes("CHEQUE DEVOLVIDO") ||
+            h.includes("CH DEVOLVIDO")
+    },
+    {
+        id: "estorno",
+        rotulo: "ESTORNO / DEVOLUÇÃO",
+        motivo: "Estorno, devolução ou cancelamento não representa renda.",
+        testar: h =>
+            /\b(ESTORNO|REVERSAO|CANCELAMENTO|DEVOLUCAO|DEVOLVIDO|REEMBOLSO)\b/.test(h)
+    },
+    {
+        id: "investimento",
+        rotulo: "INVESTIMENTO / RESGATE",
+        motivo: "Aplicação ou resgate de investimento não representa novo recurso.",
+        testar: h =>
+            /\b(RDB|RDC|CDB|RESGATE|APLICACAO|INVESTIMENTO|FUNDO DE INVESTIMENTO|POUPANCA RESGATE)\b/.test(h)
+    },
+    {
+        id: "coopera-resgate-pontos",
+        rotulo: "COOPERA - RESGATE DE PONTOS",
+        motivo: "Resgate de pontos não representa renda.",
+        testar: h =>
+            h.includes("CREDITO RESGATE PONTOS") ||
+            h.includes("CRED RESGATE PONTOS") ||
+            (h.includes("COOPERA") && h.includes("RESGATE PONTOS"))
+    }
 ];
 
-const PADROES_CREDITO_SEM_INDICADOR = ["PIX RECEBIDO", "PIX RECEB", "CRED TED STR", "CRED TRANSF CONTAS", "CRED TRANSF CONTAS INTERCREDIS", "CRED TRANSF", "CREDITO TRANSFERENCIA", "TRANSF RECEBIDA", "TRANSFERENCIA RECEBIDA", "TED RECEBIDA", "DOC RECEBIDO", "DEP CHEQUE COOP AG", "DEP CHEQUE AG", "DEPOSITO CHEQUE AG", "DEPOSITO CHEQUE", "DEP DINHEIRO", "DEPOSITO EM DINHEIRO AG", "DEPOSITO EM DINHEIRO", "LIBERACAO DE DEPOSITO BLOQUEADO", "OUTROS CREDITOS", "CRED DISTRIBUICAO SOBRAS VALORES", "CR COMPRAS", "CR ANTECIPACAO", "CRED LIQUIDACAO COBRANCA"];
+const PADROES_CREDITO_SEM_INDICADOR = [
+    "PIX RECEBIDO",
+    "PIX RECEBIDA",
+    "PIX RECEB",
+    "CRED TED STR",
+    "CRED TRANSF CONTAS",
+    "CRED TRANSF CONTAS INTERCREDIS",
+    "CRED TRANSF",
+    "CREDITO TRANSFERENCIA",
+    "TRANSF RECEBIDA",
+    "TRANSFERENCIA RECEBIDA",
+    "TED RECEBIDA",
+    "TED RECEBIDO",
+    "DOC RECEBIDO",
+    "DOC RECEBIDA",
+    "DEP CHEQUE COOP AG",
+    "DEP CHEQUE AG",
+    "DEPOSITO CHEQUE AG",
+    "DEPOSITO CHEQUE",
+    "DEP DINHEIRO",
+    "DEPOSITO EM DINHEIRO AG",
+    "DEPOSITO EM DINHEIRO",
+    "LIBERACAO DE DEPOSITO BLOQUEADO",
+    "OUTROS CREDITOS",
+    "CRED DISTRIBUICAO SOBRAS VALORES",
+    "CR COMPRAS",
+    "CRED LIQUIDACAO COBRANCA",
+    "PAGAMENTO RECEBIDO",
+    "RECEBIMENTO"
+];
 
-function iniciarMediaMovimentacao() { liberarCamposEdicaoMovimentacao(); configurarEventosMediaMovimentacao(); limparResultadosMovimentacao(); renderizarHistoricosExtrato(); }
-
-function liberarCamposEdicaoMovimentacao() {
-    ["primeiraDataMovimentacao", "ultimaDataMovimentacao", "mesesDetectadosMovimentacao", "mesesConsideradosMovimentacao"].forEach(function (id) {
-        const campo = document.getElementById(id); if (!campo) return;
-        campo.disabled = false; campo.readOnly = false; campo.removeAttribute("disabled"); campo.removeAttribute("readonly"); campo.setAttribute("aria-readonly", "false"); campo.style.pointerEvents = "auto";
-    });
+function iniciarMediaMovimentacao() {
+    liberarCamposEdicaoMovimentacao();
+    configurarEventosMediaMovimentacao();
+    limparResultadosMovimentacao();
+    renderizarHistoricosExtrato();
 }
 
 function configurarEventosMediaMovimentacao() {
@@ -37,538 +149,999 @@ function configurarEventosMediaMovimentacao() {
     const btnLimpar = document.getElementById("btnLimparMovimentacao");
     const btnRecalcular = document.getElementById("btnRecalcularMovimentacao");
     const btnRestaurar = document.getElementById("btnRestaurarPeriodoMovimentacao");
-    const primeiraData = document.getElementById("primeiraDataMovimentacao");
-    const ultimaData = document.getElementById("ultimaDataMovimentacao");
-    const mesesDetectados = document.getElementById("mesesDetectadosMovimentacao");
-    const mesesConsiderados = document.getElementById("mesesConsideradosMovimentacao");
 
     if (btnProcessar) btnProcessar.addEventListener("click", processarMovimentacao);
     if (btnLimpar) btnLimpar.addEventListener("click", limparMediaMovimentacao);
 
-    if (btnRecalcular) btnRecalcular.addEventListener("click", function () {
-        if (!movimentacoesExtrato.length) return;
-        aplicarPeriodoInformadoPeloUsuario();
-        classificarMovimentacoes(); calcularResultadosMovimentacao(); renderizarHistoricosExtrato(); renderizarResultadosMovimentacao();
-    });
+    if (btnRecalcular) {
+        btnRecalcular.addEventListener("click", function () {
+            if (!movimentacoesExtrato.length) return;
+            aplicarPeriodoInformadoPeloUsuario();
+            classificarMovimentacoes();
+            calcularResultadosMovimentacao();
+            renderizarHistoricosExtrato();
+            renderizarResultadosMovimentacao();
+        });
+    }
 
-    if (btnRestaurar) btnRestaurar.addEventListener("click", function () {
-        restaurarPeriodoAutomatico(); if (!movimentacoesExtrato.length) return;
-        classificarMovimentacoes(); calcularResultadosMovimentacao(); renderizarHistoricosExtrato(); renderizarResultadosMovimentacao();
-    });
+    if (btnRestaurar) {
+        btnRestaurar.addEventListener("click", function () {
+            restaurarPeriodoAutomatico();
+            if (!movimentacoesExtrato.length) return;
+            classificarMovimentacoes();
+            calcularResultadosMovimentacao();
+            renderizarHistoricosExtrato();
+            renderizarResultadosMovimentacao();
+        });
+    }
 
-    [primeiraData, ultimaData].forEach(function (campo) {
+    ["primeiraDataMovimentacao", "ultimaDataMovimentacao"].forEach(function (id) {
+        const campo = document.getElementById(id);
         if (!campo) return;
+
         campo.addEventListener("input", aplicarMascaraDataCampo);
+
         campo.addEventListener("blur", function () {
             if (!movimentacoesExtrato.length) return;
-            aplicarPeriodoInformadoPeloUsuario({ recalcularMesesDetectados: true, preservarMesesConsiderados: true });
-            calcularResultadosMovimentacao(); renderizarResultadosMovimentacao();
+            aplicarPeriodoInformadoPeloUsuario({
+                recalcularMesesDetectados: true,
+                preservarMesesConsiderados: true
+            });
+            calcularResultadosMovimentacao();
+            renderizarResultadosMovimentacao();
         });
     });
 
-    if (mesesDetectados) {
-        mesesDetectados.addEventListener("input", function () { if (movimentacoesExtrato.length) calcularResultadosMovimentacao(); });
-        mesesDetectados.addEventListener("blur", function () { normalizarCampoMeses(mesesDetectados, false); if (movimentacoesExtrato.length) calcularResultadosMovimentacao(); });
-    }
+    ["mesesDetectadosMovimentacao", "mesesConsideradosMovimentacao"].forEach(function (id) {
+        const campo = document.getElementById(id);
+        if (!campo) return;
 
-    if (mesesConsiderados) {
-        mesesConsiderados.addEventListener("input", function () { if (movimentacoesExtrato.length) calcularResultadosMovimentacao(); });
-        mesesConsiderados.addEventListener("blur", function () { normalizarCampoMeses(mesesConsiderados, false); if (movimentacoesExtrato.length) calcularResultadosMovimentacao(); });
-    }
+        campo.addEventListener("blur", function () {
+            normalizarCampoMeses(campo);
+            if (movimentacoesExtrato.length) {
+                calcularResultadosMovimentacao();
+                renderizarResultadosMovimentacao();
+            }
+        });
+    });
+}
+
+function liberarCamposEdicaoMovimentacao() {
+    [
+        "primeiraDataMovimentacao",
+        "ultimaDataMovimentacao",
+        "mesesDetectadosMovimentacao",
+        "mesesConsideradosMovimentacao"
+    ].forEach(function (id) {
+        const campo = document.getElementById(id);
+        if (!campo) return;
+        campo.disabled = false;
+        campo.readOnly = false;
+        campo.removeAttribute("disabled");
+        campo.removeAttribute("readonly");
+        campo.style.pointerEvents = "auto";
+    });
 }
 
 function processarMovimentacao() {
-    const textarea = document.getElementById("textoExtratoMovimentacao"); if (!textarea) return;
+    const textarea = document.getElementById("textoExtratoMovimentacao");
+    if (!textarea) return false;
+
     const texto = String(textarea.value || "").trim();
-    if (!texto) { alert("Cole o extrato no campo de texto."); return; }
+
+    if (!texto) {
+        alert("Cole o extrato no campo de texto.");
+        return false;
+    }
+
+    return processarTextoMovimentacao(texto);
+}
+
+function processarTextoMovimentacao(texto, opcoes) {
     resetarEstadoMovimentacao();
+
+    if (opcoes && Array.isArray(opcoes.competenciasDocumentadas)) {
+        competenciasDocumentadasExternas = Array.from(
+            new Set(opcoes.competenciasDocumentadas.filter(Boolean))
+        ).sort();
+    }
+
     movimentacoesExtrato = interpretarExtratoMovimentacao(texto);
-    if (!movimentacoesExtrato.length) { limparResultadosMovimentacao(); renderizarHistoricosExtrato(); alert("Nenhum lançamento financeiro válido foi identificado no extrato."); return; }
-    identificarPeriodoExtrato(); classificarMovimentacoes(); calcularResultadosMovimentacao(); renderizarHistoricosExtrato(); renderizarResultadosMovimentacao(); liberarCamposEdicaoMovimentacao();
+
+    if (!movimentacoesExtrato.length) {
+        limparResultadosMovimentacao();
+        renderizarHistoricosExtrato();
+        return false;
+    }
+
+    identificarPeriodoExtrato();
+    classificarMovimentacoes();
+    calcularResultadosMovimentacao();
+    renderizarHistoricosExtrato();
+    renderizarResultadosMovimentacao();
+    liberarCamposEdicaoMovimentacao();
+
+    return true;
 }
 
 function resetarEstadoMovimentacao() {
-    movimentacoesExtrato = []; movimentacoesConsideradas = []; movimentacoesExcluidas = [];
-    primeiraDataExtrato = null; ultimaDataExtrato = null; primeiraDataExtratoAutomatica = null; ultimaDataExtratoAutomatica = null;
-    mesesDetectadosAutomaticos = 0; formatoDataExtrato = "BR";
-    historicosExcluidosManualmente.clear(); historicosIncluidosManualmente.clear();
+    movimentacoesExtrato = [];
+    movimentacoesConsideradas = [];
+    movimentacoesExcluidas = [];
+
+    primeiraDataExtrato = null;
+    ultimaDataExtrato = null;
+    primeiraDataExtratoAutomatica = null;
+    ultimaDataExtratoAutomatica = null;
+
+    mesesDetectadosAutomaticos = 0;
+    competenciasDocumentadasExternas = [];
+    formatoDataExtrato = "BR";
+
+    historicosExcluidosManualmente.clear();
+    historicosIncluidosManualmente.clear();
 }
 
 function interpretarExtratoMovimentacao(textoOriginal) {
-    const texto = prepararTrechoExtrato(textoOriginal);
-    const linhas = String(texto || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+    const linhas = String(textoOriginal || "")
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .split("\n");
+
     formatoDataExtrato = detectarFormatoDataExtrato(linhas);
-    const movimentacoes = []; let dataCorrente = null;
+
+    const movimentacoes = [];
+    let dataCorrente = null;
+
     linhas.forEach(function (linhaOriginal, indice) {
-        const linha = String(linhaOriginal || "").trim(); if (!linha || deveIgnorarLinhaExtrato(linha)) return;
+        const linha = String(linhaOriginal || "").trim();
+
+        if (!linha || deveIgnorarLinhaExtrato(linha)) return;
+
         let resultado = null;
-        if (linha.includes("|")) resultado = interpretarLinhaTabelaExtrato(linha, dataCorrente, indice + 1);
-        if (!resultado) resultado = interpretarLinhaTextoExtrato(linha, dataCorrente, indice + 1);
+
+        if (linha.includes("|")) {
+            resultado = interpretarLinhaTabelaExtrato(
+                linha,
+                dataCorrente,
+                indice + 1
+            );
+        }
+
+        if (!resultado) {
+            resultado = interpretarLinhaTextoExtrato(
+                linha,
+                dataCorrente,
+                indice + 1
+            );
+        }
+
         if (!resultado) return;
-        if (resultado.dataCorrente) dataCorrente = resultado.dataCorrente;
-        if (resultado.movimentacao) movimentacoes.push(resultado.movimentacao);
+
+        if (resultado.dataCorrente) {
+            dataCorrente = resultado.dataCorrente;
+        }
+
+        if (resultado.movimentacao) {
+            movimentacoes.push(resultado.movimentacao);
+        }
     });
+
     return movimentacoes;
 }
 
-function prepararTrechoExtrato(textoOriginal) {
-    const linhas = String(textoOriginal || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
-    const linhasValidas = []; let processandoMovimentacoes = false, dentroResumo = false;
-    for (let i = 0; i < linhas.length; i++) {
-        const linhaOriginal = String(linhas[i] || ""); const linha = linhaOriginal.trim(); if (!linha) continue;
-        const normalizada = normalizarTexto(linha); if (!normalizada) continue;
-        const ehCabecalho = normalizada.includes("DATA") && normalizada.includes("HISTORICO") && normalizada.includes("VALOR");
-        if (ehCabecalho) { processandoMovimentacoes = true; dentroResumo = false; continue; }
-        const possuiDataInicio = /^\s*\d{1,2}\/\d{1,2}\/\d{2,4}(?=\s|\t|\||$)/.test(linhaOriginal);
-        if (normalizada === "RESUMO" || normalizada.startsWith("RESUMO ") || normalizada.includes("LANCAMENTOS FUTUROS")) { dentroResumo = true; processandoMovimentacoes = false; continue; }
-        if (dentroResumo && possuiDataInicio) { dentroResumo = false; processandoMovimentacoes = true; linhasValidas.push(linhaOriginal); continue; }
-        if (dentroResumo) continue;
-        if (!processandoMovimentacoes && possuiDataInicio) processandoMovimentacoes = true;
-        if (!processandoMovimentacoes) continue;
-        linhasValidas.push(linhaOriginal);
-    }
-    return linhasValidas.join("\n");
-}
-
 function deveIgnorarLinhaExtrato(linha) {
-    const texto = String(linha || "").trim(); if (!texto) return true;
-    if (/^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?$/.test(texto)) return true;
-    const normalizado = normalizarTexto(texto); if (!normalizado) return true;
-    if (normalizado.includes("DATA DOCUMENTO HISTORICO VALOR")) return true;
-    if (normalizado === "SICOOB" || normalizado.includes("SISTEMA DE COOPERATIVAS DE CREDITO DO BRASIL") || normalizado.includes("SISBR SISTEMA DE INFORMATICA DO SICOOB")) return true;
-    if (normalizado.startsWith("COOP ")) return true;
-    if (normalizado.startsWith("CONTA ")) return true;
-    if (normalizado.includes("EXTRATO CONTA CORRENTE")) return true;
-    if (normalizado === "RESUMO" || normalizado.startsWith("RESUMO ")) return true;
-    return false;
+    const n = normalizarTexto(linha);
+
+    if (!n) return true;
+
+    const padroes = [
+        "DATA DOCUMENTO HISTORICO VALOR",
+        "DATA HISTORICO VALOR",
+        "EXTRATO CONTA CORRENTE",
+        "EXTRATO DE CONTA",
+        "SISTEMA DE COOPERATIVAS",
+        "SISBR SISTEMA",
+        "SALDO ANTERIOR",
+        "SALDO BLOQUEADO ANTERIOR",
+        "SALDO DO DIA",
+        "SALDO FINAL",
+        "SALDO DISPONIVEL",
+        "TOTAL DE CREDITOS",
+        "TOTAL CREDITOS",
+        "TOTAL DE DEBITOS",
+        "TOTAL DEBITOS",
+        "LANCAMENTOS FUTUROS"
+    ];
+
+    if (n === "RESUMO") return true;
+
+    return padroes.some(p => n.includes(p));
 }
 
 function interpretarLinhaTabelaExtrato(linha, dataCorrente, numeroLinha) {
-    let texto = String(linha || "").trim(); if (!texto.includes("|")) return null;
-    if (texto.startsWith("|")) texto = texto.substring(1);
-    if (texto.endsWith("|")) texto = texto.substring(0, texto.length - 1);
-    const colunas = texto.split("|").map(item => item.trim()); if (colunas.length < 3) return null;
-    const dataTexto = limparCelulaTexto(colunas[0]); const valorTexto = limparCelulaValor(colunas[colunas.length - 1]);
-    let documento = "", historico = "";
-    if (colunas.length >= 4) { documento = limparCelulaTexto(colunas[1]); historico = colunas.slice(2, colunas.length - 1).map(limparCelulaTexto).filter(Boolean).join(" "); } else historico = limparCelulaTexto(colunas[1]);
-    let dataMovimentacao = null;
-    if (validarFormatoDataGenerica(dataTexto)) dataMovimentacao = converterDataExtrato(dataTexto);
-    else if (!dataTexto) dataMovimentacao = dataCorrente;
-    else return null;
+    let texto = String(linha || "").trim();
+
+    if (!texto.includes("|")) return null;
+
+    if (texto.startsWith("|")) texto = texto.slice(1);
+    if (texto.endsWith("|")) texto = texto.slice(0, -1);
+
+    const colunas = texto
+        .split("|")
+        .map(v => String(v || "").trim());
+
+    if (colunas.length < 3) return null;
+
+    const dataTexto = limparCelulaTexto(colunas[0]);
+
+    let dataMovimentacao = validarFormatoDataGenerica(dataTexto)
+        ? converterDataExtrato(dataTexto)
+        : dataCorrente;
+
     if (!dataMovimentacao) return null;
-    if (!historico) return { dataCorrente: dataMovimentacao, movimentacao: null };
+
+    const valorTexto = limparCelulaValor(colunas[colunas.length - 1]);
     const dadosValor = extrairValorIndicador(valorTexto);
-    if (!dadosValor) return { dataCorrente: dataMovimentacao, movimentacao: null };
-    return { dataCorrente: dataMovimentacao, movimentacao: criarMovimentacaoExtrato({ numeroLinha: numeroLinha, data: dataMovimentacao, documento: documento, historico: historico, valor: dadosValor.valor, indicador: dadosValor.indicador, original: linha }) };
+
+    if (!dadosValor) {
+        return {
+            dataCorrente: dataMovimentacao,
+            movimentacao: null
+        };
+    }
+
+    let documento = "";
+    let historico = "";
+
+    if (colunas.length >= 4) {
+        documento = limparCelulaTexto(colunas[1]);
+        historico = colunas
+            .slice(2, colunas.length - 1)
+            .map(limparCelulaTexto)
+            .filter(Boolean)
+            .join(" ");
+    } else {
+        historico = limparCelulaTexto(colunas[1]);
+    }
+
+    if (!historico) {
+        return {
+            dataCorrente: dataMovimentacao,
+            movimentacao: null
+        };
+    }
+
+    return {
+        dataCorrente: dataMovimentacao,
+        movimentacao: criarMovimentacaoExtrato({
+            numeroLinha,
+            data: dataMovimentacao,
+            documento,
+            historico,
+            valor: dadosValor.valor,
+            indicador: dadosValor.indicador,
+            original: linha
+        })
+    };
 }
 
 function interpretarLinhaTextoExtrato(linha, dataCorrente, numeroLinha) {
-    let texto = String(linha || "").replace(/\u00A0/g, " ").trim(); if (!texto) return null;
+    let texto = String(linha || "")
+        .replace(/\u00A0/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    if (!texto) return null;
+
     let dataMovimentacao = null;
-    const correspondenciaData = texto.match(/^(\d{1,2}\/\d{1,2}\/\d{2,4})(?=\s|\t|$)/);
-    if (correspondenciaData) { dataMovimentacao = converterDataExtrato(correspondenciaData[1]); if (!dataMovimentacao) return null; texto = texto.substring(correspondenciaData[0].length).trim(); } else dataMovimentacao = dataCorrente;
+
+    const correspondenciaData = texto.match(
+        /^(\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4})(?=\s|$)/
+    );
+
+    if (correspondenciaData) {
+        dataMovimentacao = converterDataExtrato(correspondenciaData[1]);
+
+        if (!dataMovimentacao) return null;
+
+        texto = texto
+            .substring(correspondenciaData[0].length)
+            .trim();
+    } else {
+        dataMovimentacao = dataCorrente;
+    }
+
     if (!dataMovimentacao) return null;
+
     const dadosValor = extrairValorFinalLinha(texto);
-    if (!dadosValor) return { dataCorrente: dataMovimentacao, movimentacao: null };
-    const dadosDescricao = separarDocumentoHistorico(dadosValor.parteDescricao);
-    if (!dadosDescricao.historico) return { dataCorrente: dataMovimentacao, movimentacao: null };
-    return { dataCorrente: dataMovimentacao, movimentacao: criarMovimentacaoExtrato({ numeroLinha: numeroLinha, data: dataMovimentacao, documento: dadosDescricao.documento, historico: dadosDescricao.historico, valor: dadosValor.valor, indicador: dadosValor.indicador, original: linha }) };
+
+    if (!dadosValor) {
+        return {
+            dataCorrente: dataMovimentacao,
+            movimentacao: null
+        };
+    }
+
+    const dadosDescricao = separarDocumentoHistorico(
+        dadosValor.parteDescricao
+    );
+
+    if (!dadosDescricao.historico) {
+        return {
+            dataCorrente: dataMovimentacao,
+            movimentacao: null
+        };
+    }
+
+    return {
+        dataCorrente: dataMovimentacao,
+        movimentacao: criarMovimentacaoExtrato({
+            numeroLinha,
+            data: dataMovimentacao,
+            documento: dadosDescricao.documento,
+            historico: dadosDescricao.historico,
+            valor: dadosValor.valor,
+            indicador: dadosValor.indicador,
+            original: linha
+        })
+    };
 }
 
-function extrairMetadadosIA(texto) {
-    const original = String(texto || ""); const normalizado = normalizarTexto(original);
-    let decisao = "";
-    if (normalizado.includes("INCLUIR IA")) decisao = "INCLUIR";
-    else if (normalizado.includes("EXCLUIR IA")) decisao = "EXCLUIR";
-    else if (normalizado.includes("DUVIDA IA")) decisao = "DUVIDA";
-    let idLocal = "", banco = "";
-    const idMatch = original.match(/\[LOCAL\s*:\s*([^\]]+)\]/i); if (idMatch) idLocal = String(idMatch[1] || "").trim();
-    const bancoMatch = original.match(/\[BANCO\s*:\s*([^\]]+)\]/i); if (bancoMatch) banco = String(bancoMatch[1] || "").trim();
-    return { decisao: decisao, idLocal: idLocal, banco: banco };
+function extrairMetadadosLeitura(texto) {
+    const original = String(texto || "");
+
+    function obterTag(nome) {
+        const regex = new RegExp(
+            "\\[" + nome + "\\s*:\\s*([^\\]]+)\\]",
+            "i"
+        );
+
+        const m = original.match(regex);
+
+        return m
+            ? String(m[1] || "").trim()
+            : "";
+    }
+
+    return {
+        decisao: obterTag("DECISAO").toUpperCase(),
+        id: obterTag("ID"),
+        banco: obterTag("BANCO"),
+        arquivo: obterTag("ARQUIVO")
+    };
 }
 
-function removerMetadadosIA(texto) {
-    return String(texto || "").replace(/\[LOCAL\s*:[^\]]*\]/gi, " ").replace(/\[BANCO\s*:[^\]]*\]/gi, " ").replace(/\[INCLUIR_IA\]/gi, " ").replace(/\[EXCLUIR_IA\]/gi, " ").replace(/\[DUVIDA_IA\]/gi, " ").replace(/\s+/g, " ").trim();
+function removerMetadadosLeitura(texto) {
+    return String(texto || "")
+        .replace(/\[(?:DECISAO|ID|BANCO|ARQUIVO)\s*:[^\]]+\]/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim();
 }
 
 function criarMovimentacaoExtrato(dados) {
-    const metadadosIA = extrairMetadadosIA((dados.original || "") + " " + (dados.historico || ""));
-    const historico = removerMetadadosIA(limparCelulaTexto(dados.historico));
-    return { linha: dados.numeroLinha, data: dados.data, dataTexto: formatarDataBrasileira(dados.data), competencia: obterCompetenciaData(dados.data), documento: String(dados.documento || "").trim(), historico: historico, historicoNormalizado: normalizarTexto(historico), valor: Math.abs(Number(dados.valor || 0)), indicador: String(dados.indicador || "").toUpperCase(), original: dados.original || "", considerado: false, motivo: "", decisaoIA: metadadosIA.decisao, idLocalIA: metadadosIA.idLocal, bancoIA: metadadosIA.banco };
+    const metadados = extrairMetadadosLeitura(
+        (dados.original || "") + " " + (dados.historico || "")
+    );
+
+    const historico = removerMetadadosLeitura(
+        limparCelulaTexto(dados.historico)
+    );
+
+    return {
+        linha: dados.numeroLinha,
+        data: dados.data,
+        dataTexto: formatarDataBrasileira(dados.data),
+        competencia: obterCompetenciaData(dados.data),
+        documento: String(dados.documento || "").trim(),
+        historico,
+        historicoNormalizado: normalizarTexto(historico),
+        valor: Math.abs(Number(dados.valor || 0)),
+        indicador: String(dados.indicador || "").toUpperCase(),
+        original: dados.original || "",
+        banco: metadados.banco,
+        arquivo: metadados.arquivo,
+        idOrigem: metadados.id,
+        decisaoLeitura: metadados.decisao,
+        considerado: false,
+        motivo: ""
+    };
 }
 
 function extrairValorFinalLinha(texto) {
     const valor = limparCelulaValor(texto);
-    const regex = /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i;
-    const correspondencia = valor.match(regex); if (!correspondencia) return null;
-    const numero = converterValorBrasileiro(correspondencia[1]); if (!Number.isFinite(numero)) return null;
-    let indicador = String(correspondencia[2] || "").toUpperCase(); if (!indicador && numero < 0) indicador = "D";
-    return { valor: Math.abs(numero), indicador: indicador, parteDescricao: valor.substring(0, correspondencia.index).trim() };
+
+    const correspondencia = valor.match(
+        /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i
+    );
+
+    if (!correspondencia) return null;
+
+    const numero = converterValorBrasileiro(correspondencia[1]);
+
+    if (!Number.isFinite(numero)) return null;
+
+    let indicador = String(correspondencia[2] || "").toUpperCase();
+
+    if (!indicador && numero < 0) {
+        indicador = "D";
+    }
+
+    return {
+        valor: Math.abs(numero),
+        indicador,
+        parteDescricao: valor
+            .substring(0, correspondencia.index)
+            .trim()
+    };
 }
 
 function extrairValorIndicador(texto) {
     const valor = limparCelulaValor(texto);
-    const correspondencia = valor.match(/(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i);
+
+    const correspondencia = valor.match(
+        /(-?\s*(?:R\$\s*)?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2})\s*([CD*])?\s*$/i
+    );
+
     if (!correspondencia) return null;
-    const numero = converterValorBrasileiro(correspondencia[1]); if (!Number.isFinite(numero)) return null;
-    let indicador = String(correspondencia[2] || "").toUpperCase(); if (!indicador && numero < 0) indicador = "D";
-    return { valor: Math.abs(numero), indicador: indicador };
+
+    const numero = converterValorBrasileiro(correspondencia[1]);
+
+    if (!Number.isFinite(numero)) return null;
+
+    let indicador = String(correspondencia[2] || "").toUpperCase();
+
+    if (!indicador && numero < 0) {
+        indicador = "D";
+    }
+
+    return {
+        valor: Math.abs(numero),
+        indicador
+    };
 }
 
 function separarDocumentoHistorico(texto) {
-    const valor = String(texto || "").replace(/\u00A0/g, " ").trim(); if (!valor) return { documento: "", historico: "" };
-    const partesTab = valor.split(/\t+/).map(item => item.trim()).filter(Boolean);
-    if (partesTab.length >= 2) { const primeiro = partesTab[0]; if (pareceDocumento(primeiro)) return { documento: primeiro, historico: partesTab.slice(1).join(" ") }; return { documento: "", historico: partesTab.join(" ") }; }
-    const partesEspaco = valor.split(/\s{2,}/).map(item => item.trim()).filter(Boolean);
-    if (partesEspaco.length >= 2) { const primeiro = partesEspaco[0]; if (pareceDocumento(primeiro)) return { documento: primeiro, historico: partesEspaco.slice(1).join(" ") }; return { documento: "", historico: partesEspaco.join(" ") }; }
-    const match = valor.match(/^([0-9A-Z./-]{1,30})\s+(.+)$/i);
-    if (match && pareceDocumento(match[1])) return { documento: match[1], historico: match[2].trim() };
-    return { documento: "", historico: valor };
-}
+    let valor = limparCelulaTexto(texto);
 
-function pareceDocumento(valor) {
-    const texto = String(valor || "").trim(); if (!texto || texto.length > 30) return false;
-    if (/^\d+$/.test(texto)) return true;
-    if (/^\d+[./-]\d+/.test(texto)) return true;
-    if (/^[A-Z]{0,15}\d+[A-Z0-9./-]*$/i.test(texto)) return true;
-    const normalizado = normalizarTexto(texto);
-    if (/^(PIX|MASTERCARD|CONSORCIOS|SICOOB|RECARGA|ESTORNO)$/.test(normalizado)) return true;
-    return false;
-}
-
-function identificarPeriodoExtrato() {
-    const validas = movimentacoesExtrato.filter(function (m) { return possuiDataValida(m.data) && !deveIgnorarMovimentacaoNaDeteccaoPeriodo(m); });
-    if (!validas.length) {
-        primeiraDataExtrato = null; ultimaDataExtrato = null; primeiraDataExtratoAutomatica = null; ultimaDataExtratoAutomatica = null; mesesDetectadosAutomaticos = 0;
-        definirValorCampo("primeiraDataMovimentacao", ""); definirValorCampo("ultimaDataMovimentacao", ""); definirValorCampo("mesesDetectadosMovimentacao", ""); definirValorCampo("mesesConsideradosMovimentacao", ""); return;
+    if (!valor) {
+        return {
+            documento: "",
+            historico: ""
+        };
     }
-    const datas = validas.map(item => item.data.getTime());
-    primeiraDataExtrato = new Date(Math.min.apply(null, datas)); ultimaDataExtrato = new Date(Math.max.apply(null, datas));
-    primeiraDataExtratoAutomatica = new Date(primeiraDataExtrato.getTime()); ultimaDataExtratoAutomatica = new Date(ultimaDataExtrato.getTime());
-    mesesDetectadosAutomaticos = calcularQuantidadeMesesPeriodo(primeiraDataExtrato, ultimaDataExtrato);
-    atualizarExibicaoPeriodo(); definirValorCampo("mesesDetectadosMovimentacao", mesesDetectadosAutomaticos); definirValorCampo("mesesConsideradosMovimentacao", mesesDetectadosAutomaticos); liberarCamposEdicaoMovimentacao();
-}
 
-function deveIgnorarMovimentacaoNaDeteccaoPeriodo(movimentacao) {
-    if (!movimentacao || !movimentacao.historicoNormalizado) return true;
-    const regra = localizarRegraExclusao(movimentacao.historicoNormalizado);
-    return Boolean(regra && regra.ignorarPeriodo);
+    const matchDocumento = valor.match(
+        /^([A-Z0-9.-]{3,25})\s+(.+)$/
+    );
+
+    if (
+        matchDocumento &&
+        /\d/.test(matchDocumento[1]) &&
+        !/^(PIX|TED|DOC|CRED|DEB|DEP)$/i.test(matchDocumento[1])
+    ) {
+        return {
+            documento: matchDocumento[1],
+            historico: matchDocumento[2]
+        };
+    }
+
+    return {
+        documento: "",
+        historico: valor
+    };
 }
 
 function classificarMovimentacoes() {
-    movimentacoesConsideradas = []; movimentacoesExcluidas = [];
-    movimentacoesExtrato.forEach(function (movimentacao) {
-        const classificacao = classificarMovimentacao(movimentacao);
-        movimentacao.considerado = classificacao.considerado; movimentacao.motivo = classificacao.motivo;
-        if (classificacao.considerado) movimentacoesConsideradas.push(movimentacao); else movimentacoesExcluidas.push(movimentacao);
+    movimentacoesConsideradas = [];
+    movimentacoesExcluidas = [];
+
+    movimentacoesExtrato.forEach(function (m) {
+        const classificacao = classificarMovimentacao(m);
+
+        m.considerado = classificacao.considerado;
+        m.motivo = classificacao.motivo;
+
+        if (m.considerado) {
+            movimentacoesConsideradas.push(m);
+        } else {
+            movimentacoesExcluidas.push(m);
+        }
     });
 }
 
-function classificarMovimentacao(movimentacao) {
-    const historico = movimentacao.historicoNormalizado;
-    const decisaoIA = String(movimentacao.decisaoIA || "").toUpperCase();
-    if (movimentacao.indicador === "D") return { considerado: false, motivo: "Débito" };
-    if (movimentacao.indicador === "*") return { considerado: false, motivo: "Valor bloqueado/informativo" };
-    if (decisaoIA === "EXCLUIR") return { considerado: false, motivo: "Excluído na análise dos extratos" };
-    if (decisaoIA === "DUVIDA") return { considerado: false, motivo: "Pendente de confirmação na análise dos extratos" };
-    if (decisaoIA === "INCLUIR") return { considerado: true, motivo: "Crédito aprovado na análise dos extratos" };
+function classificarMovimentacao(m) {
+    const historico = m.historicoNormalizado;
+    const decisao = String(m.decisaoLeitura || "").toUpperCase();
+
+    if (m.indicador === "D") {
+        return {
+            considerado: false,
+            motivo: "Débito"
+        };
+    }
+
+    if (m.indicador === "*") {
+        return {
+            considerado: false,
+            motivo: "Valor bloqueado/informativo"
+        };
+    }
+
+    if (decisao === "EXCLUIR") {
+        return {
+            considerado: false,
+            motivo: "Excluído na conferência da leitura"
+        };
+    }
+
+    if (decisao === "INCLUIR") {
+        return {
+            considerado: true,
+            motivo: "Crédito confirmado na conferência"
+        };
+    }
+
+    if (decisao === "DUVIDA") {
+        return {
+            considerado: false,
+            motivo: "Pendente de conferência"
+        };
+    }
+
     const regra = localizarRegraExclusao(historico);
     const inclusaoManual = historicosIncluidosManualmente.has(historico);
-    if (regra && !inclusaoManual) return { considerado: false, motivo: regra.rotulo + " - " + regra.motivo };
-    if (historicosExcluidosManualmente.has(historico)) return { considerado: false, motivo: "Exclusão manual" };
-    if (movimentacao.indicador === "C") return { considerado: true, motivo: "Crédito considerado" };
-    if (identificarCreditoSemIndicador(historico)) return { considerado: true, motivo: "Crédito identificado pelo histórico" };
-    return { considerado: false, motivo: "Movimentação não identificada como crédito" };
+
+    if (regra && !inclusaoManual) {
+        return {
+            considerado: false,
+            motivo: regra.rotulo + " - " + regra.motivo
+        };
+    }
+
+    if (historicosExcluidosManualmente.has(historico)) {
+        return {
+            considerado: false,
+            motivo: "Exclusão manual"
+        };
+    }
+
+    if (m.indicador === "C") {
+        return {
+            considerado: true,
+            motivo: "Crédito considerado"
+        };
+    }
+
+    if (identificarCreditoSemIndicador(historico)) {
+        return {
+            considerado: true,
+            motivo: "Crédito identificado pelo histórico"
+        };
+    }
+
+    return {
+        considerado: false,
+        motivo: "Movimentação sem identificação segura como crédito"
+    };
 }
 
 function localizarRegraExclusao(historico) {
-    const valor = normalizarTexto(historico);
-    for (let i = 0; i < REGRAS_EXCLUSAO_MOVIMENTACAO.length; i++) { const regra = REGRAS_EXCLUSAO_MOVIMENTACAO[i]; if (regra.testar(valor)) return regra; }
-    return null;
+    return REGRAS_EXCLUSAO_MOVIMENTACAO.find(
+        regra => regra.testar(historico)
+    ) || null;
 }
 
 function identificarCreditoSemIndicador(historico) {
-    const texto = normalizarTexto(historico);
-    return PADROES_CREDITO_SEM_INDICADOR.some(function (padrao) { return texto.includes(normalizarTexto(padrao)); });
+    return PADROES_CREDITO_SEM_INDICADOR.some(
+        padrao => historico.includes(padrao)
+    );
 }
 
-function ehCreditoPotencial(movimentacao) {
-    if (!movimentacao) return false;
-    if (movimentacao.indicador === "D" || movimentacao.indicador === "*") return false;
-    if (movimentacao.decisaoIA === "EXCLUIR" || movimentacao.decisaoIA === "DUVIDA") return false;
-    if (movimentacao.decisaoIA === "INCLUIR") return true;
-    const regra = localizarRegraExclusao(movimentacao.historicoNormalizado); if (regra) return false;
-    if (movimentacao.indicador === "C") return true;
-    return identificarCreditoSemIndicador(movimentacao.historicoNormalizado);
+function identificarPeriodoExtrato() {
+    const validas = movimentacoesExtrato.filter(function (m) {
+        return m.data instanceof Date &&
+            !Number.isNaN(m.data.getTime());
+    });
+
+    if (!validas.length) return;
+
+    primeiraDataExtrato = new Date(
+        Math.min(...validas.map(m => m.data.getTime()))
+    );
+
+    ultimaDataExtrato = new Date(
+        Math.max(...validas.map(m => m.data.getTime()))
+    );
+
+    primeiraDataExtratoAutomatica = new Date(primeiraDataExtrato);
+    ultimaDataExtratoAutomatica = new Date(ultimaDataExtrato);
+
+    if (competenciasDocumentadasExternas.length) {
+        mesesDetectadosAutomaticos =
+            competenciasDocumentadasExternas.length;
+    } else {
+        mesesDetectadosAutomaticos =
+            calcularMesesInclusivos(
+                primeiraDataExtrato,
+                ultimaDataExtrato
+            );
+    }
+
+    definirValorCampo(
+        "primeiraDataMovimentacao",
+        formatarDataBrasileira(primeiraDataExtrato)
+    );
+
+    definirValorCampo(
+        "ultimaDataMovimentacao",
+        formatarDataBrasileira(ultimaDataExtrato)
+    );
+
+    definirValorCampo(
+        "mesesDetectadosMovimentacao",
+        String(mesesDetectadosAutomaticos)
+    );
+
+    definirValorCampo(
+        "mesesConsideradosMovimentacao",
+        String(mesesDetectadosAutomaticos)
+    );
+}
+
+function aplicarPeriodoInformadoPeloUsuario(opcoes) {
+    opcoes = opcoes || {};
+
+    const inicio = converterDataExtrato(
+        obterValorCampo("primeiraDataMovimentacao")
+    );
+
+    const fim = converterDataExtrato(
+        obterValorCampo("ultimaDataMovimentacao")
+    );
+
+    if (inicio) primeiraDataExtrato = inicio;
+    if (fim) ultimaDataExtrato = fim;
+
+    if (
+        opcoes.recalcularMesesDetectados &&
+        inicio &&
+        fim
+    ) {
+        const meses = calcularMesesInclusivos(inicio, fim);
+
+        definirValorCampo(
+            "mesesDetectadosMovimentacao",
+            String(meses)
+        );
+
+        if (!opcoes.preservarMesesConsiderados) {
+            definirValorCampo(
+                "mesesConsideradosMovimentacao",
+                String(meses)
+            );
+        }
+    }
+}
+
+function restaurarPeriodoAutomatico() {
+    if (!primeiraDataExtratoAutomatica || !ultimaDataExtratoAutomatica) {
+        return;
+    }
+
+    primeiraDataExtrato = new Date(primeiraDataExtratoAutomatica);
+    ultimaDataExtrato = new Date(ultimaDataExtratoAutomatica);
+
+    definirValorCampo(
+        "primeiraDataMovimentacao",
+        formatarDataBrasileira(primeiraDataExtrato)
+    );
+
+    definirValorCampo(
+        "ultimaDataMovimentacao",
+        formatarDataBrasileira(ultimaDataExtrato)
+    );
+
+    definirValorCampo(
+        "mesesDetectadosMovimentacao",
+        String(mesesDetectadosAutomaticos)
+    );
+
+    definirValorCampo(
+        "mesesConsideradosMovimentacao",
+        String(mesesDetectadosAutomaticos)
+    );
+}
+
+function calcularResultadosMovimentacao() {
+    aplicarPeriodoInformadoPeloUsuario();
+
+    const meses = obterMesesConsiderados();
+
+    const dentroPeriodo = movimentacoesConsideradas.filter(function (m) {
+        if (!primeiraDataExtrato || !ultimaDataExtrato) return true;
+
+        return m.data >= primeiraDataExtrato &&
+            m.data <= ultimaDataExtrato;
+    });
+
+    const total = dentroPeriodo.reduce(
+        (soma, m) => soma + m.valor,
+        0
+    );
+
+    const media = meses > 0
+        ? total / meses
+        : 0;
+
+    return {
+        total,
+        media,
+        meses,
+        consideradas: dentroPeriodo
+    };
+}
+
+function obterMesesConsiderados() {
+    const valor = Number(
+        obterValorCampo("mesesConsideradosMovimentacao")
+    );
+
+    if (Number.isFinite(valor) && valor > 0) {
+        return Math.floor(valor);
+    }
+
+    return mesesDetectadosAutomaticos || 1;
+}
+
+function renderizarResultadosMovimentacao() {
+    const resumo = calcularResultadosMovimentacao();
+
+    definirTexto(
+        "resultadoMediaMovimentacao",
+        formatarMoeda(resumo.media)
+    );
+
+    definirTexto(
+        "resultadoTotalMovimentacao",
+        formatarMoeda(resumo.total)
+    );
+
+    definirTexto(
+        "resultadoMesesMovimentacao",
+        String(resumo.meses)
+    );
+
+    definirTexto(
+        "resultadoQtdConsiderados",
+        String(resumo.consideradas.length)
+    );
+
+    definirTexto(
+        "resultadoQtdExcluidos",
+        String(movimentacoesExcluidas.length)
+    );
+
+    renderizarResumoMensal(resumo.consideradas);
+    renderizarTabelaMovimentacoes(
+        "tabelaMovimentacoesConsideradas",
+        resumo.consideradas,
+        true
+    );
+    renderizarTabelaMovimentacoes(
+        "tabelaMovimentacoesExcluidas",
+        movimentacoesExcluidas,
+        false
+    );
+}
+
+function renderizarResumoMensal(lista) {
+    const tbody = obterTbody("tabelaResumoMensalMovimentacao");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    const mapa = new Map();
+
+    lista.forEach(function (m) {
+        if (!mapa.has(m.competencia)) {
+            mapa.set(m.competencia, {
+                quantidade: 0,
+                total: 0
+            });
+        }
+
+        const item = mapa.get(m.competencia);
+        item.quantidade++;
+        item.total += m.valor;
+    });
+
+    const competencias = competenciasDocumentadasExternas.length
+        ? competenciasDocumentadasExternas.slice()
+        : Array.from(mapa.keys()).sort();
+
+    if (!competencias.length) {
+        inserirVazio(
+            tbody,
+            3,
+            "Nenhum extrato processado."
+        );
+        return;
+    }
+
+    competencias.forEach(function (comp) {
+        const item = mapa.get(comp) || {
+            quantidade: 0,
+            total: 0
+        };
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML =
+            "<td>" + escapar(formatarCompetencia(comp)) + "</td>" +
+            "<td>" + item.quantidade + "</td>" +
+            "<td>" + escapar(formatarMoeda(item.total)) + "</td>";
+
+        tbody.appendChild(tr);
+    });
+}
+
+function renderizarTabelaMovimentacoes(idTabela, lista, consideradas) {
+    const tbody = obterTbody(idTabela);
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    if (!lista.length) {
+        inserirVazio(
+            tbody,
+            5,
+            consideradas
+                ? "Nenhum crédito considerado."
+                : "Nenhuma movimentação desconsiderada."
+        );
+        return;
+    }
+
+    lista
+        .slice()
+        .sort((a, b) => a.data - b.data)
+        .forEach(function (m) {
+            const tr = document.createElement("tr");
+
+            if (consideradas) {
+                const identificacao = [
+                    m.banco,
+                    m.arquivo
+                ].filter(Boolean).join(" · ") || m.motivo;
+
+                tr.innerHTML =
+                    "<td>" + escapar(m.dataTexto) + "</td>" +
+                    "<td>" + escapar(m.documento || "-") + "</td>" +
+                    "<td>" + escapar(m.historico) + "</td>" +
+                    "<td>" + escapar(formatarMoeda(m.valor)) + "</td>" +
+                    "<td>" + escapar(identificacao || "-") + "</td>";
+            } else {
+                tr.innerHTML =
+                    "<td>" + escapar(m.dataTexto) + "</td>" +
+                    "<td>" + escapar(m.documento || "-") + "</td>" +
+                    "<td>" + escapar(m.historico) + "</td>" +
+                    "<td>" + escapar(formatarMoeda(m.valor)) + "</td>" +
+                    "<td>" + escapar(m.motivo || "-") + "</td>";
+            }
+
+            tbody.appendChild(tr);
+        });
 }
 
 function renderizarHistoricosExtrato() {
     const container = document.getElementById("listaRegrasMovimentacao");
     const resumo = document.getElementById("resumoRegrasMovimentacao");
+
     if (!container) return;
+
     container.innerHTML = "";
+
     if (!movimentacoesExtrato.length) {
-        if (resumo) resumo.textContent = "Processe um extrato para visualizar os históricos encontrados.";
-        const vazio = document.createElement("div"); vazio.className = "sem-dados"; vazio.textContent = "Nenhum histórico identificado."; container.appendChild(vazio); return;
+        container.innerHTML =
+            '<div class="sem-dados">Nenhum histórico identificado.</div>';
+
+        if (resumo) {
+            resumo.textContent =
+                "Processe um extrato para visualizar os históricos encontrados.";
+        }
+
+        return;
     }
-    const historicos = agruparHistoricosExtrato();
-    if (resumo) resumo.textContent = historicos.length + " histórico(s) diferente(s) identificado(s) em " + movimentacoesExtrato.length + " lançamento(s). As exclusões automáticas estão marcadas e desconsideradas do cálculo por padrão. As marcações permanecem disponíveis para alteração manual.";
-    historicos.forEach(function (grupo, indice) {
-        const regraAutomatica = localizarRegraExclusao(grupo.normalizado);
-        const exclusaoManual = historicosExcluidosManualmente.has(grupo.normalizado);
-        const inclusaoManual = historicosIncluidosManualmente.has(grupo.normalizado);
-        const marcado = regraAutomatica ? !inclusaoManual : exclusaoManual;
-        const label = document.createElement("label"); label.className = "opcao-simulacao regra-movimentacao-item";
-        if (regraAutomatica) label.classList.add("regra-movimentacao-automatica");
-        let status = "";
-        if (regraAutomatica) status = "Exclusão automática ativa: " + regraAutomatica.motivo;
-        else if (grupo.creditosPotenciais > 0) status = grupo.creditosPotenciais + " crédito(s) considerado(s) · marque para excluir";
-        else if (grupo.debitos > 0) status = grupo.debitos + " débito(s) desconsiderado(s)";
-        else status = "Movimentação informativa/desconsiderada";
-        label.innerHTML = `<input type="checkbox" id="historico-movimentacao-${indice}" ${marcado ? "checked" : ""} aria-label="${escaparHtml(grupo.historico)}"><span class="opcao-simulacao-conteudo"><strong>${escaparHtml(grupo.historico)}</strong><small>${escaparHtml(status)} · ${grupo.quantidade} ocorrência(s)</small></span>`;
-        const checkbox = label.querySelector("input[type='checkbox']");
-        if (checkbox) {
-            checkbox.disabled = false; checkbox.removeAttribute("disabled"); checkbox.style.pointerEvents = "auto";
-            checkbox.addEventListener("change", function () {
-                if (regraAutomatica) { if (checkbox.checked) historicosIncluidosManualmente.delete(grupo.normalizado); else historicosIncluidosManualmente.add(grupo.normalizado); }
-                else { if (checkbox.checked) historicosExcluidosManualmente.add(grupo.normalizado); else historicosExcluidosManualmente.delete(grupo.normalizado); }
-                classificarMovimentacoes(); calcularResultadosMovimentacao(); renderizarResultadosMovimentacao();
+
+    const mapa = new Map();
+
+    movimentacoesExtrato.forEach(function (m) {
+        if (!mapa.has(m.historicoNormalizado)) {
+            mapa.set(m.historicoNormalizado, {
+                historico: m.historico,
+                normalizado: m.historicoNormalizado,
+                quantidade: 0,
+                total: 0
             });
         }
-        container.appendChild(label);
+
+        const item = mapa.get(m.historicoNormalizado);
+        item.quantidade++;
+        item.total += m.valor;
     });
-}
 
-function agruparHistoricosExtrato() {
-    const mapa = new Map();
-    movimentacoesExtrato.forEach(function (movimentacao) {
-        const chave = movimentacao.historicoNormalizado; if (!chave) return;
-        if (!mapa.has(chave)) mapa.set(chave, { normalizado: chave, historico: movimentacao.historico, quantidade: 0, creditosPotenciais: 0, debitos: 0, informativos: 0 });
-        const grupo = mapa.get(chave); grupo.quantidade++;
-        const regra = localizarRegraExclusao(chave);
-        if (regra) grupo.informativos++;
-        else if (ehCreditoPotencial(movimentacao)) grupo.creditosPotenciais++;
-        else if (movimentacao.indicador === "D") grupo.debitos++;
-        else grupo.informativos++;
-    });
-    return Array.from(mapa.values()).sort(function (a, b) { return a.historico.localeCompare(b.historico, "pt-BR", { sensitivity: "base" }); });
-}
+    Array.from(mapa.values())
+        .sort((a, b) => a.historico.localeCompare(b.historico, "pt-BR"))
+        .forEach(function (item) {
+            const regra = localizarRegraExclusao(item.normalizado);
+            const excluidoManual =
+                historicosExcluidosManualmente.has(item.normalizado);
 
-function renderizarRegrasMovimentacao() { renderizarHistoricosExtrato(); }
+            const incluidoManual =
+                historicosIncluidosManualmente.has(item.normalizado);
 
-function calcularResultadosMovimentacao() {
-    let mesesDetectados = obterNumeroCampo("mesesDetectadosMovimentacao");
-    if (!Number.isFinite(mesesDetectados) || mesesDetectados <= 0) mesesDetectados = calcularQuantidadeMesesPeriodo(primeiraDataExtrato, ultimaDataExtrato);
-    let mesesConsiderados = obterNumeroCampo("mesesConsideradosMovimentacao");
-    if (!Number.isFinite(mesesConsiderados) || mesesConsiderados <= 0) mesesConsiderados = mesesDetectados;
-    mesesConsiderados = Math.max(1, Math.trunc(mesesConsiderados));
-    const consideradasPeriodo = movimentacoesConsideradas.filter(movimentacaoDentroPeriodoSelecionado);
-    const total = consideradasPeriodo.reduce(function (acumulado, movimentacao) { return acumulado + movimentacao.valor; }, 0);
-    const media = mesesConsiderados > 0 ? total / mesesConsiderados : 0;
-    definirTexto("resultadoMediaMovimentacao", formatarMoeda(media));
-    definirTexto("resultadoTotalMovimentacao", formatarMoeda(total));
-    definirTexto("resultadoMesesMovimentacao", String(mesesConsiderados));
-    definirTexto("resultadoQtdConsiderados", String(consideradasPeriodo.length));
-    const excluidasPeriodo = movimentacoesExcluidas.filter(movimentacaoDentroPeriodoSelecionado);
-    definirTexto("resultadoQtdExcluidos", String(excluidasPeriodo.length));
-}
+            const excluido =
+                excluidoManual ||
+                (regra && !incluidoManual);
 
-function movimentacaoDentroPeriodoSelecionado(movimentacao) {
-    if (!movimentacao || !possuiDataValida(movimentacao.data)) return false;
-    if (possuiDataValida(primeiraDataExtrato) && movimentacao.data.getTime() < primeiraDataExtrato.getTime()) return false;
-    if (possuiDataValida(ultimaDataExtrato) && movimentacao.data.getTime() > ultimaDataExtrato.getTime()) return false;
-    return true;
-}
+            const linha = document.createElement("label");
+            linha.className = "regra-movimentacao-item";
 
-function renderizarResultadosMovimentacao() { renderizarTabelaResumoMensal(); renderizarTabelaConsideradas(); renderizarTabelaExcluidas(); }
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = !!excluido;
 
-function renderizarTabelaResumoMensal() {
-    const tbody = obterTbodyTabela("tabelaResumoMensalMovimentacao"); if (!tbody) return;
-    tbody.innerHTML = "";
-    const movimentacoes = movimentacoesConsideradas.filter(movimentacaoDentroPeriodoSelecionado);
-    if (!movimentacoes.length) { inserirLinhaSemDados(tbody, 3, "Nenhum crédito considerado."); return; }
-    const agrupamento = {};
-    movimentacoes.forEach(function (movimentacao) {
-        const competencia = movimentacao.competencia;
-        if (!agrupamento[competencia]) agrupamento[competencia] = { total: 0, quantidade: 0 };
-        agrupamento[competencia].total += movimentacao.valor; agrupamento[competencia].quantidade++;
-    });
-    Object.keys(agrupamento).sort().forEach(function (competencia) {
-        const dados = agrupamento[competencia]; const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${escaparHtml(formatarCompetencia(competencia))}</td><td>${dados.quantidade}</td><td>${formatarMoeda(dados.total)}</td>`;
-        tbody.appendChild(tr);
-    });
-}
+            const texto = document.createElement("span");
 
-function renderizarTabelaConsideradas() {
-    const tbody = obterTbodyTabela("tabelaMovimentacoesConsideradas"); if (!tbody) return;
-    tbody.innerHTML = "";
-    const lista = movimentacoesConsideradas.filter(movimentacaoDentroPeriodoSelecionado);
-    if (!lista.length) { inserirLinhaSemDados(tbody, 5, "Nenhuma movimentação de crédito considerada."); return; }
-    lista.forEach(function (movimentacao) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${escaparHtml(movimentacao.dataTexto)}</td><td>${escaparHtml(movimentacao.documento || "-")}</td><td>${escaparHtml(movimentacao.historico)}</td><td>${formatarMoeda(movimentacao.valor)}</td><td>${escaparHtml(movimentacao.motivo || "Crédito considerado")}</td>`;
-        tbody.appendChild(tr);
-    });
-}
+            texto.innerHTML =
+                "<strong>" + escapar(item.historico) + "</strong>" +
+                "<small>" +
+                item.quantidade +
+                " lançamento(s) · " +
+                escapar(formatarMoeda(item.total)) +
+                (regra
+                    ? " · Sugestão automática: " + escapar(regra.rotulo)
+                    : "") +
+                "</small>";
 
-function renderizarTabelaExcluidas() {
-    const tbody = obterTbodyTabela("tabelaMovimentacoesExcluidas"); if (!tbody) return;
-    tbody.innerHTML = "";
-    const lista = movimentacoesExcluidas.filter(movimentacaoDentroPeriodoSelecionado);
-    if (!lista.length) { inserirLinhaSemDados(tbody, 5, "Nenhuma movimentação desconsiderada."); return; }
-    lista.forEach(function (movimentacao) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${escaparHtml(movimentacao.dataTexto)}</td><td>${escaparHtml(movimentacao.documento || "-")}</td><td>${escaparHtml(movimentacao.historico)}</td><td>${formatarMoeda(movimentacao.valor)}</td><td>${escaparHtml(movimentacao.motivo || "-")}</td>`;
-        tbody.appendChild(tr);
-    });
-}
+            checkbox.addEventListener("change", function () {
+                if (checkbox.checked) {
+                    historicosExcluidosManualmente.add(item.normalizado);
+                    historicosIncluidosManualmente.delete(item.normalizado);
+                } else {
+                    historicosExcluidosManualmente.delete(item.normalizado);
+                    historicosIncluidosManualmente.add(item.normalizado);
+                }
 
-function detectarFormatoDataExtrato(linhas) {
-    let evidenciasBR = 0, evidenciasUS = 0;
-    (linhas || []).forEach(function (linha) {
-        const match = String(linha || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?=\s|\t|\||$)/); if (!match) return;
-        const primeiro = Number(match[1]), segundo = Number(match[2]);
-        if (primeiro > 12 && primeiro <= 31 && segundo >= 1 && segundo <= 12) evidenciasBR++;
-        if (segundo > 12 && segundo <= 31 && primeiro >= 1 && primeiro <= 12) evidenciasUS++;
-    });
-    return evidenciasUS > evidenciasBR ? "US" : "BR";
-}
+                classificarMovimentacoes();
+                calcularResultadosMovimentacao();
+                renderizarResultadosMovimentacao();
+            });
 
-function validarFormatoDataGenerica(valor) { return /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(String(valor || "").trim()); }
+            linha.appendChild(checkbox);
+            linha.appendChild(texto);
+            container.appendChild(linha);
+        });
 
-function converterDataExtrato(valor) {
-    const match = String(valor || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/); if (!match) return null;
-    const primeiro = Number(match[1]), segundo = Number(match[2]); let ano = Number(match[3]);
-    if (match[3].length === 2) ano += ano >= 70 ? 1900 : 2000;
-    let dia = primeiro, mes = segundo;
-    if (formatoDataExtrato === "US") { mes = primeiro; dia = segundo; }
-    let data = criarDataValida(dia, mes, ano); if (!data) data = criarDataValida(mes, dia, ano);
-    return data;
-}
-
-function criarDataValida(dia, mes, ano) {
-    if (!Number.isInteger(dia) || !Number.isInteger(mes) || !Number.isInteger(ano) || dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900 || ano > 2200) return null;
-    const data = new Date(ano, mes - 1, dia, 12, 0, 0, 0);
-    if (data.getFullYear() !== ano || data.getMonth() !== mes - 1 || data.getDate() !== dia) return null;
-    return data;
-}
-
-function possuiDataValida(data) { return data instanceof Date && !Number.isNaN(data.getTime()); }
-
-function calcularQuantidadeMesesPeriodo(dataInicial, dataFinal) {
-    if (!possuiDataValida(dataInicial) || !possuiDataValida(dataFinal)) return 0;
-    let inicial = new Date(dataInicial.getTime()), final = new Date(dataFinal.getTime());
-    if (inicial.getTime() > final.getTime()) { const auxiliar = inicial; inicial = final; final = auxiliar; }
-    return (final.getFullYear() - inicial.getFullYear()) * 12 + (final.getMonth() - inicial.getMonth()) + 1;
-}
-
-function atualizarExibicaoPeriodo() {
-    definirValorCampo("primeiraDataMovimentacao", primeiraDataExtrato ? formatarDataBrasileira(primeiraDataExtrato) : "");
-    definirValorCampo("ultimaDataMovimentacao", ultimaDataExtrato ? formatarDataBrasileira(ultimaDataExtrato) : "");
-    liberarCamposEdicaoMovimentacao();
-}
-
-function aplicarPeriodoInformadoPeloUsuario(opcoes) {
-    opcoes = opcoes || {};
-    const primeiraCampo = document.getElementById("primeiraDataMovimentacao");
-    const ultimaCampo = document.getElementById("ultimaDataMovimentacao");
-    const primeira = primeiraCampo ? converterDataBrasileira(primeiraCampo.value) : null;
-    const ultima = ultimaCampo ? converterDataBrasileira(ultimaCampo.value) : null;
-    if (possuiDataValida(primeira)) primeiraDataExtrato = primeira;
-    if (possuiDataValida(ultima)) ultimaDataExtrato = ultima;
-    if (possuiDataValida(primeiraDataExtrato) && possuiDataValida(ultimaDataExtrato) && primeiraDataExtrato.getTime() > ultimaDataExtrato.getTime()) {
-        const auxiliar = primeiraDataExtrato; primeiraDataExtrato = ultimaDataExtrato; ultimaDataExtrato = auxiliar; atualizarExibicaoPeriodo();
+    if (resumo) {
+        resumo.textContent =
+            mapa.size +
+            " histórico(s) diferente(s) identificado(s). Marque para desconsiderar do cálculo.";
     }
-    if (opcoes.recalcularMesesDetectados !== false) {
-        const meses = calcularQuantidadeMesesPeriodo(primeiraDataExtrato, ultimaDataExtrato);
-        definirValorCampo("mesesDetectadosMovimentacao", meses);
-        if (!opcoes.preservarMesesConsiderados) definirValorCampo("mesesConsideradosMovimentacao", meses);
-    }
-}
-
-function restaurarPeriodoAutomatico() {
-    primeiraDataExtrato = possuiDataValida(primeiraDataExtratoAutomatica) ? new Date(primeiraDataExtratoAutomatica.getTime()) : null;
-    ultimaDataExtrato = possuiDataValida(ultimaDataExtratoAutomatica) ? new Date(ultimaDataExtratoAutomatica.getTime()) : null;
-    atualizarExibicaoPeriodo();
-    definirValorCampo("mesesDetectadosMovimentacao", mesesDetectadosAutomaticos);
-    definirValorCampo("mesesConsideradosMovimentacao", mesesDetectadosAutomaticos);
-    liberarCamposEdicaoMovimentacao();
-}
-
-function aplicarMascaraDataCampo(evento) {
-    const campo = evento && evento.target ? evento.target : null; if (!campo) return;
-    let numeros = String(campo.value || "").replace(/\D/g, "").substring(0, 8);
-    if (numeros.length <= 2) { campo.value = numeros; return; }
-    if (numeros.length <= 4) { campo.value = numeros.substring(0, 2) + "/" + numeros.substring(2); return; }
-    campo.value = numeros.substring(0, 2) + "/" + numeros.substring(2, 4) + "/" + numeros.substring(4);
-}
-
-function normalizarCampoMeses(campo, limparInvalido) {
-    if (!campo) return;
-    const texto = String(campo.value || "").trim(); if (!texto) return;
-    const numero = Number(texto);
-    if (!Number.isFinite(numero) || numero <= 0) { if (limparInvalido) campo.value = ""; return; }
-    campo.value = String(Math.max(1, Math.trunc(numero)));
-}
-
-function converterDataBrasileira(valor) {
-    const match = String(valor || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/); if (!match) return null;
-    const dia = Number(match[1]), mes = Number(match[2]); let ano = Number(match[3]);
-    if (match[3].length === 2) ano += ano >= 70 ? 1900 : 2000;
-    return criarDataValida(dia, mes, ano);
-}
-
-function formatarDataBrasileira(data) {
-    if (!possuiDataValida(data)) return "";
-    const dia = String(data.getDate()).padStart(2, "0"), mes = String(data.getMonth() + 1).padStart(2, "0");
-    return dia + "/" + mes + "/" + data.getFullYear();
-}
-
-function obterCompetenciaData(data) {
-    if (!possuiDataValida(data)) return "";
-    return data.getFullYear() + "-" + String(data.getMonth() + 1).padStart(2, "0");
-}
-
-function formatarCompetencia(competencia) {
-    const partes = String(competencia || "").split("-");
-    if (partes.length !== 2) return competencia;
-    return partes[1] + "/" + partes[0];
-}
-
-function limparCelulaTexto(texto) {
-    return String(texto || "").replace(/\u00A0/g, " ").replace(/&nbsp;/gi, " ").replace(/<br\s*\/?>/gi, " ").replace(/\\([*_])/g, "$1").replace(/\*\*/g, "").replace(/__/g, "").replace(/\s+/g, " ").trim();
-}
-
-function limparCelulaValor(texto) {
-    return String(texto || "").replace(/\u00A0/g, " ").replace(/&nbsp;/gi, " ").replace(/<br\s*\/?>/gi, " ").replace(/\\\*/g, "*").replace(/\*\*/g, "").replace(/__/g, "").trim();
-}
-
-function normalizarTexto(texto) {
-    return String(texto || "").replace(/\u00A0/g, " ").replace(/&nbsp;/gi, " ").replace(/<br\s*\/?>/gi, " ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[.,:;()[\]{}]+/g, " ").replace(/[-–—]+/g, " ").replace(/[*_=<>]+/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function converterValorBrasileiro(valor) {
-    let texto = String(valor || "").replace(/R\$/gi, "").replace(/\s/g, "").trim();
-    if (!texto) return NaN;
-    if (texto.includes(",")) texto = texto.replace(/\./g, "").replace(",", ".");
-    texto = texto.replace(/[^\d.-]/g, "");
-    const numero = Number(texto);
-    return Number.isFinite(numero) ? numero : NaN;
-}
-
-function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function limparMediaMovimentacao() {
     resetarEstadoMovimentacao();
-    const textarea = document.getElementById("textoExtratoMovimentacao"); if (textarea) textarea.value = "";
+
+    definirValorCampo("textoExtratoMovimentacao", "");
     definirValorCampo("primeiraDataMovimentacao", "");
     definirValorCampo("ultimaDataMovimentacao", "");
     definirValorCampo("mesesDetectadosMovimentacao", "");
     definirValorCampo("mesesConsideradosMovimentacao", "");
-    limparResultadosMovimentacao(); renderizarHistoricosExtrato(); liberarCamposEdicaoMovimentacao();
+
+    limparResultadosMovimentacao();
+    renderizarHistoricosExtrato();
 }
 
 function limparResultadosMovimentacao() {
@@ -577,73 +1150,373 @@ function limparResultadosMovimentacao() {
     definirTexto("resultadoMesesMovimentacao", "0");
     definirTexto("resultadoQtdConsiderados", "0");
     definirTexto("resultadoQtdExcluidos", "0");
-    limparTabela("tabelaResumoMensalMovimentacao", 3, "Nenhum extrato processado.");
-    limparTabela("tabelaMovimentacoesConsideradas", 5, "Nenhum extrato processado.");
-    limparTabela("tabelaMovimentacoesExcluidas", 5, "Nenhum extrato processado.");
-    liberarCamposEdicaoMovimentacao();
+
+    const mensal = obterTbody("tabelaResumoMensalMovimentacao");
+    const considerados = obterTbody("tabelaMovimentacoesConsideradas");
+    const excluidos = obterTbody("tabelaMovimentacoesExcluidas");
+
+    if (mensal) {
+        mensal.innerHTML =
+            '<tr><td colspan="3" class="sem-dados">Nenhum extrato processado.</td></tr>';
+    }
+
+    if (considerados) {
+        considerados.innerHTML =
+            '<tr><td colspan="5" class="sem-dados">Nenhum extrato processado.</td></tr>';
+    }
+
+    if (excluidos) {
+        excluidos.innerHTML =
+            '<tr><td colspan="5" class="sem-dados">Nenhum extrato processado.</td></tr>';
+    }
 }
 
-function definirTexto(id, valor) { const elemento = document.getElementById(id); if (elemento) elemento.textContent = valor; }
+function detectarFormatoDataExtrato() {
+    return "BR";
+}
+
+function validarFormatoDataGenerica(texto) {
+    return /^\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}$/.test(
+        String(texto || "").trim()
+    );
+}
+
+function converterDataExtrato(texto) {
+    const m = String(texto || "")
+        .trim()
+        .match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
+
+    if (!m) return null;
+
+    let ano = Number(m[3]);
+
+    if (m[3].length === 2) {
+        ano += ano >= 70
+            ? 1900
+            : 2000;
+    }
+
+    const dia = Number(m[1]);
+    const mes = Number(m[2]);
+
+    const data = new Date(
+        ano,
+        mes - 1,
+        dia,
+        12,
+        0,
+        0,
+        0
+    );
+
+    if (
+        data.getFullYear() !== ano ||
+        data.getMonth() !== mes - 1 ||
+        data.getDate() !== dia
+    ) {
+        return null;
+    }
+
+    return data;
+}
+
+function formatarDataBrasileira(data) {
+    if (!(data instanceof Date) || Number.isNaN(data.getTime())) {
+        return "";
+    }
+
+    return [
+        String(data.getDate()).padStart(2, "0"),
+        String(data.getMonth() + 1).padStart(2, "0"),
+        data.getFullYear()
+    ].join("/");
+}
+
+function obterCompetenciaData(data) {
+    if (!(data instanceof Date)) return "";
+
+    return (
+        data.getFullYear() +
+        "-" +
+        String(data.getMonth() + 1).padStart(2, "0")
+    );
+}
+
+function calcularMesesInclusivos(inicio, fim) {
+    if (!inicio || !fim) return 0;
+
+    return (
+        (fim.getFullYear() - inicio.getFullYear()) * 12 +
+        (fim.getMonth() - inicio.getMonth()) +
+        1
+    );
+}
+
+function aplicarMascaraDataCampo(evento) {
+    const campo = evento.target;
+
+    let valor = String(campo.value || "")
+        .replace(/\D/g, "")
+        .slice(0, 8);
+
+    if (valor.length > 4) {
+        valor =
+            valor.slice(0, 2) +
+            "/" +
+            valor.slice(2, 4) +
+            "/" +
+            valor.slice(4);
+    } else if (valor.length > 2) {
+        valor =
+            valor.slice(0, 2) +
+            "/" +
+            valor.slice(2);
+    }
+
+    campo.value = valor;
+}
+
+function normalizarCampoMeses(campo) {
+    if (!campo) return;
+
+    let valor = Number(campo.value);
+
+    if (!Number.isFinite(valor) || valor < 1) {
+        valor = 1;
+    }
+
+    campo.value = String(Math.floor(valor));
+}
+
+function limparCelulaTexto(valor) {
+    return String(valor || "")
+        .replace(/\u00A0/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function limparCelulaValor(valor) {
+    return String(valor || "")
+        .replace(/\u00A0/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function converterValorBrasileiro(valor) {
+    let texto = String(valor || "")
+        .replace(/R\$/gi, "")
+        .replace(/\s+/g, "")
+        .trim();
+
+    if (!texto) return NaN;
+
+    const negativo = texto.startsWith("-");
+
+    texto = texto
+        .replace(/^[+-]/, "")
+        .replace(/\./g, "")
+        .replace(",", ".")
+        .replace(/[^\d.]/g, "");
+
+    const numero = Number(texto);
+
+    if (!Number.isFinite(numero)) return NaN;
+
+    return negativo
+        ? -numero
+        : numero;
+}
+
+function normalizarTexto(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase()
+        .replace(/\u00A0/g, " ")
+        .replace(/[.,:;()[\]{}]+/g, " ")
+        .replace(/[-–—]+/g, " ")
+        .replace(/[*_=<>]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function formatarCompetencia(comp) {
+    const partes = String(comp || "").split("-");
+
+    if (partes.length !== 2) {
+        return String(comp || "");
+    }
+
+    return partes[1] + "/" + partes[0];
+}
+
+function formatarMoeda(valor) {
+    return Number(valor || 0).toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+}
+
+function definirTexto(id, texto) {
+    const el = document.getElementById(id);
+
+    if (el) {
+        el.textContent = texto;
+    }
+}
 
 function definirValorCampo(id, valor) {
-    const elemento = document.getElementById(id); if (!elemento) return;
-    elemento.value = valor === null || valor === undefined ? "" : valor;
-    elemento.disabled = false; elemento.readOnly = false; elemento.removeAttribute("disabled"); elemento.removeAttribute("readonly");
+    const el = document.getElementById(id);
+
+    if (el) {
+        el.value = valor;
+    }
 }
 
-function obterNumeroCampo(id) {
-    const elemento = document.getElementById(id); if (!elemento) return 0;
-    const numero = Number(elemento.value); return Number.isFinite(numero) ? numero : 0;
+function obterValorCampo(id) {
+    const el = document.getElementById(id);
+
+    return el
+        ? String(el.value || "")
+        : "";
 }
 
-function obterTbodyTabela(id) {
-    const elemento = document.getElementById(id); if (!elemento) return null;
-    if (elemento.tagName && elemento.tagName.toUpperCase() === "TBODY") return elemento;
-    if (elemento.tagName && elemento.tagName.toUpperCase() === "TABLE") return elemento.querySelector("tbody");
-    return elemento;
+function obterTbody(id) {
+    const el = document.getElementById(id);
+
+    if (!el) return null;
+
+    return el.tagName === "TBODY"
+        ? el
+        : el.querySelector("tbody");
 }
 
-function limparTabela(id, colunas, mensagem) {
-    const tbody = obterTbodyTabela(id); if (!tbody) return;
-    tbody.innerHTML = ""; inserirLinhaSemDados(tbody, colunas, mensagem);
-}
-
-function inserirLinhaSemDados(tbody, colunas, mensagem) {
+function inserirVazio(tbody, colunas, texto) {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="${colunas}" class="sem-dados">${escaparHtml(mensagem)}</td>`;
+
+    tr.innerHTML =
+        '<td colspan="' +
+        colunas +
+        '" class="sem-dados">' +
+        escapar(texto) +
+        "</td>";
+
     tbody.appendChild(tr);
 }
 
-function escaparHtml(texto) {
-    return String(texto || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+function escapar(texto) {
+    return String(texto || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 window.MediaMovimentacao = {
-    processar: function () { processarMovimentacao(); },
+    processar: processarMovimentacao,
+
+    processarTexto: function (texto, opcoes) {
+        return processarTextoMovimentacao(
+            String(texto || ""),
+            opcoes || {}
+        );
+    },
+
     recalcular: function () {
         if (!movimentacoesExtrato.length) return;
-        classificarMovimentacoes(); calcularResultadosMovimentacao(); renderizarHistoricosExtrato(); renderizarResultadosMovimentacao();
+
+        aplicarPeriodoInformadoPeloUsuario();
+        classificarMovimentacoes();
+        calcularResultadosMovimentacao();
+        renderizarHistoricosExtrato();
+        renderizarResultadosMovimentacao();
     },
-    obterMovimentacoes: function () { return movimentacoesExtrato.slice(); },
-    obterConsideradas: function () { return movimentacoesConsideradas.slice(); },
-    obterExcluidas: function () { return movimentacoesExcluidas.slice(); },
+
+    obterMovimentacoes: function () {
+        return movimentacoesExtrato.slice();
+    },
+
+    obterConsideradas: function () {
+        return movimentacoesConsideradas.slice();
+    },
+
+    obterExcluidas: function () {
+        return movimentacoesExcluidas.slice();
+    },
+
     definirMesesConsiderados: function (quantidade) {
-        const numero = Math.max(1, Math.trunc(Number(quantidade) || 1));
-        definirValorCampo("mesesConsideradosMovimentacao", numero);
-        calcularResultadosMovimentacao(); renderizarResultadosMovimentacao();
+        const n = Number(quantidade);
+
+        if (!Number.isFinite(n) || n < 1) return;
+
+        definirValorCampo(
+            "mesesConsideradosMovimentacao",
+            String(Math.floor(n))
+        );
+
+        definirValorCampo(
+            "mesesDetectadosMovimentacao",
+            String(Math.floor(n))
+        );
+
+        mesesDetectadosAutomaticos = Math.floor(n);
     },
-    definirPeriodo: function (dataInicial, dataFinal) {
-        const inicial = dataInicial instanceof Date ? dataInicial : converterDataBrasileira(dataInicial);
-        const final = dataFinal instanceof Date ? dataFinal : converterDataBrasileira(dataFinal);
-        if (possuiDataValida(inicial)) primeiraDataExtrato = new Date(inicial.getTime());
-        if (possuiDataValida(final)) ultimaDataExtrato = new Date(final.getTime());
-        atualizarExibicaoPeriodo(); calcularResultadosMovimentacao(); renderizarResultadosMovimentacao();
+
+    definirCompetenciasDocumentadas: function (competencias) {
+        competenciasDocumentadasExternas =
+            Array.from(
+                new Set(
+                    (competencias || []).filter(Boolean)
+                )
+            ).sort();
+
+        if (competenciasDocumentadasExternas.length) {
+            this.definirMesesConsiderados(
+                competenciasDocumentadasExternas.length
+            );
+        }
     },
+
+    definirPeriodo: function (inicio, fim) {
+        if (inicio instanceof Date && !Number.isNaN(inicio.getTime())) {
+            primeiraDataExtrato = new Date(inicio);
+            primeiraDataExtratoAutomatica = new Date(inicio);
+
+            definirValorCampo(
+                "primeiraDataMovimentacao",
+                formatarDataBrasileira(inicio)
+            );
+        }
+
+        if (fim instanceof Date && !Number.isNaN(fim.getTime())) {
+            ultimaDataExtrato = new Date(fim);
+            ultimaDataExtratoAutomatica = new Date(fim);
+
+            definirValorCampo(
+                "ultimaDataMovimentacao",
+                formatarDataBrasileira(fim)
+            );
+        }
+    },
+
     obterResumo: function () {
-        const meses = Math.max(1, Math.trunc(obterNumeroCampo("mesesConsideradosMovimentacao") || 1));
-        const consideradas = movimentacoesConsideradas.filter(movimentacaoDentroPeriodoSelecionado);
-        const excluidas = movimentacoesExcluidas.filter(movimentacaoDentroPeriodoSelecionado);
-        const total = consideradas.reduce((s, m) => s + m.valor, 0);
-        return { total: total, media: total / meses, meses: meses, quantidadeConsideradas: consideradas.length, quantidadeExcluidas: excluidas.length, primeiraData: primeiraDataExtrato, ultimaData: ultimaDataExtrato };
+        const calculo = calcularResultadosMovimentacao();
+
+        return {
+            total: calculo.total,
+            media: calculo.media,
+            meses: calculo.meses,
+            quantidadeConsideradas: movimentacoesConsideradas.length,
+            quantidadeExcluidas: movimentacoesExcluidas.length,
+            primeiraData: primeiraDataExtrato,
+            ultimaData: ultimaDataExtrato,
+            competenciasDocumentadas: competenciasDocumentadasExternas.slice()
+        };
     }
 };
