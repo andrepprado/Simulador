@@ -15679,3 +15679,973 @@ body:has(#btnSimular) .simulador-grid .hide {
         display: none !important;
     }
 }
+
+/* =========================================================
+   COMPROMETIMENTO-RENDA.HTML
+   ========================================================= */
+
+/* =========================================================
+   ESTRUTURA PRINCIPAL
+   ========================================================= */
+
+body:has(#valorSolicitado) main,
+body:has(#rendaAtualizada) main,
+body:has(#tipoOperacao) main {
+    width: calc(100% - 48px);
+    max-width: 1180px;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 30px 0 48px;
+}
+
+body:has(#valorSolicitado) main *,
+body:has(#rendaAtualizada) main *,
+body:has(#tipoOperacao) main * {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   GRID PRINCIPAL
+   ========================================================= */
+
+body:has(#valorSolicitado) .simulador-grid,
+body:has(#valorSolicitado) .simulador-grid-igual,
+body:has(#rendaAtualizada) .simulador-grid,
+body:has(#rendaAtualizada) .simulador-grid-igual,
+body:has(#tipoOperacao) .simulador-grid,
+body:has(#tipoOperacao) .simulador-grid-igual {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    min-width: 0;
+    align-items: start;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+body:has(#valorSolicitado) .card,
+body:has(#rendaAtualizada) .card,
+body:has(#tipoOperacao) .card {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 24px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+
+    background: var(--branco);
+
+    box-shadow:
+        0 3px 8px rgba(0, 54, 64, .03),
+        0 10px 28px rgba(0, 54, 64, .055);
+}
+
+body:has(#valorSolicitado) .card::before,
+body:has(#rendaAtualizada) .card::before,
+body:has(#tipoOperacao) .card::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 3px;
+
+    background:
+        linear-gradient(90deg,
+            var(--verde-claro),
+            var(--turquesa),
+            var(--verde-escuro));
+}
+
+body:has(#valorSolicitado) .card-largura-total,
+body:has(#rendaAtualizada) .card-largura-total,
+body:has(#tipoOperacao) .card-largura-total {
+    grid-column: 1 / -1;
+}
+
+/* =========================================================
+   TÍTULOS DE SEÇÃO
+   ========================================================= */
+
+body:has(#valorSolicitado) .titulo-secao,
+body:has(#rendaAtualizada) .titulo-secao,
+body:has(#tipoOperacao) .titulo-secao {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0 0 20px;
+    padding: 0;
+}
+
+body:has(#valorSolicitado) .titulo-secao h2,
+body:has(#rendaAtualizada) .titulo-secao h2,
+body:has(#tipoOperacao) .titulo-secao h2,
+body:has(#valorSolicitado) .card>h2,
+body:has(#rendaAtualizada) .card>h2,
+body:has(#tipoOperacao) .card>h2 {
+    margin: 0 0 5px;
+
+    color: var(--verde-escuro);
+
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -.2px;
+}
+
+body:has(#valorSolicitado) .titulo-secao p,
+body:has(#rendaAtualizada) .titulo-secao p,
+body:has(#tipoOperacao) .titulo-secao p,
+body:has(#valorSolicitado) .card>p,
+body:has(#rendaAtualizada) .card>p,
+body:has(#tipoOperacao) .card>p {
+    max-width: 850px;
+
+    margin: 0;
+
+    color: var(--texto-secundario);
+
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   ETIQUETA
+   ========================================================= */
+
+body:has(#valorSolicitado) .categoria-etiqueta,
+body:has(#rendaAtualizada) .categoria-etiqueta,
+body:has(#tipoOperacao) .categoria-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    max-width: 100%;
+    min-height: 22px;
+
+    margin: 0 0 8px;
+    padding: 4px 9px;
+
+    border: 1px solid rgba(0, 160, 145, .12);
+    border-radius: 999px;
+
+    background: rgba(0, 160, 145, .075);
+    color: var(--turquesa);
+
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   GRIDS DE FORMULÁRIO
+   ========================================================= */
+
+body:has(#valorSolicitado) .grid-form,
+body:has(#rendaAtualizada) .grid-form,
+body:has(#tipoOperacao) .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 14px 16px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+body:has(#valorSolicitado) .grid-form-2,
+body:has(#rendaAtualizada) .grid-form-2,
+body:has(#tipoOperacao) .grid-form-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 14px 16px;
+
+    width: 100%;
+}
+
+body:has(#valorSolicitado) .grid-form-3,
+body:has(#rendaAtualizada) .grid-form-3,
+body:has(#tipoOperacao) .grid-form-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px 16px;
+
+    width: 100%;
+}
+
+body:has(#valorSolicitado) .grid-form-4,
+body:has(#rendaAtualizada) .grid-form-4,
+body:has(#tipoOperacao) .grid-form-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 14px 16px;
+
+    width: 100%;
+}
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+body:has(#valorSolicitado) .campo,
+body:has(#rendaAtualizada) .campo,
+body:has(#tipoOperacao) .campo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+}
+
+body:has(#valorSolicitado) .campo label,
+body:has(#rendaAtualizada) .campo label,
+body:has(#tipoOperacao) .campo label {
+    display: block;
+
+    margin: 0;
+
+    color: var(--verde-escuro);
+
+    font-size: 9px;
+    font-weight: 750;
+    line-height: 1.3;
+}
+
+body:has(#valorSolicitado) .campo small,
+body:has(#rendaAtualizada) .campo small,
+body:has(#tipoOperacao) .campo small {
+    display: block;
+
+    margin: 1px 0 0;
+
+    color: var(--texto-secundario);
+
+    font-size: 8px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   INPUTS / SELECTS
+   ========================================================= */
+
+body:has(#valorSolicitado) input,
+body:has(#valorSolicitado) select,
+body:has(#valorSolicitado) textarea,
+body:has(#rendaAtualizada) input,
+body:has(#rendaAtualizada) select,
+body:has(#rendaAtualizada) textarea,
+body:has(#tipoOperacao) input,
+body:has(#tipoOperacao) select,
+body:has(#tipoOperacao) textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 39px;
+
+    margin: 0;
+    padding: 8px 10px;
+
+    border: 1px solid var(--borda-forte);
+    border-radius: 7px;
+
+    outline: none;
+
+    background: var(--branco);
+    color: var(--texto);
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.3;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+body:has(#valorSolicitado) input:hover,
+body:has(#valorSolicitado) select:hover,
+body:has(#valorSolicitado) textarea:hover,
+body:has(#rendaAtualizada) input:hover,
+body:has(#rendaAtualizada) select:hover,
+body:has(#rendaAtualizada) textarea:hover,
+body:has(#tipoOperacao) input:hover,
+body:has(#tipoOperacao) select:hover,
+body:has(#tipoOperacao) textarea:hover {
+    border-color: #B7C9CA;
+}
+
+body:has(#valorSolicitado) input:focus,
+body:has(#valorSolicitado) select:focus,
+body:has(#valorSolicitado) textarea:focus,
+body:has(#rendaAtualizada) input:focus,
+body:has(#rendaAtualizada) select:focus,
+body:has(#rendaAtualizada) textarea:focus,
+body:has(#tipoOperacao) input:focus,
+body:has(#tipoOperacao) select:focus,
+body:has(#tipoOperacao) textarea:focus {
+    border-color: var(--turquesa);
+
+    background: #FEFFFF;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 160, 145, .08);
+}
+
+/* =========================================================
+   CAMPOS COM PREFIXO / SUFIXO
+   ========================================================= */
+
+body:has(#valorSolicitado) .campo-com-prefixo,
+body:has(#valorSolicitado) .campo-moeda,
+body:has(#valorSolicitado) .input-com-prefixo,
+body:has(#rendaAtualizada) .campo-com-prefixo,
+body:has(#rendaAtualizada) .campo-moeda,
+body:has(#rendaAtualizada) .input-com-prefixo,
+body:has(#tipoOperacao) .campo-com-prefixo,
+body:has(#tipoOperacao) .campo-moeda,
+body:has(#tipoOperacao) .input-com-prefixo {
+    display: flex;
+    align-items: stretch;
+
+    width: 100%;
+    min-width: 0;
+}
+
+body:has(#valorSolicitado) .campo-com-prefixo>span,
+body:has(#valorSolicitado) .campo-moeda>span,
+body:has(#valorSolicitado) .input-com-prefixo>span,
+body:has(#rendaAtualizada) .campo-com-prefixo>span,
+body:has(#rendaAtualizada) .campo-moeda>span,
+body:has(#rendaAtualizada) .input-com-prefixo>span,
+body:has(#tipoOperacao) .campo-com-prefixo>span,
+body:has(#tipoOperacao) .campo-moeda>span,
+body:has(#tipoOperacao) .input-com-prefixo>span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    min-width: 34px;
+
+    padding: 0 8px;
+
+    border: 1px solid var(--borda-forte);
+    border-right: 0;
+    border-radius: 7px 0 0 7px;
+
+    background: var(--fundo-secundario);
+    color: var(--texto-secundario);
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+body:has(#valorSolicitado) .campo-com-prefixo input,
+body:has(#valorSolicitado) .campo-moeda input,
+body:has(#valorSolicitado) .input-com-prefixo input,
+body:has(#rendaAtualizada) .campo-com-prefixo input,
+body:has(#rendaAtualizada) .campo-moeda input,
+body:has(#rendaAtualizada) .input-com-prefixo input,
+body:has(#tipoOperacao) .campo-com-prefixo input,
+body:has(#tipoOperacao) .campo-moeda input,
+body:has(#tipoOperacao) .input-com-prefixo input {
+    border-radius: 0 7px 7px 0;
+}
+
+/* =========================================================
+   AVISOS
+   ========================================================= */
+
+body:has(#valorSolicitado) .aviso,
+body:has(#valorSolicitado) .aviso-info,
+body:has(#rendaAtualizada) .aviso,
+body:has(#rendaAtualizada) .aviso-info,
+body:has(#tipoOperacao) .aviso,
+body:has(#tipoOperacao) .aviso-info {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 15px 0 0;
+    padding: 12px 14px 12px 17px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(0, 160, 145, .15);
+    border-radius: 9px;
+
+    background: rgba(0, 160, 145, .045);
+    color: var(--texto-secundario);
+
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+body:has(#valorSolicitado) .aviso::before,
+body:has(#valorSolicitado) .aviso-info::before,
+body:has(#rendaAtualizada) .aviso::before,
+body:has(#rendaAtualizada) .aviso-info::before,
+body:has(#tipoOperacao) .aviso::before,
+body:has(#tipoOperacao) .aviso-info::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 4px;
+
+    background: var(--turquesa);
+}
+
+body:has(#valorSolicitado) .aviso strong,
+body:has(#valorSolicitado) .aviso-info strong,
+body:has(#rendaAtualizada) .aviso strong,
+body:has(#rendaAtualizada) .aviso-info strong,
+body:has(#tipoOperacao) .aviso strong,
+body:has(#tipoOperacao) .aviso-info strong {
+    color: var(--verde-escuro);
+}
+
+/* =========================================================
+   RESULTADOS
+   ========================================================= */
+
+body:has(#valorSolicitado) .resultado-destaque,
+body:has(#rendaAtualizada) .resultado-destaque,
+body:has(#tipoOperacao) .resultado-destaque {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    width: 100%;
+
+    padding: 16px 18px;
+
+    border: 1px solid rgba(0, 160, 145, .18);
+    border-radius: 10px;
+
+    background:
+        linear-gradient(135deg,
+            rgba(0, 160, 145, .065),
+            rgba(201, 210, 0, .045));
+}
+
+body:has(#valorSolicitado) .resultado-destaque span,
+body:has(#rendaAtualizada) .resultado-destaque span,
+body:has(#tipoOperacao) .resultado-destaque span {
+    color: var(--texto-secundario);
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+body:has(#valorSolicitado) .resultado-destaque strong,
+body:has(#rendaAtualizada) .resultado-destaque strong,
+body:has(#tipoOperacao) .resultado-destaque strong {
+    color: var(--verde-escuro);
+
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+
+    text-align: right;
+}
+
+body:has(#valorSolicitado) .resultados-grid,
+body:has(#rendaAtualizada) .resultados-grid,
+body:has(#tipoOperacao) .resultados-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-top: 12px;
+}
+
+body:has(#valorSolicitado) .resultado-item,
+body:has(#rendaAtualizada) .resultado-item,
+body:has(#tipoOperacao) .resultado-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+
+    padding: 11px 12px;
+
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+
+    background: var(--fundo-secundario);
+}
+
+body:has(#valorSolicitado) .resultado-item span,
+body:has(#rendaAtualizada) .resultado-item span,
+body:has(#tipoOperacao) .resultado-item span {
+    color: var(--texto-secundario);
+
+    font-size: 8px;
+    font-weight: 650;
+}
+
+body:has(#valorSolicitado) .resultado-item strong,
+body:has(#rendaAtualizada) .resultado-item strong,
+body:has(#tipoOperacao) .resultado-item strong {
+    color: var(--verde-escuro);
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   SEPARADORES
+   ========================================================= */
+
+body:has(#valorSolicitado) hr,
+body:has(#rendaAtualizada) hr,
+body:has(#tipoOperacao) hr,
+body:has(#valorSolicitado) .separador,
+body:has(#rendaAtualizada) .separador,
+body:has(#tipoOperacao) .separador {
+    width: 100%;
+    height: 1px;
+
+    margin: 20px 0;
+
+    border: 0;
+
+    background: var(--borda);
+}
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+body:has(#valorSolicitado) .acoes,
+body:has(#rendaAtualizada) .acoes,
+body:has(#tipoOperacao) .acoes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+body:has(#valorSolicitado) .btn,
+body:has(#rendaAtualizada) .btn,
+body:has(#tipoOperacao) .btn,
+body:has(#valorSolicitado) main button,
+body:has(#rendaAtualizada) main button,
+body:has(#tipoOperacao) main button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    width: auto;
+    min-width: 125px;
+    min-height: 40px;
+
+    margin: 0;
+    padding: 8px 15px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 750;
+    line-height: 1.2;
+
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+body:has(#valorSolicitado) .btn-principal,
+body:has(#valorSolicitado) .btn-primario,
+body:has(#rendaAtualizada) .btn-principal,
+body:has(#rendaAtualizada) .btn-primario,
+body:has(#tipoOperacao) .btn-principal,
+body:has(#tipoOperacao) .btn-primario {
+    border-color: var(--turquesa);
+
+    background:
+        linear-gradient(135deg,
+            var(--turquesa),
+            #008E83);
+
+    color: var(--branco);
+
+    box-shadow:
+        0 5px 13px rgba(0, 160, 145, .16);
+}
+
+body:has(#valorSolicitado) .btn-principal:hover,
+body:has(#valorSolicitado) .btn-primario:hover,
+body:has(#rendaAtualizada) .btn-principal:hover,
+body:has(#rendaAtualizada) .btn-primario:hover,
+body:has(#tipoOperacao) .btn-principal:hover,
+body:has(#tipoOperacao) .btn-primario:hover {
+    border-color: var(--verde-escuro);
+
+    background: var(--verde-escuro);
+
+    transform: translateY(-1px);
+}
+
+body:has(#valorSolicitado) .btn-secundario,
+body:has(#rendaAtualizada) .btn-secundario,
+body:has(#tipoOperacao) .btn-secundario {
+    border-color: var(--borda-forte);
+
+    background: var(--branco);
+    color: var(--verde-escuro);
+}
+
+body:has(#valorSolicitado) .btn-secundario:hover,
+body:has(#rendaAtualizada) .btn-secundario:hover,
+body:has(#tipoOperacao) .btn-secundario:hover {
+    border-color: var(--turquesa);
+
+    background: var(--fundo-secundario);
+    color: var(--turquesa);
+
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   TABELAS
+   ========================================================= */
+
+body:has(#valorSolicitado) .tabela-wrapper,
+body:has(#rendaAtualizada) .tabela-wrapper,
+body:has(#tipoOperacao) .tabela-wrapper {
+    width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+}
+
+body:has(#valorSolicitado) table,
+body:has(#rendaAtualizada) table,
+body:has(#tipoOperacao) table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: var(--branco);
+}
+
+body:has(#valorSolicitado) th,
+body:has(#rendaAtualizada) th,
+body:has(#tipoOperacao) th {
+    padding: 9px 10px;
+
+    background: var(--fundo-secundario);
+    color: var(--verde-escuro);
+
+    border-bottom: 1px solid var(--borda);
+
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.3;
+
+    text-align: left;
+}
+
+body:has(#valorSolicitado) td,
+body:has(#rendaAtualizada) td,
+body:has(#tipoOperacao) td {
+    padding: 9px 10px;
+
+    border-bottom: 1px solid var(--borda);
+
+    color: var(--texto);
+
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   DESKTOP REDUZIDO
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    body:has(#valorSolicitado) main,
+    body:has(#rendaAtualizada) main,
+    body:has(#tipoOperacao) main {
+        width: calc(100% - 40px);
+    }
+
+    body:has(#valorSolicitado) .grid-form-4,
+    body:has(#rendaAtualizada) .grid-form-4,
+    body:has(#tipoOperacao) .grid-form-4 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    body:has(#valorSolicitado) main,
+    body:has(#rendaAtualizada) main,
+    body:has(#tipoOperacao) main {
+        width: calc(100% - 32px);
+
+        padding-top: 24px;
+        padding-bottom: 38px;
+    }
+
+    body:has(#valorSolicitado) .simulador-grid,
+    body:has(#valorSolicitado) .simulador-grid-igual,
+    body:has(#rendaAtualizada) .simulador-grid,
+    body:has(#rendaAtualizada) .simulador-grid-igual,
+    body:has(#tipoOperacao) .simulador-grid,
+    body:has(#tipoOperacao) .simulador-grid-igual {
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 16px;
+    }
+
+    body:has(#valorSolicitado) .card,
+    body:has(#rendaAtualizada) .card,
+    body:has(#tipoOperacao) .card {
+        padding: 20px;
+    }
+
+    body:has(#valorSolicitado) .grid-form-3,
+    body:has(#rendaAtualizada) .grid-form-3,
+    body:has(#tipoOperacao) .grid-form-3 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    body:has(#valorSolicitado) main,
+    body:has(#rendaAtualizada) main,
+    body:has(#tipoOperacao) main {
+        width: calc(100% - 24px);
+
+        padding-top: 20px;
+        padding-bottom: 30px;
+    }
+
+    body:has(#valorSolicitado) .card,
+    body:has(#rendaAtualizada) .card,
+    body:has(#tipoOperacao) .card {
+        padding: 17px;
+
+        border-radius: 11px;
+    }
+
+    body:has(#valorSolicitado) .grid-form,
+    body:has(#valorSolicitado) .grid-form-2,
+    body:has(#valorSolicitado) .grid-form-3,
+    body:has(#valorSolicitado) .grid-form-4,
+    body:has(#rendaAtualizada) .grid-form,
+    body:has(#rendaAtualizada) .grid-form-2,
+    body:has(#rendaAtualizada) .grid-form-3,
+    body:has(#rendaAtualizada) .grid-form-4,
+    body:has(#tipoOperacao) .grid-form,
+    body:has(#tipoOperacao) .grid-form-2,
+    body:has(#tipoOperacao) .grid-form-3,
+    body:has(#tipoOperacao) .grid-form-4 {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 11px;
+    }
+
+    body:has(#valorSolicitado) .acoes,
+    body:has(#rendaAtualizada) .acoes,
+    body:has(#tipoOperacao) .acoes {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    body:has(#valorSolicitado) .acoes .btn,
+    body:has(#rendaAtualizada) .acoes .btn,
+    body:has(#tipoOperacao) .acoes .btn,
+    body:has(#valorSolicitado) .acoes button,
+    body:has(#rendaAtualizada) .acoes button,
+    body:has(#tipoOperacao) .acoes button {
+        width: 100%;
+    }
+
+    body:has(#valorSolicitado) .resultados-grid,
+    body:has(#rendaAtualizada) .resultados-grid,
+    body:has(#tipoOperacao) .resultados-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    body:has(#valorSolicitado) .resultado-destaque,
+    body:has(#rendaAtualizada) .resultado-destaque,
+    body:has(#tipoOperacao) .resultado-destaque {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    body:has(#valorSolicitado) .resultado-destaque strong,
+    body:has(#rendaAtualizada) .resultado-destaque strong,
+    body:has(#tipoOperacao) .resultado-destaque strong {
+        text-align: left;
+    }
+}
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    body:has(#valorSolicitado) input,
+    body:has(#valorSolicitado) select,
+    body:has(#rendaAtualizada) input,
+    body:has(#rendaAtualizada) select,
+    body:has(#tipoOperacao) input,
+    body:has(#tipoOperacao) select {
+        min-height: 44px;
+    }
+
+    body:has(#valorSolicitado) main button,
+    body:has(#rendaAtualizada) main button,
+    body:has(#tipoOperacao) main button {
+        min-height: 44px;
+    }
+}
+
+/* =========================================================
+   IMPRESSÃO
+   ========================================================= */
+
+@media print {
+
+    body:has(#valorSolicitado) main,
+    body:has(#rendaAtualizada) main,
+    body:has(#tipoOperacao) main {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    body:has(#valorSolicitado) .card,
+    body:has(#rendaAtualizada) .card,
+    body:has(#tipoOperacao) .card {
+        width: 100% !important;
+
+        margin: 0 0 12px !important;
+        padding: 14px !important;
+
+        overflow: visible !important;
+
+        border: 1px solid #CCCCCC !important;
+        border-radius: 0 !important;
+
+        background: #FFFFFF !important;
+
+        box-shadow: none !important;
+
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    body:has(#valorSolicitado) .card::before,
+    body:has(#rendaAtualizada) .card::before,
+    body:has(#tipoOperacao) .card::before {
+        display: none !important;
+    }
+
+    body:has(#valorSolicitado) .acoes,
+    body:has(#rendaAtualizada) .acoes,
+    body:has(#tipoOperacao) .acoes {
+        display: none !important;
+    }
+
+    body:has(#valorSolicitado) input,
+    body:has(#valorSolicitado) select,
+    body:has(#rendaAtualizada) input,
+    body:has(#rendaAtualizada) select,
+    body:has(#tipoOperacao) input,
+    body:has(#tipoOperacao) select {
+        border: 0 !important;
+
+        background: transparent !important;
+        color: #000000 !important;
+
+        box-shadow: none !important;
+    }
+}
