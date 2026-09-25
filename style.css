@@ -12596,46 +12596,33 @@ body:has(#btnSimular) .simulador-grid .hide {
    ========================================================= */
 
 /* =========================================================
-   14. PRECIFICACAO-SIPAG.HTML
+   PRECIFICACAO-SIPAG.HTML
    ========================================================= */
 
-/* =========================================================
-   14.1 CONTAINER PRINCIPAL
-   ========================================================= */
-
-.simulador-grid-igual,
-.simulador-grid-igual *,
-.simulador-grid-igual *::before,
-.simulador-grid-igual *::after {
-    box-sizing: border-box;
+body:has(#statusMotorSipag) .simulador-grid-igual,
+body:has(#statusMotorSipag) .simulador-grid-igual *,
+body:has(#statusMotorSipag) .simulador-grid-igual *::before,
+body:has(#statusMotorSipag) .simulador-grid-igual *::after {
+    box-sizing: border-box
 }
 
-.simulador-grid-igual {
+body:has(#statusMotorSipag) main.simulador-grid-igual {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
+    gap: 20px;
     width: calc(100% - 48px);
     max-width: 1180px;
     min-width: 0;
     margin: 0 auto;
-    padding-top: 28px;
-    padding-bottom: 44px;
-    align-items: start;
+    padding: 30px 0 48px;
+    align-items: start
 }
 
-.simulador-grid-igual>* {
-    min-width: 0;
+body:has(#statusMotorSipag) main.simulador-grid-igual>* {
+    min-width: 0
 }
 
-.simulador-grid-igual>.card-largura-total {
-    grid-column: 1 / -1;
-}
-
-/* =========================================================
-   14.2 CARDS
-   ========================================================= */
-
-.simulador-grid-igual>.card {
+body:has(#statusMotorSipag) .simulador-grid-igual>.card {
     position: relative;
     width: 100%;
     min-width: 0;
@@ -12645,66 +12632,229 @@ body:has(#btnSimular) .simulador-grid .hide {
     border: 1px solid var(--borda);
     border-radius: 14px;
     background: var(--branco);
-    box-shadow:
-        0 3px 8px rgba(0, 54, 64, .035),
-        0 10px 28px rgba(0, 54, 64, .055);
+    box-shadow: 0 3px 8px rgba(0, 54, 64, .035), 0 10px 28px rgba(0, 54, 64, .055)
 }
 
-.simulador-grid-igual>.card::before {
+body:has(#statusMotorSipag) .simulador-grid-igual>.card::before {
     content: "";
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
     height: 3px;
-    background: linear-gradient(90deg,
-            var(--verde-claro),
-            var(--turquesa),
-            var(--verde-escuro));
+    background: linear-gradient(90deg, var(--verde-claro), var(--turquesa), var(--verde-escuro))
 }
 
-/* =========================================================
-   14.3 TÍTULOS
-   ========================================================= */
+body:has(#statusMotorSipag) .simulador-grid-igual>.card-largura-total {
+    grid-column: 1/-1
+}
 
-.simulador-grid-igual .titulo-secao {
+body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao {
     display: block;
     width: 100%;
     min-width: 0;
     margin: 0 0 18px;
+    padding: 0
 }
 
-.simulador-grid-igual .titulo-secao h2 {
+body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao h2 {
     margin: 0 0 5px;
     color: var(--verde-escuro);
-    font-size: 19px;
-    font-weight: 750;
-    line-height: 1.25;
-    letter-spacing: -.15px;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -.2px
 }
 
-.simulador-grid-igual .titulo-secao p {
+body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao h3 {
+    margin: 0 0 5px;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao p {
     max-width: 850px;
     margin: 0;
     color: var(--texto-secundario);
-    font-size: 10px;
-    line-height: 1.5;
+    font-size: 9px;
+    line-height: 1.5
 }
 
-.simulador-grid-igual .titulo-subsecao {
-    margin: 20px 0 10px;
+body:has(#statusMotorSipag) .simulador-grid-igual .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .grid-form-4 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .campo[hidden] {
+    display: none !important
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>label {
+    display: block;
+    width: 100%;
+    margin: 0;
     color: var(--verde-escuro);
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 750;
-    line-height: 1.35;
+    line-height: 1.4
 }
 
-/* =========================================================
-   14.4 STATUS DO MOTOR SIPAG
-   ========================================================= */
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>input,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>select,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    border: 1px solid var(--borda-forte);
+    border-radius: 7px;
+    outline: none;
+    background: var(--branco);
+    color: var(--texto);
+    font-family: inherit;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease
+}
 
-.simulador-grid-igual #statusMotorSipag,
-.simulador-grid-igual .status-carregamento {
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>input,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>select {
+    height: 38px;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 10px;
+    font-weight: 400
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>textarea {
+    min-height: 82px;
+    padding: 10px;
+    font-size: 10px;
+    line-height: 1.45;
+    resize: vertical
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>input:hover,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>select:hover,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>textarea:hover {
+    border-color: #B5C7C8
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>input:focus,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>select:focus,
+body:has(#statusMotorSipag) .simulador-grid-igual .campo>textarea:focus {
+    border-color: var(--turquesa);
+    background: #FEFFFF;
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual input[readonly],
+body:has(#statusMotorSipag) .simulador-grid-igual input:disabled,
+body:has(#statusMotorSipag) .simulador-grid-igual select:disabled {
+    background: var(--indisponivel-fundo);
+    color: var(--indisponivel);
+    border-color: var(--indisponivel-borda);
+    cursor: not-allowed
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo,
+body:has(#statusMotorSipag) .simulador-grid-igual .input-sufixo {
+    display: grid;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo {
+    grid-template-columns: auto minmax(0, 1fr)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-sufixo {
+    grid-template-columns: minmax(0, 1fr) auto
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo>span,
+body:has(#statusMotorSipag) .simulador-grid-igual .input-sufixo>span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    margin: 0;
+    color: var(--verde-escuro);
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo>span {
+    padding-right: 7px
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-sufixo>span {
+    padding-left: 7px
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo>input,
+body:has(#statusMotorSipag) .simulador-grid-igual .input-sufixo>input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 38px;
+    min-height: 38px;
+    margin: 0;
+    padding: 0 10px;
+    border: 1px solid var(--borda-forte);
+    border-radius: 7px;
+    outline: none;
+    background: var(--branco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 400
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo.bloqueado>input,
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo.bloqueado>span {
+    background: var(--indisponivel-fundo);
+    color: var(--indisponivel)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .input-prefixo>input:focus,
+body:has(#statusMotorSipag) .simulador-grid-igual .input-sufixo>input:focus {
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08)
+}
+
+body:has(#statusMotorSipag) #statusMotorSipag,
+body:has(#statusMotorSipag) .status-carregamento {
     position: relative;
     display: flex;
     align-items: center;
@@ -12712,1163 +12862,534 @@ body:has(#btnSimular) .simulador-grid .hide {
     min-width: 0;
     min-height: 36px;
     margin: 0 0 18px;
-    padding: 9px 12px 9px 31px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 160, 145, .16);
+    padding: 10px 12px 10px 30px;
+    border: 1px solid rgba(0, 160, 145, .18);
     border-radius: 8px;
     background: rgba(0, 160, 145, .045);
     color: var(--texto-secundario);
-    font-size: 9px;
-    line-height: 1.45;
+    font-size: 8px;
+    line-height: 1.45
 }
 
-.simulador-grid-igual #statusMotorSipag::before,
-.simulador-grid-igual .status-carregamento::before {
+body:has(#statusMotorSipag) #statusMotorSipag::before,
+body:has(#statusMotorSipag) .status-carregamento::before {
     content: "";
     position: absolute;
     left: 12px;
-    width: 9px;
-    height: 9px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
     border: 2px solid rgba(0, 160, 145, .25);
     border-top-color: var(--turquesa);
-    border-radius: 50%;
-    animation: sipag-loading .8s linear infinite;
+    border-radius: 50%
 }
 
-@keyframes sipag-loading {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* =========================================================
-   14.5 GRIDS DE FORMULÁRIO
-   ========================================================= */
-
-.simulador-grid-igual .grid-form {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 15px 16px;
-    width: 100%;
-    min-width: 0;
-}
-
-.simulador-grid-igual .grid-form-3 {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 15px 16px;
-    width: 100%;
-    min-width: 0;
-}
-
-.simulador-grid-igual .grid-form-4 {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 15px 16px;
-    width: 100%;
-    min-width: 0;
-}
-
-/* =========================================================
-   14.6 CAMPOS
-   ========================================================= */
-
-.simulador-grid-igual .campo {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    min-width: 0;
-    margin: 0;
-}
-
-.simulador-grid-igual .campo label {
-    display: block;
-    width: 100%;
-    margin: 0;
-    color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 750;
-    line-height: 1.35;
-}
-
-.simulador-grid-igual .campo input,
-.simulador-grid-igual .campo select,
-.simulador-grid-igual .campo textarea {
-    box-sizing: border-box;
-    display: block;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    margin: 0;
-    border: 1px solid var(--borda-forte);
-    border-radius: 8px;
-    background: var(--branco);
-    color: var(--texto);
-    font-family: inherit;
-    outline: none;
-    transition:
-        border-color .18s ease,
-        box-shadow .18s ease,
-        background .18s ease;
-}
-
-.simulador-grid-igual .campo input,
-.simulador-grid-igual .campo select {
-    height: 42px;
-    min-height: 42px;
-    padding: 0 11px;
-    font-size: 11px;
-}
-
-.simulador-grid-igual .campo select {
-    padding-right: 34px;
-}
-
-.simulador-grid-igual .campo textarea {
-    min-height: 90px;
-    padding: 10px 11px;
-    font-size: 11px;
-    line-height: 1.45;
-    resize: vertical;
-}
-
-.simulador-grid-igual .campo input:hover,
-.simulador-grid-igual .campo select:hover,
-.simulador-grid-igual .campo textarea:hover {
-    border-color: #AFC4C5;
-}
-
-.simulador-grid-igual .campo input:focus,
-.simulador-grid-igual .campo select:focus,
-.simulador-grid-igual .campo textarea:focus {
-    border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .09);
-}
-
-.simulador-grid-igual .campo input:disabled,
-.simulador-grid-igual .campo select:disabled,
-.simulador-grid-igual .campo textarea:disabled {
-    background: #F2F5F5;
-    color: #819194;
-    cursor: not-allowed;
-}
-
-.simulador-grid-igual .campo input[readonly] {
-    border-color: var(--borda);
-    background: #F4F7F7;
-    color: var(--texto-secundario);
-}
-
-.simulador-grid-igual .campo small,
-.simulador-grid-igual .campo-ajuda {
-    display: block;
-    width: 100%;
-    margin: 0;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.45;
-}
-
-/* =========================================================
-   14.7 PREFIXO E SUFIXO
-   ========================================================= */
-
-.simulador-grid-igual .input-prefixo,
-.simulador-grid-igual .input-sufixo {
+body:has(#statusMotorSipag) .aviso-info {
     position: relative;
-    display: flex;
-    align-items: stretch;
-    width: 100%;
-    min-width: 0;
-}
-
-.simulador-grid-igual .input-prefixo>span,
-.simulador-grid-igual .input-sufixo>span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    min-width: 40px;
-    padding: 0 10px;
-    border: 1px solid var(--borda-forte);
-    background: #F4F8F7;
-    color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 750;
-    white-space: nowrap;
-}
-
-.simulador-grid-igual .input-prefixo>span {
-    border-right: 0;
-    border-radius: 8px 0 0 8px;
-}
-
-.simulador-grid-igual .input-prefixo input {
-    flex: 1 1 auto;
-    min-width: 0;
-    border-radius: 0 8px 8px 0;
-}
-
-.simulador-grid-igual .input-sufixo input {
-    flex: 1 1 auto;
-    min-width: 0;
-    border-radius: 8px 0 0 8px;
-}
-
-.simulador-grid-igual .input-sufixo>span {
-    border-left: 0;
-    border-radius: 0 8px 8px 0;
-}
-
-/* =========================================================
-   14.8 OPÇÕES DE SIMULAÇÃO
-   ========================================================= */
-
-.simulador-grid-igual .opcao-simulacao {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    min-width: 0;
-    padding: 13px;
-    border: 1px solid var(--borda);
-    border-radius: 9px;
-    background: #FAFCFC;
-    cursor: pointer;
-    transition:
-        border-color .18s ease,
-        background .18s ease,
-        box-shadow .18s ease;
-}
-
-.simulador-grid-igual .opcao-simulacao:hover {
-    border-color: rgba(0, 160, 145, .4);
-    background: rgba(0, 160, 145, .025);
-}
-
-.simulador-grid-igual .opcao-simulacao:focus-within {
-    border-color: var(--turquesa);
-    box-shadow: 0 0 0 3px rgba(0, 160, 145, .08);
-}
-
-.simulador-grid-igual .opcao-simulacao-conteudo {
     display: block;
     width: 100%;
     min-width: 0;
-}
-
-.simulador-grid-igual .opcao-simulacao-conteudo strong {
-    display: block;
-    margin: 0 0 3px;
-    color: var(--verde-escuro);
-    font-size: 10px;
-    font-weight: 750;
-    line-height: 1.35;
-}
-
-.simulador-grid-igual .opcao-simulacao-conteudo span,
-.simulador-grid-igual .opcao-simulacao-conteudo p {
-    display: block;
-    margin: 0;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.45;
-}
-
-/* =========================================================
-   14.9 AÇÕES
-   ========================================================= */
-
-.simulador-grid-igual .acoes,
-.simulador-grid-igual .acoes-simulador {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 9px;
-    width: 100%;
-    min-width: 0;
-    margin: 20px 0 0;
-    padding: 0;
-}
-
-.simulador-grid-igual .acoes>*,
-.simulador-grid-igual .acoes-simulador>* {
-    flex: 0 0 auto;
-}
-
-.simulador-grid-igual .acoes .btn,
-.simulador-grid-igual .acoes button,
-.simulador-grid-igual .acoes-simulador .btn,
-.simulador-grid-igual .acoes-simulador button {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: 125px;
-    margin: 0;
-}
-
-/* =========================================================
-   14.10 BOTÕES
-   ========================================================= */
-
-.simulador-grid-igual .btn,
-.simulador-grid-igual .btn-principal,
-.simulador-grid-igual .btn-primario,
-.simulador-grid-igual .btn-secundario,
-.simulador-grid-igual .botao-secundario {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 40px;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 10px;
-    font-weight: 750;
-    line-height: 1.2;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition:
-        background .18s ease,
-        border-color .18s ease,
-        color .18s ease,
-        box-shadow .18s ease,
-        transform .18s ease;
-}
-
-.simulador-grid-igual .btn:hover,
-.simulador-grid-igual .btn-principal:hover,
-.simulador-grid-igual .btn-primario:hover,
-.simulador-grid-igual .btn-secundario:hover,
-.simulador-grid-igual .botao-secundario:hover {
-    transform: translateY(-1px);
-}
-
-.simulador-grid-igual .btn-principal,
-.simulador-grid-igual .btn-primario {
-    border: 1px solid var(--turquesa);
-    background: linear-gradient(135deg,
-            var(--turquesa),
-            #008E83);
-    color: var(--branco);
-    box-shadow: 0 5px 13px rgba(0, 160, 145, .16);
-}
-
-.simulador-grid-igual .btn-principal:hover,
-.simulador-grid-igual .btn-primario:hover {
-    border-color: var(--verde-escuro);
-    background: var(--verde-escuro);
-}
-
-.simulador-grid-igual .btn-secundario,
-.simulador-grid-igual .botao-secundario {
-    border: 1px solid var(--borda-forte);
-    background: var(--branco);
-    color: var(--verde-escuro);
-}
-
-.simulador-grid-igual .btn-secundario:hover,
-.simulador-grid-igual .botao-secundario:hover {
-    border-color: var(--turquesa);
-    background: var(--fundo-secundario);
-}
-
-/* =========================================================
-   14.11 AVISOS
-   ========================================================= */
-
-.simulador-grid-igual .aviso,
-.simulador-grid-igual .aviso-info {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-    margin: 15px 0 0;
-    padding: 12px 14px 12px 17px;
+    margin: 16px 0 0;
+    padding: 11px 13px 11px 16px;
     overflow: hidden;
     border: 1px solid rgba(0, 160, 145, .15);
-    border-radius: 9px;
+    border-radius: 8px;
     background: rgba(0, 160, 145, .045);
     color: var(--texto-secundario);
-    font-size: 9px;
-    line-height: 1.5;
+    font-size: 8px;
+    line-height: 1.5
 }
 
-.simulador-grid-igual .aviso::before,
-.simulador-grid-igual .aviso-info::before {
+body:has(#statusMotorSipag) .aviso-info::before {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
-    width: 4px;
-    background: var(--turquesa);
+    width: 3px;
+    background: var(--turquesa)
 }
 
-.simulador-grid-igual .aviso strong,
-.simulador-grid-igual .aviso-info strong {
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-wrapper {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    overflow-x: auto;
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+    background: var(--branco);
+    scrollbar-width: thin;
+    scrollbar-color: var(--borda-forte) transparent
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-wrapper::-webkit-scrollbar {
+    height: 7px
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--borda-forte)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual table {
+    width: 100%;
+    min-width: 660px;
+    margin: 0;
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: var(--branco)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual table th {
+    padding: 10px 9px;
+    border: 0;
+    border-bottom: 1px solid var(--borda);
+    background: var(--fundo-secundario);
     color: var(--verde-escuro);
+    font-size: 7px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: right;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: .1px
 }
 
-/* =========================================================
-   14.12 RESULTADOS
-   ========================================================= */
+body:has(#statusMotorSipag) .simulador-grid-igual table td {
+    padding: 10px 9px;
+    border: 0;
+    border-bottom: 1px solid var(--borda);
+    background: var(--branco);
+    color: var(--texto);
+    font-size: 8px;
+    line-height: 1.4;
+    text-align: right;
+    vertical-align: middle;
+    white-space: nowrap
+}
 
-.simulador-grid-igual .resultados-grid,
-.simulador-grid-igual .resultado-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px;
+body:has(#statusMotorSipag) .simulador-grid-igual table th:first-child,
+body:has(#statusMotorSipag) .simulador-grid-igual table td:first-child {
+    text-align: left
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual table tbody tr:hover td {
+    background: rgba(0, 160, 145, .025)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual table tbody tr:last-child td {
+    border-bottom: 0
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-mix {
+    min-width: 700px
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-mix th:first-child,
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-mix td:first-child {
+    width: 120px;
+    font-weight: 700
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-input {
+    padding: 4px !important
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-input input,
+body:has(#statusMotorSipag) .simulador-grid-igual .mix-input,
+body:has(#statusMotorSipag) .simulador-grid-igual .taxa-solicitada,
+body:has(#statusMotorSipag) .simulador-grid-igual table input {
+    display: block;
+    width: 100%;
+    min-width: 70px;
+    height: 34px;
+    min-height: 34px;
+    margin: 0;
+    padding: 0 8px;
+    border: 1px solid var(--borda-forte);
+    border-radius: 6px;
+    outline: none;
+    background: var(--branco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 9px;
+    line-height: 1.2;
+    text-align: right;
+    transition: border-color .18s ease, box-shadow .18s ease
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual table input:focus {
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 2px rgba(0, 160, 145, .08)
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .linha-selecionada {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
     width: 100%;
     min-width: 0;
+    margin: 12px 0 0;
+    padding: 11px 13px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--fundo-secundario)
 }
 
-.simulador-grid-igual .resultados-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 9px;
+body:has(#statusMotorSipag) .simulador-grid-igual .linha-selecionada span {
+    color: var(--texto-secundario);
+    font-size: 8px;
+    line-height: 1.35
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .linha-selecionada strong {
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: right
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .bloco-bandeira {
     width: 100%;
     min-width: 0;
+    margin: 0 0 18px;
+    padding: 0
 }
 
-.simulador-grid-igual .resultados-grid-4 {
+body:has(#statusMotorSipag) .simulador-grid-igual .bloco-bandeira:last-child {
+    margin-bottom: 0
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .bloco-bandeira-titulo {
+    display: block;
+    width: 100%;
+    margin: 0 0 7px;
+    padding: 0;
+    color: var(--verde-escuro);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .bloco-bandeira-conteudo {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    border: 1px solid var(--borda);
+    border-radius: 8px
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-taxas {
+    min-width: 920px
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-taxas th:first-child,
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-taxas td:first-child {
+    min-width: 120px;
+    text-align: left
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .tabela-taxas td:last-child {
+    color: var(--turquesa);
+    font-weight: 800
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .resultados-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 9px;
     width: 100%;
     min-width: 0;
+    margin: 0;
+    padding: 0
 }
 
-.simulador-grid-igual .resultado-item {
+body:has(#statusMotorSipag) .simulador-grid-igual .resultado-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 11px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #FAFCFC
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .resultado-item span {
+    display: block;
+    color: var(--texto-secundario);
+    font-size: 7px;
+    line-height: 1.4
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .resultado-item strong {
+    display: block;
+    color: var(--verde-escuro);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere
+}
+
+body:has(#statusMotorSipag) .simulador-grid-igual .resultado-destaque {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-width: 0;
-    min-height: 65px;
-    padding: 12px;
-    border: 1px solid var(--borda);
-    border-radius: 9px;
-    background: #F8FAFA;
-}
-
-.simulador-grid-igual .resultado-item span {
-    display: block;
-    margin: 0 0 4px;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.35;
-}
-
-.simulador-grid-igual .resultado-item strong {
-    display: block;
-    min-width: 0;
-    color: var(--verde-escuro);
-    font-size: 13px;
-    font-weight: 750;
-    line-height: 1.3;
-    overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   14.13 RESULTADO DESTAQUE
-   ========================================================= */
-
-.simulador-grid-igual .resultado-destaque {
-    position: relative;
+    gap: 5px;
     width: 100%;
     min-width: 0;
     margin: 0 0 10px;
-    padding: 18px;
+    padding: 17px 18px;
     overflow: hidden;
+    border: 1px solid rgba(0, 160, 145, .18);
     border-radius: 10px;
-    background: linear-gradient(135deg,
-            var(--verde-escuro),
-            #005B64);
+    background: linear-gradient(135deg, rgba(0, 160, 145, .08), rgba(201, 210, 0, .06))
 }
 
-.simulador-grid-igual .resultado-destaque::after {
-    content: "";
-    position: absolute;
-    top: -60px;
-    right: -35px;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: rgba(0, 160, 145, .23);
-}
-
-.simulador-grid-igual .resultado-destaque span,
-.simulador-grid-igual .resultado-destaque strong {
+body:has(#statusMotorSipag) .simulador-grid-igual .resultado-destaque span {
     position: relative;
     z-index: 1;
+    color: var(--texto-secundario);
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1.35
 }
 
-.simulador-grid-igual .resultado-destaque span {
-    display: block;
-    margin: 0 0 4px;
-    color: rgba(255, 255, 255, .75);
-    font-size: 9px;
-    line-height: 1.35;
-}
-
-.simulador-grid-igual .resultado-destaque strong {
-    display: block;
-    min-width: 0;
-    color: var(--verde-claro);
-    font-size: 22px;
-    font-weight: 800;
+body:has(#statusMotorSipag) .simulador-grid-igual .resultado-destaque strong {
+    position: relative;
+    z-index: 1;
+    color: var(--verde-escuro);
+    font-size: 20px;
+    font-weight: 850;
     line-height: 1.2;
-    overflow-wrap: anywhere;
+    overflow-wrap: anywhere
 }
 
-/* =========================================================
-   14.14 LINHA SELECIONADA / DESTAQUE COMERCIAL
-   ========================================================= */
-
-.simulador-grid-igual .linha-selecionada {
+body:has(#statusMotorSipag) .simulador-grid-igual .acoes {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
     width: 100%;
     min-width: 0;
-    margin: 12px 0 0;
-    padding: 11px 13px;
-    border: 1px solid rgba(0, 160, 145, .2);
-    border-radius: 8px;
-    background: rgba(0, 160, 145, .055);
+    margin: 18px 0 0;
+    padding: 0
 }
 
-.simulador-grid-igual .linha-selecionada span {
-    min-width: 0;
-    color: var(--texto-secundario);
-    font-size: 8px;
-    line-height: 1.4;
-}
-
-.simulador-grid-igual .linha-selecionada strong {
-    flex: 0 0 auto;
-    color: var(--verde-escuro);
-    font-size: 11px;
-    font-weight: 800;
-    text-align: right;
-}
-
-/* =========================================================
-   14.15 TABELAS
-   ========================================================= */
-
-.simulador-grid-igual .tabela-wrapper,
-.simulador-grid-igual .tabela-responsiva {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    border: 1px solid var(--borda);
-    border-radius: 10px;
-    background: var(--branco);
-    -webkit-overflow-scrolling: touch;
-}
-
-.simulador-grid-igual table {
-    width: 100%;
-    min-width: 760px;
+body:has(#statusMotorSipag) .simulador-grid-igual .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto;
+    min-width: 110px;
+    min-height: 36px;
     margin: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background: var(--branco);
-}
-
-.simulador-grid-igual table th,
-.simulador-grid-igual table td {
-    padding: 10px 11px;
-    border-right: 1px solid var(--borda);
-    border-bottom: 1px solid var(--borda);
-    color: var(--texto-secundario);
-    font-size: 9px;
-    line-height: 1.4;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.simulador-grid-igual table th:last-child,
-.simulador-grid-igual table td:last-child {
-    border-right: 0;
-}
-
-.simulador-grid-igual table th {
-    background: #F1F6F5;
-    color: var(--verde-escuro);
-    font-size: 8px;
-    font-weight: 800;
-    letter-spacing: .25px;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.simulador-grid-igual table tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-.simulador-grid-igual table tbody tr {
-    transition: background .15s ease;
-}
-
-.simulador-grid-igual table tbody tr:hover td {
-    background: rgba(0, 160, 145, .025);
-}
-
-/* =========================================================
-   14.16 TABELA MIX
-   ========================================================= */
-
-.simulador-grid-igual .tabela-mix {
-    width: 100%;
-    min-width: 760px;
-}
-
-.simulador-grid-igual .tabela-mix td:not(:first-child),
-.simulador-grid-igual .tabela-mix th:not(:first-child) {
-    text-align: right;
-}
-
-.simulador-grid-igual .tabela-mix td:first-child {
-    color: var(--verde-escuro);
-    font-weight: 700;
-}
-
-/* =========================================================
-   14.17 INPUTS DENTRO DAS TABELAS
-   ========================================================= */
-
-.simulador-grid-igual table .tabela-input,
-.simulador-grid-igual table input,
-.simulador-grid-igual table select {
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 85px;
-    height: 34px;
-    min-height: 34px;
-    padding: 0 8px;
-    border: 1px solid var(--borda-forte);
-    border-radius: 6px;
-    background: var(--branco);
-    color: var(--texto);
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    border-radius: 7px;
     font-family: inherit;
     font-size: 9px;
-    outline: none;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease
 }
 
-.simulador-grid-igual table input:focus,
-.simulador-grid-igual table select:focus {
+body:has(#statusMotorSipag) .simulador-grid-igual .btn-primario {
     border-color: var(--turquesa);
-    box-shadow: 0 0 0 2px rgba(0, 160, 145, .08);
+    background: var(--turquesa);
+    color: var(--branco)
 }
 
-/* =========================================================
-   14.18 CARDS DE RESUMO
-   ========================================================= */
-
-.simulador-grid-igual .resumo-card {
-    width: 100%;
-    min-width: 0;
-    padding: 15px;
-    border: 1px solid rgba(0, 160, 145, .15);
-    border-radius: 10px;
-    background: linear-gradient(135deg,
-            rgba(0, 160, 145, .055),
-            rgba(201, 210, 0, .035));
+body:has(#statusMotorSipag) .simulador-grid-igual .btn-primario:hover {
+    border-color: var(--verde-escuro);
+    background: var(--verde-escuro);
+    transform: translateY(-1px)
 }
 
-.simulador-grid-igual .resumo-card strong {
-    color: var(--verde-escuro);
+body:has(#statusMotorSipag) .simulador-grid-igual .btn-secundario {
+    border-color: var(--borda-forte);
+    background: var(--branco);
+    color: var(--verde-escuro)
 }
 
-/* =========================================================
-   14.19 SEPARADOR
-   ========================================================= */
-
-.simulador-grid-igual .separador {
-    width: 100%;
-    height: 1px;
-    margin: 20px 0;
-    border: 0;
-    background: var(--borda);
+body:has(#statusMotorSipag) .simulador-grid-igual .btn-secundario:hover {
+    border-color: var(--turquesa);
+    background: rgba(0, 160, 145, .05);
+    color: var(--turquesa);
+    transform: translateY(-1px)
 }
 
-/* =========================================================
-   14.20 STATUS
-   ========================================================= */
-
-.simulador-grid-igual .sucesso,
-.simulador-grid-igual .resultado-positivo {
-    border-color: rgba(71, 125, 13, .15);
-    background: var(--sucesso-fundo);
-    color: var(--sucesso);
-}
-
-.simulador-grid-igual .atencao {
-    border-color: rgba(166, 106, 0, .15);
-    background: var(--atencao-fundo);
-    color: var(--atencao);
-}
-
-.simulador-grid-igual .resultado-negativo {
-    border-color: rgba(199, 58, 58, .15);
-    background: var(--erro-fundo);
-    color: var(--erro);
-}
-
-/* =========================================================
-   14.21 SEM DADOS
-   ========================================================= */
-
-.simulador-grid-igual .sem-dados,
-.simulador-grid-igual .tabela-sem-dados {
-    padding: 28px 16px !important;
-    color: var(--texto-secundario) !important;
-    font-size: 10px !important;
-    font-style: italic;
-    line-height: 1.5 !important;
-    text-align: center !important;
-}
-
-/* =========================================================
-   14.22 UTILITÁRIOS
-   ========================================================= */
-
-.simulador-grid-igual .hide {
-    display: none !important;
-}
-
-.simulador-grid-igual .bloqueado {
-    opacity: .58;
-    pointer-events: none;
-}
-
-/* =========================================================
-   14.23 DESKTOP REDUZIDO
-   ========================================================= */
-
-@media (max-width: 1050px) {
-
-    .simulador-grid-igual {
+@media(max-width:1050px) {
+    body:has(#statusMotorSipag) main.simulador-grid-igual {
         width: calc(100% - 40px);
-        gap: 18px;
+        gap: 17px
     }
 
-    .simulador-grid-igual>.card {
-        padding: 22px;
+    body:has(#statusMotorSipag) .simulador-grid-igual>.card {
+        padding: 21px
     }
 
-    .simulador-grid-igual .grid-form-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    body:has(#statusMotorSipag) .simulador-grid-igual .grid-form-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
-    .simulador-grid-igual .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    body:has(#statusMotorSipag) .simulador-grid-igual .resultados-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 }
 
-/* =========================================================
-   14.24 TABLET
-   ========================================================= */
-
-@media (max-width: 850px) {
-
-    .simulador-grid-igual {
+@media(max-width:850px) {
+    body:has(#statusMotorSipag) main.simulador-grid-igual {
         grid-template-columns: minmax(0, 1fr);
         width: calc(100% - 32px);
-        gap: 16px;
+        gap: 15px;
         padding-top: 24px;
-        padding-bottom: 38px;
+        padding-bottom: 38px
     }
 
-    .simulador-grid-igual>.card,
-    .simulador-grid-igual>.card-largura-total {
+    body:has(#statusMotorSipag) .simulador-grid-igual>.card {
         grid-column: 1;
-    }
-
-    .simulador-grid-igual>.card {
-        padding: 20px;
-        border-radius: 12px;
-    }
-
-    .simulador-grid-igual .grid-form-3,
-    .simulador-grid-igual .grid-form-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .simulador-grid-igual .resultados-grid-3,
-    .simulador-grid-igual .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 20px
     }
 }
 
-/* =========================================================
-   14.25 MOBILE
-   ========================================================= */
-
-@media (max-width: 650px) {
-
-    .simulador-grid-igual {
+@media(max-width:650px) {
+    body:has(#statusMotorSipag) main.simulador-grid-igual {
         width: calc(100% - 24px);
         gap: 12px;
-        padding-top: 20px;
-        padding-bottom: 30px;
+        padding-top: 18px;
+        padding-bottom: 30px
     }
 
-    .simulador-grid-igual>.card {
+    body:has(#statusMotorSipag) .simulador-grid-igual>.card {
         padding: 16px;
-        border-radius: 11px;
+        border-radius: 11px
     }
 
-    .simulador-grid-igual .titulo-secao {
-        margin-bottom: 14px;
+    body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao {
+        margin-bottom: 14px
     }
 
-    .simulador-grid-igual .titulo-secao h2 {
-        margin-bottom: 4px;
-        font-size: 16px;
+    body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao h2 {
+        font-size: 16px
     }
 
-    .simulador-grid-igual .titulo-secao p {
-        font-size: 9px;
-    }
-
-    .simulador-grid-igual #statusMotorSipag,
-    .simulador-grid-igual .status-carregamento {
-        margin-bottom: 14px;
-        font-size: 8px;
-    }
-
-    .simulador-grid-igual .grid-form,
-    .simulador-grid-igual .grid-form-3,
-    .simulador-grid-igual .grid-form-4 {
+    body:has(#statusMotorSipag) .simulador-grid-igual .grid-form,
+    body:has(#statusMotorSipag) .simulador-grid-igual .grid-form-4 {
         grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
+        gap: 11px
     }
 
-    .simulador-grid-igual .campo label {
-        font-size: 9px;
+    body:has(#statusMotorSipag) .simulador-grid-igual .resultados-grid {
+        grid-template-columns: minmax(0, 1fr)
     }
 
-    .simulador-grid-igual .campo input,
-    .simulador-grid-igual .campo select {
-        min-height: 42px;
-        font-size: 10px;
-    }
-
-    .simulador-grid-igual .resultados-grid,
-    .simulador-grid-igual .resultado-grid,
-    .simulador-grid-igual .resultados-grid-3,
-    .simulador-grid-igual .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
-    }
-
-    .simulador-grid-igual .resultado-item {
-        min-height: 58px;
-        padding: 10px;
-    }
-
-    .simulador-grid-igual .resultado-item span {
-        font-size: 7px;
-    }
-
-    .simulador-grid-igual .resultado-item strong {
-        font-size: 11px;
-    }
-
-    .simulador-grid-igual .resultado-destaque {
-        padding: 15px;
-    }
-
-    .simulador-grid-igual .resultado-destaque strong {
-        font-size: 19px;
-    }
-
-    .simulador-grid-igual .acoes,
-    .simulador-grid-igual .acoes-simulador {
+    body:has(#statusMotorSipag) .simulador-grid-igual .linha-selecionada {
         flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        margin-top: 15px;
-    }
-
-    .simulador-grid-igual .acoes .btn,
-    .simulador-grid-igual .acoes button,
-    .simulador-grid-igual .acoes-simulador .btn,
-    .simulador-grid-igual .acoes-simulador button {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .simulador-grid-igual .linha-selecionada {
         align-items: flex-start;
+        gap: 4px
+    }
+
+    body:has(#statusMotorSipag) .simulador-grid-igual .linha-selecionada strong {
+        text-align: left
+    }
+
+    body:has(#statusMotorSipag) .simulador-grid-igual .acoes {
         flex-direction: column;
-        gap: 4px;
+        align-items: stretch
     }
 
-    .simulador-grid-igual .linha-selecionada strong {
-        text-align: left;
-    }
-
-    .simulador-grid-igual table th,
-    .simulador-grid-igual table td {
-        padding: 8px 9px;
+    body:has(#statusMotorSipag) .simulador-grid-igual .acoes .btn {
+        width: 100%;
+        min-width: 0
     }
 }
 
-/* =========================================================
-   14.26 MOBILE PEQUENO
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .simulador-grid-igual {
+@media(max-width:480px) {
+    body:has(#statusMotorSipag) main.simulador-grid-igual {
         width: calc(100% - 18px);
         gap: 10px;
-        padding-top: 16px;
-        padding-bottom: 25px;
+        padding-top: 15px;
+        padding-bottom: 25px
     }
 
-    .simulador-grid-igual>.card {
+    body:has(#statusMotorSipag) .simulador-grid-igual>.card {
         padding: 13px;
-        border-radius: 10px;
+        border-radius: 10px
     }
 
-    .simulador-grid-igual .titulo-secao h2 {
-        font-size: 15px;
+    body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao h2 {
+        font-size: 15px
     }
 
-    .simulador-grid-igual .titulo-secao p {
-        font-size: 8px;
-    }
-
-    .simulador-grid-igual .resultados-grid,
-    .simulador-grid-igual .resultado-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .simulador-grid-igual .resultados-grid-3,
-    .simulador-grid-igual .resultados-grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .simulador-grid-igual .resultado-destaque strong {
-        font-size: 17px;
-    }
-
-    .simulador-grid-igual .aviso,
-    .simulador-grid-igual .aviso-info {
-        padding: 11px 12px 11px 15px;
-        font-size: 8px;
+    body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao p {
+        font-size: 8px
     }
 }
-
-/* =========================================================
-   14.27 MOBILE MUITO PEQUENO
-   ========================================================= */
-
-@media (max-width: 360px) {
-
-    .simulador-grid-igual {
-        width: calc(100% - 16px);
-    }
-
-    .simulador-grid-igual>.card {
-        padding: 11px;
-    }
-
-    .simulador-grid-igual .resultados-grid-3,
-    .simulador-grid-igual .resultados-grid-4 {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .simulador-grid-igual .resultado-item {
-        min-height: 54px;
-    }
-}
-
-/* =========================================================
-   14.28 TOUCH
-   ========================================================= */
-
-@media (hover: none) and (pointer: coarse) {
-
-    .simulador-grid-igual .btn:hover,
-    .simulador-grid-igual .btn-principal:hover,
-    .simulador-grid-igual .btn-primario:hover,
-    .simulador-grid-igual .btn-secundario:hover,
-    .simulador-grid-igual .botao-secundario:hover {
-        transform: none;
-    }
-
-    .simulador-grid-igual .campo input,
-    .simulador-grid-igual .campo select {
-        min-height: 44px;
-    }
-
-    .simulador-grid-igual .btn,
-    .simulador-grid-igual button {
-        min-height: 44px;
-    }
-}
-
-/* =========================================================
-   14.29 IMPRESSÃO
-   ========================================================= */
 
 @media print {
-
-    .simulador-grid-igual {
-        display: grid !important;
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
-        gap: 16px !important;
+    body:has(#statusMotorSipag) main.simulador-grid-igual {
+        display: block !important;
         width: 100% !important;
         max-width: none !important;
-        min-width: 0 !important;
         margin: 0 !important;
-        padding: 0 !important;
-        align-items: start !important;
-        overflow: visible !important;
+        padding: 10px 0 !important
     }
 
-    .simulador-grid-igual>.card {
+    body:has(#statusMotorSipag) .simulador-grid-igual>.card {
         width: 100% !important;
-        min-width: 0 !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        margin: 0 !important;
+        margin: 0 0 12px !important;
         padding: 14px !important;
         overflow: visible !important;
         border: 1px solid #CCC !important;
         border-radius: 0 !important;
         background: #FFF !important;
         box-shadow: none !important;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
+        break-inside: avoid;
+        page-break-inside: avoid
     }
 
-    .simulador-grid-igual>.card::before {
-        display: none !important;
+    body:has(#statusMotorSipag) .simulador-grid-igual>.card::before {
+        display: none !important
     }
 
-    .simulador-grid-igual>.card-largura-total {
-        grid-column: 1 / -1 !important;
+    body:has(#statusMotorSipag) .simulador-grid-igual .acoes {
+        display: none !important
     }
 
-    .simulador-grid-igual .grid-form-4 {
-        display: grid !important;
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-    }
-
-    .simulador-grid-igual .grid-form-3 {
-        display: grid !important;
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-    }
-
-    .simulador-grid-igual .acoes,
-    .simulador-grid-igual .acoes-simulador,
-    .simulador-grid-igual button,
-    .simulador-grid-igual .btn,
-    .simulador-grid-igual .btn-principal,
-    .simulador-grid-igual .btn-secundario,
-    .simulador-grid-igual .botao-secundario {
-        display: none !important;
-    }
-
-    .simulador-grid-igual #statusMotorSipag,
-    .simulador-grid-igual .status-carregamento {
-        padding-left: 12px !important;
-        border: 1px solid #AAA !important;
-        background: #FFF !important;
-        color: #000 !important;
-    }
-
-    .simulador-grid-igual #statusMotorSipag::before,
-    .simulador-grid-igual .status-carregamento::before {
-        display: none !important;
-    }
-
-    .simulador-grid-igual .campo input,
-    .simulador-grid-igual .campo select,
-    .simulador-grid-igual .campo textarea {
-        border: 1px solid #AAA !important;
-        background: #FFF !important;
-        color: #000 !important;
-        box-shadow: none !important;
-    }
-
-    .simulador-grid-igual .resultado-destaque {
-        border: 1px solid #777 !important;
-        background: #FFF !important;
-    }
-
-    .simulador-grid-igual .resultado-destaque::after {
-        display: none !important;
-    }
-
-    .simulador-grid-igual .resultado-destaque span,
-    .simulador-grid-igual .resultado-destaque strong {
-        color: #000 !important;
-    }
-
-    .simulador-grid-igual .tabela-wrapper,
-    .simulador-grid-igual .tabela-responsiva {
+    body:has(#statusMotorSipag) .simulador-grid-igual .tabela-wrapper,
+    body:has(#statusMotorSipag) .simulador-grid-igual .bloco-bandeira-conteudo {
         overflow: visible !important;
-        border-radius: 0 !important;
+        border-radius: 0 !important
     }
 
-    .simulador-grid-igual table {
+    body:has(#statusMotorSipag) .simulador-grid-igual table {
         width: 100% !important;
-        min-width: 0 !important;
-        table-layout: auto !important;
+        min-width: 0 !important
     }
 
-    .simulador-grid-igual table th,
-    .simulador-grid-igual table td {
-        padding: 5px 6px !important;
+    body:has(#statusMotorSipag) .simulador-grid-igual table th,
+    body:has(#statusMotorSipag) .simulador-grid-igual table td {
+        padding: 5px !important;
         color: #000 !important;
         font-size: 7px !important;
-        line-height: 1.3 !important;
-        white-space: normal !important;
-    }
-
-    .simulador-grid-igual table th {
-        font-size: 6px !important;
-    }
-
-    .simulador-grid-igual table thead {
-        display: table-header-group !important;
-    }
-
-    .simulador-grid-igual table tr {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    .simulador-grid-igual,
-    .simulador-grid-igual * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        white-space: normal !important
     }
 }
-
-/* =========================================================
-   FIM 14. PRECIFICACAO-SIPAG.HTML
-   ========================================================= */
 
 /* =========================================================
    15. PREVIDENCIA.HTML
