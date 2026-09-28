@@ -2394,4 +2394,198 @@
     window.processarTextoMovimentacao =
         processarTexto;
 
+
+
+
+    /*
+ * =========================================================
+ * CORREÇÃO - SELEÇÃO DO MODO DE ENTRADA
+ * =========================================================
+ */
+
+    function configurarModoEntradaMovimentacao() {
+        const btnArquivo = document.getElementById("btnModoArquivo");
+        const btnTexto = document.getElementById("btnModoTexto");
+
+        if (btnArquivo && btnArquivo.dataset.eventoModoConfigurado !== "1") {
+            btnArquivo.dataset.eventoModoConfigurado = "1";
+
+            btnArquivo.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                selecionarModoEntradaMovimentacao("arquivo");
+            });
+        }
+
+        if (btnTexto && btnTexto.dataset.eventoModoConfigurado !== "1") {
+            btnTexto.dataset.eventoModoConfigurado = "1";
+
+            btnTexto.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                selecionarModoEntradaMovimentacao("texto");
+            });
+        }
+
+        document
+            .querySelectorAll(".btnTrocarModoMovimentacao")
+            .forEach(function (btn) {
+                if (btn.dataset.eventoModoConfigurado === "1") {
+                    return;
+                }
+
+                btn.dataset.eventoModoConfigurado = "1";
+
+                btn.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    voltarSelecaoModoMovimentacao();
+                });
+            });
+    }
+
+    function selecionarModoEntradaMovimentacao(modo) {
+        const cardModo = document.getElementById("cardModoEntrada");
+        const cardArquivo = document.getElementById("cardLeituraExtratos");
+        const cardTexto = document.getElementById("cardExtratoMovimentacao");
+        const cardResultadoOCR = document.getElementById("cardResultadoLeituraExtratos");
+
+        if (cardModo) {
+            cardModo.hidden = true;
+        }
+
+        if (cardArquivo) {
+            cardArquivo.hidden = modo !== "arquivo";
+        }
+
+        if (cardTexto) {
+            cardTexto.hidden = modo !== "texto";
+        }
+
+        if (cardResultadoOCR) {
+            cardResultadoOCR.hidden = true;
+        }
+
+        const cardResultado = document.getElementById("cardResultadoMovimentacao");
+        const cardHistoricos = document.getElementById("cardHistoricosMovimentacao");
+        const cardResumoMensal = document.getElementById("cardResumoMensalMovimentacao");
+
+        if (cardResultado) {
+            cardResultado.hidden = true;
+        }
+
+        if (cardHistoricos) {
+            cardHistoricos.hidden = true;
+        }
+
+        if (cardResumoMensal) {
+            cardResumoMensal.hidden = true;
+        }
+
+        const status = document.getElementById("statusModoMovimentacao");
+
+        if (status) {
+            status.textContent =
+                modo === "arquivo"
+                    ? "Modo selecionado: leitura de arquivo."
+                    : "Modo selecionado: texto colado.";
+        }
+
+        const destino =
+            modo === "arquivo"
+                ? cardArquivo
+                : cardTexto;
+
+        if (destino) {
+            setTimeout(function () {
+                destino.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }, 30);
+        }
+    }
+
+    function voltarSelecaoModoMovimentacao() {
+        const cardModo = document.getElementById("cardModoEntrada");
+        const cardArquivo = document.getElementById("cardLeituraExtratos");
+        const cardTexto = document.getElementById("cardExtratoMovimentacao");
+        const cardResultadoOCR = document.getElementById("cardResultadoLeituraExtratos");
+        const cardResultado = document.getElementById("cardResultadoMovimentacao");
+        const cardHistoricos = document.getElementById("cardHistoricosMovimentacao");
+        const cardResumoMensal = document.getElementById("cardResumoMensalMovimentacao");
+
+        if (cardModo) {
+            cardModo.hidden = false;
+        }
+
+        if (cardArquivo) {
+            cardArquivo.hidden = true;
+        }
+
+        if (cardTexto) {
+            cardTexto.hidden = true;
+        }
+
+        if (cardResultadoOCR) {
+            cardResultadoOCR.hidden = true;
+        }
+
+        if (cardResultado) {
+            cardResultado.hidden = true;
+        }
+
+        if (cardHistoricos) {
+            cardHistoricos.hidden = true;
+        }
+
+        if (cardResumoMensal) {
+            cardResumoMensal.hidden = true;
+        }
+
+        const status = document.getElementById("statusModoMovimentacao");
+
+        if (status) {
+            status.textContent = "Selecione como deseja informar o extrato.";
+        }
+
+        if (cardModo) {
+            setTimeout(function () {
+                cardModo.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }, 30);
+        }
+    }
+
+    /*
+     * Garante a configuração mesmo que o JS tenha sido carregado
+     * antes ou depois do DOMContentLoaded.
+     */
+    function inicializarModoEntradaMovimentacao() {
+        configurarModoEntradaMovimentacao();
+
+        /*
+         * Alguns componentes da página podem ser montados
+         * depois do carregamento inicial.
+         */
+        setTimeout(configurarModoEntradaMovimentacao, 100);
+        setTimeout(configurarModoEntradaMovimentacao, 500);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            inicializarModoEntradaMovimentacao,
+            { once: true }
+        );
+    } else {
+        inicializarModoEntradaMovimentacao();
+    }
+
+
 })();
