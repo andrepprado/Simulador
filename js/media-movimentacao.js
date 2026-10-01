@@ -186,10 +186,10 @@
             document.getElementById("btnRestaurarPeriodoMovimentacao");
 
         const campoInicio =
-            document.getElementById("dataInicioMovimentacao");
+            document.getElementById("primeiraDataMovimentacao");
 
         const campoFim =
-            document.getElementById("dataFimMovimentacao");
+            document.getElementById("ultimaDataMovimentacao");
 
         if (btnProcessar) {
             btnProcessar.addEventListener(
@@ -1500,33 +1500,31 @@
 
     function preencherPeriodoAutomatico() {
         const inicio =
-            obterPrimeiroElemento([
-                "dataInicioMovimentacao"
-            ]);
+            document.getElementById(
+                "primeiraDataMovimentacao"
+            );
 
         const fim =
-            obterPrimeiroElemento([
-                "dataFimMovimentacao"
-            ]);
+            document.getElementById(
+                "ultimaDataMovimentacao"
+            );
 
-        if (
-            inicio &&
-            periodoAutomatico.inicio
-        ) {
+        if (inicio) {
             inicio.value =
-                formatarDataInput(
-                    periodoAutomatico.inicio
-                );
+                periodoAutomatico.inicio
+                    ? formatarDataBR(
+                        periodoAutomatico.inicio
+                    )
+                    : "";
         }
 
-        if (
-            fim &&
-            periodoAutomatico.fim
-        ) {
+        if (fim) {
             fim.value =
-                formatarDataInput(
-                    periodoAutomatico.fim
-                );
+                periodoAutomatico.fim
+                    ? formatarDataBR(
+                        periodoAutomatico.fim
+                    )
+                    : "";
         }
 
         atualizarInformacoesPeriodo();
@@ -1540,18 +1538,18 @@
     function obterPeriodoAtual() {
         const campoInicio =
             document.getElementById(
-                "dataInicioMovimentacao"
+                "primeiraDataMovimentacao"
             );
 
         const campoFim =
             document.getElementById(
-                "dataFimMovimentacao"
+                "ultimaDataMovimentacao"
             );
 
         const inicio =
             campoInicio &&
                 campoInicio.value
-                ? parseDataISO(
+                ? parseDataBR(
                     campoInicio.value
                 )
                 : periodoAutomatico.inicio;
@@ -1559,15 +1557,10 @@
         const fim =
             campoFim &&
                 campoFim.value
-                ? parseDataISO(
+                ? parseDataBR(
                     campoFim.value
                 )
                 : periodoAutomatico.fim;
-
-        /*
-         * Caso os campos de data não existam no HTML,
-         * utiliza o período automático normalmente.
-         */
 
         return {
             inicio:
@@ -2954,12 +2947,12 @@
 
         const inicio =
             document.getElementById(
-                "dataInicioMovimentacao"
+                "primeiraDataMovimentacao"
             );
 
         const fim =
             document.getElementById(
-                "dataFimMovimentacao"
+                "ultimaDataMovimentacao"
             );
 
         if (inicio) {
@@ -3543,10 +3536,28 @@
                 id
             );
 
-        if (elemento) {
-            elemento.textContent =
-                valor;
+        if (!elemento) {
+            return;
         }
+
+        const valorFinal =
+            valor == null
+                ? ""
+                : String(valor);
+
+        if (
+            elemento.tagName === "INPUT" ||
+            elemento.tagName === "TEXTAREA" ||
+            elemento.tagName === "SELECT"
+        ) {
+            elemento.value =
+                valorFinal;
+
+            return;
+        }
+
+        elemento.textContent =
+            valorFinal;
     }
 
     function setTextoMultiplos(
