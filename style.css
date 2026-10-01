@@ -17291,3 +17291,117 @@ main.antecipacao-grid>* {
         white-space: normal !important;
     }
 }
+
+/* === MEDIA MOVIMENTACAO PAGINACAO START === */
+
+.media-movimentacao-container .paginacao-movimentacao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--borda);
+}
+
+.media-movimentacao-container .paginacao-movimentacao[hidden] {
+    display: none !important;
+}
+
+.media-movimentacao-container .paginacao-movimentacao-info {
+    display: flex;
+    align-items: center;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.media-movimentacao-container .paginacao-movimentacao-info strong {
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.media-movimentacao-container .paginacao-movimentacao-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.media-movimentacao-container .paginacao-movimentacao-pagina {
+    min-width: 115px;
+    text-align: center;
+    color: #475569;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.media-movimentacao-container .paginacao-movimentacao-pagina strong {
+    color: #1f2937;
+}
+
+.media-movimentacao-container .btn-paginacao-movimentacao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 82px;
+    min-height: 36px;
+    padding: 7px 14px;
+    background: #ffffff;
+    color: var(--turquesa);
+    border: 1px solid var(--turquesa);
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background var(--transicao),
+        color var(--transicao),
+        border-color var(--transicao),
+        opacity var(--transicao);
+}
+
+.media-movimentacao-container .btn-paginacao-movimentacao:hover:not(:disabled) {
+    background: var(--turquesa);
+    color: #ffffff;
+}
+
+.media-movimentacao-container .btn-paginacao-movimentacao:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.media-movimentacao-container .btn-paginacao-movimentacao:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.media-movimentacao-container #listaRegrasMovimentacao {
+    max-height: none;
+    overflow: visible;
+}
+
+@media (max-width: 700px) {
+    .media-movimentacao-container .paginacao-movimentacao {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .media-movimentacao-container .paginacao-movimentacao-info {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .media-movimentacao-container .paginacao-movimentacao-acoes {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .media-movimentacao-container .paginacao-movimentacao-pagina {
+        order: -1;
+        width: 100%;
+    }
+}
+
+/* === MEDIA MOVIMENTACAO PAGINACAO END === */

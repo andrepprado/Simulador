@@ -253,6 +253,7 @@
 
     function processarTexto(texto, opcoes) {
         opcoes = opcoes || {};
+        resetarPaginacaoCardsMovimentacao();
 
         competenciasDocumentadasExternas =
             normalizarCompetencias(
@@ -291,6 +292,7 @@
 
     function processarMovimentacoes(movimentacoes, opcoes) {
         opcoes = opcoes || {};
+        resetarPaginacaoCardsMovimentacao();
 
         competenciasDocumentadasExternas =
             normalizarCompetencias(
@@ -1923,6 +1925,340 @@
      * =========================================================
      */
 
+    /*
+     * =========================================================
+     * PAGINAÇÃO DOS CARDS DE RESULTADO
+     * =========================================================
+     */
+
+    const ITENS_POR_PAGINA_MOVIMENTACAO = 10;
+
+    const paginasCardsMovimentacao = {
+        historicos: 1,
+        resumoMensal: 1,
+        considerados: 1,
+        excluidos: 1
+    };
+
+    const configuracoesPaginacaoMovimentacao = [
+        {
+            chave: "historicos",
+            container: "#listaRegrasMovimentacao",
+            item: ".regra-movimentacao-item",
+            controle: "paginacaoHistoricosMovimentacao"
+        },
+        {
+            chave: "resumoMensal",
+            container: "#tabelaResumoMensalMovimentacao tbody",
+            item: "tr",
+            controle: "paginacaoResumoMensalMovimentacao"
+        },
+        {
+            chave: "considerados",
+            container: "#tabelaMovimentacoesConsideradas tbody",
+            item: "tr",
+            controle: "paginacaoCreditosConsideradosMovimentacao"
+        },
+        {
+            chave: "excluidos",
+            container: "#tabelaMovimentacoesExcluidas tbody",
+            item: "tr",
+            controle: "paginacaoMovimentacoesExcluidas"
+        }
+    ];
+
+    function resetarPaginacaoCardsMovimentacao() {
+        Object.keys(
+            paginasCardsMovimentacao
+        ).forEach(
+            function (chave) {
+                paginasCardsMovimentacao[chave] = 1;
+            }
+        );
+    }
+
+    function aplicarPaginacaoCardsMovimentacao() {
+        configuracoesPaginacaoMovimentacao.forEach(
+            function (configuracao) {
+                aplicarPaginacaoCardMovimentacao(
+                    configuracao
+                );
+            }
+        );
+    }
+
+    function aplicarPaginacaoCardMovimentacao(
+        configuracao
+    ) {
+        const container =
+            document.querySelector(
+                configuracao.container
+            );
+
+        const controle =
+            document.getElementById(
+                configuracao.controle
+            );
+
+        if (
+            !container ||
+            !controle
+        ) {
+            return;
+        }
+
+        const todosItens =
+            Array.from(
+                container.querySelectorAll(
+                    configuracao.item
+                )
+            );
+
+        const itens =
+            todosItens.filter(
+                function (item) {
+                    if (
+                        item.classList &&
+                        item.classList.contains(
+                            "sem-dados"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    if (
+                        item.querySelector &&
+                        item.querySelector(
+                            ".sem-dados"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            );
+
+        todosItens.forEach(
+            function (item) {
+                item.style.display =
+                    "";
+            }
+        );
+
+        const total =
+            itens.length;
+
+        if (
+            total <=
+            ITENS_POR_PAGINA_MOVIMENTACAO
+        ) {
+            paginasCardsMovimentacao[
+                configuracao.chave
+            ] = 1;
+
+            controle.hidden =
+                true;
+
+            controle.innerHTML =
+                "";
+
+            return;
+        }
+
+        const totalPaginas =
+            Math.ceil(
+                total /
+                ITENS_POR_PAGINA_MOVIMENTACAO
+            );
+
+        let paginaAtual =
+            Number(
+                paginasCardsMovimentacao[
+                    configuracao.chave
+                ] ||
+                1
+            );
+
+        if (
+            !Number.isFinite(
+                paginaAtual
+            )
+        ) {
+            paginaAtual = 1;
+        }
+
+        paginaAtual =
+            Math.max(
+                1,
+                Math.min(
+                    paginaAtual,
+                    totalPaginas
+                )
+            );
+
+        paginasCardsMovimentacao[
+            configuracao.chave
+        ] =
+            paginaAtual;
+
+        const indiceInicial =
+            (
+                paginaAtual -
+                1
+            ) *
+            ITENS_POR_PAGINA_MOVIMENTACAO;
+
+        const indiceFinal =
+            Math.min(
+                indiceInicial +
+                ITENS_POR_PAGINA_MOVIMENTACAO,
+                total
+            );
+
+        itens.forEach(
+            function (
+                item,
+                indice
+            ) {
+                const visivel =
+                    indice >=
+                    indiceInicial &&
+                    indice <
+                    indiceFinal;
+
+                item.style.display =
+                    visivel
+                        ? ""
+                        : "none";
+            }
+        );
+
+        controle.hidden =
+            false;
+
+        controle.innerHTML = `
+            <div class="paginacao-movimentacao-info">
+                <span>
+                    Exibindo
+                    <strong>${indiceInicial + 1}-${indiceFinal}</strong>
+                    de
+                    <strong>${total}</strong>
+                </span>
+            </div>
+
+            <div class="paginacao-movimentacao-acoes">
+                <button
+                    type="button"
+                    class="btn-paginacao-movimentacao"
+                    data-acao="anterior"
+                    ${paginaAtual <= 1 ? "disabled" : ""}
+                >
+                    Anterior
+                </button>
+
+                <span class="paginacao-movimentacao-pagina">
+                    Página
+                    <strong>${paginaAtual}</strong>
+                    de
+                    <strong>${totalPaginas}</strong>
+                </span>
+
+                <button
+                    type="button"
+                    class="btn-paginacao-movimentacao"
+                    data-acao="proxima"
+                    ${paginaAtual >= totalPaginas ? "disabled" : ""}
+                >
+                    Próxima
+                </button>
+            </div>
+        `;
+
+        const botaoAnterior =
+            controle.querySelector(
+                '[data-acao="anterior"]'
+            );
+
+        const botaoProxima =
+            controle.querySelector(
+                '[data-acao="proxima"]'
+            );
+
+        if (botaoAnterior) {
+            botaoAnterior.addEventListener(
+                "click",
+                function () {
+                    paginasCardsMovimentacao[
+                        configuracao.chave
+                    ] =
+                        Math.max(
+                            1,
+                            paginaAtual -
+                            1
+                        );
+
+                    aplicarPaginacaoCardMovimentacao(
+                        configuracao
+                    );
+
+                    rolarParaInicioCardPaginado(
+                        controle
+                    );
+                }
+            );
+        }
+
+        if (botaoProxima) {
+            botaoProxima.addEventListener(
+                "click",
+                function () {
+                    paginasCardsMovimentacao[
+                        configuracao.chave
+                    ] =
+                        Math.min(
+                            totalPaginas,
+                            paginaAtual +
+                            1
+                        );
+
+                    aplicarPaginacaoCardMovimentacao(
+                        configuracao
+                    );
+
+                    rolarParaInicioCardPaginado(
+                        controle
+                    );
+                }
+            );
+        }
+    }
+
+    function rolarParaInicioCardPaginado(
+        controle
+    ) {
+        if (!controle) {
+            return;
+        }
+
+        const card =
+            controle.closest(
+                ".card"
+            );
+
+        if (
+            !card ||
+            typeof card.scrollIntoView !==
+            "function"
+        ) {
+            return;
+        }
+
+        card.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
     function renderizarTudo() {
         atualizarInformacoesPeriodo();
 
@@ -1949,6 +2285,7 @@
             resultado
         );
 
+        aplicarPaginacaoCardsMovimentacao();
         mostrarCardsResultado();
     }
 
@@ -2587,6 +2924,7 @@
      */
 
     function limparTudo() {
+        resetarPaginacaoCardsMovimentacao();
         movimentacoesExtrato = [];
         movimentacoesConsideradas = [];
         movimentacoesExcluidas = [];
