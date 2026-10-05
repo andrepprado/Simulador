@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Previdência",
                     arquivo: "previdencia.html",
-                    disponivel: false
+                    disponivel: true
                 }
             ]
         }
