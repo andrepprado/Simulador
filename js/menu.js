@@ -67,17 +67,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Antecipação Sipag",
                     arquivo: "antecipacao-sipag.html",
-                    disponivel: false
+                    disponivel: true
                 },
                 {
                     nome: "Precificação Sipag",
                     arquivo: "precificacao-sipag.html",
-                    disponivel: false
+                    disponivel: true
                 },
                 {
                     nome: "Informações Sicoob Card",
                     arquivo: "informacoes-beneficios-sicoobcard.html",
-                    disponivel: false
+                    disponivel: true
                 },
                 {
                     nome: "Cobrança",
