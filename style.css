@@ -12587,6 +12587,26 @@ body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao {
     padding: 0
 }
 
+body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao .categoria-etiqueta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 21px;
+    margin: 0 0 7px;
+    padding: 4px 9px;
+    border: 1px solid rgba(0, 160, 145, .12);
+    border-radius: 5px;
+    background: rgba(0, 160, 145, .08);
+    color: var(--turquesa);
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .3px;
+    text-transform: uppercase
+}
+
 body:has(#statusMotorSipag) .simulador-grid-igual .titulo-secao h2 {
     margin: 0 0 5px;
     color: var(--verde-escuro);
