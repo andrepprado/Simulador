@@ -25,17 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Simulador de Crédito Rural",
                     arquivo: "credito-rural.html",
-                    disponivel: true
+                    disponivel: false
                 },
                 {
                     nome: "Cálculo de Renda por Notas Fiscais",
                     arquivo: "calculo-renda-notas-fiscais.html",
-                    disponivel: true
+                    disponivel: false
                 },
                 {
                     nome: "Porte do Produtor Rural",
                     arquivo: "porte-produtor-rural.html",
-                    disponivel: true
+                    disponivel: false
                 }
             ]
         },
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Simulador de Condições de Crédito",
                     arquivo: "condicoes-credito.html",
-                    disponivel: true
+                    disponivel: false
                 },
                 {
                     nome: "Média de Movimentação",
@@ -67,22 +67,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Antecipação Sipag",
                     arquivo: "antecipacao-sipag.html",
-                    disponivel: true
+                    disponivel: false
                 },
                 {
                     nome: "Precificação Sipag",
                     arquivo: "precificacao-sipag.html",
-                    disponivel: true
+                    disponivel: false
                 },
                 {
                     nome: "Informações Sicoob Card",
                     arquivo: "informacoes-beneficios-sicoobcard.html",
-                    disponivel: true
+                    disponivel: false
                 },
                 {
                     nome: "Cobrança",
                     arquivo: "cobranca.html",
-                    disponivel: true
+                    disponivel: false
                 }
             ]
         },
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     nome: "Previdência",
                     arquivo: "previdencia.html",
-                    disponivel: true
+                    disponivel: false
                 }
             ]
         }

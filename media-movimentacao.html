@@ -24,7 +24,7 @@
 
     <main class="container media-movimentacao-container">
 
-        <section class="card card-largura-total" id="cardModoEntrada">
+        <section class="card card-largura-total" id="cardModoEntrada" hidden>
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Início</span>
@@ -290,7 +290,7 @@
             </div>
         </aside>
 
-        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao" hidden>
+        <section class="card card-largura-total card-extrato-movimentacao" id="cardExtratoMovimentacao">
             <div class="titulo-secao">
                 <div>
                     <span class="categoria-etiqueta">Movimentação Financeira</span>
@@ -310,7 +310,7 @@
             <div class="acoes">
                 <button type="button" id="btnProcessarMovimentacao" class="btn btn-primario">Processar Extrato</button>
                 <button type="button" id="btnLimparMovimentacao" class="btn btn-secundario">Limpar</button>
-                <button type="button" class="btn btn-secundario btnTrocarModoMovimentacao">Trocar Forma de
+                <button type="button" class="btn btn-secundario btnTrocarModoMovimentacao" hidden>Trocar Forma de
                     Entrada</button>
             </div>
         </section>
