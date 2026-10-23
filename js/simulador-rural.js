@@ -2003,14 +2003,6 @@ function atualizarDocumentos() {
             );
     }
 
-    html +=
-        criarGrupoDocumentos(
-            "Documentação Orientativa",
-            DOCUMENTOS_BASE[
-            finalidade.value
-            ] || []
-        );
-
     listaDocumentos.innerHTML =
         html ||
         `

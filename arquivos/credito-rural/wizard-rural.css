@@ -1,0 +1,474 @@
+body.rural-wizard-pending .simulador-grid {
+    display: none !important;
+}
+
+#ruralWizard {
+    max-width: 880px;
+    margin: 28px auto;
+    padding: 26px 30px;
+    background: #fff;
+    border: 1px solid #d8dde0;
+    border-top: 4px solid #00a091;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,54,65,.07);
+    color: #003640;
+    font-family: Asap, Arial, sans-serif;
+}
+
+#ruralWizard .rw-eyebrow {
+    color: #00a091;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+}
+
+#ruralWizard h2 {
+    margin: 8px 0 20px;
+    font-size: 22px;
+    color: #003640;
+}
+
+#ruralWizard .rw-breadcrumb {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+#ruralWizard .rw-crumb {
+    padding: 7px 11px;
+    border: 1px solid #b2e4e0;
+    border-radius: 5px;
+    background: #e8f8f7;
+    color: #003640;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#ruralWizard .rw-label {
+    margin-bottom: 13px;
+    color: #52666b;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#ruralWizard .rw-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+#ruralWizard .rw-btn {
+    padding: 11px 17px;
+    border: 1px solid #d8dde0;
+    border-radius: 6px;
+    background: #f4f6f7;
+    color: #003640;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#ruralWizard .rw-btn:hover {
+    border-color: #00a091;
+    background: #e8f8f7;
+}
+
+#ruralWizard .rw-btn.selected {
+    background: #003640;
+    border-color: #003640;
+    color: white;
+}
+
+#ruralWizard .rw-search {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border: 1px solid #d8dde0;
+    border-radius: 6px;
+}
+
+#ruralWizard .rw-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #64777a;
+}
+
+#ruralWizard .rw-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+#ruralWizard .rw-nav button {
+    padding: 11px 17px;
+    border: 0;
+    border-radius: 6px;
+    background: #00a091;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#ruralWizard .rw-nav button.secondary {
+    background: #edf4f3;
+    color: #003640;
+}
+
+@media (max-width: 700px) {
+    #ruralWizard {
+        margin: 14px;
+        padding: 18px;
+    }
+}
+
+/* INICIO RESPONSIVIDADE MANTIQUEIRA */
+
+/* Evitar estouro horizontal */
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Configuração centralizada */
+#ruralWizard {
+    width: min(100% - 32px, 880px);
+    max-width: 880px;
+    margin: 24px auto;
+    padding: clamp(18px, 3vw, 30px);
+}
+
+/* Botões responsivos */
+#ruralWizard .rw-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 100%;
+}
+
+#ruralWizard .rw-btn {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+    text-align: left;
+}
+
+#ruralWizard .rw-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+}
+
+#ruralWizard .rw-crumb {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+/* Preservar campos originais no DOM e ocultar apenas os repetidos */
+body.rural-wizard-ready #finalidade,
+body.rural-wizard-ready #atividade,
+body.rural-wizard-ready #enquadramentoAtividade,
+body.rural-wizard-ready #linhaCredito {
+    display: none !important;
+}
+
+/* Ocultar também o contêiner do campo quando possível */
+body.rural-wizard-ready .campo:has(> #finalidade),
+body.rural-wizard-ready .campo:has(> #atividade),
+body.rural-wizard-ready .campo:has(> #enquadramentoAtividade),
+body.rural-wizard-ready .campo:has(> #linhaCredito),
+body.rural-wizard-ready .campo:has(> label[for="finalidade"]),
+body.rural-wizard-ready .campo:has(> label[for="atividade"]),
+body.rural-wizard-ready .campo:has(> label[for="enquadramentoAtividade"]),
+body.rural-wizard-ready .campo:has(> label[for="linhaCredito"]) {
+    display: none !important;
+}
+
+/* Simulador: respeitar a largura disponível */
+body.rural-wizard-ready .simulador-grid {
+    width: min(100% - 32px, 1400px);
+    max-width: 1400px;
+    margin-inline: auto;
+    min-width: 0;
+}
+
+.simulador-grid > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
+input,
+select,
+textarea {
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Tabelas com rolagem própria */
+table {
+    max-width: 100%;
+}
+
+.table-responsive,
+.tabela-wrapper,
+.tabela-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Botão de impressão não deve cobrir resultados */
+button[onclick*="print"],
+button[onclick*="imprimir"],
+.imprimir-flutuante,
+.btn-imprimir-flutuante {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+
+    body.rural-wizard-ready .simulador-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .simulador-grid > * {
+        width: 100%;
+        max-width: 100%;
+    }
+
+}
+
+/* Celulares */
+@media (max-width: 640px) {
+
+    #ruralWizard {
+        width: calc(100% - 20px);
+        margin: 12px auto;
+        padding: 18px 14px;
+        border-radius: 8px;
+    }
+
+    #ruralWizard h2 {
+        font-size: 19px;
+        line-height: 1.3;
+    }
+
+    #ruralWizard .rw-options {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    #ruralWizard .rw-btn {
+        width: 100%;
+        padding: 13px 14px;
+        min-height: 44px;
+    }
+
+    #ruralWizard .rw-nav {
+        flex-direction: column;
+    }
+
+    #ruralWizard .rw-nav button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    body.rural-wizard-ready .simulador-grid {
+        width: calc(100% - 20px);
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 14px;
+    }
+
+    .grid-form {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .simulador-grid input,
+    .simulador-grid select,
+    .simulador-grid textarea {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .simulador-grid button {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+}
+
+/* Impressão */
+@media print {
+
+    #ruralWizard .rw-nav,
+    #ruralWizard .rw-search {
+        display: none !important;
+    }
+
+    body.rural-wizard-ready .simulador-grid {
+        display: block !important;
+        width: 100%;
+    }
+
+    .simulador-grid > * {
+        break-inside: avoid;
+    }
+
+}
+
+/* FIM RESPONSIVIDADE MANTIQUEIRA */
+
+/* INICIO LAYOUT EQUILIBRADO */
+
+/* Remover card de materiais de apoio */
+.material-apoio-card,
+#material-apoio-card {
+    display: none !important;
+}
+
+/* Largura centralizada e proporcional */
+body.rural-wizard-ready .simulador-grid {
+    width: min(calc(100% - 48px), 1180px) !important;
+    max-width: 1180px !important;
+    margin: 24px auto 48px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.75fr) minmax(310px, 1fr) !important;
+    gap: 20px !important;
+    align-items: start !important;
+}
+
+body.rural-wizard-ready .simulador-grid > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Wizard alinhado ao simulador */
+#ruralWizard {
+    width: min(calc(100% - 48px), 1180px) !important;
+    max-width: 1180px !important;
+    margin: 24px auto !important;
+    padding: 24px 28px !important;
+}
+
+/* Reduzir espaços verticais */
+#ruralWizard h2 {
+    margin: 6px 0 14px !important;
+}
+
+#ruralWizard .rw-breadcrumb {
+    margin: 10px 0 14px !important;
+}
+
+#ruralWizard .rw-nav {
+    margin-top: 14px !important;
+}
+
+/* Ocultar os campos duplicados visualmente.
+   Os selects continuam no DOM para preservar o motor financeiro. */
+body.rural-wizard-ready .simulador-grid .campo:has(#finalidade),
+body.rural-wizard-ready .simulador-grid .campo:has(#atividade),
+body.rural-wizard-ready .simulador-grid .campo:has(#enquadramentoAtividade),
+body.rural-wizard-ready .simulador-grid .campo:has(#linhaCredito) {
+    display: none !important;
+}
+
+/* Campos e cartões */
+.simulador-grid .formulario-card,
+.simulador-grid .resultado-card {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+.simulador-grid input,
+.simulador-grid select,
+.simulador-grid textarea {
+    max-width: 100% !important;
+}
+
+/* Impressão: remover sobreposição flutuante */
+body.rural-wizard-ready .btn-imprimir,
+body.rural-wizard-ready .btn-imprimir-flutuante,
+body.rural-wizard-ready .imprimir-flutuante,
+body.rural-wizard-ready button[onclick*="print"] {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+
+    body.rural-wizard-ready .simulador-grid {
+        width: min(calc(100% - 32px), 860px) !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 16px !important;
+    }
+
+    #ruralWizard {
+        width: min(calc(100% - 32px), 860px) !important;
+    }
+}
+
+/* Celulares */
+@media (max-width: 640px) {
+
+    #ruralWizard {
+        width: calc(100% - 20px) !important;
+        padding: 18px 14px !important;
+        margin: 12px auto !important;
+    }
+
+    #ruralWizard h2 {
+        font-size: 19px !important;
+    }
+
+    #ruralWizard .rw-options {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    #ruralWizard .rw-btn {
+        width: 100% !important;
+        min-height: 44px;
+    }
+
+    body.rural-wizard-ready .simulador-grid {
+        width: calc(100% - 20px) !important;
+        margin: 12px auto 28px !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .simulador-grid .grid-form {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .simulador-grid input,
+    .simulador-grid select,
+    .simulador-grid textarea {
+        width: 100% !important;
+        font-size: 16px !important;
+    }
+}
+
+/* FIM LAYOUT EQUILIBRADO */
