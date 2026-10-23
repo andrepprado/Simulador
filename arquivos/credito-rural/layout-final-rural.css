@@ -199,3 +199,60 @@ body.ms-tela-unica main.simulador-grid > .material-apoio-card {
         break-inside: avoid;
     }
 }
+
+/* INICIO AJUSTE FINAL CHECKLIST E PARCELAS */
+
+/* 1. Ocultar descrições extensas do checklist */
+body.ms-tela-unica #mrChecklist .ms-descricao {
+    display: none !important;
+}
+
+/* 2. Documentos e checklist na segunda linha */
+body.ms-tela-unica main.simulador-grid > .documentos-card {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+}
+
+body.ms-tela-unica main.simulador-grid > #mrChecklist {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+}
+
+/* 3. Parcelas como última informação */
+body.ms-tela-unica main.simulador-grid > .tabela-card {
+    grid-column: 1 / -1 !important;
+    grid-row: 99 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-self: start !important;
+}
+
+/* 4. Manter rolagem apenas dentro da tabela */
+body.ms-tela-unica .tabela-card .tabela-wrapper {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+/* 5. Layout responsivo */
+@media (max-width: 900px) {
+    body.ms-tela-unica main.simulador-grid > .documentos-card,
+    body.ms-tela-unica main.simulador-grid > #mrChecklist,
+    body.ms-tela-unica main.simulador-grid > .tabela-card {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
+
+    body.ms-tela-unica main.simulador-grid > .documentos-card {
+        order: 3 !important;
+    }
+
+    body.ms-tela-unica main.simulador-grid > #mrChecklist {
+        order: 4 !important;
+    }
+
+    body.ms-tela-unica main.simulador-grid > .tabela-card {
+        order: 5 !important;
+    }
+}
+
+/* FIM AJUSTE FINAL CHECKLIST E PARCELAS */
