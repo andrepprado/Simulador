@@ -745,7 +745,7 @@
         })
         .then(dados => {
             estado.documentos = dados;
-            if (estado.tela === "checklist") {
+            if (estado.tela === "unificada") {
                 renderizarDocumentos();
             }
         })
