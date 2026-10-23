@@ -2,8 +2,7 @@
     "use strict";
 
     const CAMPOS_CLASSIFICACAO = [
-        "finalidade",
-        "atividade"
+        "finalidade"
     ];
 
     const obter = id => document.getElementById(id);
@@ -60,9 +59,13 @@
 
     function iniciar() {
         bloquearClassificacoes();
+        const produtoRural = document.getElementById("atividade");
+        if (produtoRural) produtoRural.disabled = false;
 
         const observador = new MutationObserver(() => {
             bloquearClassificacoes();
+        const produtoRural = document.getElementById("atividade");
+        if (produtoRural) produtoRural.disabled = false;
         });
 
         observador.observe(document.body, {
