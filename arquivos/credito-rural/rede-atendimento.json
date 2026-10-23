@@ -1,0 +1,137 @@
+﻿{
+    "fonte":  "https://www.sicoob.com.br/web/sicoobmantiqueira/canais-atendimento",
+    "estados":  [
+                    "SP",
+                    "RJ"
+                ],
+    "agencias":  [
+                     {
+                         "uf":  "SP",
+                         "nome":  "Araçatuba"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Araras"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Barretos"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Bauru"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Campos do Jordão"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Caraguatatuba"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Conchal"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Franca"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Guaratinguetá"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Itatiba"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Jacareí"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Leme"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Limeira"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Lins"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Marília"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Penápolis"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Pindamonhangaba"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Pirassununga"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Porto Ferreira"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "República"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Santos"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "São José do Rio Preto"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "São José do Rio Preto - Vera Cruz"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "São José dos Campos"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "São José dos Campos - Aquarius"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Taubaté - Comevap"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Taubaté - Independência"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Taubaté - Jacques Félix"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Taubaté - Nove de Julho"
+                     },
+                     {
+                         "uf":  "SP",
+                         "nome":  "Vila Madalena"
+                     },
+                     {
+                         "uf":  "RJ",
+                         "nome":  "Niterói"
+                     },
+                     {
+                         "uf":  "RJ",
+                         "nome":  "Rio de Janeiro"
+                     }
+                 ]
+}

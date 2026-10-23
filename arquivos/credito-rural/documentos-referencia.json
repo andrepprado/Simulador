@@ -1,0 +1,994 @@
+{
+  "DOCS_CUSTEIO_PEC_GERAIS": [
+    {
+      "secao": "📋 Documentos Gerais",
+      "itens": [
+        {
+          "nome": "Documento de Posse",
+          "obs": "RGI, contrato de compra e venda registrado em cartório de imóveis, Contrato de arrendamento, parceria e comodato, Declaração de posse, entre outros.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "CND de ITR — Imposto Territorial Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://servicos.receitafederal.gov.br/servico/certidoes/#/home/cib"
+        },
+        {
+          "nome": "CCIR — Certificado de Cadastro de Imóveis Rurais",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://sncr.serpro.gov.br/ccir/emissao;jsessionid=JF0-9WVviMzZUsgF9xifIZ3X.ccir4?windowId=0e1"
+        },
+        {
+          "nome": "Recibo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Demonstrativo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://car.gov.br/#/consultar"
+        },
+        {
+          "nome": "CAF — Extrato",
+          "obs": "Apenas para operações de Pronaf.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Ficha Sanitária",
+          "obs": "Apenas para bovinos, equinos, suínos e caprinos. Validade do documento 30 dias.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Laudo de Estimativa de Produção",
+          "obs": "Contendo todas as áreas exploradas do associado.",
+          "resp": "projetista",
+          "modelo": "laudo-estimativa-producao.xlsx"
+        },
+        {
+          "nome": "Gleba(s)",
+          "obs": "Em formato kml anexados ao dossiê do sistema Astec.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Documentos de Regularidade Ambiental",
+          "obs": "Necessário quando apontado pela Equipe do Sicoob para justificar algum apontamento ambiental. Ex.: Justificativa de alertas de desmatamentos, documentos de autorização dos gestores de Unidades de conservação e etc.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Projeto Técnico",
+          "obs": "Documento emitido via sistema Astec do Sicoob.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Declaração de Ciência do Associado",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "declaracao-ciencia-associado.pdf"
+        },
+        {
+          "nome": "Declaração de Concordância Compartilhamento de dados da Astec",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "termo-concordancia-astec.docx"
+        },
+        {
+          "nome": "Declaração de enquadramento ao Pronamp",
+          "obs": "Para associados enquadrados no Pronamp.",
+          "resp": "agencia",
+          "modelo": "declaracao-enquadramento-pronamp.pdf"
+        },
+        {
+          "nome": "Relatório do Sicor",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        },
+        {
+          "nome": "Verificação Ambiental dos Imóveis Rurais",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        }
+      ]
+    }
+  ],
+  "DOCS_CUSTEIO_AGR_GERAIS": [
+    {
+      "secao": "📋 Documentos Gerais",
+      "itens": [
+        {
+          "nome": "Documento de Posse",
+          "obs": "RGI, contrato de compra e venda registrado em cartório de imóveis, Contrato de arrendamento, parceria e comodato, Declaração de posse, entre outros.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "CND de ITR — Imposto Territorial Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://servicos.receitafederal.gov.br/servico/certidoes/#/home/cib"
+        },
+        {
+          "nome": "CCIR — Certificado de Cadastro de Imóveis Rurais",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://sncr.serpro.gov.br/ccir/emissao;jsessionid=JF0-9WVviMzZUsgF9xifIZ3X.ccir4?windowId=0e1"
+        },
+        {
+          "nome": "Recibo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Demonstrativo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://car.gov.br/#/consultar"
+        },
+        {
+          "nome": "CAF — Extrato",
+          "obs": "Apenas para operações de Pronaf.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Portaria ZARC",
+          "obs": "Quando atividade Zoneada para o município.",
+          "resp": "projetista",
+          "modelo": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias"
+        },
+        {
+          "nome": "Laudo de Ater",
+          "obs": "Quando atividade não for zoneada, mas tiver indicação de plantio para o município.",
+          "resp": "projetista",
+          "modelo": "__ATER_RJ__"
+        },
+        {
+          "nome": "Laudo de Vistoria Prévia (Proagro)",
+          "obs": "Quando a cultura já estiver sido implantada. Obs.: o modelo em anexo deve ser baixado no computador e aberto com o programa Adobe PDF para edição.",
+          "resp": "projetista",
+          "modelo": "laudo-vistoria-previa.pdf"
+        },
+        {
+          "nome": "Outorga / Dispensa de Outorga de Água",
+          "obs": "Quando a atividade tiver irrigação é necessário a licença/dispensa de outorga. Se não tem irrigação não é necessário apresentar nenhum documento.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Laudo de Estimativa de Produção",
+          "obs": "Contendo todas as áreas exploradas do associado.",
+          "resp": "projetista",
+          "modelo": "laudo-estimativa-producao.xlsx"
+        },
+        {
+          "nome": "Gleba(s)",
+          "obs": "Em formato kml anexados ao dossiê do sistema Astec.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Documentos de Regularidade Ambiental",
+          "obs": "Necessário quando apontado pela Equipe do Sicoob para justificar algum apontamento ambiental. Ex.: Justificativa de alertas de desmatamentos, documentos de autorização dos gestores de Unidades de conservação e etc.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Projeto Técnico",
+          "obs": "Documento emitido via sistema Astec do Sicoob.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Declaração de Ciência do Associado",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "declaracao-ciencia-associado.pdf"
+        },
+        {
+          "nome": "Declaração de Concordância Compartilhamento de dados da Astec",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "termo-concordancia-astec.docx"
+        },
+        {
+          "nome": "Declaração de enquadramento ao Pronamp",
+          "obs": "Para associados enquadrados no Pronamp.",
+          "resp": "agencia",
+          "modelo": "declaracao-enquadramento-pronamp.pdf"
+        },
+        {
+          "nome": "Relatório do Sicor",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        },
+        {
+          "nome": "Verificação Ambiental dos Imóveis Rurais",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        }
+      ]
+    }
+  ],
+  "DOCS_INV_PEC_GERAIS": [
+    {
+      "secao": "📋 Documentos Gerais",
+      "itens": [
+        {
+          "nome": "Documento de Posse",
+          "obs": "RGI, contrato de compra e venda registrado em cartório de imóveis, Contrato de arrendamento, parceria e comodato, Declaração de posse, entre outros.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "CND de ITR — Imposto Territorial Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://servicos.receitafederal.gov.br/servico/certidoes/#/home/cib"
+        },
+        {
+          "nome": "CCIR — Certificado de Cadastro de Imóveis Rurais",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://sncr.serpro.gov.br/ccir/emissao;jsessionid=JF0-9WVviMzZUsgF9xifIZ3X.ccir4?windowId=0e1"
+        },
+        {
+          "nome": "Recibo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Demonstrativo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://car.gov.br/#/consultar"
+        },
+        {
+          "nome": "CAF — Extrato",
+          "obs": "Apenas para operações de Pronaf.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Ficha Sanitária",
+          "obs": "Apenas para bovinos, equinos, suínos e caprinos. Validade do documento 30 dias.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Gleba(s)",
+          "obs": "Em formato kml anexados ao dossiê do sistema Astec.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Documentos de Regularidade Ambiental",
+          "obs": "Necessário quando apontado pela Equipe do Sicoob para justificar algum apontamento ambiental. Ex.: Justificativa de alertas de desmatamentos, documentos de autorização dos gestores de Unidades de conservação e etc.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Orçamentos com código Finame",
+          "obs": "Para tratores, colheitadeiras, autopropelidos, caminhões, reboques e semireboques, carrocerias, implementos agrícolas, energia solar, irrigação, ordenhadeiras, demais equipamentos. Equipamentos até R$ 25 mil não precisam de código Finame.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Orçamentos com código extarifário",
+          "obs": "Para equipamentos importados sem similar nacional.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Resolução Gecex de validação do extarifário",
+          "obs": "Necessário quando o equipamento for importado e sem similar nacional.",
+          "resp": "projetista",
+          "modelo": [
+            "https://www.gov.br/mdic/pt-br/assuntos/sdic/setor-automotivo/bk-autopropulsado/ex-tarifarios-vigentes",
+            "https://www.gov.br/mdic/pt-br/assuntos/sdic/ex-tarifario/estatisticas/ex-tarifarios-vigentes"
+          ],
+          "modeloLabels": [
+            "🌐 Extarifários do setor automotivo",
+            "🌐 Extarifários em geral"
+          ]
+        },
+        {
+          "nome": "Consulta CFI no BNDES",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Consulta Mapa (antigo MDA)",
+          "obs": "Para operações de Pronaf — tratores, colheitadeiras, autopropelidos, caminhões.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Projeto Técnico",
+          "obs": "Documento emitido via sistema Astec do Sicoob.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Declaração de Ciência do Associado",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "declaracao-ciencia-associado.pdf"
+        },
+        {
+          "nome": "Declaração de Concordância Compartilhamento de dados da Astec",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "termo-concordancia-astec.docx"
+        },
+        {
+          "nome": "Declaração de enquadramento ao Pronamp",
+          "obs": "Para associados enquadrados no Pronamp.",
+          "resp": "agencia",
+          "modelo": "declaracao-enquadramento-pronamp.pdf"
+        },
+        {
+          "nome": "Relatório do Sicor",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        },
+        {
+          "nome": "Verificação Ambiental dos Imóveis Rurais",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        }
+      ]
+    }
+  ],
+  "DOCS_INV_AGR_GERAIS": [
+    {
+      "secao": "📋 Documentos Gerais",
+      "itens": [
+        {
+          "nome": "Documento de Posse",
+          "obs": "RGI, contrato de compra e venda registrado em cartório de imóveis, Contrato de arrendamento, parceria e comodato, Declaração de posse, entre outros.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "CND de ITR — Imposto Territorial Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://servicos.receitafederal.gov.br/servico/certidoes/#/home/cib"
+        },
+        {
+          "nome": "CCIR — Certificado de Cadastro de Imóveis Rurais",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://sncr.serpro.gov.br/ccir/emissao;jsessionid=JF0-9WVviMzZUsgF9xifIZ3X.ccir4?windowId=0e1"
+        },
+        {
+          "nome": "Recibo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Demonstrativo do CAR — Cadastro Ambiental Rural",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://car.gov.br/#/consultar"
+        },
+        {
+          "nome": "CAF — Extrato",
+          "obs": "Apenas para operações de Pronaf.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Portaria ZARC",
+          "obs": "Quando atividade Zoneada para o município.",
+          "resp": "projetista",
+          "modelo": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias"
+        },
+        {
+          "nome": "Laudo de Ater",
+          "obs": "Quando atividade não for zoneada, mas tiver indicação de plantio para o município.",
+          "resp": "projetista",
+          "modelo": "__ATER_RJ__"
+        },
+        {
+          "nome": "Outorga / Dispensa de Outorga de Água",
+          "obs": "Quando se tratar de operações para aquisição de sistemas de irrigação ou lavouras com irrigação.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Laudo de vazão do sistema de irrigação",
+          "obs": "Quando se tratar de operações para aquisição de sistemas de irrigação.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Gleba(s)",
+          "obs": "Em formato kml anexados ao dossiê do sistema Astec.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Documentos de Regularidade Ambiental",
+          "obs": "Necessário quando apontado pela Equipe do Sicoob para justificar algum apontamento ambiental. Ex.: Justificativa de alertas de desmatamentos, documentos de autorização dos gestores de Unidades de conservação e etc.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Orçamentos com código Finame",
+          "obs": "Para tratores, colheitadeiras, autopropelidos, caminhões, reboques e semireboques, carrocerias, implementos agrícolas, energia solar, irrigação, ordenhadeiras, demais equipamentos. Equipamentos até R$ 25 mil não precisam de código Finame.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Orçamentos com código extarifário",
+          "obs": "Para equipamentos importados sem similar nacional.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Resolução Gecex de validação do extarifário",
+          "obs": "Necessário quando o equipamento for importado e sem similar nacional.",
+          "resp": "projetista",
+          "modelo": [
+            "https://www.gov.br/mdic/pt-br/assuntos/sdic/setor-automotivo/bk-autopropulsado/ex-tarifarios-vigentes",
+            "https://www.gov.br/mdic/pt-br/assuntos/sdic/ex-tarifario/estatisticas/ex-tarifarios-vigentes"
+          ],
+          "modeloLabels": [
+            "🌐 Extarifários do setor automotivo",
+            "🌐 Extarifários em geral"
+          ]
+        },
+        {
+          "nome": "Consulta CFI no BNDES",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Consulta Mapa (antigo MDA)",
+          "obs": "Para operações de Pronaf — tratores, colheitadeiras, autopropelidos, caminhões.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Projeto Técnico",
+          "obs": "Documento emitido via sistema Astec do Sicoob.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Declaração de Ciência do Associado",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "declaracao-ciencia-associado.pdf"
+        },
+        {
+          "nome": "Declaração de Concordância Compartilhamento de dados da Astec",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "termo-concordancia-astec.docx"
+        },
+        {
+          "nome": "Declaração de enquadramento ao Pronamp",
+          "obs": "Para associados enquadrados no Pronamp.",
+          "resp": "agencia",
+          "modelo": "declaracao-enquadramento-pronamp.pdf"
+        },
+        {
+          "nome": "Relatório do Sicor",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        },
+        {
+          "nome": "Verificação Ambiental dos Imóveis Rurais",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        }
+      ]
+    }
+  ],
+  "DOCS_BNDES_GERAIS": [
+    {
+      "secao": "📋 Documentos Gerais",
+      "itens": [
+        {
+          "nome": "CCIR — Certificado de Cadastro de Imóveis Rurais",
+          "obs": "",
+          "resp": "projetista",
+          "modelo": "https://sncr.serpro.gov.br/ccir/emissao;jsessionid=JF0-9WVviMzZUsgF9xifIZ3X.ccir4?windowId=0e1"
+        },
+        {
+          "nome": "Gleba(s)",
+          "obs": "Em formato kml anexados ao dossiê do sistema Astec.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Proposta de Crédito BNDES",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "proposta-credito-bndes.docx"
+        },
+        {
+          "nome": "Declaração de Ciência do Associado",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "declaracao-ciencia-associado.pdf"
+        },
+        {
+          "nome": "Declaração de Concordância Compartilhamento de dados da Astec",
+          "obs": "",
+          "resp": "agencia",
+          "modelo": "termo-concordancia-astec.docx"
+        },
+        {
+          "nome": "Relatório do Sicor",
+          "obs": "",
+          "resp": "uad",
+          "modelo": null
+        },
+        {
+          "nome": "Licença ou Dispensa Ambiental",
+          "obs": "Documento obrigatório para linhas de projeto de investimento, seja comercial ou rural.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Aplicação do Questionário de Risco Socioambiental",
+          "obs": "Aplicação obrigatória para todas as linhas de crédito, conforme manual de RSA.",
+          "resp": "agencia",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Verificação de áreas de vegetação nativa / Verificação de áreas protegidas / Análise de sobreposição com Floresta Pública Tipo B",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "uad",
+          "modelo": null
+        },
+        {
+          "nome": "Autorização de supressão vegetal (ASV) ou documento congênere",
+          "obs": "Exclusivo para as operações agropecuárias, aplicável se constar alerta de desmatamento.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Cópia da matrícula/certidão atualizada do imóvel beneficiado na operação",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "CND ou CPEND de ITR do imóvel beneficiado",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "projetista",
+          "modelo": "https://servicos.receitafederal.gov.br/servico/certidoes/#/home/cib"
+        },
+        {
+          "nome": "Cópia do contrato de arrendamento ou similar do imóvel beneficiado",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Documentos para atividades agropecuárias nos municípios que integram o Bioma Amazônia",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Procedimentos para atividades agropecuárias nos municípios que integram o Bioma Amazônia",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Recibo de Inscrição no Cadastro Ambiental Rural (CAR)",
+          "obs": "Exclusivo para as operações agropecuárias.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Projeto técnico",
+          "obs": "Exclusivo para financiamento de projetos. Em caso de Pronaf permite-se utilizar o plano simplificado.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Comprovação de inexistência de similar nacional",
+          "obs": "Para equipamentos importados. Exclusivo BNDES Finame.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Consulta do Credenciamento de Fornecedores Informatizados - CFI do BNDES",
+          "obs": "Exclusivo quando o projeto contemplar financiamento de máquinas e equipamentos.",
+          "resp": "projetista",
+          "modelo": null
+        },
+        {
+          "nome": "Orçamento estruturado",
+          "obs": "Exclusivo para operações que se enquadrem em orçamento estruturado.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Cronograma físico-financeiro",
+          "obs": "Exclusivo para operações que se enquadrem em orçamento estruturado.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Anexos",
+          "obs": "Informações sobre o Projeto / Origem e Aplicação dos Recursos. Exclusivo para operações que se enquadrem em orçamento estruturado.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Autorizações prévias para perfuração de poços",
+          "obs": "Emitidos por órgãos responsáveis. Documento obrigatório a depender da legislação estadual e para utilização de recursos hídricos específicos para cada programa.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Outorga de utilização de recursos hídricos ou documento equivalente",
+          "obs": "Documento obrigatório para empreendimentos que utilizam de recursos hídricos.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Autorização de uso de espaços físicos de corpos d'água de domínio da União",
+          "obs": "Documento obrigatório para empreendimentos que utilizam de recursos hídricos de águas da União.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Declaração para Financiamento com Custo Financeiro em Taxa Fixa BNDES em TFB Dólar",
+          "obs": "Documento obrigatório para todas as linhas de crédito que utilizam o indexador Dólar.",
+          "resp": "agencia",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Extrato da Declaração de Importação de Consumo",
+          "obs": "Para operações que seja possível o financiamento de equipamentos importados.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Comprovante de regularidade perante o Departamento Nacional de Produção Mineral - DNPM",
+          "obs": "Beneficiário que atua com Produção mineral.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Cópia do Contrato de Concessão de Serviço Público",
+          "obs": "Beneficiário que atua com Saneamento básico.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Lista de todos os fornecedores presentes no cadastro de fornecedores",
+          "obs": "Beneficiários que possuem, dentre suas atividades, o abate de bovinos e/ou a fabricação de produtos de carne quando integrados ao abate, conforme CNAE 10.1, Subclasses C10.11-2/01 e C10.11-2/05, apenas no que se refere a bovinos.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Declaração Própria da beneficiária, que atende os requisitos do Anexo XIII à Circular SUP/ADIG n° 13/2022 do BNDES, de 26/05/2022",
+          "obs": "Beneficiários que possuem, dentre suas atividades, o abate de bovinos e/ou a fabricação de produtos de carne quando integrados ao abate, conforme CNAE 10.1, Subclasses C10.11-2/01 e C10.11-2/05, apenas no que se refere a bovinos.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Certificado de inscrição no Registro Nacional de Sementes e Mudas (RENASEM)",
+          "obs": "Beneficiário que atua com sementes e mudas.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Comprovante de inscrição no Registro Geral da Atividade Pesqueira (RGP)",
+          "obs": "Financiamento direcionado à atividade pesqueira.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        },
+        {
+          "nome": "Permissão Prévia de Pesca (PPP)",
+          "obs": "Financiamento de embarcações de pesca extrativa.",
+          "resp": "projetista",
+          "modelo": null,
+          "naPadrao": true
+        }
+      ]
+    }
+  ],
+  "DOCS_AMBIENTAL": {
+    "es": [
+      {
+        "secao": "🌿 Documentos Específicos — Espírito Santo",
+        "itens": [
+          {
+            "nome": "Licença/Dispensa Ambiental",
+            "obs": "Regras conforme IN 021 do IDAF. Não é necessário documento de dispensa.",
+            "resp": "projetista",
+            "modelo": "ambiental-es-in021-idaf.pdf"
+          }
+        ]
+      }
+    ],
+    "rj": [
+      {
+        "secao": "🌿 Documentos Específicos — Rio de Janeiro",
+        "itens": [
+          {
+            "nome": "Licença/Dispensa Ambiental",
+            "obs": "Regras conforme Formulário do INEA. Documento de dispensa é o formulário do INEA preenchido, assinado e protocolado no órgão.",
+            "resp": "projetista",
+            "modelo": "ambiental-rj-inea.docx"
+          },
+          {
+            "nome": "Protocolo do INEA",
+            "obs": "Sempre que utilizar o protocolo do INEA como documento de dispensa ambiental ele precisa estar assinado e protocolado no órgão. Utilize o link abaixo para protocolar o documento após colher assinatura do associado.",
+            "resp": "agencia",
+            "modelo": [
+              "https://protocolo.inea.rj.gov.br"
+            ],
+            "modeloLabels": [
+              "🌐 Protocolar (INEA)"
+            ]
+          }
+        ]
+      }
+    ],
+    "sp": [
+      {
+        "secao": "🌿 Documentos Específicos — São Paulo",
+        "itens": [
+          {
+            "nome": "DCAA — Declaração de Conformidade Agropecuária",
+            "obs": "",
+            "resp": "projetista",
+            "modelo": null
+          }
+        ]
+      }
+    ],
+    "mg": [
+      {
+        "secao": "🌿 Documentos Específicos — Minas Gerais",
+        "itens": [
+          {
+            "nome": "Licença/Dispensa Ambiental",
+            "obs": "Regras conforme DN 217 do COPAM. Documento de dispensa é a declaração de dispensa de MG.",
+            "resp": "projetista",
+            "modelo": [
+              "dn-217-copam.pdf",
+              "declaracao-dispensa-ambiental-mg.docx"
+            ],
+            "modeloLabels": [
+              "📄 DN 217 COPAM",
+              "📄 Declaração de Dispensa"
+            ]
+          },
+          {
+            "nome": "Análise do ZEE",
+            "obs": "",
+            "resp": "projetista",
+            "modelo": "https://geoportal.meioambiente.mg.gov.br/"
+          }
+        ]
+      }
+    ],
+    "outros": [
+      {
+        "secao": "🌿 Documentos Específicos — Outros Estados",
+        "itens": [
+          {
+            "nome": "Licença/Dispensa Ambiental",
+            "obs": "Incluir documento de licença/dispensa conforme legislação estadual vigente.",
+            "resp": "projetista",
+            "modelo": null
+          }
+        ]
+      }
+    ]
+  },
+  "DOCS_BNDES": {
+    "pronaf": {
+      "titulo": "Pronaf",
+      "secoes": [
+        {
+          "secao": "🌱 Documentos Específicos — Pronaf",
+          "itens": [
+            {
+              "nome": "Cadastro Nacional da Agricultura Familiar (CAF - Pronaf)",
+              "obs": "Exclusivo para a linha Pronaf.",
+              "resp": "projetista",
+              "modelo": null
+            }
+          ]
+        }
+      ]
+    },
+    "pronamp": {
+      "titulo": "Pronamp",
+      "secoes": [
+        {
+          "secao": "🌾 Documentos Específicos — Pronamp",
+          "itens": [
+            {
+              "nome": "Declaração assinada para operações de PRONAMP",
+              "obs": "Declaro de ter, no mínimo, 80% (oitenta por cento) da renda bruta anual originária da atividade agropecuária.",
+              "resp": "projetista",
+              "modelo": "declaracao-enquadramento-pronamp.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    "renovagro": {
+      "titulo": "Renovagro",
+      "secoes": [
+        {
+          "secao": "♻️ Documentos Específicos — Renovagro",
+          "itens": [
+            {
+              "nome": "Croqui descritivo e histórico de utilização da área do projeto a ser financiado",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Análise de solo e respectiva recomendação agronômica",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Declaração de acompanhamento do projeto de conversão",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Registro no Cadastro Nacional de Produtores Orgânicos",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null,
+              "naPadrao": true
+            },
+            {
+              "nome": "Plano de manejo agropecuário, agroflorestal ou florestal",
+              "obs": "Conforme o caso, da área do projeto. Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Plano de manejo aprovado pelo órgão ambiental competente",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Cota de Reserva Ambiental (CRA)",
+              "obs": "Emitida pelo órgão competente. Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Certidão atualizada do imóvel onde está situada a CRA",
+              "obs": "Com sua respectiva averbação. Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Cadastro Ambiental Rural (CAR) onde está situada a CRA",
+              "obs": "Da propriedade onde está situada a CRA / da propriedade do proponente que realizará a compensação da sua área com a aquisição do CRA. Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Certidão atualizada da matrícula do imóvel onde está situada a CRA",
+              "obs": "Com sua respectiva averbação. Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Registro de aquisição da CRA no Sistema Único de Controle do órgão ambiental respectivo",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            },
+            {
+              "nome": "Comprovação do Certificado de Registro Genealógico",
+              "obs": "Exclusivo para a Linha Renovagro.",
+              "resp": "projetista",
+              "modelo": null
+            }
+          ]
+        }
+      ]
+    },
+    "pca": {
+      "titulo": "PCA",
+      "secoes": []
+    },
+    "proirriga": {
+      "titulo": "Proirriga",
+      "secoes": [
+        {
+          "secao": "💧 Documentos Específicos — Proirriga",
+          "itens": [
+            {
+              "nome": "Laudo de vazão do sistema de irrigação",
+              "obs": "",
+              "resp": "projetista",
+              "modelo": null
+            }
+          ]
+        }
+      ]
+    },
+    "inovagro": {
+      "titulo": "Inovagro",
+      "secoes": []
+    },
+    "moderfrota": {
+      "titulo": "Moderfrota",
+      "secoes": [
+        {
+          "secao": "🚜 Documentos Específicos — Moderfrota",
+          "itens": [
+            {
+              "nome": "Declaração assinada para operações de Moderfrota PRONAMP",
+              "obs": "Declaro de ter, no mínimo, 80% (oitenta por cento) da renda bruta anual originária da atividade agropecuária.",
+              "resp": "projetista",
+              "modelo": "declaracao-enquadramento-pronamp.pdf"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

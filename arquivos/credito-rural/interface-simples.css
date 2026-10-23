@@ -1,0 +1,351 @@
+/* SICOOB MANTIQUEIRA — INTERFACE SIMPLIFICADA */
+
+#ruralWizard,
+#mrChecklist {
+    width: min(100% - 32px, 960px);
+    max-width: 960px;
+    margin: 24px auto;
+    padding: clamp(18px, 3vw, 32px);
+    background: #fff;
+    border: 1px solid #d9e1e3;
+    border-radius: 10px;
+    color: #003640;
+    box-shadow: 0 3px 12px rgba(0, 54, 64, .05);
+}
+
+#ruralWizard {
+    border-top: 4px solid #00a091;
+}
+
+#ruralWizard h2,
+#mrChecklist h2 {
+    font-size: clamp(20px, 2.4vw, 28px);
+    margin: 8px 0;
+    color: #003640;
+}
+
+.ms-etiqueta {
+    color: #00a091;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+}
+
+.ms-descricao {
+    font-size: 13px;
+    color: #61787d;
+    line-height: 1.6;
+}
+
+.ms-configuracao {
+    display: grid;
+    gap: 22px;
+    margin-top: 26px;
+}
+
+.ms-campo h3,
+.ms-subtitulo {
+    font-size: 14px;
+    margin: 0 0 12px;
+}
+
+.ms-opcoes,
+.ms-acoes,
+.ms-funcionalidades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ms-btn {
+    border: 1px solid #d0dade;
+    border-radius: 7px;
+    padding: 12px 18px;
+    background: #f6f8f8;
+    color: #003640;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.ms-btn:hover {
+    border-color: #00a091;
+    background: #e8f6f4;
+}
+
+.ms-ativo,
+.ms-principal {
+    background: #003640 !important;
+    border-color: #003640 !important;
+    color: #fff !important;
+}
+
+.ms-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.ms-secundario {
+    background: #fff;
+}
+
+.ms-input,
+.ms-status,
+.ms-textarea {
+    font: inherit;
+    border: 1px solid #cbd6da;
+    border-radius: 7px;
+    padding: 12px;
+    background: #fff;
+}
+
+.ms-input {
+    width: min(100%, 460px);
+}
+
+.ms-acoes {
+    margin-top: 24px;
+}
+
+.ms-resumo {
+    background: #e8f6f4;
+    color: #003640;
+    border-radius: 7px;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 20px 0;
+}
+
+.ms-funcionalidades {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 18px 0;
+}
+
+.ms-funcao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 14px;
+    min-height: 130px;
+    font-size: 16px;
+    background: #f2f8f7;
+    text-align: left;
+}
+
+.ms-icone {
+    font-size: 28px;
+}
+
+#mrChecklist[hidden] {
+    display: none !important;
+}
+
+.simulador-grid[hidden],
+body:not(.ms-simulando) .simulador-grid {
+    display: none !important;
+}
+
+body.ms-simulando .simulador-grid {
+    display: grid !important;
+    width: min(100% - 32px, 1180px) !important;
+    max-width: 1180px !important;
+    margin: 20px auto !important;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) !important;
+    gap: 18px !important;
+}
+
+.simulador-grid > * {
+    min-width: 0 !important;
+}
+
+.material-apoio-card {
+    display: none !important;
+}
+
+body.ms-simulando .simulador-grid > .documentos-card,
+body.ms-simulando .simulador-grid > .tabela-card {
+    grid-column: 1 / -1 !important;
+}
+
+.ms-aviso {
+    background: #f0f7f6;
+    padding: 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    color: #46636a;
+}
+
+.ms-progresso {
+    padding: 20px;
+    background: #f7faf9;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.ms-trilho {
+    height: 9px;
+    background: #e1e8ea;
+    border-radius: 10px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+.ms-preenchimento {
+    height: 100%;
+    background: #00a091;
+}
+
+.ms-grupo {
+    border: 1px solid #dbe3e5;
+    border-radius: 8px;
+    margin: 12px 0;
+    overflow: hidden;
+}
+
+.ms-grupo summary {
+    padding: 15px;
+    background: #f2f6f6;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ms-documento {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 155px;
+    gap: 16px;
+    padding: 17px;
+    border-top: 1px solid #e3eaec;
+}
+
+.ms-documento.entregue {
+    background: #f0f8ea;
+    border-left: 3px solid #00a091;
+}
+
+.ms-documento.na {
+    background: #f5f6f6;
+    opacity: .7;
+}
+
+.ms-documento-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.ms-responsavel {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: #003640;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.ms-nome-arquivo {
+    font-size: 11px;
+    color: #59747b;
+}
+
+.ms-status {
+    width: 100%;
+    height: 44px;
+    font-size: 13px;
+}
+
+.ms-pendentes {
+    padding: 18px;
+    background: #f6f8f8;
+    border-radius: 8px;
+    margin: 22px 0;
+}
+
+.ms-pendentes summary {
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ms-pendentes li {
+    margin: 8px 0;
+    font-size: 13px;
+}
+
+.ms-label {
+    display: block;
+    font-weight: 700;
+    margin: 18px 0 10px;
+}
+
+.ms-textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+@media (max-width: 900px) {
+    body.ms-simulando .simulador-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    body.ms-simulando .simulador-grid > * {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
+}
+
+@media (max-width: 600px) {
+    #ruralWizard,
+    #mrChecklist {
+        width: calc(100% - 20px);
+        margin: 10px auto;
+        padding: 16px 13px;
+    }
+
+    .ms-funcionalidades {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ms-opcoes,
+    .ms-acoes {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ms-btn {
+        width: 100%;
+    }
+
+    .ms-documento {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ms-status {
+        font-size: 16px;
+    }
+
+    body.ms-simulando .simulador-grid {
+        width: calc(100% - 20px) !important;
+    }
+}
+
+@media print {
+    #ruralWizard,
+    .ms-acoes,
+    .ms-status {
+        display: none !important;
+    }
+
+    #mrChecklist {
+        width: 100%;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .ms-grupo {
+        break-inside: avoid;
+    }
+}
