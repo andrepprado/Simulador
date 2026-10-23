@@ -60,33 +60,87 @@
     }
 
     function aplicarFinalidade() {
-        if (!campos.finalidade) return;
+        if (!campos.finalidade) return false;
 
-        const alvo = normalizar(
-            estado.finalidade + " " + estado.atividade
-        );
-
+        const finalidade = normalizar(estado.finalidade);
+        const atividade = normalizar(estado.atividade);
         const opcoes = Array.from(campos.finalidade.options);
 
-        const encontrada = opcoes.find(opcao => {
+        // Custeio exige correspondência da atividade.
+        // Investimento pode existir como opção única no motor.
+        let encontrada = opcoes.find(opcao => {
             const texto = normalizar(opcao.textContent);
-            return texto.includes(normalizar(estado.finalidade)) &&
-                texto.includes(normalizar(estado.atividade));
+            return texto.includes(finalidade) &&
+                texto.includes(atividade);
         });
 
-        if (encontrada) {
+        if (!encontrada && finalidade === "investimento") {
+            encontrada = opcoes.find(opcao =>
+                normalizar(opcao.textContent) === "investimento"
+            );
+        }
+
+        if (!encontrada) {
+            console.warn(
+                "[MANTIQUEIRA] Combinação não encontrada no motor:",
+                estado.finalidade,
+                estado.atividade
+            );
+            return false;
+        }
+
+        if (campos.finalidade.value !== encontrada.value) {
             campos.finalidade.value = encontrada.value;
             campos.finalidade.dispatchEvent(
                 new Event("change", { bubbles: true })
             );
-        } else {
-            console.warn(
-                "[MANTIQUEIRA] Finalidade não encontrada no motor:",
-                alvo
+        }
+
+        return true;
+    }
+
+    function travarEscolhasFinanceiras(travar) {
+        if (!campos.finalidade) return;
+
+        campos.finalidade.disabled = !!travar;
+
+        const container = campos.finalidade.closest(".campo");
+
+        if (container) {
+            container.classList.toggle(
+                "ms-campo-travado",
+                !!travar
             );
         }
     }
 
+    function concluirConfiguracao() {
+        if (!configurado()) return false;
+
+        if (!aplicarFinalidade()) {
+            estado.tela = "inicio";
+            renderizar();
+
+            let aviso = root.querySelector("#msAvisoMotor");
+
+            if (!aviso) {
+                aviso = criar("p", "ms-aviso");
+                aviso.id = "msAvisoMotor";
+                root.append(aviso);
+            }
+
+            aviso.textContent =
+                "A combinação selecionada não está disponível " +
+                "no motor financeiro. Confira a finalidade e " +
+                "a atividade antes de prosseguir.";
+
+            return false;
+        }
+
+        estado.tela = "unificada";
+        renderizar();
+        return true;
+    }
     function criarEscolhas(titulo, valores, atual, alterar) {
         const bloco = criar("div", "ms-campo");
         bloco.append(criar("h3", null, titulo));
@@ -96,7 +150,10 @@
         valores.forEach(([valor, rotulo]) => {
             opcoes.append(botao(rotulo, () => {
                 alterar(valor);
-                renderizar();
+
+                if (!concluirConfiguracao()) {
+                    renderizar();
+                }
             }, atual === valor ? "ms-ativo" : ""));
         });
 
@@ -208,17 +265,9 @@
         select.addEventListener("change", () => {
             estado.pa = select.value;
 
-            if (!configurado()) return;
-
-            aplicarFinalidade();
-
-            estado.tela = "unificada";
-            renderizar();
-
-            root.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            if (!concluirConfiguracao()) {
+                renderizar();
+            }
         });
 
         pa.append(select);
@@ -292,6 +341,7 @@
             "← Alterar escolhas",
             () => {
                 estado.tela = "inicio";
+                travarEscolhasFinanceiras(false);
                 renderizar();
             },
             "ms-secundario"
@@ -329,6 +379,7 @@
             "Alterar escolhas",
             () => {
                 estado.tela = "inicio";
+                travarEscolhasFinanceiras(false);
                 renderizar();
             },
             "ms-secundario"
@@ -536,7 +587,7 @@
         const aplicaveis = total - na;
         const percentual = aplicaveis
             ? Math.round(entregues / aplicaveis * 100)
-            : 100;
+            : 0;
 
         progresso.append(criar(
             "strong",
@@ -656,6 +707,7 @@
             telaUnificada
         );
 
+        travarEscolhasFinanceiras(telaUnificada);
         grid.hidden = !telaUnificada;
         checklist.hidden = !telaUnificada;
 
@@ -680,6 +732,7 @@
             "Alterar escolhas",
             () => {
                 estado.tela = "inicio";
+                travarEscolhasFinanceiras(false);
                 renderizar();
             },
             "ms-secundario"
