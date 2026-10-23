@@ -190,3 +190,48 @@ body.ms-tela-unica .material-apoio-card {
         width: calc(100% - 16px);
     }
 }
+
+/* INICIO BORDA SUPERIOR UNIFICADA */
+
+/*
+   Mesma borda superior para todos os cards.
+   O gradiente é aplicado por background,
+   evitando diferenças de espessura entre elementos.
+*/
+
+body.ms-tela-unica .formulario-card,
+body.ms-tela-unica .resultado-card,
+body.ms-tela-unica .documentos-card,
+body.ms-tela-unica #mrChecklist,
+body.ms-tela-unica #ruralWizard {
+    position: relative !important;
+    border: 1px solid #d6e2e5 !important;
+    border-top: 0 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    overflow: hidden;
+}
+
+body.ms-tela-unica .formulario-card::before,
+body.ms-tela-unica .resultado-card::before,
+body.ms-tela-unica .documentos-card::before,
+body.ms-tela-unica #mrChecklist::before,
+body.ms-tela-unica #ruralWizard::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 4px !important;
+    background: linear-gradient(
+        90deg,
+        #C9D200 0%,
+        #00A091 55%,
+        #003640 100%
+    ) !important;
+    border-radius: 12px 12px 0 0 !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+}
+
+/* FIM BORDA SUPERIOR UNIFICADA */
