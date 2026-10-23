@@ -1,0 +1,201 @@
+/* ==========================================================
+   SICOOB MANTIQUEIRA - LAYOUT FINAL
+   ========================================================== */
+
+:root {
+    --mr-cor-escura: #003640;
+    --mr-cor-verde: #00A091;
+    --mr-cor-lima: #C9D200;
+    --mr-cor-borda: #d8e5e6;
+}
+
+/* Grade principal */
+body.ms-tela-unica main.simulador-grid {
+    display: grid !important;
+    grid-template-columns:
+        minmax(0, 1.6fr)
+        minmax(0, 1fr) !important;
+    gap: 20px !important;
+    align-items: start !important;
+    width: min(calc(100% - 32px), 1280px) !important;
+    max-width: 1280px !important;
+    margin: 20px auto !important;
+}
+
+/* Manter oculto antes de completar a configuração. */
+body main.simulador-grid[hidden],
+body #mrChecklist[hidden] {
+    display: none !important;
+}
+
+/* Todos os cards usam a mesma caixa. */
+body.ms-tela-unica main.simulador-grid > .card {
+    box-sizing: border-box !important;
+    position: relative !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    border: 1px solid var(--mr-cor-borda) !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    box-shadow: 0 5px 20px rgba(0,54,64,.06) !important;
+    align-self: start !important;
+    overflow: hidden;
+}
+
+/* Acabamento superior uniforme. */
+body.ms-tela-unica main.simulador-grid > .card::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 4px !important;
+    background: linear-gradient(
+        90deg,
+        var(--mr-cor-lima),
+        var(--mr-cor-verde) 55%,
+        var(--mr-cor-escura)
+    ) !important;
+    border: 0 !important;
+    pointer-events: none;
+}
+
+/* Primeira linha */
+body.ms-tela-unica main.simulador-grid > .formulario-card {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+}
+
+body.ms-tela-unica main.simulador-grid > .resultado-card {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+}
+
+/* Segunda linha: tabela ORIGINAL de amortização. */
+body.ms-tela-unica main.simulador-grid > .tabela-card {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    display: block !important;
+    visibility: visible !important;
+}
+
+body.ms-tela-unica .tabela-card .tabela-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.ms-tela-unica .tabela-card table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+}
+
+body.ms-tela-unica .tabela-card th,
+body.ms-tela-unica .tabela-card td {
+    padding: 11px 12px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+body.ms-tela-unica .tabela-card th:first-child,
+body.ms-tela-unica .tabela-card td:first-child {
+    text-align: left;
+}
+
+/* Terceira linha: detalhes e checklist lado a lado. */
+body.ms-tela-unica main.simulador-grid > .documentos-card {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+    display: block !important;
+}
+
+body.ms-tela-unica main.simulador-grid > #mrChecklist {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 24px !important;
+}
+
+/* Documentos não podem expandir a grade horizontalmente. */
+body.ms-tela-unica .documentos-card *,
+body.ms-tela-unica #mrChecklist * {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+body.ms-tela-unica #mrChecklist .ms-grupo {
+    width: 100%;
+    min-width: 0;
+}
+
+body.ms-tela-unica #mrChecklist .ms-documento {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+body.ms-tela-unica #mrChecklist .ms-documento-info {
+    flex: 1 1 180px;
+    min-width: 0;
+}
+
+body.ms-tela-unica #mrChecklist .ms-controles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Não exibir o card redundante de material de apoio. */
+body.ms-tela-unica main.simulador-grid > .material-apoio-card {
+    display: none !important;
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+    body.ms-tela-unica main.simulador-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 16px !important;
+    }
+
+    body.ms-tela-unica main.simulador-grid > .formulario-card,
+    body.ms-tela-unica main.simulador-grid > .resultado-card,
+    body.ms-tela-unica main.simulador-grid > .tabela-card,
+    body.ms-tela-unica main.simulador-grid > .documentos-card,
+    body.ms-tela-unica main.simulador-grid > #mrChecklist {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
+}
+
+@media (max-width: 560px) {
+    body.ms-tela-unica main.simulador-grid {
+        width: calc(100% - 20px) !important;
+    }
+
+    body.ms-tela-unica main.simulador-grid > .card {
+        padding: 16px !important;
+    }
+}
+
+@media print {
+    body.ms-tela-unica main.simulador-grid {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    body.ms-tela-unica main.simulador-grid > .card {
+        margin-bottom: 16px !important;
+        break-inside: avoid;
+    }
+}
