@@ -60,45 +60,76 @@
     }
 
     function aplicarFinalidade() {
-        if (!campos.finalidade) return false;
-
-        const finalidade = normalizar(estado.finalidade);
-        const atividade = normalizar(estado.atividade);
-        const opcoes = Array.from(campos.finalidade.options);
-
-        // Custeio exige correspondência da atividade.
-        // Investimento pode existir como opção única no motor.
-        let encontrada = opcoes.find(opcao => {
-            const texto = normalizar(opcao.textContent);
-            return texto.includes(finalidade) &&
-                texto.includes(atividade);
-        });
-
-        if (!encontrada && finalidade === "investimento") {
-            encontrada = opcoes.find(opcao =>
-                normalizar(opcao.textContent) === "investimento"
-            );
-        }
-
-        if (!encontrada) {
-            console.warn(
-                "[MANTIQUEIRA] Combinação não encontrada no motor:",
-                estado.finalidade,
-                estado.atividade
+        if (!campos.finalidade) {
+            console.error(
+                "[MANTIQUEIRA] Campo finalidade não encontrado."
             );
             return false;
         }
 
-        if (campos.finalidade.value !== encontrada.value) {
-            campos.finalidade.value = encontrada.value;
+        const finalidade = String(
+            estado.finalidade || ""
+        ).trim().toLowerCase();
+
+        const atividade = String(
+            estado.atividade || ""
+        ).trim().toLowerCase();
+
+        const mapa = {
+            "custeio|agrícola": "Custeio Agrícola",
+            "custeio|pecuária": "Custeio Pecuário",
+            "investimento|agrícola": "Investimento",
+            "investimento|pecuária": "Investimento"
+        };
+
+        const chave = `${finalidade}|${atividade}`;
+        const valorEsperado = mapa[chave];
+
+        if (!valorEsperado) {
+            console.warn(
+                "[MANTIQUEIRA] Combinação inválida:",
+                chave
+            );
+            return false;
+        }
+
+        const opcao = Array.from(
+            campos.finalidade.options
+        ).find(item =>
+            item.value === valorEsperado
+        );
+
+        if (!opcao) {
+            console.error(
+                "[MANTIQUEIRA] Opção ausente no motor:",
+                valorEsperado
+            );
+            return false;
+        }
+
+        if (campos.finalidade.value !== opcao.value) {
+            campos.finalidade.value = opcao.value;
+
             campos.finalidade.dispatchEvent(
-                new Event("change", { bubbles: true })
+                new Event("change", {
+                    bubbles: true
+                })
             );
         }
 
+        console.info(
+            "[MANTIQUEIRA] Finalidade sincronizada:",
+            {
+                finalidade: estado.finalidade,
+                atividade: estado.atividade,
+                motor: opcao.value,
+                uf: estado.uf,
+                pa: estado.pa
+            }
+        );
+
         return true;
     }
-
     function travarEscolhasFinanceiras(travar) {
         if (!campos.finalidade) return;
 
