@@ -160,71 +160,82 @@
             ],
             estado.uf,
             valor => {
+                if (estado.uf !== valor) {
+                    estado.pa = "";
+                    estado.statuses = {};
+                }
+
                 estado.uf = valor;
-                estado.pa = "";
-                estado.statuses = {};
             }
         ));
 
         const pa = criar("div", "ms-campo");
         pa.append(criar("h3", null, "4. Posto de atendimento"));
 
-        const input = criar("select", "ms-input");
-        input.setAttribute("aria-label", "Posto de atendimento");
+        const select = criar("select", "ms-input");
+        select.setAttribute("aria-label", "Posto de atendimento");
 
         const vazio = criar("option", null, "Selecione o PA");
         vazio.value = "";
-        input.append(vazio);
+        select.append(vazio);
 
-        const agencias = estado.agencias
+        const agencias = (estado.agencias || [])
             .filter(item => !item.uf || item.uf === estado.uf)
-            .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+            .filter(item => item.nome)
+            .sort((a, b) =>
+                a.nome.localeCompare(b.nome, "pt-BR")
+            );
+
+        const nomesAdicionados = new Set();
 
         agencias.forEach(item => {
+            if (nomesAdicionados.has(item.nome)) return;
+
+            nomesAdicionados.add(item.nome);
+
             const opcao = criar("option", null, item.nome);
             opcao.value = item.nome;
-            input.append(opcao);
+
+            select.append(opcao);
         });
 
-        if (agencias.some(item => item.nome === estado.pa)) {
-            input.value = estado.pa;
+        if (nomesAdicionados.has(estado.pa)) {
+            select.value = estado.pa;
         } else {
             estado.pa = "";
         }
 
-        input.addEventListener("change", () => {
-            estado.pa = input.value;
-            continuar.disabled = !configurado();
+        select.addEventListener("change", () => {
+            estado.pa = select.value;
+
+            if (!configurado()) return;
+
+            aplicarFinalidade();
+
+            estado.tela = "unificada";
+            renderizar();
+
+            root.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
         });
 
-        pa.append(input);
+        pa.append(select);
 
         if (!agencias.length) {
             pa.append(criar(
                 "p",
                 "ms-descricao",
-                "Nenhum PA cadastrado para esta UF. Confira o cadastro da rede de atendimento."
+                "Nenhum PA cadastrado para a UF selecionada."
             ));
         }
+
         configuracao.append(pa);
         root.append(configuracao);
 
         const acoes = criar("div", "ms-acoes");
 
-        const continuar = botao(
-            "Continuar →",
-            () => {
-                if (!configurado()) return;
-                estado.tela = "escolha";
-                aplicarFinalidade();
-                renderizar();
-            },
-            "ms-principal"
-        );
-
-        continuar.disabled = !configurado();
-
-        acoes.append(continuar);
         acoes.append(botao(
             "Limpar tudo",
             limparTudo,
@@ -461,26 +472,60 @@
                     ));
                 }
 
-                const controle = criar("select", "ms-status");
+                const controles = criar("div", "ms-controles");
 
-                [
-                    ["pendente", "Pendente"],
-                    ["entregue", "Entregue"],
-                    ["na", "Não se aplica"]
-                ].forEach(([valor, rotulo]) => {
-                    const opcao = criar("option", null, rotulo);
-                    opcao.value = valor;
-                    controle.append(opcao);
-                });
+                const label = criar("label", "ms-checkbox-label");
 
-                controle.value = status;
+                const checkbox = criar("input", "ms-checkbox");
+                checkbox.type = "checkbox";
+                checkbox.checked = status === "entregue";
 
-                controle.addEventListener("change", () => {
-                    estado.statuses[chave] = controle.value;
+                checkbox.setAttribute(
+                    "aria-label",
+                    "Marcar como entregue: " + item.nome
+                );
+
+                const textoCheckbox = criar(
+                    "span",
+                    null,
+                    "Entregue"
+                );
+
+                checkbox.addEventListener("change", () => {
+                    estado.statuses[chave] = checkbox.checked
+                        ? "entregue"
+                        : "pendente";
+
                     renderizarDocumentos();
                 });
 
-                linha.append(descricao, controle);
+                label.append(checkbox, textoCheckbox);
+
+                const botaoNA = botao(
+                    status === "na"
+                        ? "N/A ✓"
+                        : "N/A",
+                    () => {
+                        estado.statuses[chave] =
+                            estado.statuses[chave] === "na"
+                                ? "pendente"
+                                : "na";
+
+                        renderizarDocumentos();
+                    },
+                    status === "na"
+                        ? "ms-na-ativo"
+                        : "ms-na"
+                );
+
+                botaoNA.setAttribute(
+                    "aria-label",
+                    "Alternar não se aplica: " + item.nome
+                );
+
+                controles.append(label, botaoNA);
+                linha.append(descricao, controles);
+
                 grupo.append(linha);
             });
 
@@ -551,31 +596,13 @@
         const acoes = criar("div", "ms-acoes");
 
         acoes.append(botao(
-            "← Voltar",
-            () => {
-                estado.tela = "escolha";
-                renderizar();
-            },
-            "ms-secundario"
-        ));
-
-        acoes.append(botao(
-            "Alterar escolhas",
-            () => {
-                estado.tela = "inicio";
-                renderizar();
-            },
-            "ms-secundario"
-        ));
-
-        acoes.append(botao(
             "Imprimir / Salvar PDF",
             () => window.print(),
             "ms-principal"
         ));
 
         acoes.append(botao(
-            "Limpar tudo",
+            "Limpar tudo / Nova proposta",
             limparTudo,
             "ms-secundario"
         ));
@@ -604,36 +631,69 @@
     }
 
     function renderizar() {
-        const simulando = estado.tela === "simulador";
-        const documentos = estado.tela === "checklist";
+        const configuradoAgora = configurado();
 
-        document.body.classList.toggle(
-            "ms-simulando",
-            simulando
-        );
+        if (!configuradoAgora) {
+            estado.tela = "inicio";
+        }
 
-        grid.hidden = !simulando;
-        checklist.hidden = !documentos;
+        const telaUnificada =
+            configuradoAgora &&
+            estado.tela === "unificada";
 
-        // Remover interferência do wizard anterior.
         document.body.classList.remove(
             "rural-wizard-pending",
             "rural-wizard-ready"
         );
 
-        if (estado.tela === "inicio") {
+        document.body.classList.toggle(
+            "ms-simulando",
+            telaUnificada
+        );
+
+        document.body.classList.toggle(
+            "ms-tela-unica",
+            telaUnificada
+        );
+
+        grid.hidden = !telaUnificada;
+        checklist.hidden = !telaUnificada;
+
+        root.replaceChildren();
+
+        if (!telaUnificada) {
             renderizarInicio();
+            return;
         }
-        else if (estado.tela === "escolha") {
-            renderizarEscolha();
-        }
-        else if (simulando) {
-            renderizarSimulador();
-        }
-        else if (documentos) {
-            renderizarEscolha();
-            renderizarDocumentos();
-        }
+
+        root.append(cabecalho());
+
+        root.append(criar(
+            "p",
+            "ms-resumo",
+            `${estado.finalidade} · ${estado.atividade} · ${estado.uf} · ${estado.pa}`
+        ));
+
+        const acoes = criar("div", "ms-acoes");
+
+        acoes.append(botao(
+            "Alterar escolhas",
+            () => {
+                estado.tela = "inicio";
+                renderizar();
+            },
+            "ms-secundario"
+        ));
+
+        acoes.append(botao(
+            "Limpar tudo / Nova proposta",
+            limparTudo,
+            "ms-secundario"
+        ));
+
+        root.append(acoes);
+
+        renderizarDocumentos();
     }
 
     fetch("arquivos/credito-rural/rede-atendimento.json")

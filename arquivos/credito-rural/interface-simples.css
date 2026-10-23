@@ -349,3 +349,125 @@ body.ms-simulando .simulador-grid > .tabela-card {
         break-inside: avoid;
     }
 }
+
+/* =========================================================
+   TELA ÚNICA — SIMULAÇÃO + DOCUMENTAÇÃO
+   ========================================================= */
+
+body.ms-tela-unica #ruralWizard {
+    margin-bottom: 16px;
+}
+
+body.ms-tela-unica .simulador-grid {
+    display: grid !important;
+    grid-template-columns:
+        minmax(0, 1.6fr)
+        minmax(0, 1fr) !important;
+}
+
+body.ms-tela-unica #mrChecklist {
+    display: block !important;
+    width: min(calc(100% - 32px), 1180px);
+    max-width: 1180px;
+    margin: 22px auto 40px;
+}
+
+body.ms-tela-unica .material-apoio-card {
+    display: none !important;
+}
+
+.ms-controles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.ms-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+    color: #003640;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ms-checkbox {
+    appearance: auto;
+    width: 20px;
+    height: 20px;
+    accent-color: #00a091;
+    cursor: pointer;
+    margin: 0;
+}
+
+.ms-na {
+    min-height: 34px;
+    padding: 6px 11px;
+    font-size: 11px;
+    background: #fff;
+}
+
+.ms-na-ativo {
+    min-height: 34px;
+    padding: 6px 11px;
+    font-size: 11px;
+    background: #e7eced;
+    border-color: #91a5aa;
+}
+
+.ms-documento.entregue {
+    background: #f0f8ea;
+    border-left: 3px solid #00a091;
+}
+
+.ms-documento.na {
+    background: #f4f5f5;
+    opacity: .7;
+}
+
+.ms-documento.na .ms-checkbox-label {
+    opacity: .65;
+}
+
+.ms-documento-info {
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    body.ms-tela-unica .simulador-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    body.ms-tela-unica #mrChecklist {
+        width: calc(100% - 20px);
+    }
+
+    .ms-controles {
+        justify-content: flex-start;
+    }
+
+    .ms-documento {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media print {
+    body.ms-tela-unica .simulador-grid {
+        display: block !important;
+    }
+
+    body.ms-tela-unica #mrChecklist {
+        display: block !important;
+        width: 100%;
+    }
+
+    .ms-controles,
+    .ms-acoes {
+        display: none !important;
+    }
+}
